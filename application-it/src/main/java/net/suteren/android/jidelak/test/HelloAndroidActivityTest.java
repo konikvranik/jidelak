@@ -1,6 +1,6 @@
 package net.suteren.android.jidelak.test;
 
-import src.main.java.net.suteren.android.jidelak.HelloAndroidActivity;
+import net.suteren.android.jidelak.HelloAndroidActivity;
 import android.test.ActivityInstrumentationTestCase2;
 import net.suteren.android.jidelak.*;
 

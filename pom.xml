@@ -9,6 +9,10 @@
   <packaging>pom</packaging>
   <name>jidelak - Parent</name>
 
+  <properties>
+      <android.sdk.platform>8</android.sdk.platform>
+  </properties>
+  
   <modules>
     <module>application</module>
     <module>application-it</module>

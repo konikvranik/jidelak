@@ -26,6 +26,11 @@ public class JidelakMainActivity extends Activity {
 			// TODO Auto-generated constructor stub
 		}
 
+		public boolean areAllItemsEnabled() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
 		public int getCount() {
 			// TODO Auto-generated method stub
 			return 0;
@@ -66,6 +71,15 @@ public class JidelakMainActivity extends Activity {
 			return false;
 		}
 
+		public boolean isEnabled(int arg0) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public void notifyDataSetChanged() {
+			mDataSetObservable.notifyChanged();
+		}
+
 		public void registerDataSetObserver(DataSetObserver observer) {
 			mDataSetObservable.registerObserver(observer);
 		}
@@ -74,18 +88,56 @@ public class JidelakMainActivity extends Activity {
 			mDataSetObservable.unregisterObserver(observer);
 		}
 
-		public void notifyDataSetChanged() {
-			mDataSetObservable.notifyChanged();
+	}
+
+	public static class DayFragment extends Fragment {
+		public static final String ARG_DAY = "day";
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+
+			Bundle args = getArguments();
+
+			View rootView = inflater.inflate(R.layout.day, container, false);
+			ListView menuList = (ListView) rootView
+					.findViewById(R.id.menu_list);
+			Date day = null;
+			menuList.setAdapter(new DailyMenuAdapter(day));
+			return rootView;
+		}
+	}
+
+	public static class DayPagerAdapter extends FragmentStatePagerAdapter {
+
+		public DayPagerAdapter(FragmentManager fm) {
+			super(fm);
 		}
 
-		public boolean areAllItemsEnabled() {
+		@Override
+		public int getCount() {
 			// TODO Auto-generated method stub
-			return false;
+			return 0;
 		}
 
-		public boolean isEnabled(int arg0) {
+		private Date getDateByPosition(int arg0) {
 			// TODO Auto-generated method stub
-			return false;
+			return null;
+		}
+
+		public Fragment getItem(Date day) {
+			Fragment fragment = new DayFragment();
+			Bundle args = new Bundle();
+			args.putLong(DayFragment.ARG_DAY, day.getTime());
+			fragment.setArguments(args);
+			return fragment;
+
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+
+			return getItem(getDateByPosition(position));
 		}
 
 	}
@@ -110,57 +162,5 @@ public class JidelakMainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
-	}
-
-	public static class DayPagerAdapter extends FragmentStatePagerAdapter {
-
-		public DayPagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
-
-		@Override
-		public Fragment getItem(int position) {
-
-			return getItem(getDateByPosition(position));
-		}
-
-		private Date getDateByPosition(int arg0) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public Fragment getItem(Date day) {
-			Fragment fragment = new DayFragment();
-			Bundle args = new Bundle();
-			args.putLong(DayFragment.ARG_DAY, day.getTime());
-			fragment.setArguments(args);
-			return fragment;
-
-		}
-
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-	}
-
-	public static class DayFragment extends Fragment {
-		public static final String ARG_DAY = "day";
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-
-			Bundle args = getArguments();
-
-			View rootView = inflater.inflate(R.layout.day, container, false);
-			ListView menuList = (ListView) rootView
-					.findViewById(R.id.menu_list);
-			Date day = null;
-			menuList.setAdapter(new DailyMenuAdapter(day));
-			return rootView;
-		}
 	}
 }

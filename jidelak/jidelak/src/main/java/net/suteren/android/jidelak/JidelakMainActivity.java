@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 
-public class HelloAndroidActivity extends Activity {
+public class JidelakMainActivity extends Activity {
 
     /**
      * Called when the activity is first created.

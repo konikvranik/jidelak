@@ -11,18 +11,23 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<platform.version> 2.2.1
-		</platform.version>
+		<platform.version>2.2.1</platform.version>
 		<android.plugin.version>3.6.0</android.plugin.version>
+		<android.sdk.platform>8</android.sdk.platform>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.google.android</groupId>
+			<groupId>com.android.support</groupId>
 			<artifactId>support-v4</artifactId>
-			<version>r7</version>
+			<version>19.0.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>appcompat-v7</artifactId>
+			<version>19.0.0</version>
+			<type>aar</type>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -68,9 +73,6 @@
 					<artifactId>android-maven-plugin</artifactId>
 					<version>${android.plugin.version}</version>
 					<configuration>
-						<sdk>
-							<platform>8</platform>
-						</sdk>
 						<zipalign>
 							<verbose>true</verbose>
 						</zipalign>
@@ -120,4 +122,7 @@
 		<module>jidelak</module>
 		<module>jidelak-it</module>
 	</modules>
+
+
+
 </project>

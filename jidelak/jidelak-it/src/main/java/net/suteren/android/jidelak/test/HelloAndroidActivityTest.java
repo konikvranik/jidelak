@@ -3,14 +3,14 @@ package net.suteren.android.jidelak.test;
 import android.test.ActivityInstrumentationTestCase2;
 import net.suteren.android.jidelak.*;
 
-public class HelloAndroidActivityTest extends ActivityInstrumentationTestCase2<HelloAndroidActivity> {
+public class HelloAndroidActivityTest extends ActivityInstrumentationTestCase2<JidelakMainActivity> {
 
     public HelloAndroidActivityTest() {
-        super(HelloAndroidActivity.class); 
+        super(JidelakMainActivity.class); 
     }
 
     public void testActivity() {
-        HelloAndroidActivity activity = getActivity();
+        JidelakMainActivity activity = getActivity();
         assertNotNull(activity);
     }
 }

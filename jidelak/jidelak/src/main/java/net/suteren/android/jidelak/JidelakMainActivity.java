@@ -1,9 +1,19 @@
 package net.suteren.android.jidelak;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
+import net.suteren.android.jidelak.dao.AvailabilityDao;
+import net.suteren.android.jidelak.dao.MealDao;
+import net.suteren.android.jidelak.dao.RestaurantDao;
+import net.suteren.android.jidelak.model.Availability;
+import net.suteren.android.jidelak.model.Meal;
+import net.suteren.android.jidelak.model.Restaurant;
 import android.app.Activity;
-import android.database.DataSetObservable;
+import android.content.Context;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,22 +23,49 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class JidelakMainActivity extends Activity {
 
-	public static class DailyMenuAdapter implements ListAdapter {
+	public static class MenuListAdapter extends BaseAdapter implements
+			ListAdapter {
 
-		private final DataSetObservable mDataSetObservable = new DataSetObservable();
+		private Context ctx;
+		private Calendar day;
+		private final JidelakDbHelper dbHelper;
+		private List<Meal> meals = new ArrayList<Meal>();
+		private Restaurant  restaurant;
 
-		public DailyMenuAdapter(Date day) {
-			// TODO Auto-generated constructor stub
+		public MenuListAdapter(Context ctx, Calendar day, Restaurant restaurant) {
+			this.day = day;
+			this.ctx = ctx;
+			this.restaurant = restaurant;
+			dbHelper = new JidelakDbHelper(ctx);
 		}
 
-		public boolean areAllItemsEnabled() {
-			// TODO Auto-generated method stub
-			return false;
+		@Override
+		public void notifyDataSetChanged() {
+			dbHelper.notifyDataSetChanged();
+		}
+
+		@Override
+		public void registerDataSetObserver(DataSetObserver observer) {
+			dbHelper.registerObserver(observer);
+		}
+
+		@Override
+		public void unregisterDataSetObserver(DataSetObserver observer) {
+			dbHelper.unregisterObserver(observer);
+		}
+
+		private void updateMeals() {
+
+			MealDao mealDao = new MealDao(dbHelper);
+			mealDao.findByDayAndRestaurant(day, restaurant);
+			notifyDataSetChanged();
 		}
 
 		public int getCount() {
@@ -36,27 +73,12 @@ public class JidelakMainActivity extends Activity {
 			return 0;
 		}
 
-		public Object getItem(int position) {
+		public Object getItem(int paramInt) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		public int getItemViewType(int position) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public int getViewTypeCount() {
+		public long getItemId(int paramInt) {
 			// TODO Auto-generated method stub
 			return 0;
 		}
@@ -66,26 +88,113 @@ public class JidelakMainActivity extends Activity {
 			return false;
 		}
 
+		public View getView(int paramInt, View paramView,
+				ViewGroup paramViewGroup) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public int getItemViewType(int paramInt) {
+			return 0;
+		}
+
+		public int getViewTypeCount() {
+			return 0;
+		}
+
 		public boolean isEmpty() {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
-		public boolean isEnabled(int arg0) {
+		public boolean areAllItemsEnabled() {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
+		public boolean isEnabled(int paramInt) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+	}
+
+	public static class DailyMenuAdapter extends BaseAdapter implements
+			ListAdapter {
+
+		private final Calendar day;
+
+		private final JidelakDbHelper dbHelper;
+
+		private List<Restaurant> restaurants;
+
+		private Context ctx;
+
+		public DailyMenuAdapter(Context ctx, Calendar day) {
+			this.day = day;
+			this.ctx = ctx;
+			dbHelper = new JidelakDbHelper(ctx);
+		}
+
+		@Override
 		public void notifyDataSetChanged() {
-			mDataSetObservable.notifyChanged();
+			dbHelper.notifyDataSetChanged();
 		}
 
+		@Override
 		public void registerDataSetObserver(DataSetObserver observer) {
-			mDataSetObservable.registerObserver(observer);
+			dbHelper.registerObserver(observer);
 		}
 
+		@Override
 		public void unregisterDataSetObserver(DataSetObserver observer) {
-			mDataSetObservable.unregisterObserver(observer);
+			dbHelper.unregisterObserver(observer);
+		}
+
+		public int getCount() {
+			updateRestaurants();
+			return restaurants.size();
+		}
+
+		private void updateRestaurants() {
+			restaurants = new RestaurantDao(dbHelper).findAll();
+			notifyDataSetChanged();
+		}
+
+		public Restaurant getItem(int position) {
+			updateRestaurants();
+			return restaurants.get(position);
+		}
+
+		public long getItemId(int position) {
+			return getItem(position).getId();
+		}
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+
+			if (convertView == null) {
+				convertView = View.inflate(ctx, R.layout.restaurant_daily_menu,
+						parent);
+			}
+
+			Restaurant restaurant = getItem(position);
+
+			TextView nameView = (TextView) convertView.findViewById(R.id.name);
+			nameView.setText(restaurant.getName());
+
+			TextView openingView = (TextView) convertView
+					.findViewById(R.id.open);
+			openingView.setText(Restaurant.openingHoursToString(restaurant
+					.getOpeningHours(day)));
+
+			ListView menuListView = (ListView) convertView
+					.findViewById(R.id.menu_list);
+
+			ListAdapter menuListAdapter = new MenuListAdapter(ctx, day,
+					restaurant);
+			menuListView.setAdapter(menuListAdapter);
+
+			return convertView;
 		}
 
 	}
@@ -102,13 +211,20 @@ public class JidelakMainActivity extends Activity {
 			View rootView = inflater.inflate(R.layout.day, container, false);
 			ListView menuList = (ListView) rootView
 					.findViewById(R.id.menu_list);
-			Date day = null;
-			menuList.setAdapter(new DailyMenuAdapter(day));
+
+			Calendar day = Calendar.getInstance(Locale.getDefault());
+			day.setTime(new Date(args.getLong(DayFragment.ARG_DAY)));
+
+			menuList.setAdapter(new DailyMenuAdapter(getActivity()
+					.getApplicationContext(), day));
+
 			return rootView;
 		}
 	}
 
-	public static class DayPagerAdapter extends FragmentStatePagerAdapter {
+	public class DayPagerAdapter extends FragmentStatePagerAdapter {
+
+		private List<Availability> dates = new ArrayList<Availability>();
 
 		public DayPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -116,30 +232,42 @@ public class JidelakMainActivity extends Activity {
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
-			return 0;
+			updateDates();
+			return dates.size();
 		}
 
-		private Date getDateByPosition(int arg0) {
-			// TODO Auto-generated method stub
-			return null;
+		private void updateDates() {
+			AvailabilityDao ad = new AvailabilityDao(dbHelper);
+
+			dates = ad.findAllDays();
+
+			notifyDataSetChanged();
 		}
 
-		public Fragment getItem(Date day) {
+		private Calendar getDateByPosition(int position) {
+			updateDates();
+			return dates.get(position).getCalendar();
+		}
+
+		public Fragment getItem(Calendar day) {
 			Fragment fragment = new DayFragment();
 			Bundle args = new Bundle();
-			args.putLong(DayFragment.ARG_DAY, day.getTime());
+			args.putLong(DayFragment.ARG_DAY, day.getTime().getTime());
 			fragment.setArguments(args);
 			return fragment;
-
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-
 			return getItem(getDateByPosition(position));
 		}
 
+	}
+
+	private final JidelakDbHelper dbHelper;
+
+	public JidelakMainActivity() {
+		dbHelper = new JidelakDbHelper(getApplicationContext());
 	}
 
 	/**

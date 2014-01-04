@@ -1,0 +1,42 @@
+buildscript {
+	repositories { mavenCentral() }
+	dependencies { classpath 'com.android.tools.build:gradle:0.7.+' }
+}
+apply plugin: 'android'
+
+sourceSets {
+	main {
+		java { srcDir 'src/main/java' }
+		java { srcDir 'gen' }
+		resources { srcDir 'src/main/resources' }
+	}
+}
+
+repositories { mavenCentral() }
+
+android {
+	compileSdkVersion 19
+	buildToolsVersion "19.0.0"
+
+	defaultConfig {
+		minSdkVersion 7
+		targetSdkVersion 19
+	}
+
+	sourceSets {
+		main {
+			manifest.srcFile 'AndroidManifest.xml'
+			java.srcDirs = ['src/main/java']
+			resources.srcDirs = ['src/main/resources']
+			res.srcDirs = ['res']
+			assets.srcDirs = ['assets']
+		}
+
+		instrumentTest.setRoot('tests')
+	}
+}
+
+dependencies {
+	compile 'com.android.support:support-v4:19.0.0'
+	compile 'com.android.support:appcompat-v7:19.0.0'
+}

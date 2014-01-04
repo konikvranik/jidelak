@@ -12,13 +12,13 @@ import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
-import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -27,8 +27,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 
 public class JidelakMainActivity extends ActionBarActivity {
 

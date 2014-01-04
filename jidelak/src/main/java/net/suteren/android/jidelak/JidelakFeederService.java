@@ -7,7 +7,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class JidelakFeederService extends Service {
-	static final String LOGGING_TAG = "MyDemo";
+	static final String LOGGING_TAG = "JidelakFeederService";
 
 	@Override
 	public IBinder onBind(Intent intent) {

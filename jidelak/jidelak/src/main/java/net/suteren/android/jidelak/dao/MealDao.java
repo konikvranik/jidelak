@@ -15,7 +15,6 @@ public class MealDao extends BaseDao<Meal> {
 	public static final String CATEGORY = "category";
 	public static final String DESCRIPTION = "description";
 	public static final String TITLE = "title";
-	public static final String ID = "id";
 	public static final String RESTAURANT = "restaurant";
 	public static final String AVAILABILITY = "availability";
 	public static final String TABLE_NAME = "meal";
@@ -26,15 +25,21 @@ public class MealDao extends BaseDao<Meal> {
 
 	public List<Meal> findByDayAndRestaurant(Calendar day, Restaurant restaurant) {
 		return query(
-				RESTAURANT
-						+ "= ? and "
-						+ AVAILABILITY
-						+ " in ( select id from availability a where ((a.year = ? and a.month = ? and a.day = ?) or (a.year is null and a.month is null and a.day is null)) and (a.dow = ? or a.dow is null))",
+				RESTAURANT + "= ? and " + AVAILABILITY
+						+ " in ( select id from " + AvailabilityDao.TABLE_NAME
+						+ " a where ((a." + AvailabilityDao.YEAR
+						+ " = ? and a." + AvailabilityDao.MONTH + " = ? and a."
+						+ AvailabilityDao.DAY + " = ?) or (a."
+						+ AvailabilityDao.YEAR + " is null and a."
+						+ AvailabilityDao.MONTH + " is null and a."
+						+ AvailabilityDao.DAY + " is null)) and (a."
+						+ AvailabilityDao.DOW + " = ? or a."
+						+ AvailabilityDao.DOW + " is null))",
 				new String[] { String.valueOf(day.get(Calendar.YEAR)),
 						String.valueOf(day.get(Calendar.MONTH)),
 						String.valueOf(day.get(Calendar.DAY_OF_MONTH)),
 						String.valueOf(day.get(Calendar.DAY_OF_WEEK)) }, null,
-				null, "dish, category");
+				null, DISH + ", " + CATEGORY);
 	}
 
 	@Override

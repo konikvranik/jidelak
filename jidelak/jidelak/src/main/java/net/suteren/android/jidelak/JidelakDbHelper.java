@@ -11,9 +11,8 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 
 	public static final int DATABASE_VERSION = 0;
 	public static final String DATABASE_NAME = "Jidelak.db";
-	private static final String SQL_CREATE_ENTRIES = "create table restaurant (id integer primary key, name text);"
+	private static final String SQL_CREATE_ENTRIES = "create table restaurant (id integer primary key, city text, address text, longitude real, latitude real, zip integer, country text, phone text, web text, mail text, name text);"
 			+ "create table availability(id integer primary key, year integer, month integer, day integer, dow integer, from integer, to integer, restaurant integer, meal integer, foreign key(restaurant) references restaurant(id));"
-			+ "create table contact(city text, address text, longitude real, latitude real, zip integer, country text, phone text, web text, mail text, restaurant integer, foreign key(restaurant) references restaurant(id));"
 			+ "create table meal(title text, description text, category text, dish text, price real, restaurant integer, availability integer, foreign key(restaurant) references restaurant(id),foreign key(availability) references availability(id));";
 
 	private final static DataSetObservable mDataSetObservable = new DataSetObservable();

@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 
 public abstract class BaseDao<T extends Identificable> {
+	public static final String ID = "id";
 	private JidelakDbHelper dbHelper;
 
 	public BaseDao(JidelakDbHelper dbHelper) {
@@ -31,7 +32,8 @@ public abstract class BaseDao<T extends Identificable> {
 	}
 
 	public void delete(T obj) {
-		getDbHelper().getWritableDatabase().delete(getTableName(), "id = ?", new String[]{Integer.toString( obj.getId())});
+		getDbHelper().getWritableDatabase().delete(getTableName(), "id = ?",
+				new String[] { Integer.toString(obj.getId()) });
 	}
 
 	public List<T> findAll() {
@@ -43,7 +45,7 @@ public abstract class BaseDao<T extends Identificable> {
 	}
 
 	public T findById(int obj) {
-		List<T> result = query("id = ?",
+		List<T> result = query(ID + " = ?",
 				new String[] { Integer.toString(obj) }, null, null, null);
 		if (result.size() > 1)
 			throw new SQLiteConstraintException();
@@ -89,6 +91,8 @@ public abstract class BaseDao<T extends Identificable> {
 		else if (c == Integer.class)
 			value = (V) Integer.valueOf(cursor.getInt(idx));
 		else if (c == Float.class)
+			value = (V) Float.valueOf(cursor.getFloat(idx));
+		else if (c == Double.class)
 			value = (V) Double.valueOf(cursor.getDouble(idx));
 		else if (c == String.class)
 			value = (V) Double.valueOf(cursor.getString(idx));

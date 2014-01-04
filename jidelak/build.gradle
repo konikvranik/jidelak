@@ -1,8 +1,17 @@
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
+
+apply plugin: 'android'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.6
+version = '0.1-SNAPSHOT'
+group = "net.suteren.android.jidelak"
+
 buildscript {
 	repositories { mavenCentral() }
 	dependencies { classpath 'com.android.tools.build:gradle:0.7.+' }
 }
-apply plugin: 'android'
+
 
 sourceSets {
 	main {
@@ -39,4 +48,6 @@ android {
 dependencies {
 	compile 'com.android.support:support-v4:19.0.0'
 	compile 'com.android.support:appcompat-v7:19.0.0'
+	compile 'net.sf.jtidy:jtidy:r938'
 }
+

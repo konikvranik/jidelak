@@ -26,7 +26,6 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 
-		showIntent();
 
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
@@ -37,6 +36,8 @@ public class JidelakTemplateImporterActivity extends Activity {
 			source = bundle != null ? (Uri) bundle.get(Intent.EXTRA_STREAM)
 					: null;
 		}
+
+		showIntent();
 
 		ask();
 
@@ -59,6 +60,8 @@ public class JidelakTemplateImporterActivity extends Activity {
 		sb.append(intent.getScheme());
 		sb.append("\ntype: ");
 		sb.append(intent.getType());
+		sb.append("\ndata: ");
+		sb.append(source.toString());
 
 		if (intent.getExtras() != null)
 			sb.append(showBundle(intent.getExtras()));

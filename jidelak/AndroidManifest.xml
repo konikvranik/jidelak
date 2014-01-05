@@ -42,6 +42,18 @@
                     android:host="*"
                     android:pathPattern=".*\\.jidelak\\.xsl"
                     android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:pathPattern=".*\\.jidelak\\.xsl"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:pathPattern=".*\\.jidelak\\.xsl"
+                    android:scheme="ftps" />
+                <data
+                    android:host="*"
+                    android:pathPattern=".*\\.jidelak\\.xsl"
+                    android:scheme="ftp" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -50,7 +62,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="*" android:mimeType="*/*"
+                    android:host="*"
+                    android:mimeType="*/*"
                     android:pathPattern=".*\\.jidelak\\.xsl"
                     android:scheme="file" />
             </intent-filter>

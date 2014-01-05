@@ -71,18 +71,21 @@ public class JidelakFeederService extends Service {
 			} catch (IOException e) {
 				Toast.makeText(getApplicationContext(),
 						getResources().getText(R.string.download_failed),
-						DURATION);
+						DURATION).show();
+				;
 				Log.e(LOGGING_TAG, e.getMessage(), e);
 			} catch (TransformerException e) {
 				Toast.makeText(getApplicationContext(),
 						getResources().getText(R.string.unable_to_parse),
-						DURATION);
+						DURATION).show();
 				Log.e(LOGGING_TAG, e.getMessage(), e);
 			} catch (ParserConfigurationException e) {
 				Toast.makeText(
 						getApplicationContext(),
 						getResources().getText(
-								R.string.parser_configuration_error), DURATION);
+								R.string.parser_configuration_error), DURATION)
+						.show();
+				;
 				Log.e(LOGGING_TAG, e.getMessage(), e);
 			}
 

@@ -8,6 +8,7 @@ import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Identificable;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
+import android.database.sqlite.SQLiteDatabase;
 
 public abstract class BaseDao<T extends Identificable> {
 	public static final String ID = "id";
@@ -32,8 +33,13 @@ public abstract class BaseDao<T extends Identificable> {
 	}
 
 	public void delete(T obj) {
-		getDbHelper().getWritableDatabase().delete(getTableName(), "id = ?",
-				new String[] { Integer.toString(obj.getId()) });
+		SQLiteDatabase db = getDbHelper().getWritableDatabase();
+		try {
+			db.delete(getTableName(), "id = ?",
+					new String[] { Integer.toString(obj.getId()) });
+		} finally {
+			db.close();
+		}
 	}
 
 	public List<T> findAll() {
@@ -56,20 +62,28 @@ public abstract class BaseDao<T extends Identificable> {
 
 	protected List<T> query(String selection, String[] selectionArgs,
 			String groupBy, String having, String orderBy) {
-		Cursor cursor = getDbHelper().getWritableDatabase().query(
-				getTableName(), getColumnNames(), selection, selectionArgs,
-				groupBy, having, orderBy);
-
 		ArrayList<T> results = new ArrayList<T>();
-		while (!cursor.isAfterLast()) {
-			if (cursor.isBeforeFirst())
-				cursor.moveToNext();
-			if (cursor.isAfterLast())
-				break;
+		SQLiteDatabase db = getDbHelper().getReadableDatabase();
+		try {
+			Cursor cursor = db.query(getTableName(), getColumnNames(),
+					selection, selectionArgs, groupBy, having, orderBy);
+			try {
 
-			results.add(parseRow(cursor));
-			cursor.moveToNext();
+				while (!cursor.isAfterLast()) {
+					if (cursor.isBeforeFirst())
+						cursor.moveToNext();
+					if (cursor.isAfterLast())
+						break;
 
+					results.add(parseRow(cursor));
+					cursor.moveToNext();
+
+				}
+			} finally {
+				cursor.close();
+			}
+		} finally {
+			db.close();
 		}
 
 		return results;

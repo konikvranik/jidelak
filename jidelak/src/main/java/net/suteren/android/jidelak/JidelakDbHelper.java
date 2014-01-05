@@ -21,30 +21,72 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.suteren.android.jidelak.INotifyingDbHelper#onCreate(android.database
+	 * .sqlite.SQLiteDatabase)
+	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(SQL_CREATE_ENTRIES);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.suteren.android.jidelak.INotifyingDbHelper#onUpgrade(android.database
+	 * .sqlite.SQLiteDatabase, int, int)
+	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.suteren.android.jidelak.INotifyingDbHelper#onDowngrade(android.database
+	 * .sqlite.SQLiteDatabase, int, int)
+	 */
+	@Override
 	@SuppressLint("Override")
 	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		onUpgrade(db, oldVersion, newVersion);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.suteren.android.jidelak.INotifyingDbHelper#notifyDataSetChanged()
+	 */
 	public void notifyDataSetChanged() {
 		mDataSetObservable.notifyChanged();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.suteren.android.jidelak.INotifyingDbHelper#registerObserver(android
+	 * .database.DataSetObserver)
+	 */
 	public void registerObserver(DataSetObserver observer) {
 		mDataSetObservable.registerObserver(observer);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.suteren.android.jidelak.INotifyingDbHelper#unregisterObserver(android
+	 * .database.DataSetObserver)
+	 */
 	public void unregisterObserver(DataSetObserver observer) {
 		mDataSetObservable.unregisterObserver(observer);
 	}

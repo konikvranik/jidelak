@@ -1,5 +1,6 @@
 package net.suteren.android.jidelak.model;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -22,6 +23,8 @@ public class Restaurant implements Identificable {
 	List<Availability> openingHours;
 	List<Meal> menu;
 	private Integer id;
+	private URL sourceUrl;
+	private byte[] template;
 
 	public List<Availability> getOpeningHours() {
 		return openingHours;
@@ -116,4 +119,21 @@ public class Restaurant implements Identificable {
 
 		return sb.toString();
 	}
+
+	public URL getSourceUrl() {
+		return sourceUrl;
+	}
+
+	public void setSourceUrl(URL sourceUrl) {
+		this.sourceUrl = sourceUrl;
+	}
+
+	public byte[] getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(byte[] template) {
+		this.template = template;
+	}
+
 }

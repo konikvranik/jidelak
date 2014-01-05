@@ -3,6 +3,11 @@
  */
 package net.suteren.android.jidelak;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -25,7 +30,6 @@ public class JidelakTemplateImporterActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-
 
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
@@ -106,16 +110,17 @@ public class JidelakTemplateImporterActivity extends Activity {
 					// No button clicked
 					break;
 				}
-
 				finish();
 			}
+
 		};
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(
 				getIntent().getAction() + " - Are you sure to import " + source
 						+ "?").setPositiveButton("Yes", dialogClickListener)
-				.setNegativeButton("No", dialogClickListener).show();
+				.setNegativeButton("No", dialogClickListener)
+				.setCancelable(false).show();
 	}
 
 	private void importTemplate() {
@@ -123,6 +128,19 @@ public class JidelakTemplateImporterActivity extends Activity {
 		Toast.makeText(getApplicationContext(),
 				"Importing " + source.toString() + "...", Toast.LENGTH_LONG)
 				.show();
+		try {
+			URL sourceUrl = new URL(source.toString());
 
+			InputStream sourceStream = sourceUrl.openStream();
+			
+			
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

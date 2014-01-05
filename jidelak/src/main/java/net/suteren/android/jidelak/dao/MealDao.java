@@ -6,6 +6,7 @@ import java.util.List;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
+import android.content.ContentValues;
 import android.database.Cursor;
 
 public class MealDao extends BaseDao<Meal> {
@@ -50,7 +51,7 @@ public class MealDao extends BaseDao<Meal> {
 	@Override
 	protected Meal parseRow(Cursor cursor) {
 		Meal meal = new Meal();
-		meal.setId(getColumnValue(cursor, ID, Integer.class));
+		meal.setId(getColumnValue(cursor, ID, Long.class));
 		meal.setCategory(getColumnValue(cursor, CATEGORY, String.class));
 		meal.setTitle(getColumnValue(cursor, TITLE, String.class));
 		meal.setDescription(getColumnValue(cursor, DESCRIPTION, String.class));
@@ -66,5 +67,19 @@ public class MealDao extends BaseDao<Meal> {
 	protected String[] getColumnNames() {
 		return new String[] { ID, TITLE, DESCRIPTION, CATEGORY, DISH, PRICE,
 				RESTAURANT, AVAILABILITY };
+	}
+
+	@Override
+	protected ContentValues getValues(Meal obj) {
+		ContentValues values = new ContentValues();
+		values.put(AVAILABILITY, obj.getAvailability().getId());
+		values.put(DESCRIPTION, obj.getDescription());
+		values.put(DISH, obj.getDish());
+		values.put(ID, obj.getId());
+		values.put(TITLE, obj.getTitle());
+		values.put(CATEGORY, obj.getCategory());
+		values.put(PRICE, obj.getPrice());
+		values.put(RESTAURANT, obj.getRestaurant().getId());
+		return values;
 	}
 }

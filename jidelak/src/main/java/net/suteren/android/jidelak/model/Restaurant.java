@@ -22,7 +22,7 @@ public class Restaurant implements Identificable {
 
 	List<Availability> openingHours;
 	List<Meal> menu;
-	private Integer id;
+	private Long id;
 	private URL sourceUrl;
 	private byte[] template;
 
@@ -93,11 +93,11 @@ public class Restaurant implements Identificable {
 		return dailyMenu;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

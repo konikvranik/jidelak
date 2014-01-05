@@ -11,7 +11,7 @@ public class Availability implements Identificable {
 	private Integer dow;
 	private Integer from;
 	private Integer to;
-	private Integer id;
+	private Long id;
 
 	public Availability(Calendar cal) {
 		super();
@@ -72,11 +72,12 @@ public class Availability implements Identificable {
 		this.to = to;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	@Override
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -91,4 +92,5 @@ public class Availability implements Identificable {
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal;
 	}
+
 }

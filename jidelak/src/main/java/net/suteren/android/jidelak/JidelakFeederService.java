@@ -3,8 +3,8 @@ package net.suteren.android.jidelak;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -98,7 +98,7 @@ public class JidelakFeederService extends Service {
 
 	public Node retrieve(URL url, InputStream inXsl) throws IOException,
 			TransformerException, ParserConfigurationException {
-		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+		URLConnection con = url.openConnection();
 		Document d = tidy(con.getInputStream(), con.getContentEncoding());
 		DOMResult res = transform(d, inXsl);
 		return res.getNode();

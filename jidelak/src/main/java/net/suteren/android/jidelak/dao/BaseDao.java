@@ -6,7 +6,9 @@ import java.util.NoSuchElementException;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Identificable;
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -23,20 +25,31 @@ public abstract class BaseDao<T extends Identificable> {
 	}
 
 	public void insert(T obj) {
-		// TODO Auto-generated method stub
-
+		SQLiteDatabase db = getDbHelper().getWritableDatabase();
+		long result = db.insert(getTableName(), null, getValues(obj));
+		if (result == -1)
+			throw new SQLException();
+		obj.setId(result);
+		db.close();
 	}
 
-	public void update(T obj) {
-		// TODO Auto-generated method stub
+	protected abstract ContentValues getValues(T obj);
 
+	public void update(T obj) {
+		SQLiteDatabase db = getDbHelper().getWritableDatabase();
+		int result = db.update(getTableName(), getValues(obj), "id = ?",
+				new String[] { Long.toString(obj.getId()) });
+		if (result != 1)
+			throw new RuntimeException("Updated " + result
+					+ " rows. 1 expected.");
+		db.close();
 	}
 
 	public void delete(T obj) {
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
 		try {
 			db.delete(getTableName(), "id = ?",
-					new String[] { Integer.toString(obj.getId()) });
+					new String[] { Long.toString(obj.getId()) });
 		} finally {
 			db.close();
 		}
@@ -50,9 +63,9 @@ public abstract class BaseDao<T extends Identificable> {
 		return findById(obj.getId());
 	}
 
-	public T findById(int obj) {
+	public T findById(long obj) {
 		List<T> result = query(ID + " = ?",
-				new String[] { Integer.toString(obj) }, null, null, null);
+				new String[] { Long.toString(obj) }, null, null, null);
 		if (result.size() > 1)
 			throw new SQLiteConstraintException();
 		else if (result.isEmpty())

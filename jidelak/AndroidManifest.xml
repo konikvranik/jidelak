@@ -31,7 +31,7 @@
         <activity
             android:name=".JidelakTemplateImporterActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            android:theme="@style/DialogTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

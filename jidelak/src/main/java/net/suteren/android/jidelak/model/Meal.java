@@ -8,8 +8,8 @@ public class Meal implements Identificable {
 	private String dish;
 	private Restaurant restaurant;
 	private Availability availability;
-	private Integer id;
-	private CharSequence price;
+	private Long id;
+	private String price;
 
 	public String getTitle() {
 		return title;
@@ -59,19 +59,19 @@ public class Meal implements Identificable {
 		this.availability = availability;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public CharSequence getPrice() {
+	public String getPrice() {
 		return price;
 	}
 
-	public void setPrice(CharSequence price) {
+	public void setPrice(String price) {
 		this.price = price;
 	}
 }

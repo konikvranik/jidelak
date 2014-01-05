@@ -5,6 +5,7 @@ import java.util.List;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
+import android.content.ContentValues;
 import android.database.Cursor;
 
 public class AvailabilityDao extends BaseDao<Availability> {
@@ -15,6 +16,8 @@ public class AvailabilityDao extends BaseDao<Availability> {
 	public static final String DOW = "dow";
 	public static final String TABLE_NAME = "availability";
 	public static final String RESTAURANT = "restaurant";
+	public static final String FROM = "from";
+	public static final String TO = "to";
 
 	public AvailabilityDao(JidelakDbHelper dbHelper) {
 		super(dbHelper);
@@ -34,7 +37,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
 		av.setYear(getColumnValue(cursor, YEAR, Integer.class));
 		av.setMonth(getColumnValue(cursor, MONTH, Integer.class));
 		av.setDay(getColumnValue(cursor, DAY, Integer.class));
-		av.setId(getColumnValue(cursor, ID, Integer.class));
+		av.setId(getColumnValue(cursor, ID, Long.class));
 		return av;
 	}
 
@@ -52,9 +55,22 @@ public class AvailabilityDao extends BaseDao<Availability> {
 		return findByRestaurant(restaurant.getId());
 	}
 
-	public List<Availability> findByRestaurant(int restaurant) {
+	public List<Availability> findByRestaurant(long restaurant) {
 		return query(RESTAURANT + " = ?",
-				new String[] { Integer.toString(restaurant) }, null, null, null);
+				new String[] { Long.toString(restaurant) }, null, null, null);
+	}
+
+	@Override
+	protected ContentValues getValues(Availability obj) {
+		ContentValues values = new ContentValues();
+		values.put(DAY, obj.getDay());
+		values.put(DOW, obj.getDow());
+		values.put(FROM, obj.getFrom());
+		values.put(ID, obj.getId());
+		values.put(MONTH, obj.getMonth());
+		values.put(TO, obj.getTo());
+		values.put(YEAR, obj.getYear());
+		return values;
 	}
 
 }

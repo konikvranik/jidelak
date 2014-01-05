@@ -1,0 +1,119 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  Internal Error (javaClasses.cpp:136), pid=8996, tid=11084
+#  fatal error: Invalid layout of preloaded class
+#
+# JRE version:  (7.0_45-b18) (build )
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (24.45-b08 mixed mode windows-amd64 compressed oops)
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x0000000002bed800):  JavaThread "Unknown thread" [_thread_in_vm, id=11084, stack(0x0000000002ae0000,0x0000000002be0000)]
+
+Stack: [0x0000000002ae0000,0x0000000002be0000]
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+
+Other Threads:
+
+=>0x0000000002bed800 (exited) JavaThread "Unknown thread" [_thread_in_vm, id=11084, stack(0x0000000002ae0000,0x0000000002be0000)]
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (10 events):
+Event: 0.022 loading class 0x0000000002c376b0 done
+Event: 0.022 loading class 0x0000000002c370d0 done
+Event: 0.022 loading class 0x0000000002c370b0
+Event: 0.022 loading class 0x0000000002c3f1b0
+Event: 0.022 loading class 0x0000000002c3f1b0 done
+Event: 0.022 loading class 0x0000000002c3f1e0
+Event: 0.022 loading class 0x0000000002c3f1e0 done
+Event: 0.022 loading class 0x0000000002c3f210
+Event: 0.022 loading class 0x0000000002c3f210 done
+Event: 0.022 loading class 0x0000000002c370b0 done
+
+
+Dynamic libraries:
+0x00007ff6d90e0000 - 0x00007ff6d9113000 	C:\Program Files\Java\jdk1.7.0_45\bin\javaw.exe
+0x00007ff82f350000 - 0x00007ff82f4f9000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ff82d150000 - 0x00007ff82d289000 	C:\WINDOWS\system32\KERNEL32.DLL
+0x00007ff82c7a0000 - 0x00007ff82c8ae000 	C:\WINDOWS\system32\KERNELBASE.dll
+0x00007ff82b300000 - 0x00007ff82b38b000 	C:\WINDOWS\system32\apphelp.dll
+0x00007ff819b40000 - 0x00007ff819b8f000 	C:\WINDOWS\AppPatch\AppPatch64\AcGenral.DLL
+0x00007ff82d5b0000 - 0x00007ff82d657000 	C:\WINDOWS\system32\msvcrt.dll
+0x00007ff82c4b0000 - 0x00007ff82c4db000 	C:\WINDOWS\SYSTEM32\SspiCli.dll
+0x00007ff82d0d0000 - 0x00007ff82d121000 	C:\WINDOWS\system32\SHLWAPI.dll
+0x00007ff82f190000 - 0x00007ff82f301000 	C:\WINDOWS\system32\USER32.dll
+0x00007ff82d290000 - 0x00007ff82d406000 	C:\WINDOWS\system32\ole32.dll
+0x00007ff82dcb0000 - 0x00007ff82f0bf000 	C:\WINDOWS\system32\SHELL32.dll
+0x00007ff82bce0000 - 0x00007ff82bcff000 	C:\WINDOWS\SYSTEM32\USERENV.dll
+0x00007ff82daa0000 - 0x00007ff82db45000 	C:\WINDOWS\system32\ADVAPI32.dll
+0x00007ff820620000 - 0x00007ff82063b000 	C:\WINDOWS\SYSTEM32\MPR.dll
+0x00007ff82d410000 - 0x00007ff82d546000 	C:\WINDOWS\system32\RPCRT4.dll
+0x00007ff82d550000 - 0x00007ff82d5a7000 	C:\WINDOWS\SYSTEM32\sechost.dll
+0x00007ff82cbf0000 - 0x00007ff82cdc7000 	C:\WINDOWS\SYSTEM32\combase.dll
+0x00007ff82cdd0000 - 0x00007ff82cf15000 	C:\WINDOWS\system32\GDI32.dll
+0x00007ff82c6d0000 - 0x00007ff82c6e4000 	C:\WINDOWS\SYSTEM32\profapi.dll
+0x00007ff82afc0000 - 0x00007ff82b061000 	C:\WINDOWS\SYSTEM32\SHCORE.dll
+0x00007ff82f310000 - 0x00007ff82f344000 	C:\WINDOWS\system32\IMM32.DLL
+0x00007ff82d710000 - 0x00007ff82d848000 	C:\WINDOWS\system32\MSCTF.dll
+0x00007ff82a510000 - 0x00007ff82a76a000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.9600.16384_none_62475f7becb72503\COMCTL32.dll
+0x0000000057a60000 - 0x0000000057b32000 	C:\Program Files\Java\jdk1.7.0_45\jre\bin\msvcr100.dll
+0x0000000054e70000 - 0x0000000055639000 	C:\Program Files\Java\jdk1.7.0_45\jre\bin\server\jvm.dll
+0x00007ff824c90000 - 0x00007ff824c99000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007ff824c70000 - 0x00007ff824c8f000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ff82cbe0000 - 0x00007ff82cbe7000 	C:\WINDOWS\system32\PSAPI.DLL
+0x00007ff82f0d0000 - 0x00007ff82f128000 	C:\WINDOWS\system32\WS2_32.dll
+0x00007ff824c20000 - 0x00007ff824c4a000 	C:\WINDOWS\SYSTEM32\WINMMBASE.dll
+0x00007ff82f0c0000 - 0x00007ff82f0c9000 	C:\WINDOWS\system32\NSI.dll
+0x00007ff82c8b0000 - 0x00007ff82c8fa000 	C:\WINDOWS\SYSTEM32\cfgmgr32.dll
+0x00007ff82b580000 - 0x00007ff82b5a6000 	C:\WINDOWS\SYSTEM32\DEVOBJ.dll
+0x0000000057a50000 - 0x0000000057a5f000 	C:\Program Files\Java\jdk1.7.0_45\jre\bin\verify.dll
+0x0000000057a20000 - 0x0000000057a48000 	C:\Program Files\Java\jdk1.7.0_45\jre\bin\java.dll
+0x0000000057a00000 - 0x0000000057a15000 	C:\Program Files\Java\jdk1.7.0_45\jre\bin\zip.dll
+
+VM Arguments:
+jvm_args: -Dfile.encoding=Cp1250 -Xbootclasspath:C:\Users\Petr\android-sdks\platforms\android-17\android.jar;C:\Users\Petr\android-sdks\add-ons\addon-google_apis-google-17\libs\effects.jar;C:\Users\Petr\android-sdks\add-ons\addon-google_apis-google-17\libs\usb.jar;C:\Users\Petr\android-sdks\add-ons\addon-google_apis-google-17\libs\maps.jar 
+java_command: org.w3c.tidy.Tidy
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\AMD APP\bin\x86_64;C:\Program Files (x86)\AMD APP\bin\x86;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\TortoiseGit\bin;C:\Program Files\Gemalto\Classic Client\BIN;C:\Program Files (x86)\Gemalto\Classic Client\BIN;C:\Program Files\Samsung\AllShare Framework DMS\1.3.21\;C:\Program Files\Samsung\AllShare Framework DMS\1.3.21\64bit\;c:\Program Files (x86)\Java\jre7\bin\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\AMD APP\bin\x86_64;C:\Program Files (x86)\AMD APP\bin\x86;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\TortoiseGit\bin;C:\Program Files\Gemalto\Classic Client\BIN;C:\Program Files (x86)\Gemalto\Classic Client\BIN;C:\Program Files\Samsung\AllShare Framework DMS\1.3.21\;C:\Program Files\Samsung\AllShare Framework DMS\1.3.21\64bit\
+USERNAME=Petr
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=AMD64 Family 18 Model 1 Stepping 0, AuthenticAMD
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 8 , 64 bit Build 9200 
+
+CPU:total 4 (4 cores per cpu, 1 threads per core) family 18 model 1 stepping 0, cmov, cx8, fxsr, mmx, sse, sse2, sse3, popcnt, mmxext, 3dnowpref, lzcnt, sse4a, tsc, tscinvbit, tscinv
+
+Memory: 4k page, physical 5746476k(1639172k free), swap 9678640k(2271388k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (24.45-b08) for windows-amd64 JRE (1.7.0_45-b18), built on Oct  8 2013 05:47:22 by "java_re" with unknown MS VC++:1600
+
+time: Sun Jan 05 22:24:36 2014
+elapsed time: 0 seconds
+

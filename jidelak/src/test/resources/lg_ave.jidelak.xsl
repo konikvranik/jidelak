@@ -12,20 +12,21 @@
 
 	<xsl:template match="/config">
 		<config>
-			<id>praha-lunch-garden-avenir</id>
-			<name>Lunch Garden Avenir</name>
-			<encoding>cp1250</encoding>
+			<restaurant>
+				<id>praha-lunch-garden-avenir</id>
+				<name>Lunch Garden Avenir</name>
 
-			<!-- relative|absolute -->
-			<!-- day|week|month|year -->
+				<!-- relative|absolute -->
+				<!-- day|week|month|year -->
 
-			<source time="relative" base="week" firstDayOfWeek="mo"
-				timeOffset="0"
-				url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php" />
+				<source time="relative" base="week" firstDayOfWeek="mo"
+					timeOffset="0" encoding="cp1250" dateFormat="dd. mmm. yyyy" locale="cs_CZ"
+					url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php" />
 
-			<source time="relative" base="week" firstDayOfWeek="mo"
-				timeOffset="1"
-				url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-pristi-tyden-tisk.php" />
+				<source time="relative" base="week" firstDayOfWeek="mo"
+					timeOffset="1" encoding="cp1250" dateFormat="dd. mmm. yyyy" locale="cs_CZ"
+					url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-pristi-tyden-tisk.php" />
+			</restaurant>
 
 		</config>
 

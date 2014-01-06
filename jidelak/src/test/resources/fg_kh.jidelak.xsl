@@ -12,19 +12,21 @@
 
 	<xsl:template match="/config">
 		<config>
-			<id>praha-food-garden-kavci-hory</id>
-			<name>Food Garden Kavčí hory</name>
+			<restaurant>
+				<id>praha-food-garden-kavci-hory</id>
+				<name>Food Garden Kavčí hory</name>
 
-			<!-- relative|absolute -->
-			<!-- day|week|month|year -->
+				<!-- relative|absolute -->
+				<!-- day|week|month|year -->
 
-			<source time="relative" base="week" firstDayOfWeek="mo"
-				timeOffset="0" encoding="cp1250" dateFormat="dd. mmm. yyyy"
-				url="http://fgkavcihory.cateringmelodie.cz/cz/samoobsluzna-restaurace/denni-menu-tisk.php" />
+				<source time="relative" base="week" firstDayOfWeek="mo"
+					timeOffset="0" encoding="cp1250" dateFormat="dd. mmm. yyyy" locale="cs_CZ"
+					url="http://fgkavcihory.cateringmelodie.cz/cz/samoobsluzna-restaurace/denni-menu-tisk.php" />
 
-			<source time="relative" base="week" firstDayOfWeek="mo"
-				timeOffset="1" encoding="cp1250"
-				url="http://fgkavcihory.cateringmelodie.cz/cz/samoobsluzna-restaurace/denni-menu-pristi-tyden-tisk.php" />
+				<source time="relative" base="week" firstDayOfWeek="mo"
+					locale="cs_CZ" timeOffset="1" encoding="cp1250"
+					url="http://fgkavcihory.cateringmelodie.cz/cz/samoobsluzna-restaurace/denni-menu-pristi-tyden-tisk.php" />
+			</restaurant>
 
 		</config>
 

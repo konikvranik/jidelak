@@ -32,6 +32,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import net.suteren.android.jidelak.dao.RestaurantDao;
+import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
 
@@ -170,7 +171,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 			String fileName = saveLocally(source, restaurant);
 
-			Object configNode = parseConfig(openFileInput(fileName));
+			parseConfig(openFileInput(fileName), restaurant);
 
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -181,9 +182,8 @@ public class JidelakTemplateImporterActivity extends Activity {
 		}
 	}
 
-	Restaurant parseConfig(InputStream fileStream) throws FileNotFoundException {
-
-		Restaurant restaurant = new Restaurant();
+	void parseConfig(InputStream fileStream, Restaurant restaurant)
+			throws FileNotFoundException {
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
@@ -191,49 +191,23 @@ public class JidelakTemplateImporterActivity extends Activity {
 			db = dbf.newDocumentBuilder();
 			Document d = db.newDocument();
 
-			d.appendChild(d.createElement("config"));
+			Node n = d.appendChild(d.createElement("jidelak"));
+			n.appendChild(d.createElement("config"));
 			Transformer tr = TransformerFactory.newInstance().newTransformer(
 					new StreamSource(fileStream));
 			DOMResult res = new DOMResult(DocumentBuilderFactory.newInstance()
 					.newDocumentBuilder().newDocument());
 			tr.transform(new DOMSource(d), res);
 
-			Node n = res.getNode().getFirstChild();
+			n = res.getNode().getFirstChild();
 
 			Log.d(LOGGING_TAG,
 					"Node: " + n.getNodeName() + " .. " + n.getNodeType());
 
 			if ("jidelak".equals(n.getNodeName())) {
-				n = n.getFirstChild();
 
-				boolean secondLevel = false;
-
-				while (n != null) {
-					if (!secondLevel && "config".equals(n.getNodeName())) {
-						n = n.getFirstChild();
-						secondLevel = true;
-					}
-
-					if (secondLevel) {
-						if ("id".equals(n.getNodeName())) {
-
-						} else if ("name".equals(n.getNodeName())) {
-							restaurant.setName(n.getTextContent().toString());
-						} else if ("source".equals(n.getNodeName())) {
-							restaurant.addSource(parseSourceNode(n));
-						}
-					}
-					n = n.getNextSibling();
-				}
-
-				if (!secondLevel)
-					throw new RuntimeException("Missing element <config/>!");
-
-			} else {
-				throw new RuntimeException(
-						"Missing root element <jirelak/>! Not a jidelak template file.");
+				new RestaurantMarshaller().unmarshall(n, restaurant);
 			}
-
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -247,27 +221,8 @@ public class JidelakTemplateImporterActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return restaurant;
 	}
 
-	private Source parseSourceNode(Node n) {
-		Source source = new Source();
-
-		NamedNodeMap attrs = n.getAttributes();
-
-		String format = attrs.getNamedItem("dateFormat").getNodeValue();
-		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		try {
-			cal.setTime(new SimpleDateFormat(format, Locale.getDefault())
-					.parse(attrs.getNamedItem("base").getNodeValue()));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		source.setBase(cal);
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	private String saveLocally(Uri uri, Restaurant restaurant)
 			throws IOException {

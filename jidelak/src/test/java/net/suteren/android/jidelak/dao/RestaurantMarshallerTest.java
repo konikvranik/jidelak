@@ -49,8 +49,9 @@ public class RestaurantMarshallerTest {
 		n = doc.appendChild(doc.createElement("restaurant"));
 		n = n.appendChild(doc.createElement("name"));
 		n = n.appendChild(doc.createTextNode("Pokusný"));
-		Restaurant restaurant = new RestaurantMarshaller().unmarshall(doc
-				.getDocumentElement());
+		Restaurant restaurant = new Restaurant();
+		new RestaurantMarshaller().unmarshall(doc.getDocumentElement(),
+				restaurant);
 
 		assertEquals("Pokusný", restaurant.getName());
 

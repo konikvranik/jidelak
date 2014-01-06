@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -13,7 +14,8 @@ public abstract class BaseMarshaller<T> {
 
 	Stack<Node> path = new Stack<Node>();
 
-	protected abstract T unmarshallHelper(String prefix, Map<String, String> data);
+	protected abstract void unmarshallHelper(String prefix,
+			Map<String, String> data, T object);
 
 	public void clean() {
 		synchronized (path) {
@@ -22,18 +24,22 @@ public abstract class BaseMarshaller<T> {
 		}
 	}
 
-	public T unmarshall(Node n) {
-		return unmarshall(null, n);
+	public void unmarshall(Node n, T object) {
+		unmarshall(null, n, object);
 	}
 
-	public T unmarshall(String prefix, Node n) {
+	public void unmarshall(String prefix, Node n, T object) {
 		synchronized (path) {
 			while (n != null) {
 				if (n.getNodeType() == Node.ELEMENT_NODE) {
-					path.push(n);
-					if (n.hasAttributes())
-						processAttributes(n);
-					n = getNextNode(n);
+
+					boolean res;
+					if (res = processElementHook((Element) n, object)) {
+						path.push(n);
+						if (n.hasAttributes())
+							processAttributes(n);
+					}
+					n = getNextNode(n, res);
 				} else if (n.getNodeType() == Node.TEXT_NODE) {
 					data.put(path(), n.getTextContent());
 					n = getNextNode(n);
@@ -41,11 +47,25 @@ public abstract class BaseMarshaller<T> {
 			}
 			path.clear();
 		}
-		return unmarshallHelper(prefix, data);
+
+		if (prefix == null)
+			prefix = "";
+		if (prefix.length() > 0 && prefix.charAt(prefix.length()) != '.')
+			prefix += ".";
+
+		unmarshallHelper(prefix, data, object);
+	}
+
+	protected boolean processElementHook(Element n, T object) {
+		return true;
 	}
 
 	protected Node getNextNode(Node n) {
-		if (n.hasChildNodes())
+		return getNextNode(n, true);
+	}
+
+	protected Node getNextNode(Node n, boolean processChildren) {
+		if (n.hasChildNodes() && processChildren)
 			return n = n.getFirstChild();
 		n = n.getNextSibling();
 		while (n == null && !path.isEmpty()) {

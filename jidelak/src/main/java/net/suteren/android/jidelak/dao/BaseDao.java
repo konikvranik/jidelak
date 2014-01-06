@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+<<<<<<< HEAD
+=======
+import java.util.NoSuchElementException;
+>>>>>>> refs/remotes/origin/master
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Identificable;

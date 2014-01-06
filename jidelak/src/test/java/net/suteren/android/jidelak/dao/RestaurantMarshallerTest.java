@@ -1,11 +1,11 @@
 package net.suteren.android.jidelak.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import junit.framework.Assert;
 import net.suteren.android.jidelak.model.Restaurant;
 
 import org.junit.After;

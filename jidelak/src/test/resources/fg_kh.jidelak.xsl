@@ -19,7 +19,7 @@
 			<!-- day|week|month|year -->
 
 			<source time="relative" base="week" firstDayOfWeek="mo"
-				timeOffset="0" encoding="cp1250"
+				timeOffset="0" encoding="cp1250" dateFormat="dd. mmm. yyyy"
 				url="http://fgkavcihory.cateringmelodie.cz/cz/samoobsluzna-restaurace/denni-menu-tisk.php" />
 
 			<source time="relative" base="week" firstDayOfWeek="mo"

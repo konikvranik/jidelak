@@ -13,8 +13,9 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 	public static final String DATABASE_NAME = "Jidelak.db";
 	private static final String SQL_CREATE_ENTRIES = "create table restaurant (id integer primary key, city text, address text, longitude real, latitude real, zip integer, country text, phone text, web text, mail text, name text);"
 			+ "create table availability(id integer primary key, year integer, month integer, day integer, dow integer, from integer, to integer, restaurant integer, meal integer, foreign key(restaurant) references restaurant(id));"
-			+ "create table meal(title text, description text, category text, dish text, price real, restaurant integer, availability integer, foreign key(restaurant) references restaurant(id),foreign key(availability) references availability(id));";
-
+			+ "create table meal(title text, description text, category text, dish text, price real, restaurant integer, availability integer, foreign key(restaurant) references restaurant(id),foreign key(availability) references availability(id));"
+			+ "create table source(time text, base text, firstdayofweek text, offset integer, url text, restaurant integer, foreign key(restaurant) references restaurant(id));";
+	// TODO: predelat na konstanty tabulek a sloupcu z DAO
 	private final static DataSetObservable mDataSetObservable = new DataSetObservable();
 
 	public JidelakDbHelper(Context context) {
@@ -53,7 +54,6 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 	 * net.suteren.android.jidelak.INotifyingDbHelper#onDowngrade(android.database
 	 * .sqlite.SQLiteDatabase, int, int)
 	 */
-	@Override
 	@SuppressLint("Override")
 	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		onUpgrade(db, oldVersion, newVersion);

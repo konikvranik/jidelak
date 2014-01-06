@@ -163,7 +163,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 			String fileName = saveLocally(source, restaurant);
 
-			parseConfig(openFileInput(fileName));
+		Object configNode = parseConfig(openFileInput(fileName));
 
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -174,7 +174,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 		}
 	}
 
-	void parseConfig(InputStream fileStream) throws FileNotFoundException {
+	Restaurant parseConfig(InputStream fileStream) throws FileNotFoundException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
 		try {
@@ -232,6 +232,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	private String saveLocally(Uri uri, Restaurant restaurant)

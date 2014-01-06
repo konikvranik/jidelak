@@ -1,10 +1,11 @@
 package net.suteren.android.jidelak;
 
-import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,6 +20,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.model.Restaurant;
+import net.suteren.android.jidelak.model.Source;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -56,37 +58,39 @@ public class JidelakFeederService extends Service {
 				Intent.ACTION_TIME_TICK));
 	}
 
-	private void updateData() {
+	private void updateData() throws FileNotFoundException {
 
 		RestaurantDao restaurantDao = new RestaurantDao(getDbHelper());
 		for (Restaurant restaurant : restaurantDao.findAll()) {
-			URL sourceUrl = restaurant.getSourceUrl();
-			InputStream template = new ByteArrayInputStream(
-					restaurant.getTemplate());
+			List<Source> sources = restaurant.getSource();
 
-			try {
-				Node result = retrieve(sourceUrl, template);
+			InputStream template = openFileInput(restaurant.getTemplateName());
 
-				// TODO Auto-generated method stub
-			} catch (IOException e) {
-				Toast.makeText(getApplicationContext(),
-						getResources().getText(R.string.download_failed),
-						DURATION).show();
-				;
-				Log.e(LOGGING_TAG, e.getMessage(), e);
-			} catch (TransformerException e) {
-				Toast.makeText(getApplicationContext(),
-						getResources().getText(R.string.unable_to_parse),
-						DURATION).show();
-				Log.e(LOGGING_TAG, e.getMessage(), e);
-			} catch (ParserConfigurationException e) {
-				Toast.makeText(
-						getApplicationContext(),
-						getResources().getText(
-								R.string.parser_configuration_error), DURATION)
-						.show();
-				;
-				Log.e(LOGGING_TAG, e.getMessage(), e);
+			for (Source source : sources) {
+				try {
+					Node result = retrieve(source.getUrl(), template);
+
+					// TODO Auto-generated method stub
+				} catch (IOException e) {
+					Toast.makeText(getApplicationContext(),
+							getResources().getText(R.string.download_failed),
+							DURATION).show();
+					;
+					Log.e(LOGGING_TAG, e.getMessage(), e);
+				} catch (TransformerException e) {
+					Toast.makeText(getApplicationContext(),
+							getResources().getText(R.string.unable_to_parse),
+							DURATION).show();
+					Log.e(LOGGING_TAG, e.getMessage(), e);
+				} catch (ParserConfigurationException e) {
+					Toast.makeText(
+							getApplicationContext(),
+							getResources().getText(
+									R.string.parser_configuration_error),
+							DURATION).show();
+					;
+					Log.e(LOGGING_TAG, e.getMessage(), e);
+				}
 			}
 
 		}

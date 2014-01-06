@@ -1,11 +1,18 @@
 package net.suteren.android.jidelak.dao;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Identificable;
+import net.suteren.android.jidelak.model.TimeType;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -13,7 +20,9 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
 public abstract class BaseDao<T extends Identificable> {
+	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 	public static final String ID = "id";
+	public static final Locale LOCALE = Locale.ENGLISH;
 	private JidelakDbHelper dbHelper;
 
 	public BaseDao(JidelakDbHelper dbHelper) {
@@ -110,7 +119,7 @@ public abstract class BaseDao<T extends Identificable> {
 	protected abstract String[] getColumnNames();
 
 	@SuppressWarnings("unchecked")
-	public <V> V getColumnValue(Cursor cursor, String name, Class<V> c) {
+	public <V> V unpackColumnValue(Cursor cursor, String name, Class<V> c) {
 		int idx = cursor.getColumnIndex(name);
 		V value;
 		if (cursor.isNull(idx))
@@ -125,8 +134,26 @@ public abstract class BaseDao<T extends Identificable> {
 			value = (V) Double.valueOf(cursor.getString(idx));
 		else if (c == byte[].class)
 			value = (V) cursor.getBlob(idx);
+		else if (c == Calendar.class)
+			try {
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(new SimpleDateFormat(DATE_FORMAT, LOCALE)
+						.parse(cursor.getString(idx)));
+				value = (V) cal;
+			} catch (ParseException e) {
+				return null;
+			}
+		else if (c == TimeType.class)
+			value = (V) TimeType.values()[cursor.getInt(idx)];
+		else if (c == URL.class)
+			try {
+				value = (V) new URL(cursor.getString(idx));
+			} catch (MalformedURLException e) {
+				return null;
+			}
 		else
 			throw new ClassCastException();
 		return value;
 	}
+
 }

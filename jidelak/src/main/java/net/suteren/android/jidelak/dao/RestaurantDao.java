@@ -14,15 +14,14 @@ public class RestaurantDao extends BaseDao<Restaurant> {
 	public static final String TABLE_NAME = "restaurant";
 	public static final String NAME = "name";
 	public static final String COUNTRY = "country";
-	private static final String CITY = "city";
-	private static final String ADDRESS = "address";
-	private static final String LONGITUDE = "longitude";
-	private static final String LATITUDE = "latitude";
-	private static final String ZIP = "zip";
-	private static final String PHONE = "phone";
-	private static final String WEB = "web";
-	private static final String E_MAIL = "email";
-	private static final String URL = "url";
+	public static final String CITY = "city";
+	public static final String ADDRESS = "address";
+	public static final String LONGITUDE = "longitude";
+	public static final String LATITUDE = "latitude";
+	public static final String ZIP = "zip";
+	public static final String PHONE = "phone";
+	public static final String WEB = "web";
+	public static final String E_MAIL = "email";
 
 	public RestaurantDao(JidelakDbHelper dbHelper) {
 		super(dbHelper);
@@ -31,27 +30,35 @@ public class RestaurantDao extends BaseDao<Restaurant> {
 	@Override
 	protected Restaurant parseRow(Cursor cursor) {
 		Restaurant restaurant = new Restaurant();
-		restaurant.setId(getColumnValue(cursor, ID, Long.class));
-		restaurant.setName(getColumnValue(cursor, NAME, String.class));
+		restaurant.setId(unpackColumnValue(cursor, ID, Long.class));
+		restaurant.setName(unpackColumnValue(cursor, NAME, String.class));
 		restaurant.setOpeningHours(new AvailabilityDao(getDbHelper())
 				.findByRestaurant(restaurant));
 
 		Address address = new Address(Locale.getDefault());
-		address.setCountryName(getColumnValue(cursor, COUNTRY, String.class));
-		address.setLocality(getColumnValue(cursor, CITY, String.class));
-		String[] addrLines = getColumnValue(cursor, ADDRESS, String.class)
-				.split("\n");
-		for (int i = 0; i < addrLines.length; i++) {
-			address.setAddressLine(i, addrLines[i]);
+		address.setCountryName(unpackColumnValue(cursor, COUNTRY, String.class));
+		address.setLocality(unpackColumnValue(cursor, CITY, String.class));
+		String add = unpackColumnValue(cursor, ADDRESS, String.class);
+		if (add != null) {
+			String[] addrLines = add.split("\n");
+			for (int i = 0; i < addrLines.length; i++) {
+				address.setAddressLine(i, addrLines[i]);
+			}
 		}
-		address.setLatitude(getColumnValue(cursor, LATITUDE, Double.class));
-		address.setLongitude(getColumnValue(cursor, LONGITUDE, Double.class));
-		address.setPostalCode(Integer.toString(getColumnValue(cursor, ZIP,
-				Integer.class)));
-		address.setUrl(getColumnValue(cursor, WEB, String.class));
-		address.setPhone(getColumnValue(cursor, PHONE, String.class));
+
+		Double lat = unpackColumnValue(cursor, LATITUDE, Double.class);
+		if (lat != null)
+			address.setLatitude(lat);
+		Double lon = unpackColumnValue(cursor, LONGITUDE, Double.class);
+		if (lon != null)
+			address.setLongitude(lon);
+		Integer zip = unpackColumnValue(cursor, ZIP, Integer.class);
+		if (zip != null)
+			address.setPostalCode(Integer.toString(zip));
+		address.setUrl(unpackColumnValue(cursor, WEB, String.class));
+		address.setPhone(unpackColumnValue(cursor, PHONE, String.class));
 		Bundle b = new Bundle();
-		b.putString(E_MAIL, getColumnValue(cursor, E_MAIL, String.class));
+		b.putString(E_MAIL, unpackColumnValue(cursor, E_MAIL, String.class));
 		address.setExtras(b);
 		restaurant.setAddress(address);
 		return restaurant;
@@ -72,30 +79,29 @@ public class RestaurantDao extends BaseDao<Restaurant> {
 	protected ContentValues getValues(Restaurant obj) {
 		ContentValues values = new ContentValues();
 
+		values.put(ID, obj.getId());
+		values.put(NAME, obj.getName());
+
 		Address addr = obj.getAddress();
 		if (addr != null) {
 			StringBuffer address = new StringBuffer();
-
 			String line = addr.getAddressLine(0);
 			for (int i = 0; line != null; line = addr.getAddressLine(++i)) {
 				address.append(line);
 			}
 			values.put(ADDRESS, address.toString());
-			values.put(COUNTRY, addr.getCountryName());
 			values.put(CITY, addr.getLocality());
-			values.put(LONGITUDE, addr.getLongitude());
-			values.put(LATITUDE, addr.getLatitude());
+			values.put(COUNTRY, addr.getCountryName());
 			values.put(ZIP, addr.getPostalCode());
 			values.put(PHONE, addr.getPhone());
 			values.put(WEB, addr.getUrl());
 			if (addr.getExtras() != null)
 				values.put(E_MAIL, addr.getExtras().getString(E_MAIL));
+			if (addr.hasLatitude())
+				values.put(LATITUDE, addr.getLatitude());
+			if (addr.hasLongitude())
+				values.put(LONGITUDE, addr.getLongitude());
 		}
-		values.put(ID, obj.getId());
-		values.put(NAME, obj.getName());
-		if (obj.getSourceUrl() != null)
-			values.put(URL, obj.getSourceUrl().toString());
-
 		return values;
 	}
 

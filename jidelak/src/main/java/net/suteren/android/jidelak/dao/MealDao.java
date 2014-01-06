@@ -36,7 +36,8 @@ public class MealDao extends BaseDao<Meal> {
 						+ AvailabilityDao.DAY + " is null)) and (a."
 						+ AvailabilityDao.DOW + " = ? or a."
 						+ AvailabilityDao.DOW + " is null))",
-				new String[] { String.valueOf(day.get(Calendar.YEAR)),
+				new String[] { String.valueOf(restaurant.getId()),
+						String.valueOf(day.get(Calendar.YEAR)),
 						String.valueOf(day.get(Calendar.MONTH)),
 						String.valueOf(day.get(Calendar.DAY_OF_MONTH)),
 						String.valueOf(day.get(Calendar.DAY_OF_WEEK)) }, null,
@@ -51,15 +52,15 @@ public class MealDao extends BaseDao<Meal> {
 	@Override
 	protected Meal parseRow(Cursor cursor) {
 		Meal meal = new Meal();
-		meal.setId(getColumnValue(cursor, ID, Long.class));
-		meal.setCategory(getColumnValue(cursor, CATEGORY, String.class));
-		meal.setTitle(getColumnValue(cursor, TITLE, String.class));
-		meal.setDescription(getColumnValue(cursor, DESCRIPTION, String.class));
+		meal.setId(unpackColumnValue(cursor, ID, Long.class));
+		meal.setCategory(unpackColumnValue(cursor, CATEGORY, String.class));
+		meal.setTitle(unpackColumnValue(cursor, TITLE, String.class));
+		meal.setDescription(unpackColumnValue(cursor, DESCRIPTION, String.class));
 		meal.setAvailability(new AvailabilityDao(getDbHelper())
-				.findById(getColumnValue(cursor, AVAILABILITY, Integer.class)));
-		meal.setDish(getColumnValue(cursor, DISH, String.class));
+				.findById(unpackColumnValue(cursor, AVAILABILITY, Long.class)));
+		meal.setDish(unpackColumnValue(cursor, DISH, String.class));
 		meal.setRestaurant(new RestaurantDao(getDbHelper())
-				.findById(getColumnValue(cursor, RESTAURANT, Integer.class)));
+				.findById(unpackColumnValue(cursor, RESTAURANT, Long.class)));
 		return meal;
 	}
 

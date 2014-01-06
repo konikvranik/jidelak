@@ -1,3 +1,5 @@
 /bin
 /build
 /gen
+/local.properties
+/lint.xml

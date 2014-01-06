@@ -16,8 +16,8 @@ public class AvailabilityDao extends BaseDao<Availability> {
 	public static final String DOW = "dow";
 	public static final String TABLE_NAME = "availability";
 	public static final String RESTAURANT = "restaurant";
-	public static final String FROM = "from";
-	public static final String TO = "to";
+	public static final String FROM = "from_time";
+	public static final String TO = "to_time";
 
 	public AvailabilityDao(JidelakDbHelper dbHelper) {
 		super(dbHelper);
@@ -34,10 +34,10 @@ public class AvailabilityDao extends BaseDao<Availability> {
 	@Override
 	protected Availability parseRow(Cursor cursor) {
 		Availability av = new Availability();
-		av.setYear(getColumnValue(cursor, YEAR, Integer.class));
-		av.setMonth(getColumnValue(cursor, MONTH, Integer.class));
-		av.setDay(getColumnValue(cursor, DAY, Integer.class));
-		av.setId(getColumnValue(cursor, ID, Long.class));
+		av.setYear(unpackColumnValue(cursor, YEAR, Integer.class));
+		av.setMonth(unpackColumnValue(cursor, MONTH, Integer.class));
+		av.setDay(unpackColumnValue(cursor, DAY, Integer.class));
+		av.setId(unpackColumnValue(cursor, ID, Long.class));
 		return av;
 	}
 

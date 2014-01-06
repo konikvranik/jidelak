@@ -14,17 +14,16 @@
 		<config>
 			<id>praha-food-garden-kavci-hory</id>
 			<name>Food Garden Kavčí hory</name>
-			<encoding>cp1250</encoding>
 
 			<!-- relative|absolute -->
 			<!-- day|week|month|year -->
 
 			<source time="relative" base="week" firstDayOfWeek="mo"
-				timeOffset="0"
+				timeOffset="0" encoding="cp1250"
 				url="http://fgkavcihory.cateringmelodie.cz/cz/samoobsluzna-restaurace/denni-menu-tisk.php" />
 
 			<source time="relative" base="week" firstDayOfWeek="mo"
-				timeOffset="1"
+				timeOffset="1" encoding="cp1250"
 				url="http://fgkavcihory.cateringmelodie.cz/cz/samoobsluzna-restaurace/denni-menu-pristi-tyden-tisk.php" />
 
 		</config>

@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".JidelakMainActivity"
+            android:name="net.suteren.android.jidelak.JidelakMainActivity"
             android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,7 @@
         </activity>
         <!-- created by Petr at 2014-01-05 12:39:35 -->
         <activity
-            android:name=".JidelakTemplateImporterActivity"
+            android:name="net.suteren.android.jidelak.JidelakTemplateImporterActivity"
             android:exported="true"
             android:theme="@style/DialogTheme" >
             <intent-filter>
@@ -80,7 +80,7 @@
         </activity>
 
         <service
-            android:name=".JidelakFeederService"
+            android:name="net.suteren.android.jidelak.JidelakFeederService"
             android:exported="false"
             android:process=".JidelakFeederService" >
             <intent-filter>
@@ -89,7 +89,7 @@
         </service>
 
         <receiver
-            android:name=".JidelakFeederReceiver"
+            android:name="net.suteren.android.jidelak.JidelakFeederReceiver"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
             android:process=":receiver" >
             <intent-filter>
@@ -98,6 +98,13 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <uses-library android:name="android.test.runner" />
     </application>
+
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:label="your tests label"
+        android:targetPackage="net.suteren.android.jidelak" />
 
 </manifest>

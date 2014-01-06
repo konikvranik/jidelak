@@ -3,10 +3,35 @@
  */
 package net.suteren.android.jidelak;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.CharBuffer;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
+
+import net.suteren.android.jidelak.dao.RestaurantDao;
+import net.suteren.android.jidelak.model.Restaurant;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -41,7 +66,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 					: null;
 		}
 
-		showIntent();
+		// showIntent();
 
 		ask();
 
@@ -129,12 +154,17 @@ public class JidelakTemplateImporterActivity extends Activity {
 				"Importing " + source.toString() + "...", Toast.LENGTH_LONG)
 				.show();
 		try {
-			URL sourceUrl = new URL(source.toString());
 
-			InputStream sourceStream = sourceUrl.openStream();
-			
-			
-			
+			RestaurantDao restaurantDao = new RestaurantDao(
+					new JidelakDbHelper(getApplicationContext()));
+
+			Restaurant restaurant = new Restaurant();
+			restaurantDao.insert(restaurant);
+
+			String fileName = saveLocally(source, restaurant);
+
+			parseConfig(openFileInput(fileName));
+
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -142,5 +172,90 @@ public class JidelakTemplateImporterActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	void parseConfig(InputStream fileStream) throws FileNotFoundException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db;
+		try {
+			db = dbf.newDocumentBuilder();
+			Document d = db.newDocument();
+
+			d.appendChild(d.createElement("config"));
+			Transformer tr = TransformerFactory.newInstance().newTransformer(
+					new StreamSource(fileStream));
+			DOMResult res = new DOMResult(DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder().newDocument());
+			tr.transform(new DOMSource(d), res);
+
+			Node n = res.getNode().getFirstChild();
+
+			Log.d(LOGGING_TAG,
+					"Node: " + n.getNodeName() + " .. " + n.getNodeType());
+
+			if ("jidelak".equals(n.getNodeName())) {
+				n = n.getFirstChild();
+
+				boolean secondLevel = false;
+
+				while (n != null) {
+					if (!secondLevel && "config".equals(n.getNodeName())) {
+						n = n.getFirstChild();
+						secondLevel = true;
+					}
+
+					if (secondLevel) {
+						if ("id".equals(n.getNodeName())) {
+
+						} else if ("name".equals(n.getNodeName())) {
+
+						} else if ("source".equals(n.getNodeName())) {
+
+						}
+					}
+					n = n.getNextSibling();
+				}
+
+			} else {
+			}
+
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerFactoryConfigurationError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private String saveLocally(Uri uri, Restaurant restaurant)
+			throws IOException {
+
+		String fileName = "template_" + restaurant.getId();
+		InputStream sourceStream = new URL(uri.toString()).openStream();
+		FileOutputStream out = openFileOutput(fileName, MODE_PRIVATE);
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				sourceStream));
+		try {
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
+			try {
+				CharBuffer target = CharBuffer.allocate(1024);
+				while (-1 != br.read(target)) {
+					bw.write(target.array());
+				}
+			} finally {
+				bw.close();
+			}
+		} finally {
+			br.close();
+		}
+		return fileName;
 	}
 }

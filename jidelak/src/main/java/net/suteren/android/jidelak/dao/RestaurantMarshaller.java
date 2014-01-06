@@ -7,7 +7,7 @@ import net.suteren.android.jidelak.model.Restaurant;
 public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 
 	@Override
-	protected Restaurant marshallHelper(String prefix, Map<String, String> data) {
+	protected Restaurant unmarshallHelper(String prefix, Map<String, String> data) {
 
 		if (prefix == null)
 			prefix = "";

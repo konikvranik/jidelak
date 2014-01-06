@@ -13,7 +13,7 @@ public abstract class BaseMarshaller<T> {
 
 	Stack<Node> path = new Stack<Node>();
 
-	protected abstract T marshallHelper(String prefix, Map<String, String> data);
+	protected abstract T unmarshallHelper(String prefix, Map<String, String> data);
 
 	public void clean() {
 		synchronized (path) {
@@ -22,11 +22,11 @@ public abstract class BaseMarshaller<T> {
 		}
 	}
 
-	public T marshall(Node n) {
-		return marshall(null, n);
+	public T unmarshall(Node n) {
+		return unmarshall(null, n);
 	}
 
-	public T marshall(String prefix, Node n) {
+	public T unmarshall(String prefix, Node n) {
 		synchronized (path) {
 			while (n != null) {
 				if (n.getNodeType() == Node.ELEMENT_NODE) {
@@ -41,7 +41,7 @@ public abstract class BaseMarshaller<T> {
 			}
 			path.clear();
 		}
-		return marshallHelper(prefix, data);
+		return unmarshallHelper(prefix, data);
 	}
 
 	protected Node getNextNode(Node n) {

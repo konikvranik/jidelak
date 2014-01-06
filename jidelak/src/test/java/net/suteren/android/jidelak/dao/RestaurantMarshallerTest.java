@@ -1,5 +1,7 @@
 package net.suteren.android.jidelak.dao;
 
+import static org.junit.Assert.*;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -34,7 +36,7 @@ public class RestaurantMarshallerTest {
 
 	@Test
 	public void testClean() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	@Test
@@ -47,16 +49,16 @@ public class RestaurantMarshallerTest {
 		n = doc.appendChild(doc.createElement("restaurant"));
 		n = n.appendChild(doc.createElement("name"));
 		n = n.appendChild(doc.createTextNode("Pokusný"));
-		Restaurant restaurant = new RestaurantMarshaller().marshall(doc
+		Restaurant restaurant = new RestaurantMarshaller().unmarshall(doc
 				.getDocumentElement());
 
-		Assert.assertEquals("Pokusný", restaurant.getName());
+		assertEquals("Pokusný", restaurant.getName());
 
 	}
 
 	@Test
 	public void testMarshallStringNode() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 }

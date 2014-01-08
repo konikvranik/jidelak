@@ -1,9 +1,11 @@
 package net.suteren.android.jidelak.dao;
 
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Restaurant;
@@ -14,12 +16,15 @@ import android.database.Cursor;
 
 public class SourceDao extends BaseDao<Source> {
 
-	public static final String TIME_TYPE = "time";
-	public static final String BASE_TIME = "base";
+	public static final String TIME_TYPE = "timetype";
+	public static final String BASE_TIME = "basedate";
 	public static final String FIRST_DAY_OF_WEEK = "firstdayofweek";
 	public static final String OFFSET = "offset";
 	public static final String URL = "url";
 	public static final String RESTAURANT = "restaurant";
+	public static final String LOCALE = "locale";
+	public static final String DATE_FORMAT = "datedofmat";
+	public static final String ENCODING = "encoding";
 	public static final String TABLE_NAME = "source";
 
 	public SourceDao(JidelakDbHelper dbHelper) {
@@ -42,11 +47,15 @@ public class SourceDao extends BaseDao<Source> {
 		Source source = new Source();
 		source.setId(unpackColumnValue(cursor, ID, Long.class));
 		source.setTimeType(unpackColumnValue(cursor, TIME_TYPE, TimeType.class));
-		source.setBase(unpackColumnValue(cursor, BASE_TIME, Calendar.class));
+		source.setBaseDate(unpackColumnValue(cursor, BASE_TIME, Calendar.class));
 		source.setFirstdayofweek(unpackColumnValue(cursor, FIRST_DAY_OF_WEEK,
 				Integer.class));
 		source.setOffset(unpackColumnValue(cursor, OFFSET, Integer.class));
 		source.setUrl(unpackColumnValue(cursor, URL, URL.class));
+		source.setLocale(unpackColumnValue(cursor, LOCALE, Locale.class));
+		source.setEncoding(unpackColumnValue(cursor, ENCODING, String.class));
+		source.setDateFormat(unpackColumnValue(cursor, DATE_FORMAT,
+				DateFormat.class));
 		source.setRestaurant(new RestaurantDao(getDbHelper())
 				.findById(unpackColumnValue(cursor, RESTAURANT, Integer.class)));
 		return source;
@@ -62,13 +71,17 @@ public class SourceDao extends BaseDao<Source> {
 	protected ContentValues getValues(Source obj) {
 		ContentValues values = new ContentValues();
 		values.put(ID, obj.getId());
-		values.put(TIME_TYPE, obj.getTime().ordinal());
+		values.put(TIME_TYPE, obj.getTimeType().ordinal());
 		values.put(BASE_TIME, new SimpleDateFormat(BaseDao.DATE_FORMAT,
-				BaseDao.LOCALE).format(obj.getBase().getTime()));
+				BaseDao.LOCALE).format(obj.getBaseDate().getTime()));
 		values.put(FIRST_DAY_OF_WEEK, obj.getFirstdayofweek());
 		values.put(OFFSET, obj.getOffset());
 		values.put(URL, obj.getUrl().toString());
+		values.put(DATE_FORMAT, obj.getDateFormatString());
+		values.put(LOCALE, obj.getLocaleString());
+		values.put(ENCODING, obj.getEncoding());
 		values.put(RESTAURANT, obj.getRestaurant().getId());
+
 		return values;
 	}
 }

@@ -1,31 +1,40 @@
 package net.suteren.android.jidelak.model;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
+
+import net.suteren.android.jidelak.dao.Utils;
 
 public class Source implements Identificable {
-	TimeType time;
-	Calendar base;
+	TimeType timeType;
+	Calendar baseDate;
 	Integer firstdayofweek;
 	Integer offset;
 	URL url;
 	Restaurant restaurant;
 	private Long id;
+	Locale locale;
+	DateFormat dateFormat;
+	private String dateFormatString;
+	private String encoding;
 
-	public TimeType getTime() {
-		return time;
+	public TimeType getTimeType() {
+		return timeType;
 	}
 
 	public void setTimeType(TimeType time) {
-		this.time = time;
+		this.timeType = time;
 	}
 
-	public Calendar getBase() {
-		return base;
+	public Calendar getBaseDate() {
+		return baseDate;
 	}
 
-	public void setBase(Calendar base) {
-		this.base = base;
+	public void setBaseDate(Calendar base) {
+		this.baseDate = base;
 	}
 
 	public Integer getFirstdayofweek() {
@@ -68,7 +77,48 @@ public class Source implements Identificable {
 
 	@Override
 	public void setId(Long id) {
-	this.id=id;
+		this.id = id;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public String getLocaleString() {
+		return getLocale().getLanguage() + "_" + getLocale().getCountry();
+	}
+
+	public void setLocale(String locale) {
+		this.locale = Utils.stringToLocale(locale);
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+
+	public DateFormat getDateFormat() {
+		return dateFormat;
+	}
+
+	public void setDateFormat(DateFormat dateFormat) {
+		this.dateFormat = dateFormat;
+	}
+
+	public void setDateFormat(String dateFormat) {
+		this.dateFormatString = dateFormat;
+		this.dateFormat = new SimpleDateFormat(dateFormat, getLocale());
+	}
+
+	public String getDateFormatString() {
+		return dateFormatString;
+	}
+
+	public void setEncoding(String string) {
+		this.encoding = string;
+	}
+
+	public String getEncoding() {
+		return encoding;
 	}
 
 }

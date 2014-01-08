@@ -48,6 +48,7 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 			+ SourceDao.TABLE_NAME + "(" + SourceDao.TIME_TYPE + " text, "
 			+ SourceDao.BASE_TIME + " text, " + SourceDao.FIRST_DAY_OF_WEEK
 			+ " text, " + SourceDao.OFFSET + " integer, " + SourceDao.URL
+			+ " text, " + SourceDao.LOCALE + " text, " + SourceDao.DATE_FORMAT
 			+ " text, " + SourceDao.RESTAURANT + " integer, foreign key("
 			+ SourceDao.RESTAURANT + ") references "
 			+ AvailabilityDao.TABLE_NAME + "(" + AvailabilityDao.ID + "));";
@@ -72,7 +73,7 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 		Log.d(LOGGER_TAG, SQL_CREATE_AVAILABILITY);
 		Log.d(LOGGER_TAG, SQL_CREATE_MEAL);
 		Log.d(LOGGER_TAG, SQL_CREATE_SOURCE);
-		
+
 		db.execSQL(SQL_CREATE_RESTAURANT);
 		db.execSQL(SQL_CREATE_AVAILABILITY);
 		db.execSQL(SQL_CREATE_MEAL);

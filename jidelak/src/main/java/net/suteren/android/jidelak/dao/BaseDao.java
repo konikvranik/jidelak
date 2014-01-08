@@ -2,6 +2,7 @@ package net.suteren.android.jidelak.dao;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public abstract class BaseDao<T extends Identificable> {
 	public static final String ID = "id";
 	public static final Locale LOCALE = Locale.ENGLISH;
 	private JidelakDbHelper dbHelper;
+	public Locale locale;
 
 	public BaseDao(JidelakDbHelper dbHelper) {
 		this.dbHelper = dbHelper;
@@ -146,7 +148,11 @@ public abstract class BaseDao<T extends Identificable> {
 			}
 		else if (c == TimeType.class)
 			value = (V) TimeType.values()[cursor.getInt(idx)];
-		else if (c == URL.class)
+		else if (c == Locale.class) {
+			value = (V) Utils.stringToLocale(cursor.getString(idx));
+		} else if (c == DateFormat.class) {
+			value = (V) new SimpleDateFormat(cursor.getString(idx), this.locale);
+		} else if (c == URL.class)
 			try {
 				value = (V) new URL(cursor.getString(idx));
 			} catch (MalformedURLException e) {
@@ -155,6 +161,10 @@ public abstract class BaseDao<T extends Identificable> {
 		else
 			throw new ClassCastException();
 		return value;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 
 }

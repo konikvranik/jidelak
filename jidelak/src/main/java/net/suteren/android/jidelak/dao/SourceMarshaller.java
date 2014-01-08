@@ -21,10 +21,13 @@ public class SourceMarshaller extends BaseMarshaller<Source> {
 		if (source == null)
 			source = new Source();
 
-		data.get(prefix + "source@locale");
+		source.setLocale(data.get(prefix + "source@locale"));
+
 		DateFormat df = new SimpleDateFormat(data.get(prefix
-				+ "source@dateFormat"));
-		data.get(prefix + "source@encoding");
+				+ "source@dateFormat"), source.getLocale());
+
+		source.setDateFormat(df);
+		source.setEncoding(data.get(prefix + "source@encoding"));
 
 		source.setOffset(Integer.parseInt(data
 				.get(prefix + "source@timeOffset")));
@@ -42,12 +45,10 @@ public class SourceMarshaller extends BaseMarshaller<Source> {
 		try {
 			Calendar cal = Calendar.getInstance(Locale.getDefault());
 			cal.setTime(df.parse(data.get(prefix + "source@base")));
-			source.setBase(cal);
+			source.setBaseDate(cal);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 		}
-
-		// TODO Auto-generated method stub
 
 	}
 

@@ -10,7 +10,7 @@
 		</jidelak>
 	</xsl:template>
 
-	<xsl:template match="/config">
+	<xsl:template match="/jidelak/config">
 		<config>
 			<restaurant>
 				<id>praha-food-garden-kavci-hory</id>

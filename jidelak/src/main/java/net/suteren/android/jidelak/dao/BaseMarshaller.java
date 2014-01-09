@@ -43,6 +43,8 @@ public abstract class BaseMarshaller<T> {
 				} else if (n.getNodeType() == Node.TEXT_NODE) {
 					data.put(path(), n.getTextContent());
 					n = getNextNode(n);
+				} else {
+					n = getNextNode(n);
 				}
 			}
 			path.clear();
@@ -50,7 +52,7 @@ public abstract class BaseMarshaller<T> {
 
 		if (prefix == null)
 			prefix = "";
-		if (prefix.length() > 0 && prefix.charAt(prefix.length()) != '.')
+		if (prefix.length() > 0 && prefix.charAt(prefix.length() - 1) != '.')
 			prefix += ".";
 
 		unmarshallHelper(prefix, data, object);
@@ -88,7 +90,7 @@ public abstract class BaseMarshaller<T> {
 		NamedNodeMap na = n.getAttributes();
 		for (int i = 0; i < na.getLength(); i++) {
 			n = na.item(i);
-			data.put(path + "@" + n.getNodeName(), n.getNodeValue());
+			data.put(path() + "@" + n.getNodeName(), n.getNodeValue());
 		}
 	}
 

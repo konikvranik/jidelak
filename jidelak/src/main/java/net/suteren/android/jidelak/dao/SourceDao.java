@@ -2,8 +2,6 @@ package net.suteren.android.jidelak.dao;
 
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,7 +45,7 @@ public class SourceDao extends BaseDao<Source> {
 		Source source = new Source();
 		source.setId(unpackColumnValue(cursor, ID, Long.class));
 		source.setTimeType(unpackColumnValue(cursor, TIME_TYPE, TimeType.class));
-		source.setBaseDate(unpackColumnValue(cursor, BASE_TIME, Calendar.class));
+		source.setBaseDate(unpackColumnValue(cursor, BASE_TIME, String.class));
 		source.setFirstdayofweek(unpackColumnValue(cursor, FIRST_DAY_OF_WEEK,
 				Integer.class));
 		source.setOffset(unpackColumnValue(cursor, OFFSET, Integer.class));
@@ -72,8 +70,7 @@ public class SourceDao extends BaseDao<Source> {
 		ContentValues values = new ContentValues();
 		values.put(ID, obj.getId());
 		values.put(TIME_TYPE, obj.getTimeType().ordinal());
-		values.put(BASE_TIME, new SimpleDateFormat(BaseDao.DATE_FORMAT,
-				BaseDao.LOCALE).format(obj.getBaseDate().getTime()));
+		values.put(BASE_TIME, obj.getBaseDate());
 		values.put(FIRST_DAY_OF_WEEK, obj.getFirstdayofweek());
 		values.put(OFFSET, obj.getOffset());
 		values.put(URL, obj.getUrl().toString());

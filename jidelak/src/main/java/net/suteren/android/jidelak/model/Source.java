@@ -2,15 +2,17 @@ package net.suteren.android.jidelak.model;
 
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import net.suteren.android.jidelak.dao.Utils;
 
 public class Source implements Identificable {
 	TimeType timeType;
-	Calendar baseDate;
+	String baseDate;
 	Integer firstdayofweek;
 	Integer offset;
 	URL url;
@@ -29,16 +31,23 @@ public class Source implements Identificable {
 		this.timeType = time;
 	}
 
-	public Calendar getBaseDate() {
+	public String getBaseDate() {
 		return baseDate;
 	}
 
-	public void setBaseDate(Calendar base) {
+	public void setBaseDate(String base) {
 		this.baseDate = base;
 	}
 
 	public Integer getFirstdayofweek() {
 		return firstdayofweek;
+	}
+
+	public void setFirstdayofweek(String firstdayofweek) throws ParseException {
+		DateFormat df = new SimpleDateFormat("E", getLocale());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(df.parse(firstdayofweek));
+		setFirstdayofweek(cal.get(Calendar.DAY_OF_WEEK));
 	}
 
 	public void setFirstdayofweek(Integer firstdayofweek) {
@@ -81,6 +90,8 @@ public class Source implements Identificable {
 	}
 
 	public Locale getLocale() {
+		if (locale == null)
+			return Locale.getDefault();
 		return locale;
 	}
 
@@ -97,6 +108,14 @@ public class Source implements Identificable {
 	}
 
 	public DateFormat getDateFormat() {
+
+		if (dateFormat == null) {
+			Locale l = getLocale();
+			if (l == null)
+				l = Locale.getDefault();
+			return new SimpleDateFormat("dd.mm.yyyy", l);
+		}
+
 		return dateFormat;
 	}
 

@@ -19,6 +19,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import net.suteren.android.jidelak.dao.RestaurantDao;
+import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
 
@@ -69,6 +70,11 @@ public class JidelakFeederService extends Service {
 			for (Source source : sources) {
 				try {
 					Node result = retrieve(source.getUrl(), template);
+					
+					
+					
+					
+					new RestaurantMarshaller().unmarshall(result, restaurant);
 
 					// TODO Auto-generated method stub
 				} catch (IOException e) {

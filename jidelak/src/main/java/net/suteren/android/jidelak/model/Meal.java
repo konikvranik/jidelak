@@ -10,6 +10,7 @@ public class Meal implements Identificable {
 	private Availability availability;
 	private Long id;
 	private String price;
+	private Source source;
 
 	public String getTitle() {
 		return title;
@@ -73,5 +74,13 @@ public class Meal implements Identificable {
 
 	public void setPrice(String price) {
 		this.price = price;
+	}
+
+	public Source getSource() {
+		return source;
+	}
+
+	public void setSource(Source source) {
+		this.source = source;
 	}
 }

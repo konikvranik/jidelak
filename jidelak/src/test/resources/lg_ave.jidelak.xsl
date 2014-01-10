@@ -6,35 +6,21 @@
 
 	<xsl:template match="/">
 		<jidelak>
-			<xsl:apply-templates select="/config|/html" />
+			<xsl:apply-templates select="/jidelak/config|/html" />
 		</jidelak>
 	</xsl:template>
 
-	<xsl:template match="/jidelak/config">
+	<xsl:template match="/jidelak/config|/html">
 		<config>
-			<restaurant>
-				<id>praha-lunch-garden-avenir</id>
-				<name>Lunch Garden Avenir</name>
-
-				<!-- relative|absolute -->
-				<!-- day|week|month|year -->
-
-				<source time="relative" base="week" firstDayOfWeek="mo"
-					timeOffset="0" encoding="cp1250" dateFormat="dd. mmm. yyyy" locale="cs_CZ"
-					url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php" />
-
-				<source time="relative" base="week" firstDayOfWeek="mo"
-					timeOffset="1" encoding="cp1250" dateFormat="dd. mmm. yyyy" locale="cs_CZ"
-					url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-pristi-tyden-tisk.php" />
-			</restaurant>
-
+			<xsl:call-template name="restaurant" />
 		</config>
 
 	</xsl:template>
 
-	<xsl:template match="/html">
+	<xsl:template name="restaurant">
 		<restaurant>
-			<name>Food Garden Kavčí hory</name>
+			<id>praha-lunch-garden-avenir</id>
+			<name>Lunch Garden Avenir</name>
 			<phone>+420 731 401 714</phone>
 			<e-mail>pavel.pechaty.ml@cateringmelodie.cz</e-mail>
 			<web>http://fgkavcihory.cateringmelodie.cz/cz/</web>
@@ -50,12 +36,18 @@
 				<term day-of-week="th" from="8:00" to="17:00" />
 				<term day-of-week="fr" from="8:00" to="17:00" />
 			</open>
+
+			<source time="relative" base="week" firstDayOfWeek="mo"
+				timeOffset="0" encoding="cp1250" dateFormat="dd. mmm. yyyy" locale="cs_CZ"
+				url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php" />
+			<source time="relative" base="week" firstDayOfWeek="mo"
+				timeOffset="1" encoding="cp1250" dateFormat="dd. mmm. yyyy" locale="cs_CZ"
+				url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-pristi-tyden-tisk.php" />
+
+				<xsl:apply-templates
+					select="//table[@class='tb_jidelak' and position() = 1]/tbody/tr[1]/td"
+					mode="days" />
 		</restaurant>
-		<menu>
-			<xsl:apply-templates
-				select="//table[@class='tb_jidelak' and position() = 1]/tbody/tr[1]/td"
-				mode="days" />
-		</menu>
 	</xsl:template>
 
 	<xsl:template match="td" mode="days">
@@ -108,8 +100,11 @@
 		<xsl:param name="ref-time" />
 		<meal order="{position()}" category="{$type}" dish="{$dish}"
 			time="{$time}" ref-time="{$ref-time}">
-
-			<xsl:value-of select="." />
+			<title>
+				<xsl:value-of select="." />
+			</title>
+			<description></description>
+			<price></price>
 		</meal>
 	</xsl:template>
 

@@ -39,20 +39,9 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 					String y = data.get(prefix + "meal@ref-time");
 
 					cal.setTime(getSource().getDateFormat().parse(y));
-					
-					switch (source.getOffsetBase()) {
-					case value:
-						
-						break;
 
-					default:
-						break;
-					}
-
-					if (y != null) {
-						source.getOffsetBase();
-
-					}
+					cal.add(getSource().getOffsetBase().getType(),
+							Integer.parseInt(x));
 
 				}
 

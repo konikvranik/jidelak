@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import net.suteren.android.jidelak.model.Source;
+import net.suteren.android.jidelak.model.TimeOffsetType;
 import net.suteren.android.jidelak.model.TimeType;
 
 public class SourceMarshaller extends BaseMarshaller<Source> {
@@ -48,7 +49,8 @@ public class SourceMarshaller extends BaseMarshaller<Source> {
 
 		x = data.get(prefix + "source@base");
 		if (x != null)
-			source.setOffsetBase(x);
+			source.setOffsetBase(TimeOffsetType.valueOf(x
+					.toUpperCase(Locale.ENGLISH)));
 
 	}
 

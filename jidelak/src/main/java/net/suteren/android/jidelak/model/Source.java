@@ -4,8 +4,10 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import net.suteren.android.jidelak.dao.Utils;
@@ -22,6 +24,7 @@ public class Source implements Identificable {
 	DateFormat dateFormat;
 	private String dateFormatString;
 	private String encoding;
+	private List<Meal> menu;
 
 	public TimeType getTimeType() {
 		return timeType;
@@ -140,4 +143,23 @@ public class Source implements Identificable {
 		return encoding;
 	}
 
+	public List<Meal> getMenu() {
+		return menu;
+	}
+
+	public void setMenu(List<Meal> menu) {
+		this.menu = menu;
+	}
+
+	public void addMenu(Meal meal) {
+		if (menu == null)
+			menu = new ArrayList<Meal>();
+		menu.add(meal);
+	}
+
+	public void addMenuAll(Collection<Meal> meal) {
+		if (menu == null)
+			menu = new ArrayList<Meal>();
+		menu.addAll(meal);
+	}
 }

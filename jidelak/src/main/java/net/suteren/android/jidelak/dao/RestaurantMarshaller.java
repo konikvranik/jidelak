@@ -10,6 +10,8 @@ import org.w3c.dom.Element;
 
 public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 
+	private Source source;
+
 	@Override
 	protected void unmarshallHelper(String prefix, Map<String, String> data,
 			Restaurant restaurant) {
@@ -22,7 +24,7 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 	protected boolean processElementHook(Element n, Restaurant restaurant) {
 
 		if ("source".equals(n.getNodeName())) {
-			Source source = new Source();
+			source = new Source();
 			source.setRestaurant(restaurant);
 			restaurant.addSource(source);
 
@@ -33,7 +35,9 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 			meal.setRestaurant(restaurant);
 			restaurant.addMenu(meal);
 
-			new MealMarshaller().unmarshall(n, meal);
+			MealMarshaller mm = new MealMarshaller();
+			mm.setSource(source);
+			mm.unmarshall(n, meal);
 			return false;
 		}
 		return true;

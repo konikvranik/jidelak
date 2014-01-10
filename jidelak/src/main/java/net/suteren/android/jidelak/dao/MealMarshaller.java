@@ -5,9 +5,12 @@ import java.util.Map;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
+import net.suteren.android.jidelak.model.Source;
 import net.suteren.android.jidelak.model.TimeType;
 
 public class MealMarshaller extends BaseMarshaller<Meal> {
+
+	private Source source;
 
 	@Override
 	protected void unmarshallHelper(String prefix, Map<String, String> data,
@@ -34,5 +37,13 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 			}
 
 		}
+	}
+
+	public void setSource(Source source) {
+		this.source = source;
+	}
+
+	public Source getSource() {
+		return source;
 	}
 }

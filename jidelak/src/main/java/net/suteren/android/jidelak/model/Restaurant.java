@@ -2,6 +2,7 @@ package net.suteren.android.jidelak.model;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 
 import android.location.Address;
@@ -81,6 +82,12 @@ public class Restaurant implements Identificable {
 		menu.add(meal);
 	}
 
+	public void addMenuAll(Collection<Meal> meal) {
+		if (menu == null)
+			menu = new ArrayList<Meal>();
+		menu.addAll(meal);
+	}
+
 	public List<Meal> getMenu(Calendar day) {
 		List<Meal> dailyMenu = new ArrayList<Meal>();
 
@@ -133,6 +140,6 @@ public class Restaurant implements Identificable {
 	}
 
 	public String getTemplateName() {
-		return "restaurant-"+getId()+".template.xsl";
+		return "restaurant-" + getId() + ".template.xsl";
 	}
 }

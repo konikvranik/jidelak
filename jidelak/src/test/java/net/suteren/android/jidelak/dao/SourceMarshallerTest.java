@@ -65,10 +65,11 @@ public class SourceMarshallerTest {
 
 		Source s = new Source();
 
-		Document d = prepareDocument();
+		Node d = db.newDocument();
+		d = RestaurantMarshallerTest.prepareDocument(d);
+		d = prepareDocument(d);
 
-		Node n = d.getDocumentElement().getFirstChild().getFirstChild()
-				.getFirstChild();
+		Node n = d;
 		sm.unmarshall(n, s);
 
 		assertEquals(Integer.valueOf(Calendar.MONDAY), s.getFirstdayofweek());
@@ -84,15 +85,16 @@ public class SourceMarshallerTest {
 				s.getUrl());
 	}
 
-	private Document prepareDocument() {
-		Document d = db.newDocument();
+	public static Node prepareDocument(Node n) {
 
-		Node n = d.appendChild(d.createElement("jidelak"));
+		Document doc;
+		if (n instanceof Document) {
+			doc = (Document) n;
+		} else {
+			doc = n.getOwnerDocument();
+		}
 
-		n = n.appendChild(d.createElement("config"));
-		Node rn = n.appendChild(d.createElement("restaurant"));
-
-		Element sn = (Element) rn.appendChild(d.createElement("source"));
+		Element sn = (Element) n.appendChild(doc.createElement("source"));
 
 		sn.setAttribute("time", "relative");
 		sn.setAttribute("base", "week");
@@ -103,14 +105,15 @@ public class SourceMarshallerTest {
 		sn.setAttribute("locale", "cs_CZ");
 		sn.setAttribute("url",
 				"http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php");
-		return d;
+		return sn;
 	}
 
 	@Test
 	public void testUnmarshallStringNodeT() throws MalformedURLException {
 		Source s = new Source();
 
-		Document d = prepareDocument();
+		Node d = db.newDocument();
+		prepareDocument(RestaurantMarshallerTest.prepareDocument(d));
 
 		sm.unmarshall("jidelak.config.restaurant", d, s);
 

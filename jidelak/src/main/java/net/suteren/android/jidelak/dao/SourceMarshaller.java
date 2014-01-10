@@ -3,13 +3,11 @@ package net.suteren.android.jidelak.dao;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Locale;
 import java.util.Map;
 
 import net.suteren.android.jidelak.model.Source;
 import net.suteren.android.jidelak.model.TimeType;
-import android.util.Log;
 
 public class SourceMarshaller extends BaseMarshaller<Source> {
 

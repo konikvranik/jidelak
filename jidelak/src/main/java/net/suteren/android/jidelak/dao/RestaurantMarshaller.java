@@ -13,9 +13,6 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 	protected void unmarshallHelper(String prefix, Map<String, String> data,
 			Restaurant restaurant) {
 
-		if (restaurant == null)
-			restaurant = new Restaurant();
-
 		restaurant.setName(data.get(prefix + "restaurant.name"));
 
 	}
@@ -25,9 +22,10 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 
 		if ("source".equals(n.getNodeName())) {
 			Source source = new Source();
-			new SourceMarshaller().unmarshall(n, source);
 			source.setRestaurant(restaurant);
 			restaurant.addSource(source);
+
+			new SourceMarshaller().unmarshall(n, source);
 			return false;
 		}
 		return true;

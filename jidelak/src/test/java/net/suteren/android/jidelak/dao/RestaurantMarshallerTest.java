@@ -45,15 +45,15 @@ public class RestaurantMarshallerTest {
 		Document doc = DocumentBuilderFactory.newInstance()
 				.newDocumentBuilder().newDocument();
 
-		Node n;
-		n = doc.appendChild(doc.createElement("restaurant"));
-		n = n.appendChild(doc.createElement("name"));
-		n = n.appendChild(doc.createTextNode("Pokusný"));
+		Node n = prepareDocument(doc);
+		SourceMarshallerTest.prepareDocument(n);
+
 		Restaurant restaurant = new Restaurant();
-		new RestaurantMarshaller().unmarshall(doc.getDocumentElement(),
-				restaurant);
+		new RestaurantMarshaller().unmarshall(n, restaurant);
 
 		assertEquals("Pokusný", restaurant.getName());
+
+		assertEquals("cp1250", restaurant.getSource().get(0).getEncoding());
 
 	}
 
@@ -62,4 +62,22 @@ public class RestaurantMarshallerTest {
 		fail("Not yet implemented");
 	}
 
+	public static Node prepareDocument(Node n) {
+
+		Document doc;
+		if (n instanceof Document) {
+			doc = (Document) n;
+		} else {
+			doc = n.getOwnerDocument();
+		}
+
+		n = n.appendChild(doc.createElement("jidelak"));
+
+		n = n.appendChild(doc.createElement("config"));
+		Node rn = n.appendChild(doc.createElement("restaurant"));
+		n = rn.appendChild(doc.createElement("name"));
+		n = n.appendChild(doc.createTextNode("Pokusný"));
+
+		return rn;
+	}
 }

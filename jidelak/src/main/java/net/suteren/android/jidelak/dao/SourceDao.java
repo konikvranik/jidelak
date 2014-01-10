@@ -45,7 +45,7 @@ public class SourceDao extends BaseDao<Source> {
 		Source source = new Source();
 		source.setId(unpackColumnValue(cursor, ID, Long.class));
 		source.setTimeType(unpackColumnValue(cursor, TIME_TYPE, TimeType.class));
-		source.setBaseDate(unpackColumnValue(cursor, BASE_TIME, String.class));
+		source.setOffsetBase(unpackColumnValue(cursor, BASE_TIME, String.class));
 		source.setFirstdayofweek(unpackColumnValue(cursor, FIRST_DAY_OF_WEEK,
 				Integer.class));
 		source.setOffset(unpackColumnValue(cursor, OFFSET, Integer.class));
@@ -70,7 +70,7 @@ public class SourceDao extends BaseDao<Source> {
 		ContentValues values = new ContentValues();
 		values.put(ID, obj.getId());
 		values.put(TIME_TYPE, obj.getTimeType().ordinal());
-		values.put(BASE_TIME, obj.getBaseDate());
+		values.put(BASE_TIME, obj.getOffsetBase());
 		values.put(FIRST_DAY_OF_WEEK, obj.getFirstdayofweek());
 		values.put(OFFSET, obj.getOffset());
 		values.put(URL, obj.getUrl().toString());

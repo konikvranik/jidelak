@@ -1,5 +1,8 @@
 package net.suteren.android.jidelak.dao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Map;
 
 import net.suteren.android.jidelak.model.Availability;
@@ -24,19 +27,48 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 		meal.setCategory(data.get(prefix + "meal@category"));
 		meal.setDish(data.get(prefix + "meal@dish"));
 
-		String x = data.get(prefix + "meal@time");
-		if (x != null) {
-			Availability availability = new Availability();
+		try {
+			String x = data.get(prefix + "meal@time");
+			Calendar cal = Calendar.getInstance(getSource().getLocale());
+			switch (getSource().getTimeType()) {
+			case RELATIVE:
 
-			if (meal.getSource().getTimeType() == TimeType.RELATIVE) {
+				if (x != null) {
+					Availability availability = new Availability();
 
-				String y = data.get(prefix + "meal@ref-time");
+					String y = data.get(prefix + "meal@ref-time");
 
-				if (y != null) {
+					cal.setTime(getSource().getDateFormat().parse(y));
+					
+					switch (source.getOffsetBase()) {
+					case value:
+						
+						break;
+
+					default:
+						break;
+					}
+
+					if (y != null) {
+						source.getOffsetBase();
+
+					}
+
 				}
+
+			case ABSOLUTE:
+
+				break;
+
+			default:
+				break;
 			}
 
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
 	}
 
 	public void setSource(Source source) {

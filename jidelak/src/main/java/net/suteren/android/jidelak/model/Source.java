@@ -14,7 +14,7 @@ import net.suteren.android.jidelak.dao.Utils;
 
 public class Source implements Identificable {
 	TimeType timeType;
-	String baseDate;
+	TimeOffsetType offsetBase;
 	Integer firstdayofweek;
 	Integer offset;
 	URL url;
@@ -25,6 +25,7 @@ public class Source implements Identificable {
 	private String dateFormatString;
 	private String encoding;
 	private List<Meal> menu;
+	Calendar date;
 
 	public TimeType getTimeType() {
 		return timeType;
@@ -34,12 +35,12 @@ public class Source implements Identificable {
 		this.timeType = time;
 	}
 
-	public String getBaseDate() {
-		return baseDate;
+	public TimeOffsetType getOffsetBase() {
+		return offsetBase;
 	}
 
-	public void setBaseDate(String base) {
-		this.baseDate = base;
+	public void setOffsetBase(TimeOffsetType base) {
+		this.offsetBase = base;
 	}
 
 	public Integer getFirstdayofweek() {
@@ -161,5 +162,13 @@ public class Source implements Identificable {
 		if (menu == null)
 			menu = new ArrayList<Meal>();
 		menu.addAll(meal);
+	}
+
+	public Calendar getDate() {
+		return date;
+	}
+
+	public void setDate(Calendar date) {
+		this.date = date;
 	}
 }

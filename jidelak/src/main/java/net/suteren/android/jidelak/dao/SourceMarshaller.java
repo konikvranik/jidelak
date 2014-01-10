@@ -48,7 +48,7 @@ public class SourceMarshaller extends BaseMarshaller<Source> {
 
 		x = data.get(prefix + "source@base");
 		if (x != null)
-			source.setBaseDate(x);
+			source.setOffsetBase(x);
 
 	}
 

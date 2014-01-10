@@ -74,7 +74,7 @@ public class SourceMarshallerTest {
 
 		assertEquals(Integer.valueOf(Calendar.MONDAY), s.getFirstdayofweek());
 		assertEquals(TimeType.RELATIVE, s.getTimeType());
-		assertEquals("week", s.getBaseDate());
+		assertEquals("week", s.getOffsetBase());
 		assertEquals(Integer.valueOf(0), s.getOffset());
 		assertEquals("cp1250", s.getEncoding());
 		assertEquals(new SimpleDateFormat("dd. mmm. yyyy", new Locale("cs",
@@ -119,7 +119,7 @@ public class SourceMarshallerTest {
 
 		assertEquals(Integer.valueOf(Calendar.MONDAY), s.getFirstdayofweek());
 		assertEquals(TimeType.RELATIVE, s.getTimeType());
-		assertEquals("week", s.getBaseDate());
+		assertEquals("week", s.getOffsetBase());
 		assertEquals(Integer.valueOf(0), s.getOffset());
 		assertEquals("cp1250", s.getEncoding());
 		assertEquals(new SimpleDateFormat("dd. mmm. yyyy", new Locale("cs",

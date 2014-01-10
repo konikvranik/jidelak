@@ -14,10 +14,6 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.CharBuffer;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,11 +30,8 @@ import javax.xml.transform.stream.StreamSource;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.model.Restaurant;
-import net.suteren.android.jidelak.model.Source;
 
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import android.app.Activity;
@@ -173,6 +166,8 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 			parseConfig(openFileInput(fileName), restaurant);
 
+			restaurantDao.update(restaurant);
+
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -185,10 +180,9 @@ public class JidelakTemplateImporterActivity extends Activity {
 	void parseConfig(InputStream fileStream, Restaurant restaurant)
 			throws FileNotFoundException {
 
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db;
 		try {
-			db = dbf.newDocumentBuilder();
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document d = db.newDocument();
 
 			Node n = d.appendChild(d.createElement("jidelak"));
@@ -199,15 +193,9 @@ public class JidelakTemplateImporterActivity extends Activity {
 					.newDocumentBuilder().newDocument());
 			tr.transform(new DOMSource(d), res);
 
-			n = res.getNode().getFirstChild();
+			new RestaurantMarshaller().unmarshall("jidelak.config",
+					res.getNode(), restaurant);
 
-			Log.d(LOGGING_TAG,
-					"Node: " + n.getNodeName() + " .. " + n.getNodeType());
-
-			if ("jidelak".equals(n.getNodeName())) {
-
-				new RestaurantMarshaller().unmarshall(n, restaurant);
-			}
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -222,7 +210,6 @@ public class JidelakTemplateImporterActivity extends Activity {
 			e.printStackTrace();
 		}
 	}
-
 
 	private String saveLocally(Uri uri, Restaurant restaurant)
 			throws IOException {

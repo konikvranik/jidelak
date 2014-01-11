@@ -16,42 +16,16 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 
 	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "Jidelak.db";
-	private static final String SQL_CREATE_RESTAURANT = "create table "
-			+ RestaurantDao.TABLE_NAME + "(" + RestaurantDao.ID
-			+ " integer primary key, " + RestaurantDao.CITY + " text, "
-			+ RestaurantDao.ADDRESS + " text, " + RestaurantDao.LONGITUDE
-			+ " real, " + RestaurantDao.LATITUDE + " real, "
-			+ RestaurantDao.ZIP + " integer, " + RestaurantDao.COUNTRY
-			+ " text, " + RestaurantDao.PHONE + " text, " + RestaurantDao.WEB
-			+ " text, " + RestaurantDao.E_MAIL + " text, " + RestaurantDao.NAME
-			+ " text);";
-	private static final String SQL_CREATE_AVAILABILITY = "create table "
-			+ AvailabilityDao.TABLE_NAME + "(" + AvailabilityDao.ID
-			+ " integer primary key, " + AvailabilityDao.YEAR + " integer, "
-			+ AvailabilityDao.MONTH + " integer, " + AvailabilityDao.DAY
-			+ " integer, " + AvailabilityDao.DOW + " integer, "
-			+ AvailabilityDao.FROM + " integer, " + AvailabilityDao.TO
-			+ " integer, " + AvailabilityDao.RESTAURANT
-			+ " integer,  foreign key( " + AvailabilityDao.RESTAURANT
-			+ ") references  " + RestaurantDao.TABLE_NAME + "("
-			+ RestaurantDao.ID + "));";
-	private static final String SQL_CREATE_MEAL = "create table "
-			+ MealDao.TABLE_NAME + "(" + MealDao.TITLE + " text, "
-			+ MealDao.DESCRIPTION + " text, " + MealDao.CATEGORY + " text, "
-			+ MealDao.DISH + " text, " + MealDao.PRICE + " real, "
-			+ MealDao.RESTAURANT + " integer, " + MealDao.AVAILABILITY
-			+ " integer, foreign key(" + MealDao.RESTAURANT + ") references "
-			+ RestaurantDao.TABLE_NAME + "(" + RestaurantDao.ID
-			+ "), foreign key(" + MealDao.AVAILABILITY + ") references "
-			+ AvailabilityDao.TABLE_NAME + "(" + AvailabilityDao.ID + "));";
-	private static final String SQL_CREATE_SOURCE = "create table "
-			+ SourceDao.TABLE_NAME + "(" + SourceDao.TIME_TYPE + " text, "
-			+ SourceDao.BASE_TIME + " text, " + SourceDao.FIRST_DAY_OF_WEEK
-			+ " text, " + SourceDao.OFFSET + " integer, " + SourceDao.URL
-			+ " text, " + SourceDao.LOCALE + " text, " + SourceDao.DATE_FORMAT
-			+ " text, " + SourceDao.RESTAURANT + " integer, foreign key("
-			+ SourceDao.RESTAURANT + ") references "
-			+ AvailabilityDao.TABLE_NAME + "(" + AvailabilityDao.ID + "));";
+
+	private static final String SQL_CREATE_RESTAURANT = RestaurantDao
+			.getTable().createClausule();
+
+	private static final String SQL_CREATE_AVAILABILITY = AvailabilityDao
+			.getTable().createClausule();
+	private static final String SQL_CREATE_MEAL = MealDao.getTable()
+			.createClausule();
+	private static final String SQL_CREATE_SOURCE = SourceDao.getTable()
+			.createClausule();
 
 	private final static DataSetObservable mDataSetObservable = new DataSetObservable();
 	private static final String LOGGER_TAG = "JidelakDbHelper";

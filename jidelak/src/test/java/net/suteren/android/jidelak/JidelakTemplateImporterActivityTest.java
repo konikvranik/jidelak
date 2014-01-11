@@ -3,13 +3,20 @@ package net.suteren.android.jidelak;
 import java.util.Calendar;
 import java.util.List;
 
+import net.suteren.android.jidelak.dao.AvailabilityDao;
+import net.suteren.android.jidelak.dao.MealDao;
+import net.suteren.android.jidelak.dao.RestaurantDao;
+import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
+import net.suteren.android.jidelak.model.Source;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 
 public class JidelakTemplateImporterActivityTest extends
 		ActivityInstrumentationTestCase2<JidelakTemplateImporterActivity> {
+
+	private static final String LOG_TAG = "JidelakTemplateImporterActivityTest";
 
 	public JidelakTemplateImporterActivityTest() {
 		super(JidelakTemplateImporterActivity.class);
@@ -49,6 +56,41 @@ public class JidelakTemplateImporterActivityTest extends
 		assertEquals(Integer.valueOf(1), av.getMonth());
 		assertEquals(Integer.valueOf(2010), av.getYear());
 		assertEquals(Boolean.valueOf(true), av.getClosed());
+
+	}
+
+	public void testResults() {
+		JidelakTemplateImporterActivity activity = getActivity();
+		JidelakDbHelper dbh = new JidelakDbHelper(activity);
+
+		RestaurantDao rdao = new RestaurantDao(dbh);
+
+		List<Restaurant> rests = rdao.findAll();
+
+		assertTrue(rests.size() > 0);
+
+		for (Restaurant rest : rests) {
+
+			Log.d(LOG_TAG, "Name: " + rest.getName());
+			Log.d(LOG_TAG, "TemplateName: " + rest.getTemplateName());
+
+			List<Source> srcs = rest.getSource();
+			if (srcs != null)
+				for (Source src : srcs) {
+					Log.d(LOG_TAG, "\t:src: " + src.getUrl().toString());
+				}
+
+			List<Availability> oh = rest.getOpeningHours();
+			if (oh != null)
+				for (Availability av : oh) {
+					Log.d(LOG_TAG, "\t av: " + av.getFrom());
+				}
+
+			Log.d(LOG_TAG, "Restauranrs count: " + rdao.findAll().size());
+			Log.d(LOG_TAG, "Availability count: " + new AvailabilityDao(dbh).findAll().size());
+			Log.d(LOG_TAG, "Meal count: " + new MealDao(dbh).findAll().size());
+			Log.d(LOG_TAG, "Source count: " + new SourceDao(dbh).findAll().size());
+			}
 
 	}
 }

@@ -15,16 +15,43 @@ import android.database.Cursor;
 
 public class SourceDao extends BaseDao<Source> {
 
-	public static final String TIME_TYPE = "timetype";
-	public static final String BASE_TIME = "basedate";
-	public static final String FIRST_DAY_OF_WEEK = "firstdayofweek";
-	public static final String OFFSET = "offset";
-	public static final String URL = "url";
-	public static final String RESTAURANT = "restaurant";
-	public static final String LOCALE = "locale";
-	public static final String DATE_FORMAT = "datedofmat";
-	public static final String ENCODING = "encoding";
+	public static final Column TIME_TYPE = new Column("timetype",
+			SQLiteDataTypes.TEXT);
+	public static final Column BASE_TIME = new Column("basedate",
+			SQLiteDataTypes.TEXT);
+	public static final Column FIRST_DAY_OF_WEEK = new Column("firstdayofweek",
+			SQLiteDataTypes.TEXT);
+	public static final Column OFFSET = new Column("offset",
+			SQLiteDataTypes.INTEGER);
+	public static final Column URL = new Column("url", SQLiteDataTypes.TEXT);
+	public static final Column RESTAURANT = new Column("restaurant",
+			RestaurantDao.ID.getType(), new ForeignKey(
+					RestaurantDao.getTable(), RestaurantDao.ID));
+	public static final Column LOCALE = new Column("locale",
+			SQLiteDataTypes.TEXT);
+	public static final Column DATE_FORMAT = new Column("datedofmat",
+			SQLiteDataTypes.TEXT);
+	public static final Column ENCODING = new Column("encoding",
+			SQLiteDataTypes.TEXT);
+
 	public static final String TABLE_NAME = "source";
+
+	static {
+
+		registerTable(TABLE_NAME);
+
+		getTable().addColumn(ID);
+
+		getTable().addColumn(FIRST_DAY_OF_WEEK);
+		getTable().addColumn(ENCODING);
+		getTable().addColumn(TIME_TYPE);
+		getTable().addColumn(BASE_TIME);
+		getTable().addColumn(OFFSET);
+		getTable().addColumn(LOCALE);
+		getTable().addColumn(DATE_FORMAT);
+		getTable().addColumn(URL);
+		getTable().addColumn(RESTAURANT);
+	}
 
 	public SourceDao(JidelakDbHelper dbHelper) {
 		super(dbHelper);
@@ -46,7 +73,8 @@ public class SourceDao extends BaseDao<Source> {
 		Source source = new Source();
 		source.setId(unpackColumnValue(cursor, ID, Long.class));
 		source.setTimeType(unpackColumnValue(cursor, TIME_TYPE, TimeType.class));
-		source.setOffsetBase(unpackColumnValue(cursor, BASE_TIME, TimeOffsetType.class));
+		source.setOffsetBase(unpackColumnValue(cursor, BASE_TIME,
+				TimeOffsetType.class));
 		source.setFirstdayofweek(unpackColumnValue(cursor, FIRST_DAY_OF_WEEK,
 				Integer.class));
 		source.setOffset(unpackColumnValue(cursor, OFFSET, Integer.class));
@@ -62,24 +90,27 @@ public class SourceDao extends BaseDao<Source> {
 
 	@Override
 	protected String[] getColumnNames() {
-		return new String[] { ID, TIME_TYPE, BASE_TIME, FIRST_DAY_OF_WEEK,
-				OFFSET, URL, RESTAURANT };
+		return getTable().getColumnNames();
 	}
 
 	@Override
 	protected ContentValues getValues(Source obj) {
 		ContentValues values = new ContentValues();
-		values.put(ID, obj.getId());
-		values.put(TIME_TYPE, obj.getTimeType().ordinal());
-		values.put(BASE_TIME, obj.getOffsetBase().ordinal());
-		values.put(FIRST_DAY_OF_WEEK, obj.getFirstdayofweek());
-		values.put(OFFSET, obj.getOffset());
-		values.put(URL, obj.getUrl().toString());
-		values.put(DATE_FORMAT, obj.getDateFormatString());
-		values.put(LOCALE, obj.getLocaleString());
-		values.put(ENCODING, obj.getEncoding());
-		values.put(RESTAURANT, obj.getRestaurant().getId());
+		values.put(ID.getName(), obj.getId());
+		values.put(TIME_TYPE.getName(), obj.getTimeType().ordinal());
+		values.put(BASE_TIME.getName(), obj.getOffsetBase().ordinal());
+		values.put(FIRST_DAY_OF_WEEK.getName(), obj.getFirstdayofweek());
+		values.put(OFFSET.getName(), obj.getOffset());
+		values.put(URL.getName(), obj.getUrl().toString());
+		values.put(DATE_FORMAT.getName(), obj.getDateFormatString());
+		values.put(LOCALE.getName(), obj.getLocaleString());
+		values.put(ENCODING.getName(), obj.getEncoding());
+		values.put(RESTAURANT.getName(), obj.getRestaurant().getId());
 
 		return values;
+	}
+
+	public static Table getTable() {
+		return getTable(TABLE_NAME);
 	}
 }

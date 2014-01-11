@@ -1,4 +1,4 @@
-package net.suteren.android.jidelak.dao;
+package net.suteren.android.jidelak;
 
 import java.util.Locale;
 import java.util.StringTokenizer;

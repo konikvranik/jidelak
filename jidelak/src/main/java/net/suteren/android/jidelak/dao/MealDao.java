@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
+import net.suteren.android.jidelak.dao.BaseDao.Column;
+import net.suteren.android.jidelak.dao.BaseDao.ForeignKey;
+import net.suteren.android.jidelak.dao.BaseDao.Table;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.content.ContentValues;
@@ -11,14 +14,36 @@ import android.database.Cursor;
 
 public class MealDao extends BaseDao<Meal> {
 
-	public static final String PRICE = "price";
-	public static final String DISH = "dish";
-	public static final String CATEGORY = "category";
-	public static final String DESCRIPTION = "description";
-	public static final String TITLE = "title";
-	public static final String RESTAURANT = "restaurant";
-	public static final String AVAILABILITY = "availability";
+	public static final Column PRICE = new Column("price", SQLiteDataTypes.REAL);
+	public static final Column DISH = new Column("dish", SQLiteDataTypes.TEXT);
+	public static final Column CATEGORY = new Column("category",
+			SQLiteDataTypes.TEXT);
+	public static final Column DESCRIPTION = new Column("description",
+			SQLiteDataTypes.TEXT);
+	public static final Column TITLE = new Column("title", SQLiteDataTypes.TEXT);
+	public static final Column RESTAURANT = new Column("restaurant",
+			RestaurantDao.ID.getType(), new ForeignKey(
+					RestaurantDao.getTable(), RestaurantDao.ID));
+	public static final Column AVAILABILITY = new Column("availability",
+			AvailabilityDao.ID.getType(), new ForeignKey(
+					AvailabilityDao.getTable(), AvailabilityDao.ID));
+
 	public static final String TABLE_NAME = "meal";
+
+	static {
+
+		registerTable(TABLE_NAME);
+
+		getTable().addColumn(ID);
+		getTable().addColumn(TITLE);
+		getTable().addColumn(DESCRIPTION);
+		getTable().addColumn(PRICE);
+		getTable().addColumn(DISH);
+		getTable().addColumn(CATEGORY);
+		getTable().addColumn(RESTAURANT);
+		getTable().addColumn(AVAILABILITY);
+
+	}
 
 	public MealDao(JidelakDbHelper dbHelper) {
 		super(dbHelper);
@@ -66,21 +91,24 @@ public class MealDao extends BaseDao<Meal> {
 
 	@Override
 	protected String[] getColumnNames() {
-		return new String[] { ID, TITLE, DESCRIPTION, CATEGORY, DISH, PRICE,
-				RESTAURANT, AVAILABILITY };
+		return getTable().getColumnNames();
 	}
 
 	@Override
 	protected ContentValues getValues(Meal obj) {
 		ContentValues values = new ContentValues();
-		values.put(AVAILABILITY, obj.getAvailability().getId());
-		values.put(DESCRIPTION, obj.getDescription());
-		values.put(DISH, obj.getDish());
-		values.put(ID, obj.getId());
-		values.put(TITLE, obj.getTitle());
-		values.put(CATEGORY, obj.getCategory());
-		values.put(PRICE, obj.getPrice());
-		values.put(RESTAURANT, obj.getRestaurant().getId());
+		values.put(AVAILABILITY.getName(), obj.getAvailability().getId());
+		values.put(DESCRIPTION.getName(), obj.getDescription());
+		values.put(DISH.getName(), obj.getDish());
+		values.put(ID.getName(), obj.getId());
+		values.put(TITLE.getName(), obj.getTitle());
+		values.put(CATEGORY.getName(), obj.getCategory());
+		values.put(PRICE.getName(), obj.getPrice());
+		values.put(RESTAURANT.getName(), obj.getRestaurant().getId());
 		return values;
+	}
+
+	public static Table getTable() {
+		return getTable(TABLE_NAME);
 	}
 }

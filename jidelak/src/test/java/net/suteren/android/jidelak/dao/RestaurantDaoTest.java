@@ -2,6 +2,7 @@ package net.suteren.android.jidelak.dao;
 
 import java.util.List;
 
+import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakMainActivity;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.content.ContentValues;
@@ -19,6 +20,7 @@ public class RestaurantDaoTest extends
 
 	@Override
 	protected void setUp() throws Exception {
+		// getActivity().deleteDatabase(JidelakDbHelper.DATABASE_NAME);
 		dao = new RestaurantDao(getActivity().getDbHelper());
 	}
 
@@ -45,6 +47,12 @@ public class RestaurantDaoTest extends
 
 	}
 
+	public void testTableCreateClausule() {
+		assertEquals(
+				"create table restaurant(id integer primary key,city text,address text,longitude real,latitude real,zip integer,country text,phone text,web text,email text,name text)",
+				RestaurantDao.getTable().createClausule());
+	}
+
 	public void testUpdate() {
 
 		Restaurant restaurant = new Restaurant();
@@ -59,6 +67,7 @@ public class RestaurantDaoTest extends
 
 		restaurant = dao.findById(restaurant);
 
+		assertNotNull(restaurant);
 		assertEquals("Restaurant test update", restaurant.getName());
 
 	}
@@ -67,6 +76,8 @@ public class RestaurantDaoTest extends
 		Restaurant restaurant = new Restaurant();
 		restaurant.setId(Long.valueOf(1));
 		dao.delete(restaurant);
+
+		assertNull(dao.findById(restaurant));
 	}
 
 	public void testFindAll() {
@@ -82,6 +93,7 @@ public class RestaurantDaoTest extends
 		restaurant.setId((long) 2);
 		restaurant = dao.findById(restaurant);
 
+		assertNotNull(restaurant);
 		assertNotNull(restaurant.getName());
 	}
 

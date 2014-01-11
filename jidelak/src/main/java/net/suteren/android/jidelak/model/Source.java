@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-import net.suteren.android.jidelak.dao.Utils;
+import net.suteren.android.jidelak.Utils;
 
 public class Source implements Identificable {
 	TimeType timeType;

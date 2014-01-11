@@ -12,16 +12,40 @@ import android.os.Bundle;
 public class RestaurantDao extends BaseDao<Restaurant> {
 
 	public static final String TABLE_NAME = "restaurant";
-	public static final String NAME = "name";
-	public static final String COUNTRY = "country";
-	public static final String CITY = "city";
-	public static final String ADDRESS = "address";
-	public static final String LONGITUDE = "longitude";
-	public static final String LATITUDE = "latitude";
-	public static final String ZIP = "zip";
-	public static final String PHONE = "phone";
-	public static final String WEB = "web";
-	public static final String E_MAIL = "email";
+
+	public static final Column NAME = new Column("name", SQLiteDataTypes.TEXT);
+	public static final Column COUNTRY = new Column("country",
+			SQLiteDataTypes.TEXT);
+	public static final Column CITY = new Column("city", SQLiteDataTypes.TEXT);
+	public static final Column ADDRESS = new Column("address",
+			SQLiteDataTypes.TEXT);
+	public static final Column LONGITUDE = new Column("longitude",
+			SQLiteDataTypes.REAL);
+	public static final Column LATITUDE = new Column("latitude",
+			SQLiteDataTypes.REAL);
+	public static final Column ZIP = new Column("zip", SQLiteDataTypes.INTEGER);
+	public static final Column PHONE = new Column("phone", SQLiteDataTypes.TEXT);
+	public static final Column WEB = new Column("web", SQLiteDataTypes.TEXT);
+	public static final Column E_MAIL = new Column("email",
+			SQLiteDataTypes.TEXT);
+
+	static {
+
+		registerTable(TABLE_NAME);
+
+		getTable().addColumn(ID);
+		getTable().addColumn(CITY);
+		getTable().addColumn(ADDRESS);
+		getTable().addColumn(LONGITUDE);
+		getTable().addColumn(LATITUDE);
+		getTable().addColumn(ZIP);
+		getTable().addColumn(COUNTRY);
+		getTable().addColumn(PHONE);
+		getTable().addColumn(WEB);
+		getTable().addColumn(E_MAIL);
+		getTable().addColumn(NAME);
+
+	}
 
 	public RestaurantDao(JidelakDbHelper dbHelper) {
 		super(dbHelper);
@@ -58,7 +82,8 @@ public class RestaurantDao extends BaseDao<Restaurant> {
 		address.setUrl(unpackColumnValue(cursor, WEB, String.class));
 		address.setPhone(unpackColumnValue(cursor, PHONE, String.class));
 		Bundle b = new Bundle();
-		b.putString(E_MAIL, unpackColumnValue(cursor, E_MAIL, String.class));
+		b.putString(E_MAIL.getName(),
+				unpackColumnValue(cursor, E_MAIL, String.class));
 		address.setExtras(b);
 		restaurant.setAddress(address);
 		return restaurant;
@@ -66,21 +91,20 @@ public class RestaurantDao extends BaseDao<Restaurant> {
 
 	@Override
 	protected String getTableName() {
-		return TABLE_NAME;
+		return getTable().getName();
 	}
 
 	@Override
 	protected String[] getColumnNames() {
-		return new String[] { ID, NAME, ADDRESS, CITY, COUNTRY, ZIP, PHONE,
-				WEB, E_MAIL, LATITUDE, LONGITUDE };
+		return getTable().getColumnNames();
 	}
 
 	@Override
 	protected ContentValues getValues(Restaurant obj) {
 		ContentValues values = new ContentValues();
 
-		values.put(ID, obj.getId());
-		values.put(NAME, obj.getName());
+		values.put(ID.getName(), obj.getId());
+		values.put(NAME.getName(), obj.getName());
 
 		Address addr = obj.getAddress();
 		if (addr != null) {
@@ -89,20 +113,24 @@ public class RestaurantDao extends BaseDao<Restaurant> {
 			for (int i = 0; line != null; line = addr.getAddressLine(++i)) {
 				address.append(line);
 			}
-			values.put(ADDRESS, address.toString());
-			values.put(CITY, addr.getLocality());
-			values.put(COUNTRY, addr.getCountryName());
-			values.put(ZIP, addr.getPostalCode());
-			values.put(PHONE, addr.getPhone());
-			values.put(WEB, addr.getUrl());
+			values.put(ADDRESS.getName(), address.toString());
+			values.put(CITY.getName(), addr.getLocality());
+			values.put(COUNTRY.getName(), addr.getCountryName());
+			values.put(ZIP.getName(), addr.getPostalCode());
+			values.put(PHONE.getName(), addr.getPhone());
+			values.put(WEB.getName(), addr.getUrl());
 			if (addr.getExtras() != null)
-				values.put(E_MAIL, addr.getExtras().getString(E_MAIL));
+				values.put(E_MAIL.getName(),
+						addr.getExtras().getString(E_MAIL.getName()));
 			if (addr.hasLatitude())
-				values.put(LATITUDE, addr.getLatitude());
+				values.put(LATITUDE.getName(), addr.getLatitude());
 			if (addr.hasLongitude())
-				values.put(LONGITUDE, addr.getLongitude());
+				values.put(LONGITUDE.getName(), addr.getLongitude());
 		}
 		return values;
 	}
 
+	public static Table getTable() {
+		return getTable(TABLE_NAME);
+	}
 }

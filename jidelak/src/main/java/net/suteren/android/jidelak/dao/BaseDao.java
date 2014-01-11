@@ -7,10 +7,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
+import net.suteren.android.jidelak.Utils;
 import net.suteren.android.jidelak.model.Identificable;
 import net.suteren.android.jidelak.model.TimeType;
 import android.content.ContentValues;
@@ -20,9 +24,156 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
 public abstract class BaseDao<T extends Identificable> {
+	public static class Table {
+
+		private String name;
+		private List<Column> columns = new ArrayList<Column>();
+		private List<ForeignKey> foreignKeys = new ArrayList<ForeignKey>();
+
+		public Table(String name) {
+			this.name = name;
+		}
+
+		public void addColumn(Column col) {
+			columns.add(col);
+			if (col.getFk() != null) {
+				col.getFk().setColumn(col.getName());
+				foreignKeys.add(col.getFk());
+			}
+		}
+
+		public String createClausule() {
+			StringBuffer sb = new StringBuffer("create table ");
+			sb.append(name);
+			sb.append("(");
+			Iterator<Column> ci = columns.iterator();
+
+			while (ci.hasNext()) {
+				Column c = ci.next();
+				sb.append(c.createClausule());
+				if (ci.hasNext())
+					sb.append(",");
+			}
+
+			for (ForeignKey fk : foreignKeys) {
+				sb.append(",");
+				sb.append(fk.createClausule());
+
+			}
+			sb.append(")");
+			return sb.toString();
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String[] getColumnNames() {
+			List<String> colNames = new ArrayList<String>();
+			for (Column col : columns) {
+				colNames.add(col.getName());
+			}
+			return colNames.toArray(new String[0]);
+		}
+	}
+
+	public static class Column {
+
+		private String name;
+		private SQLiteDataTypes type;
+		private boolean pk;
+		private ForeignKey fk;
+
+		public Column(String name, SQLiteDataTypes type, boolean pk) {
+			this(name, type, pk, null);
+		}
+
+		public Column(String name, SQLiteDataTypes type, ForeignKey fk) {
+			this(name, type, false, fk);
+		}
+
+		public Column(String name, SQLiteDataTypes type) {
+			this(name, type, false, null);
+		}
+
+		public Column(String name, SQLiteDataTypes type, boolean pk,
+				ForeignKey fk) {
+			this.name = name;
+			this.type = type;
+			this.pk = pk;
+			this.fk = fk;
+		}
+
+		@Override
+		public String toString() {
+			return getName();
+		}
+
+		public String createClausule() {
+			StringBuffer sb = new StringBuffer();
+			sb.append(name);
+			sb.append(" ");
+			sb.append(type.getType());
+			if (pk)
+				sb.append(" primary key");
+			return sb.toString();
+		}
+
+		public ForeignKey getFk() {
+			return fk;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public SQLiteDataTypes getType() {
+			return type;
+		}
+
+	}
+
+	public static class ForeignKey {
+
+		private String target;
+		private String table;
+		private String source;
+
+		public ForeignKey(String table, String column) {
+			this.table = table;
+			this.target = column;
+		}
+
+		public ForeignKey(Table table, Column column) {
+			this.table = table.getName();
+			this.target = column.getName();
+		}
+
+		public void setColumn(String column) {
+			this.source = column;
+		}
+
+		public Object createClausule() {
+			StringBuffer sb = new StringBuffer();
+			sb.append("foreign key(");
+			sb.append(source);
+			sb.append(") references ");
+			sb.append(table);
+			sb.append("(");
+			sb.append(target);
+			sb.append(")");
+			return sb.toString();
+		}
+	}
+
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
-	public static final String ID = "id";
+
+	public static final Column ID = new Column("id", SQLiteDataTypes.INTEGER,
+			true);
+
 	public static final Locale LOCALE = Locale.ENGLISH;
+
+	private static Map<String, Table> tables = new HashMap<String, Table>();
 	private JidelakDbHelper dbHelper;
 	public Locale locale;
 
@@ -119,6 +270,10 @@ public abstract class BaseDao<T extends Identificable> {
 
 	protected abstract String[] getColumnNames();
 
+	protected <V> V unpackColumnValue(Cursor cursor, Column name, Class<V> c) {
+		return unpackColumnValue(cursor, name.name, c);
+	}
+
 	@SuppressWarnings("unchecked")
 	protected <V> V unpackColumnValue(Cursor cursor, String name, Class<V> c) {
 		int idx = cursor.getColumnIndex(name);
@@ -167,4 +322,11 @@ public abstract class BaseDao<T extends Identificable> {
 		this.locale = locale;
 	}
 
+	protected static Table getTable(String name) {
+		return tables.get(name);
+	}
+
+	protected static void registerTable(String name) {
+		tables.put(name, new Table(name));
+	}
 }

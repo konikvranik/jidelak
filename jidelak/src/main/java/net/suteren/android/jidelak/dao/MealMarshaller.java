@@ -1,7 +1,6 @@
 package net.suteren.android.jidelak.dao;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
-import net.suteren.android.jidelak.model.TimeType;
 
 public class MealMarshaller extends BaseMarshaller<Meal> {
 
@@ -18,8 +16,6 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 	@Override
 	protected void unmarshallHelper(String prefix, Map<String, String> data,
 			Meal meal) {
-
-		Restaurant restaurant = meal.getRestaurant();
 
 		meal.setTitle(data.get(prefix + "meal.title"));
 		meal.setDescription(data.get(prefix + "meal.description"));
@@ -34,7 +30,6 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 			case RELATIVE:
 
 				if (x != null) {
-					Availability availability = new Availability();
 
 					String y = data.get(prefix + "meal@ref-time");
 
@@ -44,14 +39,16 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 							Integer.parseInt(x));
 
 				}
+				break;
 
 			case ABSOLUTE:
-
+				cal.setTime(getSource().getDateFormat().parse(x));
 				break;
 
 			default:
 				break;
 			}
+			meal.setAvailability(new Availability(cal));
 
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

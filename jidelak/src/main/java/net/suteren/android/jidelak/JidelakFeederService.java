@@ -20,7 +20,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import net.suteren.android.jidelak.dao.MealMarshaller;
 import net.suteren.android.jidelak.dao.RestaurantDao;
-import net.suteren.android.jidelak.dao.SourceMarshaller;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
@@ -49,6 +48,12 @@ public class JidelakFeederService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.v(LOGGING_TAG, "JidelakFeederService.onStartCommand()");
+		try {
+			updateData();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return START_REDELIVER_INTENT;
 	}
 
@@ -61,7 +66,7 @@ public class JidelakFeederService extends Service {
 				Intent.ACTION_TIME_TICK));
 	}
 
-	private void updateData() throws FileNotFoundException {
+	void updateData() throws FileNotFoundException {
 
 		RestaurantDao restaurantDao = new RestaurantDao(getDbHelper());
 		for (Restaurant restaurant : restaurantDao.findAll()) {
@@ -74,7 +79,7 @@ public class JidelakFeederService extends Service {
 					Node result = retrieve(source.getUrl(), template);
 
 					Meal meal = new Meal();
-					new MealMarshaller().unmarshall(result, meal );
+					new MealMarshaller().unmarshall(result, meal);
 
 					// TODO Auto-generated method stub
 				} catch (IOException e) {

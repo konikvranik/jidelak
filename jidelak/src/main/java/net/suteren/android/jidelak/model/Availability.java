@@ -9,9 +9,10 @@ public class Availability implements Identificable {
 	private Integer month;
 	private Integer year;
 	private Integer dow;
-	private Integer from;
-	private Integer to;
+	private String from;
+	private String to;
 	private Long id;
+	private Boolean closed;
 
 	public Availability(Calendar cal) {
 		super();
@@ -56,19 +57,19 @@ public class Availability implements Identificable {
 		this.dow = dow;
 	}
 
-	public Integer getFrom() {
+	public String getFrom() {
 		return from;
 	}
 
-	public void setFrom(Integer from) {
+	public void setFrom(String from) {
 		this.from = from;
 	}
 
-	public Integer getTo() {
+	public String getTo() {
 		return to;
 	}
 
-	public void setTo(Integer to) {
+	public void setTo(String to) {
 		this.to = to;
 	}
 
@@ -91,6 +92,14 @@ public class Availability implements Identificable {
 		cal.set(Calendar.HOUR, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal;
+	}
+
+	public void setClosed(Boolean closed) {
+		this.closed = closed;
+	}
+
+	public Boolean getClosed() {
+		return closed;
 	}
 
 }

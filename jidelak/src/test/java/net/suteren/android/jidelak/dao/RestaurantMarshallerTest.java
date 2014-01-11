@@ -3,9 +3,22 @@ package net.suteren.android.jidelak.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.io.StringWriter;
+import java.util.Calendar;
+import java.util.List;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
+import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 
 import org.junit.After;
@@ -13,10 +26,15 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 public class RestaurantMarshallerTest {
+
+	private static Logger log = LoggerFactory.getLogger("RestaurantTest");
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -40,12 +58,16 @@ public class RestaurantMarshallerTest {
 	}
 
 	@Test
-	public void testMarshallNode() throws ParserConfigurationException {
+	public void testMarshallNode() throws ParserConfigurationException,
+			TransformerConfigurationException,
+			TransformerFactoryConfigurationError, TransformerException {
 
 		Document doc = DocumentBuilderFactory.newInstance()
 				.newDocumentBuilder().newDocument();
 
 		Node n = prepareDocument(doc);
+		printNode(n);
+
 		SourceMarshallerTest.prepareDocument(n);
 
 		Restaurant restaurant = new Restaurant();
@@ -55,6 +77,24 @@ public class RestaurantMarshallerTest {
 
 		assertEquals("cp1250", restaurant.getSource().get(0).getEncoding());
 
+		List<Availability> oh = restaurant.getOpeningHours();
+		assertEquals(6, oh.size());
+
+		Availability av = oh.get(0);
+		assertEquals(Integer.valueOf(Calendar.MONDAY), av.getDow());
+		assertEquals("8:00", av.getFrom());
+		assertEquals("17:00", av.getTo());
+
+		av = oh.get(1);
+		assertEquals(Integer.valueOf(Calendar.TUESDAY), av.getDow());
+		assertEquals("8:00", av.getFrom());
+		assertEquals("17:00", av.getTo());
+
+		av = oh.get(5);
+		assertEquals(Integer.valueOf(1), av.getDay());
+		assertEquals(Integer.valueOf(1), av.getMonth());
+		assertEquals(Integer.valueOf(2010), av.getYear());
+		assertEquals(true, av.getClosed());
 	}
 
 	@Test
@@ -78,6 +118,53 @@ public class RestaurantMarshallerTest {
 		n = rn.appendChild(doc.createElement("name"));
 		n = n.appendChild(doc.createTextNode("Pokusný"));
 
+		Node on = rn.appendChild(doc.createElement("open"));
+
+		n = on.appendChild(doc.createElement("term"));
+		addAttr(n, "day-of-week", "Po");
+		addAttr(n, "from", "8:00");
+		addAttr(n, "to", "17:00");
+
+		n = on.appendChild(doc.createElement("term"));
+		addAttr(n, "day-of-week", "Út");
+		addAttr(n, "from", "8:00");
+		addAttr(n, "to", "17:00");
+
+		n = on.appendChild(doc.createElement("term"));
+		addAttr(n, "day-of-week", "St");
+		addAttr(n, "from", "8:00");
+		addAttr(n, "to", "17:00");
+
+		n = on.appendChild(doc.createElement("term"));
+		addAttr(n, "day-of-week", "Čt");
+		addAttr(n, "from", "8:00");
+		addAttr(n, "to", "17:00");
+
+		n = on.appendChild(doc.createElement("term"));
+		addAttr(n, "day-of-week", "Pá");
+		addAttr(n, "from", "8:00");
+		addAttr(n, "to", "17:00");
+
+		n = on.appendChild(doc.createElement("term"));
+		addAttr(n, "date", "1. 1. 2010");
+		addAttr(n, "closed", "true");
+
 		return rn;
+	}
+
+	private static void printNode(Node rn)
+			throws TransformerConfigurationException,
+			TransformerFactoryConfigurationError, TransformerException {
+		StringWriter sb = new StringWriter();
+		Transformer tr = TransformerFactory.newInstance().newTransformer();
+		tr.setOutputProperty(OutputKeys.INDENT, "yes");
+		tr.transform(new DOMSource(rn), new StreamResult(sb));
+		log.info(sb.toString());
+	}
+
+	private static void addAttr(Node n, String name, String value) {
+		Attr a = n.getOwnerDocument().createAttribute(name);
+		a.setValue(value);
+		n.getAttributes().setNamedItem(a);
 	}
 }

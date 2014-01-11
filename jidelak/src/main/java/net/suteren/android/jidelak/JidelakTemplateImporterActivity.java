@@ -193,8 +193,9 @@ public class JidelakTemplateImporterActivity extends Activity {
 					.newDocumentBuilder().newDocument());
 			tr.transform(new DOMSource(d), res);
 
-			new RestaurantMarshaller().unmarshall("jidelak.config",
-					res.getNode(), restaurant);
+			RestaurantMarshaller rm = new RestaurantMarshaller();
+//			rm.setSource(source);
+			rm.unmarshall("#document.jidelak.config", res.getNode(), restaurant);
 
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block

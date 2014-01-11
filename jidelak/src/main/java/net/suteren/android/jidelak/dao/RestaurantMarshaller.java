@@ -2,6 +2,7 @@ package net.suteren.android.jidelak.dao;
 
 import java.util.Map;
 
+import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
@@ -30,7 +31,7 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 
 			new SourceMarshaller().unmarshall(n, source);
 			return false;
-		}else if ("meal".equals(n.getNodeName())) {
+		} else if ("meal".equals(n.getNodeName())) {
 			Meal meal = new Meal();
 			meal.setRestaurant(restaurant);
 			restaurant.addMenu(meal);
@@ -39,7 +40,26 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 			mm.setSource(source);
 			mm.unmarshall(n, meal);
 			return false;
+		} else if ("term".equals(n.getNodeName())
+				&& "open".equals(n.getParentNode().getNodeName())) {
+			Availability avail = new Availability();
+
+			AvailabilityMarshaller am = new AvailabilityMarshaller();
+			am.setSource(source);
+			am.unmarshall(n, avail);
+
+			restaurant.addOpeningHours(avail);
+
+			return false;
 		}
 		return true;
+	}
+
+	public void setSource(Source source) {
+		this.source = source;
+	}
+
+	public Source getSource() {
+		return source;
 	}
 }

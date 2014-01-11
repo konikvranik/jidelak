@@ -93,5 +93,10 @@ dependencies {
 	compile 'com.android.support:support-v4:19.0.0'
 	compile 'com.android.support:appcompat-v7:19.0.0'
 	compile 'net.sf.jtidy:jtidy:r938'
+	
+	testCompile 'org.slf4j:slf4j-api:1.7.5'
+	testCompile 'org.slf4j:slf4j-log4j12:1.7.5'
+	testCompile 'log4j:log4j:1.2.17'
+            
 }
 

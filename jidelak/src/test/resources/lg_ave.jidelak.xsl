@@ -28,14 +28,6 @@
 			<country>Česká republika</country>
 			<address>Radlická 714/113a</address>
 			<zip>158 00</zip>
-			<open>
-				<term date="1.1.2010" closed="true" />
-				<term day-of-week="mo" from="8:00" to="17:00" />
-				<term day-of-week="tu" from="8:00" to="17:00" />
-				<term day-of-week="we" from="8:00" to="17:00" />
-				<term day-of-week="th" from="8:00" to="17:00" />
-				<term day-of-week="fr" from="8:00" to="17:00" />
-			</open>
 
 			<source time="relative" base="week" firstDayOfWeek="mo"
 				timeOffset="0" encoding="cp1250" dateFormat="dd. mmm. yyyy" locale="cs_CZ"
@@ -43,6 +35,15 @@
 			<source time="relative" base="week" firstDayOfWeek="mo"
 				timeOffset="1" encoding="cp1250" dateFormat="dd. mmm. yyyy" locale="cs_CZ"
 				url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-pristi-tyden-tisk.php" />
+
+			<open>
+				<term day-of-week="Po" from="8:00" to="17:00" />
+				<term day-of-week="Út" from="8:00" to="17:00" />
+				<term day-of-week="St" from="8:00" to="17:00" />
+				<term day-of-week="Čt" from="8:00" to="17:00" />
+				<term day-of-week="Pá" from="8:00" to="17:00" />
+				<term date="1. 1. 2010" closed="true" />
+			</open>
 
 			<menu>
 				<xsl:apply-templates

@@ -14,6 +14,8 @@ public abstract class BaseMarshaller<T> {
 
 	Stack<Node> path = new Stack<Node>();
 
+	private Node root;
+
 	protected abstract void unmarshallHelper(String prefix,
 			Map<String, String> data, T object);
 
@@ -30,22 +32,21 @@ public abstract class BaseMarshaller<T> {
 
 	public void unmarshall(String prefix, Node n, T object) {
 		synchronized (path) {
-			while (n != null) {
-				if (n.getNodeType() == Node.ELEMENT_NODE) {
 
-					boolean res;
+			root = n;
+			path.push(n);
+
+			while (n != null) {
+				boolean res = true;
+				if (n.getNodeType() == Node.ELEMENT_NODE) {
 					if (res = processElementHook((Element) n, object)) {
-						path.push(n);
 						if (n.hasAttributes())
 							processAttributes(n);
 					}
-					n = getNextNode(n, res);
 				} else if (n.getNodeType() == Node.TEXT_NODE) {
 					data.put(path(), n.getTextContent());
-					n = getNextNode(n);
-				} else {
-					n = getNextNode(n);
 				}
+				n = getNextNode(n, res);
 			}
 			path.clear();
 		}
@@ -67,12 +68,26 @@ public abstract class BaseMarshaller<T> {
 	}
 
 	protected Node getNextNode(Node n, boolean processChildren) {
-		if (n.hasChildNodes() && processChildren)
-			return n = n.getFirstChild();
-		n = n.getNextSibling();
-		while (n == null && !path.isEmpty()) {
-			n = path.pop().getNextSibling();
+		if (n.hasChildNodes() && processChildren) {
+			n = n.getFirstChild();
+			if (n.getNodeType() == Node.ELEMENT_NODE)
+				path.push(n);
+			return n;
 		}
+		
+		if (n == root)
+			return null;
+		
+		do {
+			n = path.pop().getNextSibling();
+		} while (n == null && !path.isEmpty());
+
+		if (n == null)
+			return null;
+		
+		if (n.getNodeType() == Node.ELEMENT_NODE)
+			path.push(n);
+		
 		return n;
 	}
 

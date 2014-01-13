@@ -4,3 +4,4 @@
 /local.properties
 /lint.xml
 hs_err_pid*.log
+.gradle

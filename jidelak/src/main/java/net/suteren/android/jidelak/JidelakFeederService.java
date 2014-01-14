@@ -49,8 +49,12 @@ public class JidelakFeederService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.v(LOGGING_TAG, "JidelakFeederService.onStartCommand()");
 		try {
-			updateData();
-		} catch (FileNotFoundException e) {
+			try {
+				updateData();
+			} catch (FileNotFoundException e) {
+				throw new JidelakException(e);
+			}
+		} catch (JidelakException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -66,7 +70,7 @@ public class JidelakFeederService extends Service {
 				Intent.ACTION_TIME_TICK));
 	}
 
-	void updateData() throws FileNotFoundException {
+	void updateData() throws FileNotFoundException, JidelakException {
 
 		RestaurantDao restaurantDao = new RestaurantDao(getDbHelper());
 		for (Restaurant restaurant : restaurantDao.findAll()) {
@@ -86,21 +90,22 @@ public class JidelakFeederService extends Service {
 					Toast.makeText(getApplicationContext(),
 							getResources().getText(R.string.download_failed),
 							DURATION).show();
-					;
 					Log.e(LOGGING_TAG, e.getMessage(), e);
+					throw new JidelakException(e);
 				} catch (TransformerException e) {
 					Toast.makeText(getApplicationContext(),
 							getResources().getText(R.string.unable_to_parse),
 							DURATION).show();
 					Log.e(LOGGING_TAG, e.getMessage(), e);
+					throw new JidelakException(e);
 				} catch (ParserConfigurationException e) {
 					Toast.makeText(
 							getApplicationContext(),
 							getResources().getText(
 									R.string.parser_configuration_error),
 							DURATION).show();
-					;
 					Log.e(LOGGING_TAG, e.getMessage(), e);
+					throw new JidelakException(e);
 				}
 			}
 

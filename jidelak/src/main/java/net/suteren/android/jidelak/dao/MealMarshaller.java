@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Map;
 
+import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
@@ -15,7 +16,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 
 	@Override
 	protected void unmarshallHelper(String prefix, Map<String, String> data,
-			Meal meal) {
+			Meal meal) throws JidelakException {
 
 		meal.setTitle(data.get(prefix + "meal.title"));
 		meal.setDescription(data.get(prefix + "meal.description"));
@@ -51,8 +52,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 			meal.setAvailability(new Availability(cal));
 
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new JidelakException(e);
 		}
 
 	}

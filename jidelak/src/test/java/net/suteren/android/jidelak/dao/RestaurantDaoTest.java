@@ -13,15 +13,24 @@ public class RestaurantDaoTest extends
 		ActivityInstrumentationTestCase2<JidelakMainActivity> {
 
 	private RestaurantDao dao;
+	private boolean emptyDb;
 
 	public RestaurantDaoTest() {
 		super(JidelakMainActivity.class);
+
+		emptyDb = false;
 	}
 
 	@Override
 	protected void setUp() throws Exception {
-		// getActivity().deleteDatabase(JidelakDbHelper.DATABASE_NAME);
+		if (emptyDb)
+			getActivity().deleteDatabase(JidelakDbHelper.DATABASE_NAME);
 		dao = new RestaurantDao(getActivity().getDbHelper());
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		getActivity().deleteDatabase(JidelakDbHelper.DATABASE_NAME);
 	}
 
 	public void testGetValuesRestaurant() {
@@ -40,7 +49,10 @@ public class RestaurantDaoTest extends
 		restaurant.setId(Long.valueOf(1));
 
 		dao.insert(restaurant);
-
+		if (emptyDb) {
+			restaurant.setId(null);
+			dao.insert(restaurant);
+		}
 		assertNotNull(restaurant.getId());
 
 		Log.d("test", "Restaurant id: " + restaurant.getId());
@@ -90,7 +102,7 @@ public class RestaurantDaoTest extends
 
 	public void testFindByIdT() {
 		Restaurant restaurant = new Restaurant();
-		restaurant.setId((long) 2);
+		restaurant.setId((long) 1);
 		restaurant = dao.findById(restaurant);
 
 		assertNotNull(restaurant);

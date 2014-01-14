@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import net.suteren.android.jidelak.JidelakException;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -17,7 +19,7 @@ public abstract class BaseMarshaller<T> {
 	private Node root;
 
 	protected abstract void unmarshallHelper(String prefix,
-			Map<String, String> data, T object);
+			Map<String, String> data, T object) throws JidelakException;
 
 	public void clean() {
 		synchronized (path) {
@@ -26,11 +28,11 @@ public abstract class BaseMarshaller<T> {
 		}
 	}
 
-	public void unmarshall(Node n, T object) {
+	public void unmarshall(Node n, T object) throws JidelakException {
 		unmarshall(null, n, object);
 	}
 
-	public void unmarshall(String prefix, Node n, T object) {
+	public void unmarshall(String prefix, Node n, T object) throws JidelakException {
 		synchronized (path) {
 
 			root = n;
@@ -59,7 +61,7 @@ public abstract class BaseMarshaller<T> {
 		unmarshallHelper(prefix, data, object);
 	}
 
-	protected boolean processElementHook(Element n, T object) {
+	protected boolean processElementHook(Element n, T object) throws JidelakException {
 		return true;
 	}
 
@@ -74,20 +76,20 @@ public abstract class BaseMarshaller<T> {
 				path.push(n);
 			return n;
 		}
-		
+
 		if (n == root)
 			return null;
-		
+
 		do {
 			n = path.pop().getNextSibling();
 		} while (n == null && !path.isEmpty());
 
 		if (n == null)
 			return null;
-		
+
 		if (n.getNodeType() == Node.ELEMENT_NODE)
 			path.push(n);
-		
+
 		return n;
 	}
 

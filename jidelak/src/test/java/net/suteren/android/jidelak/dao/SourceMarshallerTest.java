@@ -12,6 +12,7 @@ import java.util.Locale;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Source;
 import net.suteren.android.jidelak.model.TimeType;
 
@@ -61,7 +62,7 @@ public class SourceMarshallerTest {
 	}
 
 	@Test
-	public void testUnmarshallNodeT() throws MalformedURLException {
+	public void testUnmarshallNodeT() throws MalformedURLException, JidelakException {
 
 		Source s = new Source();
 
@@ -109,7 +110,7 @@ public class SourceMarshallerTest {
 	}
 
 	@Test
-	public void testUnmarshallStringNodeT() throws MalformedURLException {
+	public void testUnmarshallStringNodeT() throws MalformedURLException, JidelakException {
 		Source s = new Source();
 
 		Node d = db.newDocument();

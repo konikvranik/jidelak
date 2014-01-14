@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.Map;
 
+import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Source;
 import net.suteren.android.jidelak.model.TimeOffsetType;
 import net.suteren.android.jidelak.model.TimeType;
@@ -14,7 +15,7 @@ public class SourceMarshaller extends BaseMarshaller<Source> {
 
 	@Override
 	protected void unmarshallHelper(String prefix, Map<String, String> data,
-			Source source) {
+			Source source) throws JidelakException {
 
 		source.setLocale(data.get(prefix + "source@locale"));
 
@@ -35,16 +36,15 @@ public class SourceMarshaller extends BaseMarshaller<Source> {
 		try {
 			source.setUrl(new URL(data.get(prefix + "source@url")));
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
+			throw new JidelakException(e);
 		}
 
 		x = data.get(prefix + "source@firstDayOfWeek");
 		if (x != null)
 			try {
 				source.setFirstdayofweek(x);
-			} catch (ParseException e1) {
-				e1.printStackTrace();
-				// TODO Auto-generated catch block
+			} catch (ParseException e) {
+				throw new JidelakException(e);
 			}
 
 		x = data.get(prefix + "source@base");

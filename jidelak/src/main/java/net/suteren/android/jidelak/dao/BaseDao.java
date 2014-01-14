@@ -37,7 +37,8 @@ public abstract class BaseDao<T extends Identificable> {
 		public void addColumn(Column col) {
 			columns.add(col);
 			if (col.getFk() != null) {
-				col.getFk().setColumn(col.getName());
+				if (col.getFk().isUnset())
+					col.getFk().setColumn(col);
 				foreignKeys.add(col.getFk());
 			}
 		}
@@ -135,32 +136,36 @@ public abstract class BaseDao<T extends Identificable> {
 
 	public static class ForeignKey {
 
-		private String target;
-		private String table;
-		private String source;
+		private Column target;
+		private Table table;
+		private Column source;
 
-		public ForeignKey(String table, String column) {
+		public ForeignKey(String table, Column column) {
+			this.table = getTable(table);
+			this.target = column;
+		}
+
+		public boolean isUnset() {
+			return source == null;
+		}
+
+		public ForeignKey(Table table, Column column) {
 			this.table = table;
 			this.target = column;
 		}
 
-		public ForeignKey(Table table, Column column) {
-			this.table = table.getName();
-			this.target = column.getName();
-		}
-
-		public void setColumn(String column) {
+		public void setColumn(Column column) {
 			this.source = column;
 		}
 
 		public Object createClausule() {
 			StringBuffer sb = new StringBuffer();
 			sb.append("foreign key(");
-			sb.append(source);
+			sb.append(source.getName());
 			sb.append(") references ");
-			sb.append(table);
+			sb.append(table.getName());
 			sb.append("(");
-			sb.append(target);
+			sb.append(target.getName());
 			sb.append(")");
 			return sb.toString();
 		}

@@ -2,6 +2,7 @@ package net.suteren.android.jidelak.dao;
 
 import java.util.Map;
 
+import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
@@ -22,7 +23,7 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 	}
 
 	@Override
-	protected boolean processElementHook(Element n, Restaurant restaurant) {
+	protected boolean processElementHook(Element n, Restaurant restaurant) throws JidelakException {
 
 		if ("source".equals(n.getNodeName())) {
 			source = new Source();

@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
+import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Source;
 
@@ -15,7 +16,7 @@ public class AvailabilityMarshaller extends BaseMarshaller<Availability> {
 
 	@Override
 	protected void unmarshallHelper(String prefix, Map<String, String> data,
-			Availability avail) {
+			Availability avail) throws JidelakException {
 
 		Calendar cal = Calendar.getInstance(getSource().getLocale());
 		String x = data.get(prefix + "term@date");
@@ -25,9 +26,8 @@ public class AvailabilityMarshaller extends BaseMarshaller<Availability> {
 				avail.setDay(cal.get(Calendar.DAY_OF_MONTH));
 				avail.setMonth(cal.get(Calendar.MONTH) + 1);
 				avail.setYear(cal.get(Calendar.YEAR));
-			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (ParseException e) {
+				throw new JidelakException(e);
 			}
 
 		x = data.get(prefix + "term@day-of-week");
@@ -38,8 +38,7 @@ public class AvailabilityMarshaller extends BaseMarshaller<Availability> {
 				cal.setTime(df.parse(x));
 				avail.setDow(cal.get(Calendar.DAY_OF_WEEK));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new JidelakException(e);
 			}
 
 		avail.setFrom(data.get(prefix + "term@from"));

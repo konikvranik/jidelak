@@ -149,7 +149,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 				.setCancelable(false).show();
 	}
 
-	private void importTemplate() {
+	private void importTemplate() throws JidelakException {
 
 		Toast.makeText(getApplicationContext(),
 				"Importing " + source.toString() + "...", Toast.LENGTH_LONG)
@@ -169,16 +169,14 @@ public class JidelakTemplateImporterActivity extends Activity {
 			restaurantDao.update(restaurant);
 
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new JidelakException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new JidelakException(e);
 		}
 	}
 
 	void parseConfig(InputStream fileStream, Restaurant restaurant)
-			throws FileNotFoundException {
+			throws FileNotFoundException, JidelakException {
 
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -194,21 +192,17 @@ public class JidelakTemplateImporterActivity extends Activity {
 			tr.transform(new DOMSource(d), res);
 
 			RestaurantMarshaller rm = new RestaurantMarshaller();
-//			rm.setSource(source);
+			// rm.setSource(source);
 			rm.unmarshall("#document.jidelak.config", res.getNode(), restaurant);
 
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new JidelakException(e);
 		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new JidelakException(e);
 		} catch (TransformerFactoryConfigurationError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new JidelakException(e);
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new JidelakException(e);
 		}
 	}
 

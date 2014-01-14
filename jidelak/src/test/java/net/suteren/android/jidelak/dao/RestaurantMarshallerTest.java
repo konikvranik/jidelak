@@ -18,6 +18,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 
@@ -60,7 +61,7 @@ public class RestaurantMarshallerTest {
 	@Test
 	public void testMarshallNode() throws ParserConfigurationException,
 			TransformerConfigurationException,
-			TransformerFactoryConfigurationError, TransformerException {
+			TransformerFactoryConfigurationError, TransformerException, JidelakException {
 
 		Document doc = DocumentBuilderFactory.newInstance()
 				.newDocumentBuilder().newDocument();

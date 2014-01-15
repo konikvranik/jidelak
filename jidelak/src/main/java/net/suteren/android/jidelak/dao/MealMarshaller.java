@@ -7,7 +7,6 @@ import java.util.Map;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
-import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
 
 public class MealMarshaller extends BaseMarshaller<Meal> {
@@ -43,7 +42,8 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 				break;
 
 			case ABSOLUTE:
-				cal.setTime(getSource().getDateFormat().parse(x));
+				if (x != null)
+					cal.setTime(getSource().getDateFormat().parse(x));
 				break;
 
 			default:
@@ -62,6 +62,8 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 	}
 
 	public Source getSource() {
+		if (source == null)
+			return new Source();
 		return source;
 	}
 }

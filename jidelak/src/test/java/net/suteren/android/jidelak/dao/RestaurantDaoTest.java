@@ -18,7 +18,7 @@ public class RestaurantDaoTest extends
 	public RestaurantDaoTest() {
 		super(JidelakMainActivity.class);
 
-		emptyDb = false;
+		emptyDb = true;
 	}
 
 	@Override

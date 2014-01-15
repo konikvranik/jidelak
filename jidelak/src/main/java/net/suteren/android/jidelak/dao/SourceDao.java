@@ -79,12 +79,21 @@ public class SourceDao extends BaseDao<Source> {
 				Integer.class));
 		source.setOffset(unpackColumnValue(cursor, OFFSET, Integer.class));
 		source.setUrl(unpackColumnValue(cursor, URL, URL.class));
-		source.setLocale(unpackColumnValue(cursor, LOCALE, Locale.class));
+
+		Locale locale = unpackColumnValue(cursor, LOCALE, Locale.class);
+		source.setLocale(locale);
+		setLocale(locale);
+
 		source.setEncoding(unpackColumnValue(cursor, ENCODING, String.class));
 		source.setDateFormat(unpackColumnValue(cursor, DATE_FORMAT,
 				DateFormat.class));
-		source.setRestaurant(new RestaurantDao(getDbHelper())
-				.findById(unpackColumnValue(cursor, RESTAURANT, Integer.class)));
+
+		Restaurant restaurant = new Restaurant();
+		restaurant.setId(unpackColumnValue(cursor, RESTAURANT, Long.class));
+		source.setRestaurant(restaurant);
+		// source.setRestaurant(new RestaurantDao(getDbHelper())
+		// .findById(unpackColumnValue(cursor, RESTAURANT, Integer.class)));
+
 		return source;
 	}
 

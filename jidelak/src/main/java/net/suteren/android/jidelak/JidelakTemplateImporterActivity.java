@@ -5,13 +5,13 @@ package net.suteren.android.jidelak;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.URL;
 import java.nio.CharBuffer;
 
@@ -25,11 +25,16 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
+import net.suteren.android.jidelak.dao.SourceDao;
+import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
+import net.suteren.android.jidelak.model.Source;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -50,7 +55,7 @@ import android.widget.Toast;
 public class JidelakTemplateImporterActivity extends Activity {
 
 	private static final String LOGGING_TAG = "JidelakTemplateImporterService";
-	private Uri source;
+	private Uri sourceUri;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,16 +65,16 @@ public class JidelakTemplateImporterActivity extends Activity {
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-			source = intent.getData();
+			sourceUri = intent.getData();
 		} else if (Intent.ACTION_SEND.equals(intent.getAction())
 				|| Intent.ACTION_SENDTO.equals(intent.getAction())) {
-			source = bundle != null ? (Uri) bundle.get(Intent.EXTRA_STREAM)
+			sourceUri = bundle != null ? (Uri) bundle.get(Intent.EXTRA_STREAM)
 					: null;
 		}
 
 		// showIntent();
-
-		ask();
+		if (sourceUri != null)
+			ask();
 
 	}
 
@@ -91,7 +96,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 		sb.append("\ntype: ");
 		sb.append(intent.getType());
 		sb.append("\ndata: ");
-		sb.append(source.toString());
+		sb.append(sourceUri.toString());
 
 		if (intent.getExtras() != null)
 			sb.append(showBundle(intent.getExtras()));
@@ -129,7 +134,12 @@ public class JidelakTemplateImporterActivity extends Activity {
 				switch (which) {
 				case DialogInterface.BUTTON_POSITIVE:
 					// Yes button clicked
-					importTemplate();
+					try {
+						importTemplate();
+					} catch (JidelakException e) {
+						Log.e(LOGGING_TAG, e.getMessage(), e);
+						// TODO Auto-generated catch block
+					}
 					break;
 
 				case DialogInterface.BUTTON_NEGATIVE:
@@ -143,8 +153,9 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(
-				getIntent().getAction() + " - Are you sure to import " + source
-						+ "?").setPositiveButton("Yes", dialogClickListener)
+				getIntent().getAction() + " - Are you sure to import "
+						+ sourceUri + "?")
+				.setPositiveButton("Yes", dialogClickListener)
 				.setNegativeButton("No", dialogClickListener)
 				.setCancelable(false).show();
 	}
@@ -152,31 +163,38 @@ public class JidelakTemplateImporterActivity extends Activity {
 	private void importTemplate() throws JidelakException {
 
 		Toast.makeText(getApplicationContext(),
-				"Importing " + source.toString() + "...", Toast.LENGTH_LONG)
+				"Importing " + sourceUri.toString() + "...", Toast.LENGTH_LONG)
 				.show();
+
+		RestaurantDao restaurantDao = new RestaurantDao(new JidelakDbHelper(
+				getApplicationContext()));
+
+		Restaurant restaurant = new Restaurant();
+
 		try {
-
-			RestaurantDao restaurantDao = new RestaurantDao(
-					new JidelakDbHelper(getApplicationContext()));
-
-			Restaurant restaurant = new Restaurant();
 			restaurantDao.insert(restaurant);
 
-			String fileName = saveLocally(source, restaurant);
+			String fileName = saveLocally(sourceUri, restaurant);
 
 			parseConfig(openFileInput(fileName), restaurant);
 
 			restaurantDao.update(restaurant);
 
-		} catch (MalformedURLException e) {
-			throw new JidelakException(e);
-		} catch (IOException e) {
+			new SourceDao(new JidelakDbHelper(getApplicationContext()))
+					.insert(restaurant.getSource());
+
+			new AvailabilityDao(new JidelakDbHelper(getApplicationContext()))
+					.insert(restaurant.getOpeningHours());
+
+		} catch (Exception e) {
+			deleteFile(restaurant.getTemplateName());
+			restaurantDao.delete(restaurant);
 			throw new JidelakException(e);
 		}
 	}
 
 	void parseConfig(InputStream fileStream, Restaurant restaurant)
-			throws FileNotFoundException, JidelakException {
+			throws JidelakException {
 
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -191,6 +209,17 @@ public class JidelakTemplateImporterActivity extends Activity {
 					.newDocumentBuilder().newDocument());
 			tr.transform(new DOMSource(d), res);
 
+			try {
+				FileOutputStream os = openFileOutput("debug.xsl",
+						MODE_WORLD_READABLE);
+				StreamResult deb = new StreamResult(os);
+				tr = TransformerFactory.newInstance().newTransformer();
+				tr.transform(new DOMSource(res.getNode()), deb);
+				os.close();
+			} catch (Throwable e) {
+				throw new JidelakException(e);
+			}
+
 			RestaurantMarshaller rm = new RestaurantMarshaller();
 			// rm.setSource(source);
 			rm.unmarshall("#document.jidelak.config", res.getNode(), restaurant);
@@ -203,30 +232,36 @@ public class JidelakTemplateImporterActivity extends Activity {
 			throw new JidelakException(e);
 		} catch (TransformerException e) {
 			throw new JidelakException(e);
+		} finally {
+			try {
+				fileStream.close();
+			} catch (IOException e) {
+				throw new JidelakException(e);
+			}
 		}
 	}
 
 	private String saveLocally(Uri uri, Restaurant restaurant)
 			throws IOException {
 
-		String fileName = "template_" + restaurant.getId();
+		String fileName = restaurant.getTemplateName();
 		InputStream sourceStream = new URL(uri.toString()).openStream();
 		FileOutputStream out = openFileOutput(fileName, MODE_PRIVATE);
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(
-				sourceStream));
+		Writer bw = new BufferedWriter(new OutputStreamWriter(out));
 		try {
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
+			Reader br = new BufferedReader(new InputStreamReader(sourceStream));
 			try {
-				CharBuffer target = CharBuffer.allocate(1024);
-				while (-1 != br.read(target)) {
-					bw.write(target.array());
+				CharBuffer buf = CharBuffer.allocate(64);
+				while (br.read(buf) >= 0) {
+					bw.append((CharSequence) buf.flip());
+					buf.clear();
 				}
 			} finally {
-				bw.close();
+				br.close();
 			}
 		} finally {
-			br.close();
+			bw.close();
 		}
 		return fileName;
 	}

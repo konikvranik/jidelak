@@ -1,5 +1,15 @@
 package net.suteren.android.jidelak;
 
+import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.nio.CharBuffer;
 import java.util.Calendar;
 import java.util.List;
 
@@ -10,6 +20,12 @@ import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
+
+import org.junit.Test;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 
@@ -27,13 +43,44 @@ public class JidelakTemplateImporterActivityTest extends
 		assertNotNull(activity);
 	}
 
+	@Test
 	public void testParser() throws Exception {
 		JidelakTemplateImporterActivity activity = getActivity();
+
+		// InputStream r = this.getClass().getResourceAsStream(
+		// "/lg_ave.jidelak.xsl");
+		//
+		// CharBuffer cb = CharBuffer.allocate(64);
+		//
+		// BufferedReader br = new BufferedReader(new InputStreamReader(r));
+		//
+		// BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+		// getActivity().openFileOutput("test.xsl",
+		// getActivity().MODE_WORLD_READABLE)));
+		//
+		// while (br.read(cb) != -1) {
+		// bw.write(cb.array());
+		// }
+		// br.close();
+		// bw.close();
+
+		Intent intent = new Intent(getActivity(),
+				JidelakTemplateImporterActivity.class);
+		intent.setData(Uri.fromFile(new File("/sdcard/lg_ave.jidelak.xsl")));
+		intent.putExtra("force", true);
+		getActivity().startActivity(intent);
+
 		Log.d("Test", "activity: " + activity);
 		Restaurant restaurant = new Restaurant();
-		activity.parseConfig(
-				this.getClass().getResourceAsStream("/lg_ave.jidelak.xsl"),
-				restaurant);
+		// activity.parseConfig(
+		// this.getClass().getResourceAsStream("/lg_ave.jidelak.xsl"),
+		// restaurant);
+
+		RestaurantDao rdao = new RestaurantDao(new JidelakDbHelper(
+				getActivity()));
+
+		restaurant.setId((long) 1);
+		rdao.findById(restaurant);
 
 		assertEquals("Lunch Garden Avenir", restaurant.getName());
 		assertEquals("cp1250", restaurant.getSource().get(0).getEncoding());
@@ -87,10 +134,12 @@ public class JidelakTemplateImporterActivityTest extends
 				}
 
 			Log.d(LOG_TAG, "Restauranrs count: " + rdao.findAll().size());
-			Log.d(LOG_TAG, "Availability count: " + new AvailabilityDao(dbh).findAll().size());
+			Log.d(LOG_TAG, "Availability count: "
+					+ new AvailabilityDao(dbh).findAll().size());
 			Log.d(LOG_TAG, "Meal count: " + new MealDao(dbh).findAll().size());
-			Log.d(LOG_TAG, "Source count: " + new SourceDao(dbh).findAll().size());
-			}
+			Log.d(LOG_TAG, "Source count: "
+					+ new SourceDao(dbh).findAll().size());
+		}
 
 	}
 }

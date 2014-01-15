@@ -31,6 +31,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
 
 		registerTable(TABLE_NAME);
 
+		getTable().addColumn(ID);
 		getTable().addColumn(YEAR);
 		getTable().addColumn(MONTH);
 		getTable().addColumn(DAY);

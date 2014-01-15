@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Map;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.Utils;
 import net.suteren.android.jidelak.model.Identificable;
+import net.suteren.android.jidelak.model.TimeOffsetType;
 import net.suteren.android.jidelak.model.TimeType;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -190,6 +192,17 @@ public abstract class BaseDao<T extends Identificable> {
 		return dbHelper;
 	}
 
+	public void insert(Collection<T> objs) {
+		SQLiteDatabase db = getDbHelper().getWritableDatabase();
+		for (T obj : objs) {
+			long result = db.insert(getTableName(), null, getValues(obj));
+			if (result == -1)
+				throw new SQLException();
+			obj.setId(result);
+		}
+		db.close();
+	}
+
 	public void insert(T obj) {
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
 		long result = db.insert(getTableName(), null, getValues(obj));
@@ -308,23 +321,32 @@ public abstract class BaseDao<T extends Identificable> {
 			}
 		else if (c == TimeType.class)
 			value = (V) TimeType.values()[cursor.getInt(idx)];
+		else if (c == TimeOffsetType.class)
+			value = (V) TimeOffsetType.values()[cursor.getInt(idx)];
 		else if (c == Locale.class) {
 			value = (V) Utils.stringToLocale(cursor.getString(idx));
 		} else if (c == DateFormat.class) {
-			value = (V) new SimpleDateFormat(cursor.getString(idx), this.locale);
-		} else if (c == URL.class)
+			value = (V) new SimpleDateFormat(cursor.getString(idx), getLocale());
+		} else if (c == URL.class) {
 			try {
 				value = (V) new URL(cursor.getString(idx));
 			} catch (MalformedURLException e) {
 				return null;
 			}
-		else
+		} else {
 			throw new ClassCastException();
+		}
 		return value;
 	}
 
 	public void setLocale(Locale locale) {
 		this.locale = locale;
+	}
+
+	public Locale getLocale() {
+		if (locale == null)
+			return Locale.getDefault();
+		return locale;
 	}
 
 	protected static Table getTable(String name) {

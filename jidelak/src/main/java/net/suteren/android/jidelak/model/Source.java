@@ -28,6 +28,8 @@ public class Source implements Identificable {
 	Calendar date;
 
 	public TimeType getTimeType() {
+		if (timeType == null)
+			return TimeType.ABSOLUTE;
 		return timeType;
 	}
 

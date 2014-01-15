@@ -23,7 +23,8 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 	}
 
 	@Override
-	protected boolean processElementHook(Element n, Restaurant restaurant) throws JidelakException {
+	protected boolean processElementHook(Element n, Restaurant restaurant)
+			throws JidelakException {
 
 		if ("source".equals(n.getNodeName())) {
 			source = new Source();
@@ -35,6 +36,7 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 		} else if ("meal".equals(n.getNodeName())) {
 			Meal meal = new Meal();
 			meal.setRestaurant(restaurant);
+			meal.setSource(source);
 			restaurant.addMenu(meal);
 
 			MealMarshaller mm = new MealMarshaller();

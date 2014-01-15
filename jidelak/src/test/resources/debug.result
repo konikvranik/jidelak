@@ -1,328 +1,327 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<jidelak>
-	<config>
-		<restaurant>
-			<id>praha-lunch-garden-avenir</id>
-			<name>Lunch Garden Avenir</name>
-			<phone>+420 731 401 714</phone>
-			<e-mail>pavel.pechaty.ml@cateringmelodie.cz</e-mail>
-			<web>http://fgkavcihory.cateringmelodie.cz/cz/</web>
-			<city>Praha 5</city>
-			<country>Česká republika</country>
-			<address>Radlická 714/113a</address>
-			<zip>158 00</zip>
-			<source url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php" locale="cs_CZ" dateFormat="dd. mmm. yyyy" encoding="cp1250" timeOffset="0" firstDayOfWeek="Po" base="week" time="relative"/>
-			<source url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-pristi-tyden-tisk.php" locale="cs_CZ" dateFormat="dd. mmm. yyyy" encoding="cp1250" timeOffset="1" firstDayOfWeek="Po" base="week" time="relative"/>
-			<open>
-				<term to="17:00" from="8:00" day-of-week="Po"/>
-				<term to="17:00" from="8:00" day-of-week="Út"/>
-				<term to="17:00" from="8:00" day-of-week="St"/>
-				<term to="17:00" from="8:00" day-of-week="Čt"/>
-				<term to="17:00" from="8:00" day-of-week="Pá"/>
-				<term closed="true" date="1. 1. 2010"/>
-			</open>
-			<menu>
-				<meal ref-time="20.1.2014" time="1" dish="soup" category="normal" order="1">
-					<title>Slepičí polévka s masem a nudlemi</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="1" dish="soup" category="normal" order="2">
-					<title>Tradiční bramborová polévka s houbami </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="1" dish="lunch" category="normal" order="1">
-					<title>Smažený vepřový řízek, bramborová kaše, okurka </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="1" dish="lunch" category="normal" order="2">
-					<title>Hovězí nudle s chilli a šalotkou, dušená rýže </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="1" dish="lunch" category="normal" order="3">
-					<title>Zapečená kapusta s uzeným masem, slaninou, česnekem a cibulkou </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="1" dish="lunch" category="normal" order="4">
-					<title>Tortilla plněná sekanou zeleninou a sýrem, majonézový dip </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="1" dish="lunch" category="normal" order="5">
-					<title>Šopský salát </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="1" dish="lunch" category="superior" order="1">
-					<title>Pečené vepřové nudle s cibulí a hořčicí, bramborové hranolky </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="1" dish="lunch" category="live" order="1">
-					<title>Ragú z králičího hřbetu, cibulový koláč </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="1" dish="lunch" category="pasta" order="1">
-					<title>Gabell ŠPAGETY s vepřovým masem a rajčatovým sugem </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="1" dish="lunch" category="pasta" order="2">
-					<title>SPIRÁLKY  s houbami a kuřecím masem v sýrové omáčce </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="1" dish="lunch" category="pasta" order="3">
-					<title>FARFALLE s cuketou, kapiemi a lilkem sypané parmezánem </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="2" dish="soup" category="normal" order="1">
-					<title>Polévka z hovězí oháňky s petrželkovým svítkem</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="2" dish="soup" category="normal" order="2">
-					<title>Dršťková polévka</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="2" dish="lunch" category="normal" order="1">
-					<title>Zbojnický skřivan, dušená rýže </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="2" dish="lunch" category="normal" order="2">
-					<title>Segedínský guláš, houskový knedlík</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="2" dish="lunch" category="normal" order="3">
-					<title>Kuře připravené na zelenině, pórkové brambory</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="2" dish="lunch" category="normal" order="4">
-					<title>Zapečená jablková žemlovka s rozinkami a bílkovým sněhem</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="2" dish="lunch" category="normal" order="5">
-					<title>Zeleninový salátek se sýrovými noky a jogurtovým dipem</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="2" dish="lunch" category="superior" order="1">
-					<title>Krůtí prsa plněná listovým špenátem, bramborové krokety </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="2" dish="lunch" category="live" order="1">
-					<title>Steak z  hovězí roštěné s pečenými bramborami </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="2" dish="lunch" category="pasta" order="1">
-					<title>Gabell ŠPAGETY s vepřovým masem a rajčatovým sugem </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="2" dish="lunch" category="pasta" order="2">
-					<title>SPIRÁLKY  s houbami a kuřecím masem v sýrové omáčce </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="2" dish="lunch" category="pasta" order="3">
-					<title>FARFALLE s cuketou, kapiemi a lilkem sypané parmezánem </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="3" dish="soup" category="normal" order="1">
-					<title>Thajská polévka s pikantní zeleninou a kuřecím masem</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="3" dish="soup" category="normal" order="2">
-					<title>Zelná polévka se slaninou a smetanou</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="3" dish="lunch" category="normal" order="1">
-					<title>Kaplická cmunda s uzeným masem a červeným zelím</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="3" dish="lunch" category="normal" order="2">
-					<title>Kuře alá bažant, dušená rýže</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="3" dish="lunch" category="normal" order="3">
-					<title>Hovězí maso na pepři, houskové knedlíky</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="3" dish="lunch" category="normal" order="4">
-					<title>Pečené rybí filátko na zeleninovém kuskusu</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="3" dish="lunch" category="normal" order="5">
-					<title>Salát Caprese s bazalkovým pestem</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="3" dish="lunch" category="superior" order="1">
-					<title>Kuřecí paličky balené v slaninovém kabátku, americké brambory </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="3" dish="lunch" category="live" order="1">
-					<title>Grilované vepřové medailonky s houbami, bramborové špecle </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="3" dish="lunch" category="pasta" order="1">
-					<title>Gabell ŠPAGETY s vepřovým masem a rajčatovým sugem </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="3" dish="lunch" category="pasta" order="2">
-					<title>SPIRÁLKY  s houbami a kuřecím masem v sýrové omáčce </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="3" dish="lunch" category="pasta" order="3">
-					<title>FARFALLE s cuketou, kapiemi a lilkem sypané parmezánem </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="4" dish="soup" category="normal" order="1">
-					<title>Drůbeží vývar se strouhanou zavářkou</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="4" dish="soup" category="normal" order="2">
-					<title>Bavorský Eintopf</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="4" dish="lunch" category="normal" order="1">
-					<title>Kuřecí roláda s bylinkovou nádivkou, šťouchané máslové brambory</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="4" dish="lunch" category="normal" order="2">
-					<title>Domažlické vepřové ragú, houskové knedlíky </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="4" dish="lunch" category="normal" order="3">
-					<title>Orientálská hovězí pečeně, dušená rýže </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="4" dish="lunch" category="normal" order="4">
-					<title>Hovězí nudle zapečené se sýrem a špenátem </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="4" dish="lunch" category="normal" order="5">
-					<title>Barevná zelenina s kuřecími nugetami v sezamu </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="4" dish="lunch" category="superior" order="1">
-					<title>Krůtí plátky marinované v medu, bramborové pyré </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="4" dish="lunch" category="live" order="1">
-					<title>Hovězí nudle s pikantní zeleninou, rozmarýnová rýže </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="4" dish="lunch" category="pasta" order="1">
-					<title>Gabell ŠPAGETY s vepřovým masem a rajčatovým sugem </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="4" dish="lunch" category="pasta" order="2">
-					<title>SPIRÁLKY  s houbami a kuřecím masem v sýrové omáčce </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="4" dish="lunch" category="pasta" order="3">
-					<title>FARFALLE s cuketou, kapiemi a lilkem sypané parmezánem </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="5" dish="soup" category="normal" order="1">
-					<title>Zeleninová polévka s rýží</title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="5" dish="soup" category="normal" order="2">
-					<title>Drůbková polévka se zeleninou </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="5" dish="lunch" category="normal" order="1">
-					<title>Hovězí maso na česneku, špenát, bramborové knedlíky </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="5" dish="lunch" category="normal" order="2">
-					<title>Kuřecí Kung pao, dušená rýže </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="5" dish="lunch" category="normal" order="3">
-					<title>Gratinované šunkové flíčky se sýrem a vejci, kyselá okurka </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="5" dish="lunch" category="normal" order="4">
-					<title>Zeleninové palačinky s brokolicí a tomatovým dipem </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="5" dish="lunch" category="normal" order="5">
-					<title>Míchaný salát s ančovičkami a rukolou </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="5" dish="lunch" category="superior" order="1">
-					<title>Paela s mořskými plody a kuřetem </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="5" dish="lunch" category="live" order="1">
-					<title>Vykostěná krocaní stehna pečená na rozmarýnu, brambory Lorraine </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="5" dish="lunch" category="pasta" order="1">
-					<title>Gabell ŠPAGETY s vepřovým masem a rajčatovým sugem </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="5" dish="lunch" category="pasta" order="2">
-					<title>SPIRÁLKY  s houbami a kuřecím masem v sýrové omáčce </title>
-					<description/>
-					<price/>
-				</meal>
-				<meal ref-time="20.1.2014" time="5" dish="lunch" category="pasta" order="3">
-					<title>FARFALLE s cuketou, kapiemi a lilkem sypané parmezánem </title>
-					<description/>
-					<price/>
-				</meal>
-			</menu>
-		</restaurant>
-	</config>
+<?xml version="1.0" encoding="UTF-8"?><jidelak>
+<config>
+<restaurant>
+<id>praha-lunch-garden-avenir</id>
+<name>Lunch Garden Avenir</name>
+<phone>+420 731 401 714</phone>
+<e-mail>pavel.pechaty.ml@cateringmelodie.cz</e-mail>
+<web>http://fgkavcihory.cateringmelodie.cz/cz/</web>
+<city>Praha 5</city>
+<country>Česká republika</country>
+<address>Radlická 714/113a</address>
+<zip>158 00</zip>
+<source url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php" locale="cs_CZ" dateFormat="d.M.y" encoding="cp1250" timeOffset="0" firstDayOfWeek="Po" base="week" time="relative"/>
+<source url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-pristi-tyden-tisk.php" locale="cs_CZ" dateFormat="d.M.y" encoding="cp1250" timeOffset="1" firstDayOfWeek="Po" base="week" time="relative"/>
+<open>
+<term to="17:00" from="8:00" day-of-week="Po"/>
+<term to="17:00" from="8:00" day-of-week="Út"/>
+<term to="17:00" from="8:00" day-of-week="St"/>
+<term to="17:00" from="8:00" day-of-week="Čt"/>
+<term to="17:00" from="8:00" day-of-week="Pá"/>
+<term closed="true" date="1. 1. 2010"/>
+</open>
+<menu>
+<meal ref-time="20.1.2014" time="1" dish="soup" category="normal" order="1">
+<title>Slepičí polévka s masem a nudlemi</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="1" dish="soup" category="normal" order="2">
+<title>Tradiční bramborová polévka s houbami </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="1" dish="lunch" category="normal" order="1">
+<title>Smažený vepřový řízek, bramborová kaše, okurka </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="1" dish="lunch" category="normal" order="2">
+<title>Hovězí nudle s chilli a šalotkou, dušená rýže </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="1" dish="lunch" category="normal" order="3">
+<title>Zapečená kapusta s uzeným masem, slaninou, česnekem a cibulkou </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="1" dish="lunch" category="normal" order="4">
+<title>Tortilla plněná sekanou zeleninou a sýrem, majonézový dip </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="1" dish="lunch" category="normal" order="5">
+<title>Šopský salát </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="1" dish="lunch" category="superior" order="1">
+<title>Pečené vepřové nudle s cibulí a hořčicí, bramborové hranolky </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="1" dish="lunch" category="live" order="1">
+<title>Ragú z králičího hřbetu, cibulový koláč </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="1" dish="lunch" category="pasta" order="1">
+<title>Gabell ŠPAGETY s vepřovým masem a rajčatovým sugem </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="1" dish="lunch" category="pasta" order="2">
+<title>SPIRÁLKY  s houbami a kuřecím masem v sýrové omáčce </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="1" dish="lunch" category="pasta" order="3">
+<title>FARFALLE s cuketou, kapiemi a lilkem sypané parmezánem </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="2" dish="soup" category="normal" order="1">
+<title>Polévka z hovězí oháňky s petrželkovým svítkem</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="2" dish="soup" category="normal" order="2">
+<title>Dršťková polévka</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="2" dish="lunch" category="normal" order="1">
+<title>Zbojnický skřivan, dušená rýže </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="2" dish="lunch" category="normal" order="2">
+<title>Segedínský guláš, houskový knedlík</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="2" dish="lunch" category="normal" order="3">
+<title>Kuře připravené na zelenině, pórkové brambory</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="2" dish="lunch" category="normal" order="4">
+<title>Zapečená jablková žemlovka s rozinkami a bílkovým sněhem</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="2" dish="lunch" category="normal" order="5">
+<title>Zeleninový salátek se sýrovými noky a jogurtovým dipem</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="2" dish="lunch" category="superior" order="1">
+<title>Krůtí prsa plněná listovým špenátem, bramborové krokety </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="2" dish="lunch" category="live" order="1">
+<title>Steak z  hovězí roštěné s pečenými bramborami </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="2" dish="lunch" category="pasta" order="1">
+<title>Gabell ŠPAGETY s vepřovým masem a rajčatovým sugem </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="2" dish="lunch" category="pasta" order="2">
+<title>SPIRÁLKY  s houbami a kuřecím masem v sýrové omáčce </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="2" dish="lunch" category="pasta" order="3">
+<title>FARFALLE s cuketou, kapiemi a lilkem sypané parmezánem </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="3" dish="soup" category="normal" order="1">
+<title>Thajská polévka s pikantní zeleninou a kuřecím masem</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="3" dish="soup" category="normal" order="2">
+<title>Zelná polévka se slaninou a smetanou</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="3" dish="lunch" category="normal" order="1">
+<title>Kaplická cmunda s uzeným masem a červeným zelím</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="3" dish="lunch" category="normal" order="2">
+<title>Kuře alá bažant, dušená rýže</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="3" dish="lunch" category="normal" order="3">
+<title>Hovězí maso na pepři, houskové knedlíky</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="3" dish="lunch" category="normal" order="4">
+<title>Pečené rybí filátko na zeleninovém kuskusu</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="3" dish="lunch" category="normal" order="5">
+<title>Salát Caprese s bazalkovým pestem</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="3" dish="lunch" category="superior" order="1">
+<title>Kuřecí paličky balené v slaninovém kabátku, americké brambory </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="3" dish="lunch" category="live" order="1">
+<title>Grilované vepřové medailonky s houbami, bramborové špecle </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="3" dish="lunch" category="pasta" order="1">
+<title>Gabell ŠPAGETY s vepřovým masem a rajčatovým sugem </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="3" dish="lunch" category="pasta" order="2">
+<title>SPIRÁLKY  s houbami a kuřecím masem v sýrové omáčce </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="3" dish="lunch" category="pasta" order="3">
+<title>FARFALLE s cuketou, kapiemi a lilkem sypané parmezánem </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="4" dish="soup" category="normal" order="1">
+<title>Drůbeží vývar se strouhanou zavářkou</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="4" dish="soup" category="normal" order="2">
+<title>Bavorský Eintopf</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="4" dish="lunch" category="normal" order="1">
+<title>Kuřecí roláda s bylinkovou nádivkou, šťouchané máslové brambory</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="4" dish="lunch" category="normal" order="2">
+<title>Domažlické vepřové ragú, houskové knedlíky </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="4" dish="lunch" category="normal" order="3">
+<title>Orientálská hovězí pečeně, dušená rýže </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="4" dish="lunch" category="normal" order="4">
+<title>Hovězí nudle zapečené se sýrem a špenátem </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="4" dish="lunch" category="normal" order="5">
+<title>Barevná zelenina s kuřecími nugetami v sezamu </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="4" dish="lunch" category="superior" order="1">
+<title>Krůtí plátky marinované v medu, bramborové pyré </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="4" dish="lunch" category="live" order="1">
+<title>Hovězí nudle s pikantní zeleninou, rozmarýnová rýže </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="4" dish="lunch" category="pasta" order="1">
+<title>Gabell ŠPAGETY s vepřovým masem a rajčatovým sugem </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="4" dish="lunch" category="pasta" order="2">
+<title>SPIRÁLKY  s houbami a kuřecím masem v sýrové omáčce </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="4" dish="lunch" category="pasta" order="3">
+<title>FARFALLE s cuketou, kapiemi a lilkem sypané parmezánem </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="5" dish="soup" category="normal" order="1">
+<title>Zeleninová polévka s rýží</title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="5" dish="soup" category="normal" order="2">
+<title>Drůbková polévka se zeleninou </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="5" dish="lunch" category="normal" order="1">
+<title>Hovězí maso na česneku, špenát, bramborové knedlíky </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="5" dish="lunch" category="normal" order="2">
+<title>Kuřecí Kung pao, dušená rýže </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="5" dish="lunch" category="normal" order="3">
+<title>Gratinované šunkové flíčky se sýrem a vejci, kyselá okurka </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="5" dish="lunch" category="normal" order="4">
+<title>Zeleninové palačinky s brokolicí a tomatovým dipem </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="5" dish="lunch" category="normal" order="5">
+<title>Míchaný salát s ančovičkami a rukolou </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="5" dish="lunch" category="superior" order="1">
+<title>Paela s mořskými plody a kuřetem </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="5" dish="lunch" category="live" order="1">
+<title>Vykostěná krocaní stehna pečená na rozmarýnu, brambory Lorraine </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="5" dish="lunch" category="pasta" order="1">
+<title>Gabell ŠPAGETY s vepřovým masem a rajčatovým sugem </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="5" dish="lunch" category="pasta" order="2">
+<title>SPIRÁLKY  s houbami a kuřecím masem v sýrové omáčce </title>
+<description/>
+<price/>
+</meal>
+<meal ref-time="20.1.2014" time="5" dish="lunch" category="pasta" order="3">
+<title>FARFALLE s cuketou, kapiemi a lilkem sypané parmezánem </title>
+<description/>
+<price/>
+</meal>
+</menu>
+</restaurant>
+</config>
 </jidelak>

@@ -32,7 +32,8 @@ public abstract class BaseMarshaller<T> {
 		unmarshall(null, n, object);
 	}
 
-	public void unmarshall(String prefix, Node n, T object) throws JidelakException {
+	public void unmarshall(String prefix, Node n, T object)
+			throws JidelakException {
 		synchronized (path) {
 
 			root = n;
@@ -61,7 +62,8 @@ public abstract class BaseMarshaller<T> {
 		unmarshallHelper(prefix, data, object);
 	}
 
-	protected boolean processElementHook(Element n, T object) throws JidelakException {
+	protected boolean processElementHook(Element n, T object)
+			throws JidelakException {
 		return true;
 	}
 
@@ -77,11 +79,10 @@ public abstract class BaseMarshaller<T> {
 			return n;
 		}
 
-		if (n == root)
-			return null;
-
 		do {
 			n = path.pop().getNextSibling();
+			if (n == root)
+				return null;
 		} while (n == null && !path.isEmpty());
 
 		if (n == null)

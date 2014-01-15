@@ -30,10 +30,10 @@
 			<zip>158 00</zip>
 
 			<source time="relative" base="week" firstDayOfWeek="Po"
-				timeOffset="0" encoding="cp1250" dateFormat="dd. mmm. yyyy" locale="cs_CZ"
+				timeOffset="0" encoding="cp1250" dateFormat="d.M.y" locale="cs_CZ"
 				url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php" />
 			<source time="relative" base="week" firstDayOfWeek="Po"
-				timeOffset="1" encoding="cp1250" dateFormat="dd. mmm. yyyy" locale="cs_CZ"
+				timeOffset="1" encoding="cp1250" dateFormat="d.M.y" locale="cs_CZ"
 				url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-pristi-tyden-tisk.php" />
 
 			<open>

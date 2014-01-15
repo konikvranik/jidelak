@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -13,16 +14,18 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.URIResolver;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.MealMarshaller;
+import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Meal;
+import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
 
 import org.w3c.dom.Document;
@@ -35,7 +38,6 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 public class JidelakFeederService extends Service {
 	static final String LOGGING_TAG = "JidelakFeederService";
@@ -69,6 +71,9 @@ public class JidelakFeederService extends Service {
 
 		SourceDao sdao = new SourceDao(getDbHelper());
 		MealDao mdao = new MealDao(getDbHelper());
+		AvailabilityDao adao = new AvailabilityDao(getDbHelper());
+
+		RestaurantMarshaller rm = new RestaurantMarshaller();
 
 		for (Source source : sdao.findAll()) {
 
@@ -78,15 +83,15 @@ public class JidelakFeederService extends Service {
 
 				Node result = retrieve(source.getUrl(), template);
 
-				Meal meal = new Meal();
-				meal.setRestaurant(source.getRestaurant());
-				meal.setSource(source);
+				Restaurant restaurant = new Restaurant();
+				restaurant.addSource(source);
 
-				MealMarshaller mm = new MealMarshaller();
-				mm.setSource(source);
-				mm.unmarshall("#document.jidelak.config.restaurant.menu", result, meal);
+				rm.unmarshall("#document.jidelak.config", result, restaurant);
 
-				mdao.insert(meal);
+				for (Meal meal : restaurant.getMenu()) {
+					adao.insert(meal.getAvailability());
+					mdao.insert(meal);
+				}
 
 				// TODO Auto-generated method stub
 			} catch (IOException e) {
@@ -120,16 +125,20 @@ public class JidelakFeederService extends Service {
 		return dbHelper;
 	}
 
-	public Node retrieve(URL url, InputStream inXsl) throws IOException,
+	Node retrieve(URL url, InputStream inXsl) throws IOException,
 			TransformerException, ParserConfigurationException {
 		URLConnection con = url.openConnection();
-		Document d = tidy(con.getInputStream(), con.getContentEncoding());
+		InputStream is = con.getInputStream();
+		Document d = getTidy(con.getContentEncoding()).parseDOM(is, null);
+		is.close();
 		DOMResult res = transform(d, inXsl);
 		return res.getNode();
 	}
 
-	private Document tidy(InputStream is, String enc) throws IOException {
+	private Tidy getTidy(String enc) throws IOException {
+
 		Tidy t = new Tidy();
+
 		t.setInputEncoding(enc == null ? "cp1250" : enc);
 		// t.setNumEntities(false);
 		// t.setQuoteMarks(false);
@@ -146,9 +155,7 @@ public class JidelakFeederService extends Service {
 		// t.setSmartIndent(true);
 		// t.setQuoteNbsp(true);
 
-		Document d = t.parseDOM(is, null);
-		is.close();
-		return d;
+		return t;
 	}
 
 	private DOMResult transform(Document d, InputStream inXsl)
@@ -157,8 +164,11 @@ public class JidelakFeederService extends Service {
 			TransformerException {
 
 		TransformerFactory trf = TransformerFactory.newInstance();
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setNamespaceAware(false);
 
 		Transformer tr = trf.newTransformer();
+
 		tr.setOutputProperty(OutputKeys.INDENT, "yes");
 		tr.transform(
 				new DOMSource(d),
@@ -166,8 +176,6 @@ public class JidelakFeederService extends Service {
 						MODE_WORLD_READABLE)));
 
 		tr = trf.newTransformer(new StreamSource(inXsl));
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		dbf.setNamespaceAware(false);
 		DOMResult res = new DOMResult(dbf.newDocumentBuilder().newDocument());
 		tr.transform(new DOMSource(d), res);
 

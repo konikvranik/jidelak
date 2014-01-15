@@ -1,9 +1,11 @@
 package net.suteren.android.jidelak.dao;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
+import android.util.Log;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
@@ -35,8 +37,20 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 
 					cal.setTime(getSource().getDateFormat().parse(y));
 
+					Log.d(getSource().getTimeType().name(),
+							"Before: "
+									+ new SimpleDateFormat("EE, yyyy-MM-dd")
+											.format(cal.getTime()));
+
 					cal.add(getSource().getOffsetBase().getType(),
 							Integer.parseInt(x));
+
+					Log.d(getSource().getTimeType().name(),
+							"After + "
+									+ x
+									+ ": "
+									+ new SimpleDateFormat("EE, yyyy-MM-dd")
+											.format(cal.getTime()));
 
 				}
 				break;
@@ -49,6 +63,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 			default:
 				break;
 			}
+
 			meal.setAvailability(new Availability(cal));
 
 		} catch (ParseException e) {

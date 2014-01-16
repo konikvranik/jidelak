@@ -121,12 +121,13 @@ public class JidelakFeederService extends Service {
 				throw new JidelakException(e);
 			} catch (ParserConfigurationException e) {
 				throw new JidelakException(e);
+			} finally {
+				getDbHelper().notifyDataSetChanged();
 			}
 		}
 
 	}
 
-	
 	private JidelakDbHelper getDbHelper() {
 		if (dbHelper == null)
 			dbHelper = new JidelakDbHelper(getApplicationContext());

@@ -86,7 +86,7 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 	 * net.suteren.android.jidelak.INotifyingDbHelper#notifyDataSetChanged()
 	 */
 	public void notifyDataSetChanged() {
-		// Log.d(LOGGER_TAG, "Notifying - dataset changed.");
+		Log.d(LOGGER_TAG,"notifyDataSetChanged");
 		mDataSetObservable.notifyChanged();
 	}
 
@@ -115,6 +115,7 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 	}
 
 	public void notifyDataSetInvalidated() {
+		Log.d(LOGGER_TAG,"notifyDataSetInvalidated");
 		mDataSetObservable.notifyInvalidated();
 		;
 	}

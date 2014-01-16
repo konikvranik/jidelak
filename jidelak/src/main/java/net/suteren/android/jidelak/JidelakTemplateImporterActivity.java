@@ -32,9 +32,7 @@ import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.dao.SourceDao;
-import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
-import net.suteren.android.jidelak.model.Source;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -166,8 +164,8 @@ public class JidelakTemplateImporterActivity extends Activity {
 				"Importing " + sourceUri.toString() + "...", Toast.LENGTH_LONG)
 				.show();
 
-		RestaurantDao restaurantDao = new RestaurantDao(new JidelakDbHelper(
-				getApplicationContext()));
+		JidelakDbHelper dbh = new JidelakDbHelper(getApplicationContext());
+		RestaurantDao restaurantDao = new RestaurantDao(dbh);
 
 		Restaurant restaurant = new Restaurant();
 
@@ -180,16 +178,16 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 			restaurantDao.update(restaurant);
 
-			new SourceDao(new JidelakDbHelper(getApplicationContext()))
-					.insert(restaurant.getSource());
+			new SourceDao(dbh).insert(restaurant.getSource());
 
-			new AvailabilityDao(new JidelakDbHelper(getApplicationContext()))
-					.insert(restaurant.getOpeningHours());
+			new AvailabilityDao(dbh).insert(restaurant.getOpeningHours());
 
 		} catch (Exception e) {
 			deleteFile(restaurant.getTemplateName());
 			restaurantDao.delete(restaurant);
 			throw new JidelakException(e);
+		} finally {
+			dbh.notifyDataSetChanged();
 		}
 	}
 

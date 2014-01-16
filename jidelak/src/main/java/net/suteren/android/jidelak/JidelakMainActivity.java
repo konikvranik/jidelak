@@ -70,9 +70,9 @@ public class JidelakMainActivity extends ActionBarActivity {
 					@Override
 					public void run() {
 						dpa.notifyDataSetChanged();
-						// super.onChanged();
 					}
 				});
+				super.onChanged();
 			}
 
 			@Override
@@ -85,7 +85,7 @@ public class JidelakMainActivity extends ActionBarActivity {
 						dpa.notifyDataSetChanged();
 					}
 				});
-				// super.onInvalidated();
+				super.onInvalidated();
 			}
 
 		});
@@ -122,18 +122,6 @@ public class JidelakMainActivity extends ActionBarActivity {
 		private List<Restaurant> restaurants;
 		private Context ctx;
 
-		@Override
-		public void notifyDataSetChanged() {
-			updateRestaurants();
-			super.notifyDataSetChanged();
-		}
-
-		@Override
-		public void notifyDataSetInvalidated() {
-			updateRestaurants();
-			super.notifyDataSetInvalidated();
-		}
-
 		public DailyMenuAdapter(Context ctx, Calendar day) {
 			this.day = day;
 			this.ctx = ctx;
@@ -161,6 +149,7 @@ public class JidelakMainActivity extends ActionBarActivity {
 
 		@Override
 		public int getChildrenCount(int paramInt) {
+
 			Log.d(LOGGER_TAG, "MEnu count: "
 					+ getGroup(paramInt).getMenu().size());
 			return getGroup(paramInt).getMenu().size();
@@ -267,35 +256,34 @@ public class JidelakMainActivity extends ActionBarActivity {
 				menuList.expandGroup(i);
 			}
 
-			((JidelakMainActivity) getActivity()).getDbHelper()
-					.registerObserver(new DataSetObserver() {
-						@Override
-						public void onChanged() {
-
-							ad.updateRestaurants();
-							getActivity().runOnUiThread(new Runnable() {
-
-								@Override
-								public void run() {
-									ad.notifyDataSetChanged();
-								}
-							});
-							// super.onChanged();
-						}
+			final JidelakMainActivity act = (JidelakMainActivity) getActivity();
+			act.getDbHelper().registerObserver(new DataSetObserver() {
+				@Override
+				public void onChanged() {
+					ad.updateRestaurants();
+					act.runOnUiThread(new Runnable() {
 
 						@Override
-						public void onInvalidated() {
-							ad.updateRestaurants();
-							getActivity().runOnUiThread(new Runnable() {
-
-								@Override
-								public void run() {
-									ad.notifyDataSetInvalidated();
-								}
-							});
-							// super.onInvalidated();
+						public void run() {
+							ad.notifyDataSetChanged();
 						}
 					});
+					super.onChanged();
+				}
+
+				@Override
+				public void onInvalidated() {
+					ad.updateRestaurants();
+					act.runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							ad.notifyDataSetInvalidated();
+						}
+					});
+					super.onInvalidated();
+				}
+			});
 
 			return rootView;
 		}

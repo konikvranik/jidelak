@@ -202,7 +202,6 @@ public abstract class BaseDao<T extends Identificable> {
 			obj.setId(result);
 		}
 		db.close();
-		getDbHelper().notifyDataSetChanged();
 	}
 
 	public void insert(T obj) {
@@ -212,7 +211,6 @@ public abstract class BaseDao<T extends Identificable> {
 			throw new SQLException();
 		obj.setId(result);
 		db.close();
-		getDbHelper().notifyDataSetChanged();
 	}
 
 	protected abstract ContentValues getValues(T obj);
@@ -228,7 +226,6 @@ public abstract class BaseDao<T extends Identificable> {
 		} finally {
 			db.close();
 		}
-		getDbHelper().notifyDataSetChanged();
 	}
 
 	public void delete(Collection<T> obj) {
@@ -242,7 +239,6 @@ public abstract class BaseDao<T extends Identificable> {
 		} finally {
 			db.close();
 		}
-		getDbHelper().notifyDataSetInvalidated();
 	}
 
 	public void delete(T obj) {
@@ -253,7 +249,6 @@ public abstract class BaseDao<T extends Identificable> {
 		} finally {
 			db.close();
 		}
-		getDbHelper().notifyDataSetInvalidated();
 	}
 
 	public List<T> findAll() {

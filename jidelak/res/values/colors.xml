@@ -1,0 +1,10 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <color name="shadow">@android:color/black</color>
+    <color name="shadow1" alpha="51">@color/shadow</color>
+    <color name="shadow2" alpha="102">@color/shadow</color>
+    <color name="shadow3" alpha="153">@color/shadow</color>
+    <color name="shadow4" alpha="204">@color/shadow</color>
+    <color name="shadow5" alpha="255">@color/shadow</color>
+
+</resources>

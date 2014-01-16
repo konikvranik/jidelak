@@ -39,19 +39,9 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 					cal.add(getSource().getOffsetBase().getType(), getSource()
 							.getOffset());
 
-					Log.d(getSource().getTimeType().name(),
-							"Before: "
-									+ new SimpleDateFormat("EE, yyyy-MM-dd")
-											.format(cal.getTime()));
 
 					cal.add(Calendar.DAY_OF_MONTH, Integer.parseInt(x));
 
-					Log.d(getSource().getTimeType().name(),
-							"After + "
-									+ x
-									+ ": "
-									+ new SimpleDateFormat("EE, yyyy-MM-dd")
-											.format(cal.getTime()));
 
 				}
 				break;

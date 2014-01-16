@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,6 +26,7 @@ import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.dao.SourceDao;
+import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
@@ -86,42 +90,43 @@ public class JidelakFeederService extends Service {
 
 				rm.unmarshall("#document.jidelak.config", result, restaurant);
 
+				Set<Availability> avs = new HashSet<Availability>();
+				for (Meal meal : restaurant.getMenu()) {
+					avs.add(meal.getAvailability());
+				}
+
+				for (Availability av : avs) {
+					List<Meal> atd = mdao.findByDayAndRestaurant(
+							av.getCalendar(), restaurant);
+					mdao.delete(atd);
+				}
+
 				for (Meal meal : restaurant.getMenu()) {
 					adao.insert(meal.getAvailability());
 					mdao.insert(meal);
 				}
 
 				Restaurant savedRestaurant = rdao.findById(restaurant);
-				adao.delete(savedRestaurant.getOpeningHours());
+				if (savedRestaurant != null
+						&& savedRestaurant.getOpeningHours() != null)
+					adao.delete(savedRestaurant.getOpeningHours());
+
 				adao.insert(restaurant.getOpeningHours());
 				rdao.update(restaurant);
 
 				// TODO Auto-generated method stub
 			} catch (IOException e) {
-				// Toast.makeText(getApplicationContext(),
-				// getResources().getText(R.string.download_failed),
-				// DURATION).show();
-				Log.e(LOGGING_TAG, e.getMessage(), e);
 				throw new JidelakException(e);
 			} catch (TransformerException e) {
-				// Toast.makeText(getApplicationContext(),
-				// getResources().getText(R.string.unable_to_parse),
-				// DURATION).show();
-				Log.e(LOGGING_TAG, e.getMessage(), e);
 				throw new JidelakException(e);
 			} catch (ParserConfigurationException e) {
-				// Toast.makeText(
-				// getApplicationContext(),
-				// getResources().getText(
-				// R.string.parser_configuration_error), DURATION)
-				// .show();
-				Log.e(LOGGING_TAG, e.getMessage(), e);
 				throw new JidelakException(e);
 			}
 		}
 
 	}
 
+	
 	private JidelakDbHelper getDbHelper() {
 		if (dbHelper == null)
 			dbHelper = new JidelakDbHelper(getApplicationContext());

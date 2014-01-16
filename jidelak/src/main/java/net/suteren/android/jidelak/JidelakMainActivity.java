@@ -57,8 +57,38 @@ public class JidelakMainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		ViewPager pagerView = (ViewPager) findViewById(R.id.pager);
-		DayPagerAdapter dpa = new DayPagerAdapter(getSupportFragmentManager());
+		final DayPagerAdapter dpa = new DayPagerAdapter(
+				getSupportFragmentManager());
 		pagerView.setAdapter(dpa);
+
+		getDbHelper().registerObserver(new DataSetObserver() {
+			@Override
+			public void onChanged() {
+				dpa.updateDates();
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						dpa.notifyDataSetChanged();
+						// super.onChanged();
+					}
+				});
+			}
+
+			@Override
+			public void onInvalidated() {
+				dpa.updateDates();
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						dpa.notifyDataSetChanged();
+					}
+				});
+				// super.onInvalidated();
+			}
+
+		});
 
 	}
 
@@ -91,26 +121,24 @@ public class JidelakMainActivity extends ActionBarActivity {
 		private final JidelakDbHelper dbHelper;
 		private List<Restaurant> restaurants;
 		private Context ctx;
-		DataSetObserver dailyMenuObserver = new DataSetObserver() {
-			@Override
-			public void onChanged() {
-				super.onChanged();
-				updateRestaurants();
-			}
 
-			@Override
-			public void onInvalidated() {
-				super.onInvalidated();
-				updateRestaurants();
-			}
-		};
+		@Override
+		public void notifyDataSetChanged() {
+			updateRestaurants();
+			super.notifyDataSetChanged();
+		}
+
+		@Override
+		public void notifyDataSetInvalidated() {
+			updateRestaurants();
+			super.notifyDataSetInvalidated();
+		}
 
 		public DailyMenuAdapter(Context ctx, Calendar day) {
 			this.day = day;
 			this.ctx = ctx;
 			dbHelper = new JidelakDbHelper(ctx);
 
-			dbHelper.registerObserver(dailyMenuObserver);
 			updateRestaurants();
 		}
 
@@ -188,8 +216,6 @@ public class JidelakMainActivity extends ActionBarActivity {
 		public View getChildView(int paramInt1, int paramInt2,
 				boolean paramBoolean, View paramView, ViewGroup paramViewGroup) {
 
-			Log.d(LOGGER_TAG, "MEal view");
-
 			if (paramView == null)
 				paramView = View.inflate(ctx, R.layout.meal, null);
 
@@ -212,6 +238,7 @@ public class JidelakMainActivity extends ActionBarActivity {
 	}
 
 	public static class DayFragment extends Fragment {
+
 		public static final String ARG_DAY = "day";
 
 		@Override
@@ -232,14 +259,43 @@ public class JidelakMainActivity extends ActionBarActivity {
 
 			Log.d(LOGGER_TAG, "Creating new DayFragment for "
 					+ new SimpleDateFormat("yyyy-MM-dd").format(day.getTime()));
-			DailyMenuAdapter ad = new DailyMenuAdapter(getActivity()
+			final DailyMenuAdapter ad = new DailyMenuAdapter(getActivity()
 					.getApplicationContext(), day);
 			menuList.setAdapter(ad);
 
 			for (int i = 0; i < ad.getGroupCount(); i++) {
-				Log.d(LOGGER_TAG, "expanging group " + i);
 				menuList.expandGroup(i);
 			}
+
+			((JidelakMainActivity) getActivity()).getDbHelper()
+					.registerObserver(new DataSetObserver() {
+						@Override
+						public void onChanged() {
+
+							ad.updateRestaurants();
+							getActivity().runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									ad.notifyDataSetChanged();
+								}
+							});
+							// super.onChanged();
+						}
+
+						@Override
+						public void onInvalidated() {
+							ad.updateRestaurants();
+							getActivity().runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									ad.notifyDataSetInvalidated();
+								}
+							});
+							// super.onInvalidated();
+						}
+					});
 
 			return rootView;
 		}
@@ -250,43 +306,25 @@ public class JidelakMainActivity extends ActionBarActivity {
 	public class DayPagerAdapter extends FragmentStatePagerAdapter {
 
 		private List<Availability> dates = new ArrayList<Availability>();
-		private DataSetObserver dayPagerDatasetObserver = new DataSetObserver() {
-			@Override
-			public void onChanged() {
-				super.onChanged();
-				updateDates();
-			}
-
-			@Override
-			public void onInvalidated() {
-				super.onInvalidated();
-				updateDates();
-			}
-		};
 
 		public DayPagerAdapter(FragmentManager fm) {
 			super(fm);
 
-			getDbHelper().registerObserver(dayPagerDatasetObserver);
 			updateDates();
 
 		}
 
 		@Override
 		public int getCount() {
-			// updateDates();
-			Log.d(LOGGER_TAG, "Dates getSount: " + dates.size());
 			return dates.size();
 		}
 
 		private void updateDates() {
 			AvailabilityDao ad = new AvailabilityDao(getDbHelper());
 			dates = ad.findAllDays();
-			notifyDataSetChanged();
 		}
 
 		private Calendar getDateByPosition(int position) {
-			// updateDates();
 			return dates.get(position).getCalendar();
 		}
 

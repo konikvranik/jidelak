@@ -160,7 +160,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 				.setCancelable(false).show();
 	}
 
-	private void importTemplate() throws JidelakException {
+	void importTemplate() throws JidelakException {
 
 		Toast.makeText(getApplicationContext(),
 				"Importing " + sourceUri.toString() + "...", Toast.LENGTH_LONG)
@@ -241,8 +241,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 		}
 	}
 
-	private String saveLocally(Uri uri, Restaurant restaurant)
-			throws IOException {
+	String saveLocally(Uri uri, Restaurant restaurant) throws IOException {
 
 		String fileName = restaurant.getTemplateName();
 		InputStream sourceStream = new URL(uri.toString()).openStream();

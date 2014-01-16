@@ -3,7 +3,7 @@ package net.suteren.android.jidelak.model;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class Availability implements Identificable {
+public class Availability implements Identificable, Comparable<Availability> {
 
 	private Integer day;
 	private Integer month;
@@ -111,4 +111,71 @@ public class Availability implements Identificable {
 		this.restaurant = restaurant;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Availability) {
+			Availability a = (Availability) o;
+
+			if (a.getCalendar() != null)
+				if (!a.getCalendar().equals(getCalendar()))
+					return false;
+
+			if (a.getClosed() != null)
+				if (!a.getClosed().equals(getClosed()))
+					return false;
+
+			if (a.getFrom() != null)
+				if (!a.getFrom().equals(getFrom()))
+					return false;
+
+			if (a.getTo() != null)
+				if (!a.getTo().equals(getTo()))
+					return false;
+
+			return true;
+		} else
+			return false;
+	}
+
+	@Override
+	public int compareTo(Availability another) {
+		int c = 0;
+		if (getCalendar() == null) {
+			if (another.getCalendar() != null)
+				return -1;
+		} else {
+			c = getCalendar().compareTo(another.getCalendar());
+			if (c != 0)
+				return c;
+		}
+
+		if (getClosed() == null) {
+			if (another.getClosed() != null)
+				return -1;
+		} else {
+			c = getClosed().compareTo(another.getClosed());
+			if (c != 0)
+				return c;
+		}
+
+		if (getFrom() == null) {
+			if (another.getFrom() != null)
+				return -1;
+		} else {
+			c = getFrom().compareTo(another.getFrom());
+			if (c != 0)
+				return c;
+		}
+
+		if (getTo() == null) {
+			if (another.getTo() != null)
+				return -1;
+		} else {
+			c = getTo().compareTo(another.getTo());
+			if (c != 0)
+				return c;
+		}
+
+		return c;
+	}
 }

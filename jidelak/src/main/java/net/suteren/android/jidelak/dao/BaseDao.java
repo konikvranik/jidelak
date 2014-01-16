@@ -202,6 +202,7 @@ public abstract class BaseDao<T extends Identificable> {
 			obj.setId(result);
 		}
 		db.close();
+		getDbHelper().notifyDataSetChanged();
 	}
 
 	public void insert(T obj) {
@@ -211,18 +212,23 @@ public abstract class BaseDao<T extends Identificable> {
 			throw new SQLException();
 		obj.setId(result);
 		db.close();
+		getDbHelper().notifyDataSetChanged();
 	}
 
 	protected abstract ContentValues getValues(T obj);
 
 	public void update(T obj) {
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
-		int result = db.update(getTableName(), getValues(obj), "id = ?",
-				new String[] { Long.toString(obj.getId()) });
-		if (result != 1)
-			throw new RuntimeException("Updated " + result
-					+ " rows. 1 expected.");
-		db.close();
+		try {
+			int result = db.update(getTableName(), getValues(obj), "id = ?",
+					new String[] { Long.toString(obj.getId()) });
+			if (result != 1)
+				throw new RuntimeException("Updated " + result
+						+ " rows. 1 expected.");
+		} finally {
+			db.close();
+		}
+		getDbHelper().notifyDataSetChanged();
 	}
 
 	public void delete(Collection<T> obj) {
@@ -236,6 +242,7 @@ public abstract class BaseDao<T extends Identificable> {
 		} finally {
 			db.close();
 		}
+		getDbHelper().notifyDataSetInvalidated();
 	}
 
 	public void delete(T obj) {
@@ -246,6 +253,7 @@ public abstract class BaseDao<T extends Identificable> {
 		} finally {
 			db.close();
 		}
+		getDbHelper().notifyDataSetInvalidated();
 	}
 
 	public List<T> findAll() {

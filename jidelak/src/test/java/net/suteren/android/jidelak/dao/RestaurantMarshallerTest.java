@@ -5,7 +5,9 @@ import static org.junit.Assert.fail;
 
 import java.io.StringWriter;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -61,7 +63,8 @@ public class RestaurantMarshallerTest {
 	@Test
 	public void testMarshallNode() throws ParserConfigurationException,
 			TransformerConfigurationException,
-			TransformerFactoryConfigurationError, TransformerException, JidelakException {
+			TransformerFactoryConfigurationError, TransformerException,
+			JidelakException {
 
 		Document doc = DocumentBuilderFactory.newInstance()
 				.newDocumentBuilder().newDocument();
@@ -76,22 +79,27 @@ public class RestaurantMarshallerTest {
 
 		assertEquals("Pokusný", restaurant.getName());
 
-		assertEquals("cp1250", restaurant.getSource().get(0).getEncoding());
+		assertEquals("cp1250", restaurant.getSource().iterator().next()
+				.getEncoding());
 
-		List<Availability> oh = restaurant.getOpeningHours();
+		SortedSet<Availability> oh = restaurant.getOpeningHours();
 		assertEquals(6, oh.size());
 
-		Availability av = oh.get(0);
+		Iterator<Availability> it = oh.iterator();
+		Availability av = it.next();
 		assertEquals(Integer.valueOf(Calendar.MONDAY), av.getDow());
 		assertEquals("8:00", av.getFrom());
 		assertEquals("17:00", av.getTo());
 
-		av = oh.get(1);
+		av = it.next();
 		assertEquals(Integer.valueOf(Calendar.TUESDAY), av.getDow());
 		assertEquals("8:00", av.getFrom());
 		assertEquals("17:00", av.getTo());
 
-		av = oh.get(5);
+		av = it.next();
+		av = it.next();
+		av = it.next();
+		av = it.next();
 		assertEquals(Integer.valueOf(1), av.getDay());
 		assertEquals(Integer.valueOf(1), av.getMonth());
 		assertEquals(Integer.valueOf(2010), av.getYear());

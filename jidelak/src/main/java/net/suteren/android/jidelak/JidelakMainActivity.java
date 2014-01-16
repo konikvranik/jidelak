@@ -1,11 +1,14 @@
 package net.suteren.android.jidelak;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TreeSet;
+import java.util.zip.DataFormatException;
 
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
@@ -20,7 +23,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnNavigationListener;
+import android.support.v7.app.ActionBar.Tab;
+import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,13 +36,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class JidelakMainActivity extends ActionBarActivity {
+public class JidelakMainActivity extends ActionBarActivity implements
+		TabListener, OnNavigationListener {
 
 	private JidelakDbHelper dbHelper;
+	private ViewPager pagerView;
+	private ActionBar ab;
 
 	public JidelakDbHelper getDbHelper() {
 		if (dbHelper == null)
@@ -56,10 +70,29 @@ public class JidelakMainActivity extends ActionBarActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		ViewPager pagerView = (ViewPager) findViewById(R.id.pager);
+		pagerView = (ViewPager) findViewById(R.id.pager);
+
+		ab = getSupportActionBar();
+		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
 		final DayPagerAdapter dpa = new DayPagerAdapter(
 				getSupportFragmentManager());
 		pagerView.setAdapter(dpa);
+
+		ab.setListNavigationCallbacks(dpa, this);
+
+		pagerView
+				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+					@Override
+					public void onPageSelected(int position) {
+						ab.setSelectedNavigationItem(position);
+					}
+
+				});
+
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		cal.setTimeInMillis(System.currentTimeMillis());
+		pagerView.setCurrentItem(dpa.getPositionByDate(cal));
 
 		getDbHelper().registerObserver(new DataSetObserver() {
 			@Override
@@ -70,6 +103,13 @@ public class JidelakMainActivity extends ActionBarActivity {
 					@Override
 					public void run() {
 						dpa.notifyDataSetChanged();
+						ab.removeAllTabs();
+						for (int i = 0; i < dpa.getCount(); i++) {
+							ab.addTab(ab.newTab().setText(dpa.getPageTitle(i))
+									.setTabListener(JidelakMainActivity.this));
+
+						}
+
 					}
 				});
 				super.onChanged();
@@ -83,6 +123,13 @@ public class JidelakMainActivity extends ActionBarActivity {
 					@Override
 					public void run() {
 						dpa.notifyDataSetChanged();
+						ab.removeAllTabs();
+						for (int i = 0; i < dpa.getCount(); i++) {
+							ab.addTab(ab.newTab().setText(dpa.getPageTitle(i))
+									.setTabListener(JidelakMainActivity.this));
+
+						}
+
 					}
 				});
 				super.onInvalidated();
@@ -117,6 +164,7 @@ public class JidelakMainActivity extends ActionBarActivity {
 
 	public static class DailyMenuAdapter extends BaseExpandableListAdapter {
 
+		private static final boolean ENABLE_UPPER_SHADOW = false;
 		private final Calendar day;
 		private final JidelakDbHelper dbHelper;
 		private List<Restaurant> restaurants;
@@ -133,12 +181,21 @@ public class JidelakMainActivity extends ActionBarActivity {
 		private void updateRestaurants() {
 			restaurants = new RestaurantDao(dbHelper).findAll();
 			MealDao mdao = new MealDao(dbHelper);
+			AvailabilityDao adao = new AvailabilityDao(dbHelper);
 			for (Restaurant restaurant : restaurants) {
-				restaurant
-						.setMenu(mdao.findByDayAndRestaurant(day, restaurant));
-
+				restaurant.setMenu(new TreeSet<Meal>(mdao
+						.findByDayAndRestaurant(day, restaurant)));
+				restaurant.setOpeningHours(new TreeSet<Availability>(adao
+						.findByRestaurant(restaurant)));
 				Log.d(LOGGER_TAG, "Added " + restaurant.getMenu().size()
 						+ " meals.");
+				Log.d(LOGGER_TAG, "Added "
+						+ restaurant.getOpeningHours().size()
+						+ " openning hours.");
+
+				Log.d(LOGGER_TAG, "Added "
+						+ restaurant.getOpeningHours(day).size()
+						+ " openning hours for day.");
 			}
 		}
 
@@ -163,7 +220,10 @@ public class JidelakMainActivity extends ActionBarActivity {
 
 		@Override
 		public Meal getChild(int paramInt1, int paramInt2) {
-			return getGroup(paramInt1).getMenu().get(paramInt2);
+			List<Meal> ml = getGroup(paramInt1).getMenuAsList();
+			if (ml == null)
+				return null;
+			return ml.get(paramInt2);
 		}
 
 		@Override
@@ -186,13 +246,12 @@ public class JidelakMainActivity extends ActionBarActivity {
 				View paramView, ViewGroup paramViewGroup) {
 
 			if (paramView == null) {
-				paramView = View.inflate(ctx, R.layout.restaurant_daily_menu,
-						null);
+				paramView = View.inflate(ctx, R.layout.restaurant, null);
 			}
 
-//			if (paramInt > 0)
-//				paramView.findViewById(R.id.upper_shadow).setVisibility(
-//						View.VISIBLE);
+			if (paramInt > 0 && ENABLE_UPPER_SHADOW)
+				paramView.findViewById(R.id.upper_shadow).setVisibility(
+						View.VISIBLE);
 
 			Restaurant restaurant = getGroup(paramInt);
 
@@ -200,8 +259,7 @@ public class JidelakMainActivity extends ActionBarActivity {
 			nameView.setText(restaurant.getName());
 
 			TextView openingView = (TextView) paramView.findViewById(R.id.open);
-			openingView.setText(Restaurant.openingHoursToString(restaurant
-					.getOpeningHours(day)));
+			openingView.setText(restaurant.openingHoursToString(day));
 
 			return paramView;
 		}
@@ -300,7 +358,8 @@ public class JidelakMainActivity extends ActionBarActivity {
 
 	static final String LOGGER_TAG = "JidelakMainActivity";
 
-	public class DayPagerAdapter extends FragmentStatePagerAdapter {
+	public class DayPagerAdapter extends FragmentStatePagerAdapter implements
+			SpinnerAdapter {
 
 		private List<Availability> dates = new ArrayList<Availability>();
 
@@ -319,10 +378,23 @@ public class JidelakMainActivity extends ActionBarActivity {
 		private void updateDates() {
 			AvailabilityDao ad = new AvailabilityDao(getDbHelper());
 			dates = ad.findAllDays();
+
 		}
 
-		private Calendar getDateByPosition(int position) {
+		@Override
+		public CharSequence getPageTitle(int position) {
+			Availability d = dates.get(position);
+			return DateFormat.getDateInstance(DateFormat.SHORT,
+					Locale.getDefault()).format(d.getCalendar().getTime());
+
+		}
+
+		Calendar getDateByPosition(int position) {
 			return dates.get(position).getCalendar();
+		}
+
+		int getPositionByDate(Calendar cal) {
+			return dates.indexOf(new Availability(cal));
 		}
 
 		public Fragment getItem(Calendar day) {
@@ -338,5 +410,75 @@ public class JidelakMainActivity extends ActionBarActivity {
 			return getItem(getDateByPosition(position));
 		}
 
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public int getItemViewType(int position) {
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null)
+				convertView = new TextView(getApplicationContext());
+			((TextView) convertView).setText(DateFormat.getDateInstance(
+					DateFormat.SHORT, Locale.getDefault()).format(
+					dates.get(position).getCalendar().getTime()));
+			return convertView;
+		}
+
+		@Override
+		public int getViewTypeCount() {
+			return 1;
+		}
+
+		@Override
+		public boolean hasStableIds() {
+			return false;
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return dates.isEmpty();
+		}
+
+		@Override
+		public View getDropDownView(int position, View convertView,
+				ViewGroup parent) {
+			if (convertView == null)
+				convertView = new TextView(getApplicationContext());
+			((TextView) convertView).setText(DateFormat.getDateInstance(
+					DateFormat.SHORT, Locale.getDefault()).format(
+					dates.get(position).getCalendar().getTime()));
+			return convertView;
+		}
+
+	}
+
+	@Override
+	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction arg1) {
+		pagerView.setCurrentItem(tab.getPosition());
+
+	}
+
+	@Override
+	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(int arg0, long arg1) {
+		pagerView.setCurrentItem(arg0);
+		return true;
 	}
 }

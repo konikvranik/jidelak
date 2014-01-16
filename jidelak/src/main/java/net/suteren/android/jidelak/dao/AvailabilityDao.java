@@ -1,5 +1,6 @@
 package net.suteren.android.jidelak.dao;
 
+import java.util.Collection;
 import java.util.List;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
@@ -62,6 +63,8 @@ public class AvailabilityDao extends BaseDao<Availability> {
 		av.setMonth(unpackColumnValue(cursor, MONTH, Integer.class));
 		av.setDay(unpackColumnValue(cursor, DAY, Integer.class));
 		av.setId(unpackColumnValue(cursor, ID, Long.class));
+		av.setFrom(unpackColumnValue(cursor, FROM, String.class));
+		av.setTo(unpackColumnValue(cursor, TO, String.class));
 		av.setRestaurant(unpackColumnValue(cursor, RESTAURANT, Restaurant.class));
 		return av;
 	}
@@ -76,7 +79,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
 		return getTable().getColumnNames();
 	}
 
-	public List<Availability> findByRestaurant(Restaurant restaurant) {
+	public Collection<Availability> findByRestaurant(Restaurant restaurant) {
 		return findByRestaurant(restaurant.getId());
 	}
 

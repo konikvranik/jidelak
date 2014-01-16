@@ -117,7 +117,6 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 	public void notifyDataSetInvalidated() {
 		Log.d(LOGGER_TAG,"notifyDataSetInvalidated");
 		mDataSetObservable.notifyInvalidated();
-		;
 	}
 
 }

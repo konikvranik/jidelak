@@ -11,7 +11,10 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.CharBuffer;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
@@ -83,22 +86,25 @@ public class JidelakTemplateImporterActivityTest extends
 		rdao.findById(restaurant);
 
 		assertEquals("Lunch Garden Avenir", restaurant.getName());
-		assertEquals("cp1250", restaurant.getSource().get(0).getEncoding());
+		assertEquals("cp1250", restaurant.getSource().iterator().next().getEncoding());
 
-		List<Availability> oh = restaurant.getOpeningHours();
+		SortedSet<Availability> oh = restaurant.getOpeningHours();
 		assertEquals(6, oh.size());
 
-		Availability av = oh.get(0);
+		Iterator<Availability> it = oh.iterator();
+		Availability av = it.next();
 		assertEquals(Integer.valueOf(Calendar.MONDAY), av.getDow());
 		assertEquals("8:00", av.getFrom());
 		assertEquals("17:00", av.getTo());
 
-		av = oh.get(1);
+		av = it.next();
 		assertEquals(Integer.valueOf(Calendar.TUESDAY), av.getDow());
 		assertEquals("8:00", av.getFrom());
 		assertEquals("17:00", av.getTo());
 
-		av = oh.get(5);
+		av = it.next();
+		av = it.next();
+		av = it.next();
 		assertEquals(Integer.valueOf(1), av.getDay());
 		assertEquals(Integer.valueOf(1), av.getMonth());
 		assertEquals(Integer.valueOf(2010), av.getYear());
@@ -121,13 +127,13 @@ public class JidelakTemplateImporterActivityTest extends
 			Log.d(LOG_TAG, "Name: " + rest.getName());
 			Log.d(LOG_TAG, "TemplateName: " + rest.getTemplateName());
 
-			List<Source> srcs = rest.getSource();
+			Set<Source> srcs = rest.getSource();
 			if (srcs != null)
 				for (Source src : srcs) {
 					Log.d(LOG_TAG, "\t:src: " + src.getUrl().toString());
 				}
 
-			List<Availability> oh = rest.getOpeningHours();
+			Set<Availability> oh = rest.getOpeningHours();
 			if (oh != null)
 				for (Availability av : oh) {
 					Log.d(LOG_TAG, "\t av: " + av.getFrom());

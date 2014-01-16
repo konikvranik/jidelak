@@ -3,7 +3,12 @@ package net.suteren.android.jidelak.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import android.location.Address;
 
@@ -20,17 +25,18 @@ public class Restaurant implements Identificable {
 		this.address = address;
 	}
 
-	List<Availability> openingHours;
-	List<Meal> menu;
+	SortedSet<Availability> openingHours;
+	SortedSet<Meal> menu;
 	private Long id;
-	private List<Source> source;
+	private Set<Source> source;
 
-	public List<Availability> getOpeningHours() {
+	public SortedSet<Availability> getOpeningHours() {
 		return openingHours;
 	}
 
-	public List<Availability> getOpeningHours(Calendar day) {
-		List<Availability> av = new ArrayList<Availability>();
+	public Set<Availability> getOpeningHours(Calendar day) {
+		Set<Availability> av = new TreeSet<Availability>();
+
 		for (Availability availability : openingHours) {
 			if (testDay(day, availability))
 				av.add(availability);
@@ -39,30 +45,37 @@ public class Restaurant implements Identificable {
 	}
 
 	private boolean testDay(Calendar day, Availability availability) {
-		if (day == null || availability == null)
+		if (day == null)
+			return true;
+		if (availability == null)
 			return false;
-		return ((availability.getYear() != null
-				&& availability.getMonth() != null
-				&& availability.getDay() != null
-				&& day.get(Calendar.YEAR) == availability.getYear()
-				&& day.get(Calendar.MONTH) == availability.getMonth()
-				&& day.get(Calendar.YEAR) == availability.getYear() && (availability
-				.getDow() == null || day.get(Calendar.DAY_OF_WEEK) == availability
-				.getDow())) || (null == availability.getYear()
-				&& null == availability.getMonth()
-				&& null == availability.getYear()
-				&& availability.getDow() != null && day
-					.get(Calendar.DAY_OF_WEEK) == availability.getDow()));
 
+		if (availability.getDay() != null
+				&& day.get(Calendar.DAY_OF_MONTH) != availability.getDay())
+			return false;
+
+		if (availability.getMonth() != null
+				&& day.get(Calendar.MONTH) + 1 != availability.getMonth())
+			return false;
+
+		if (availability.getYear() != null
+				&& day.get(Calendar.YEAR) != availability.getYear())
+			return false;
+
+		if (availability.getDow() != null
+				&& day.get(Calendar.DAY_OF_WEEK) != availability.getDow())
+			return false;
+
+		return true;
 	}
 
-	public void setOpeningHours(List<Availability> openingHours) {
+	public void setOpeningHours(SortedSet<Availability> openingHours) {
 		this.openingHours = openingHours;
 	}
 
 	public void addOpeningHours(Availability oh) {
 		if (openingHours == null)
-			openingHours = new ArrayList<Availability>();
+			openingHours = new TreeSet<Availability>();
 		openingHours.add(oh);
 	}
 
@@ -74,28 +87,28 @@ public class Restaurant implements Identificable {
 		return name;
 	}
 
-	public void setMenu(List<Meal> menu) {
+	public void setMenu(SortedSet<Meal> menu) {
 		this.menu = menu;
 	}
 
-	public List<Meal> getMenu() {
+	public SortedSet<Meal> getMenu() {
 		return menu;
 	}
 
 	public void addMenu(Meal meal) {
 		if (menu == null)
-			menu = new ArrayList<Meal>();
+			menu = new TreeSet<Meal>();
 		menu.add(meal);
 	}
 
 	public void addMenuAll(Collection<Meal> meal) {
 		if (menu == null)
-			menu = new ArrayList<Meal>();
+			menu = new TreeSet<Meal>();
 		menu.addAll(meal);
 	}
 
-	public List<Meal> getMenu(Calendar day) {
-		List<Meal> dailyMenu = new ArrayList<Meal>();
+	public SortedSet<Meal> getMenu(Calendar day) {
+		SortedSet<Meal> dailyMenu = new TreeSet<Meal>();
 
 		for (Meal meal : menu) {
 			if (testDay(day, meal.getAvailability()))
@@ -112,10 +125,49 @@ public class Restaurant implements Identificable {
 		this.id = id;
 	}
 
-	public static String openingHoursToString(List<Availability> openingHours) {
+	public String openingHoursToString() {
+		return openingHoursToString(getOpeningHours());
+	}
 
-		StringBuffer sb = new StringBuffer();
+	public static String openingHoursToString(
+			Collection<Availability> openingHours) {
+
+		TreeSet<Availability> tm = new TreeSet<Availability>(
+				new Comparator<Availability>() {
+
+					@Override
+					public int compare(Availability lhs, Availability rhs) {
+
+						if (lhs == null) {
+							if (rhs == null) {
+								return 0;
+							} else {
+								return 1;
+							}
+						} else {
+							if (rhs == null) {
+								return -1;
+							}
+						}
+
+						int r = 0;
+						if (lhs.getFrom() != null
+								&& (r = lhs.getFrom().compareTo(rhs.getFrom())) != 0)
+							return r;
+
+						if (lhs.getTo() != null
+								&& (r = lhs.getTo().compareTo(rhs.getTo())) != 0)
+							return r;
+
+						return 0;
+					}
+				});
+
 		for (Availability availability : openingHours) {
+			tm.add(availability);
+		}
+		StringBuffer sb = new StringBuffer();
+		for (Availability availability : tm) {
 			if (availability.getFrom() != null)
 				sb.append(availability.getFrom());
 			if (availability.getFrom() != null && availability.getTo() != null)
@@ -132,21 +184,31 @@ public class Restaurant implements Identificable {
 		return sb.toString();
 	}
 
-	public List<Source> getSource() {
+	public Set<Source> getSource() {
 		return source;
 	}
 
-	public void setSource(List<Source> source) {
+	public void setSource(Set<Source> source) {
 		this.source = source;
 	}
 
 	public void addSource(Source source) {
 		if (this.source == null)
-			this.source = new ArrayList<Source>();
+			this.source = new HashSet<Source>();
 		this.source.add(source);
 	}
 
 	public String getTemplateName() {
 		return "restaurant-" + getId() + ".template.xsl";
+	}
+
+	public String openingHoursToString(Calendar day) {
+		return openingHoursToString(getOpeningHours(day));
+	}
+
+	public List<Meal> getMenuAsList() {
+		if (getMenu() == null)
+			return null;
+		return new ArrayList<Meal>(getMenu());
 	}
 }

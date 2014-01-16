@@ -4,13 +4,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-<!--     <View -->
-<!--         android:id="@+id/upper_shadow" -->
-<!--         android:layout_width="match_parent" -->
-<!--         android:layout_height="8dp" -->
-<!--         android:background="@drawable/upper_shadow" -->
-<!--         android:visibility="gone" > -->
-<!--     </View> -->
+    <View
+        android:id="@+id/upper_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@drawable/upper_shadow"
+        android:visibility="gone" >
+    </View>
 
     <RelativeLayout
         style="@style/RestaurantHeaderTheme"
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content" >
 
             <ImageButton
-                android:id="@+id/imageButton1"
+                android:id="@+id/btn_locate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -31,11 +31,11 @@
                 android:src="@android:drawable/ic_menu_compass" />
 
             <ImageButton
-                android:id="@+id/imageButton2"
+                android:id="@+id/btn_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/imageButton1"
+                android:layout_toLeftOf="@+id/btn_locate"
                 android:src="@android:drawable/ic_menu_call" />
 
             <TextView
@@ -45,8 +45,9 @@
                 android:layout_alignBaseline="@+id/textView2"
                 android:layout_alignBottom="@+id/textView2"
                 android:layout_toRightOf="@+id/textView2"
-                android:text="Small Text"
-                android:textAppearance="@style/RestaurantTextLarge" />
+                android:paddingLeft="1dp"
+                android:text="16:00 - 19:00"
+                android:textAppearance="@style/RestaurantText" />
 
             <TextView
                 android:id="@+id/name"
@@ -54,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/imageButton2"
+                android:layout_toLeftOf="@+id/btn_call"
                 android:text="Restaurace"
                 android:textAppearance="@style/RestaurantTextLarge" />
 

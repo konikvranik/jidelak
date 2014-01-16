@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
+import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.content.ContentValues;
@@ -12,7 +13,10 @@ import android.database.Cursor;
 public class MealDao extends BaseDao<Meal> {
 
 	public static final Column PRICE = new Column("price", SQLiteDataTypes.REAL);
-	public static final Column DISH = new Column("dish", SQLiteDataTypes.TEXT);
+	public static final Column DISH = new Column("dish",
+			SQLiteDataTypes.INTEGER);
+	public static final Column POSITION = new Column("position",
+			SQLiteDataTypes.INTEGER);
 	public static final Column CATEGORY = new Column("category",
 			SQLiteDataTypes.TEXT);
 	public static final Column DESCRIPTION = new Column("description",
@@ -35,6 +39,7 @@ public class MealDao extends BaseDao<Meal> {
 		getTable().addColumn(TITLE);
 		getTable().addColumn(DESCRIPTION);
 		getTable().addColumn(PRICE);
+		getTable().addColumn(POSITION);
 		getTable().addColumn(DISH);
 		getTable().addColumn(CATEGORY);
 		getTable().addColumn(RESTAURANT);
@@ -50,8 +55,8 @@ public class MealDao extends BaseDao<Meal> {
 		return query(
 				RESTAURANT + "= ? and " + AVAILABILITY
 						+ " in ( select id from " + AvailabilityDao.TABLE_NAME
-						+ " a where (a." + AvailabilityDao.YEAR
-						+ " = ? and a." + AvailabilityDao.MONTH + " = ? and a."
+						+ " a where (a." + AvailabilityDao.YEAR + " = ? and a."
+						+ AvailabilityDao.MONTH + " = ? and a."
 						+ AvailabilityDao.DAY + " = ?) or (a."
 						+ AvailabilityDao.YEAR + " is null and a."
 						+ AvailabilityDao.MONTH + " is null and a."
@@ -80,7 +85,8 @@ public class MealDao extends BaseDao<Meal> {
 		meal.setDescription(unpackColumnValue(cursor, DESCRIPTION, String.class));
 		meal.setAvailability(new AvailabilityDao(getDbHelper())
 				.findById(unpackColumnValue(cursor, AVAILABILITY, Long.class)));
-		meal.setDish(unpackColumnValue(cursor, DISH, String.class));
+		meal.setDish(unpackColumnValue(cursor, DISH, Dish.class));
+		meal.setPosition(unpackColumnValue(cursor, POSITION, Integer.class));
 		meal.setRestaurant(new RestaurantDao(getDbHelper())
 				.findById(unpackColumnValue(cursor, RESTAURANT, Long.class)));
 		return meal;
@@ -96,8 +102,10 @@ public class MealDao extends BaseDao<Meal> {
 		ContentValues values = new ContentValues();
 		values.put(AVAILABILITY.getName(), obj.getAvailability().getId());
 		values.put(DESCRIPTION.getName(), obj.getDescription());
-		values.put(DISH.getName(), obj.getDish());
+
+		values.put(DISH.getName(), obj.getDish().ordinal());
 		values.put(ID.getName(), obj.getId());
+		values.put(POSITION.getName(), obj.getPosition());
 		values.put(TITLE.getName(), obj.getTitle());
 		values.put(CATEGORY.getName(), obj.getCategory());
 		values.put(PRICE.getName(), obj.getPrice());

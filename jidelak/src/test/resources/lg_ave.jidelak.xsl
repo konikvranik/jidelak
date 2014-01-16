@@ -19,7 +19,7 @@
 
 	<xsl:template name="restaurant">
 		<restaurant>
-			<id>praha-lunch-garden-avenir</id>
+			<id>praha-dinner-garden-avenir</id>
 			<name>Lunch Garden Avenir</name>
 			<phone>+420 731 401 714</phone>
 			<e-mail>pavel.pechaty.ml@cateringmelodie.cz</e-mail>
@@ -68,28 +68,28 @@
 		<xsl:apply-templates
 			select="../../tr[position() &gt; 2]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
 			<xsl:with-param name="type" select="'normal'" />
-			<xsl:with-param name="dish" select="'lunch'" />
+			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
 		</xsl:apply-templates>
 		<xsl:apply-templates
 			select="../../../following-sibling::table[@class='tb_jidelak' and ( position() = 1)]/tbody/tr[2]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
 			<xsl:with-param name="type" select="'superior'" />
-			<xsl:with-param name="dish" select="'lunch'" />
+			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
 		</xsl:apply-templates>
 		<xsl:apply-templates
 			select="../../../following-sibling::table[@class='tb_jidelak' and (position() = 2 )]/tbody/tr[2]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
 			<xsl:with-param name="type" select="'live'" />
-			<xsl:with-param name="dish" select="'lunch'" />
+			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
 		</xsl:apply-templates>
 		<xsl:apply-templates
 			select="../../../following-sibling::table[@class='tb_jidelak' and position() = 3]/tbody/tr[2]/td[normalize-space(translate(.,'&#160;', ' ')) != '']">
 			<xsl:with-param name="type" select="'pasta'" />
-			<xsl:with-param name="dish" select="'lunch'" />
+			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
 		</xsl:apply-templates>

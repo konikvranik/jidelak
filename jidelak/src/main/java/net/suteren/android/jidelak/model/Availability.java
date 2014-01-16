@@ -85,10 +85,14 @@ public class Availability implements Identificable, Comparable<Availability> {
 
 	public Calendar getCalendar() {
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		cal.set(Calendar.YEAR, getYear());
-		cal.set(Calendar.MONTH, getMonth());
-		cal.set(Calendar.DAY_OF_MONTH, getDay());
-		cal.set(Calendar.MINUTE, 0);
+		if (getYear() != null)
+			cal.set(Calendar.YEAR, getYear());
+		if (getMonth() != null)
+			cal.set(Calendar.MONTH, getMonth());
+		if (getDay() != null)
+			cal.set(Calendar.DAY_OF_MONTH, getDay());
+		if (getDow() != null)
+			cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.HOUR, 0);
 		cal.set(Calendar.MILLISECOND, 0);

@@ -16,6 +16,7 @@ import java.util.Map;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.Utils;
+import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Identificable;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.TimeOffsetType;
@@ -338,6 +339,8 @@ public abstract class BaseDao<T extends Identificable> {
 			}
 		else if (c == TimeType.class)
 			value = (V) TimeType.values()[cursor.getInt(idx)];
+		else if (c == Dish.class)
+			value = (V) Dish.values()[cursor.getInt(idx)];
 		else if (c == TimeOffsetType.class)
 			value = (V) TimeOffsetType.values()[cursor.getInt(idx)];
 		else if (c == Locale.class) {

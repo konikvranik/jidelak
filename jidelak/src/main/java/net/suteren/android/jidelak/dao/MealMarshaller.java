@@ -1,15 +1,16 @@
 package net.suteren.android.jidelak.dao;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Map;
 
+import android.util.Log;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Availability;
+import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Source;
-import android.util.Log;
 
 public class MealMarshaller extends BaseMarshaller<Meal> {
 
@@ -23,7 +24,12 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 		meal.setDescription(data.get(prefix + "meal.description"));
 		meal.setPrice(data.get(prefix + "meal.price"));
 		meal.setCategory(data.get(prefix + "meal@category"));
-		meal.setDish(data.get(prefix + "meal@dish"));
+		meal.setDish(Dish.valueOf(data.get(prefix + "meal@dish").toUpperCase(
+				Locale.ENGLISH)));
+
+		Log.d("Test", "Dish set to: " + meal.getDish().name());
+		
+		meal.setPosition(Integer.parseInt(data.get(prefix + "meal@order")));
 
 		try {
 			String x = data.get(prefix + "meal@time");
@@ -39,9 +45,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 					cal.add(getSource().getOffsetBase().getType(), getSource()
 							.getOffset());
 
-
 					cal.add(Calendar.DAY_OF_MONTH, Integer.parseInt(x));
-
 
 				}
 				break;

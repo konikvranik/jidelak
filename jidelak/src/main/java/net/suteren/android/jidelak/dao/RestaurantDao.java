@@ -1,8 +1,10 @@
 package net.suteren.android.jidelak.dao;
 
 import java.util.Locale;
+import java.util.TreeSet;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
+import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -56,8 +58,9 @@ public class RestaurantDao extends BaseDao<Restaurant> {
 		Restaurant restaurant = new Restaurant();
 		restaurant.setId(unpackColumnValue(cursor, ID, Long.class));
 		restaurant.setName(unpackColumnValue(cursor, NAME, String.class));
-		restaurant.setOpeningHours(new AvailabilityDao(getDbHelper())
-				.findByRestaurant(restaurant));
+		restaurant
+				.setOpeningHours(new TreeSet<Availability>(new AvailabilityDao(
+						getDbHelper()).findByRestaurant(restaurant)));
 
 		Address address = new Address(Locale.getDefault());
 		address.setCountryName(unpackColumnValue(cursor, COUNTRY, String.class));

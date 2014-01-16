@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,7 +20,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
-import net.suteren.android.jidelak.dao.MealMarshaller;
+import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Meal;
@@ -43,7 +42,6 @@ public class JidelakFeederService extends Service {
 	static final String LOGGING_TAG = "JidelakFeederService";
 	private JidelakDbHelper dbHelper;
 	private boolean force = false;
-	private static final int DURATION = 3000;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -71,6 +69,7 @@ public class JidelakFeederService extends Service {
 
 		SourceDao sdao = new SourceDao(getDbHelper());
 		MealDao mdao = new MealDao(getDbHelper());
+		RestaurantDao rdao = new RestaurantDao(getDbHelper());
 		AvailabilityDao adao = new AvailabilityDao(getDbHelper());
 
 		RestaurantMarshaller rm = new RestaurantMarshaller();
@@ -83,8 +82,7 @@ public class JidelakFeederService extends Service {
 
 				Node result = retrieve(source.getUrl(), template);
 
-				Restaurant restaurant = new Restaurant();
-				restaurant.addSource(source);
+				Restaurant restaurant = source.getRestaurant();
 
 				rm.unmarshall("#document.jidelak.config", result, restaurant);
 
@@ -92,6 +90,11 @@ public class JidelakFeederService extends Service {
 					adao.insert(meal.getAvailability());
 					mdao.insert(meal);
 				}
+
+				Restaurant savedRestaurant = rdao.findById(restaurant);
+				adao.delete(savedRestaurant.getOpeningHours());
+				adao.insert(restaurant.getOpeningHours());
+				rdao.update(restaurant);
 
 				// TODO Auto-generated method stub
 			} catch (IOException e) {

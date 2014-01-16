@@ -5,11 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
-import android.util.Log;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Source;
+import android.util.Log;
 
 public class MealMarshaller extends BaseMarshaller<Meal> {
 
@@ -36,14 +36,15 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 					String y = data.get(prefix + "meal@ref-time");
 
 					cal.setTime(getSource().getDateFormat().parse(y));
+					cal.add(getSource().getOffsetBase().getType(), getSource()
+							.getOffset());
 
 					Log.d(getSource().getTimeType().name(),
 							"Before: "
 									+ new SimpleDateFormat("EE, yyyy-MM-dd")
 											.format(cal.getTime()));
 
-					cal.add(getSource().getOffsetBase().getType(),
-							Integer.parseInt(x));
+					cal.add(Calendar.DAY_OF_MONTH, Integer.parseInt(x));
 
 					Log.d(getSource().getTimeType().name(),
 							"After + "

@@ -72,6 +72,7 @@ public abstract class BaseMarshaller<T> {
 	}
 
 	protected Node getNextNode(Node n, boolean processChildren) {
+
 		if (n.hasChildNodes() && processChildren) {
 			n = n.getFirstChild();
 			if (n.getNodeType() == Node.ELEMENT_NODE)
@@ -80,9 +81,11 @@ public abstract class BaseMarshaller<T> {
 		}
 
 		do {
-			n = path.pop().getNextSibling();
+			n = path.pop();
 			if (n == root)
 				return null;
+			n = n.getNextSibling();
+
 		} while (n == null && !path.isEmpty());
 
 		if (n == null)

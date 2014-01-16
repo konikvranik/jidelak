@@ -39,13 +39,19 @@ public class Restaurant implements Identificable {
 	}
 
 	private boolean testDay(Calendar day, Availability availability) {
-		return ((day.get(Calendar.YEAR) == availability.getYear()
+		if (day == null || availability == null)
+			return false;
+		return ((availability.getYear() != null
+				&& availability.getMonth() != null
+				&& availability.getDay() != null
+				&& day.get(Calendar.YEAR) == availability.getYear()
 				&& day.get(Calendar.MONTH) == availability.getMonth()
-				&& day.get(Calendar.YEAR) == availability.getYear() && (day
-				.get(Calendar.DAY_OF_WEEK) == availability.getDow() || availability
-				.getDow() == null)) || (null == availability.getYear()
+				&& day.get(Calendar.YEAR) == availability.getYear() && (availability
+				.getDow() == null || day.get(Calendar.DAY_OF_WEEK) == availability
+				.getDow())) || (null == availability.getYear()
 				&& null == availability.getMonth()
-				&& null == availability.getYear() && day
+				&& null == availability.getYear()
+				&& availability.getDow() != null && day
 					.get(Calendar.DAY_OF_WEEK) == availability.getDow()));
 
 	}
@@ -120,7 +126,8 @@ public class Restaurant implements Identificable {
 				sb.append(", ");
 		}
 
-		sb.delete(sb.length() - 2, sb.length());
+		if (sb.length() > 1)
+			sb.delete(sb.length() - 2, sb.length());
 
 		return sb.toString();
 	}

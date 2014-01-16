@@ -10,6 +10,9 @@ import net.suteren.android.jidelak.model.Source;
 
 import org.w3c.dom.Element;
 
+import android.location.Address;
+import android.os.Bundle;
+
 public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 
 	private Source source;
@@ -20,6 +23,22 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 
 		restaurant.setName(data.get(prefix + "restaurant.name"));
 
+		Address addr = new Address(source.getLocale());
+		String addrString = data.get(prefix + "restaurant.address");
+		String[] addrLines = addrString.split("\n");
+		for (int i = 0; i < addrLines.length; i++) {
+			addr.setAddressLine(i, addrLines[i]);
+		}
+		addr.setCountryName(data.get("restaurant.country"));
+		addr.setLocality(data.get("restaurant.city"));
+		addr.setPostalCode(data.get("restaurant.zip"));
+		addr.setPhone(data.get("restaurant.phone"));
+		addr.setUrl(data.get("restaurant.web"));
+		Bundle e = new Bundle();
+		e.putString(RestaurantDao.E_MAIL.getName(),
+				data.get("restaurant.e-mail"));
+		addr.setExtras(e);
+		restaurant.setAddress(addr);
 	}
 
 	@Override
@@ -34,6 +53,7 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 			new SourceMarshaller().unmarshall(n, source);
 			return false;
 		} else if ("meal".equals(n.getNodeName())) {
+
 			Meal meal = new Meal();
 			meal.setRestaurant(restaurant);
 			meal.setSource(source);
@@ -46,6 +66,7 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 		} else if ("term".equals(n.getNodeName())
 				&& "open".equals(n.getParentNode().getNodeName())) {
 			Availability avail = new Availability();
+			avail.setRestaurant(restaurant);
 
 			AvailabilityMarshaller am = new AvailabilityMarshaller();
 			am.setSource(source);

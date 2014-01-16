@@ -4,9 +4,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
-import net.suteren.android.jidelak.dao.BaseDao.Column;
-import net.suteren.android.jidelak.dao.BaseDao.ForeignKey;
-import net.suteren.android.jidelak.dao.BaseDao.Table;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.content.ContentValues;
@@ -53,14 +50,14 @@ public class MealDao extends BaseDao<Meal> {
 		return query(
 				RESTAURANT + "= ? and " + AVAILABILITY
 						+ " in ( select id from " + AvailabilityDao.TABLE_NAME
-						+ " a where ((a." + AvailabilityDao.YEAR
+						+ " a where (a." + AvailabilityDao.YEAR
 						+ " = ? and a." + AvailabilityDao.MONTH + " = ? and a."
 						+ AvailabilityDao.DAY + " = ?) or (a."
 						+ AvailabilityDao.YEAR + " is null and a."
 						+ AvailabilityDao.MONTH + " is null and a."
-						+ AvailabilityDao.DAY + " is null)) and (a."
+						+ AvailabilityDao.DAY + " is null and (a."
 						+ AvailabilityDao.DOW + " = ? or a."
-						+ AvailabilityDao.DOW + " is null))",
+						+ AvailabilityDao.DOW + " is null)))",
 				new String[] { String.valueOf(restaurant.getId()),
 						String.valueOf(day.get(Calendar.YEAR)),
 						String.valueOf(day.get(Calendar.MONTH)),

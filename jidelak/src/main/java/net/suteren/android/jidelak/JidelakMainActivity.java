@@ -1,5 +1,6 @@
 package net.suteren.android.jidelak;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,15 +20,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 public class JidelakMainActivity extends ActionBarActivity {
@@ -54,6 +56,10 @@ public class JidelakMainActivity extends ActionBarActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		ViewPager pagerView = (ViewPager) findViewById(R.id.pager);
+		DayPagerAdapter dpa = new DayPagerAdapter(getSupportFragmentManager());
+		pagerView.setAdapter(dpa);
+
 	}
 
 	@Override
@@ -79,70 +85,116 @@ public class JidelakMainActivity extends ActionBarActivity {
 		}
 	}
 
-	public static class MenuListAdapter extends BaseAdapter implements
-			ListAdapter {
+	public static class DailyMenuAdapter extends BaseExpandableListAdapter {
 
+		private final Calendar day;
 		private final JidelakDbHelper dbHelper;
+		private List<Restaurant> restaurants;
 		private Context ctx;
-		private Calendar day;
-		private List<Meal> meals = new ArrayList<Meal>();
-		private Restaurant restaurant;
+		DataSetObserver dailyMenuObserver = new DataSetObserver() {
+			@Override
+			public void onChanged() {
+				super.onChanged();
+				updateRestaurants();
+			}
 
-		public MenuListAdapter(Context ctx, Calendar day, Restaurant restaurant) {
+			@Override
+			public void onInvalidated() {
+				super.onInvalidated();
+				updateRestaurants();
+			}
+		};
+
+		public DailyMenuAdapter(Context ctx, Calendar day) {
 			this.day = day;
 			this.ctx = ctx;
-			this.restaurant = restaurant;
 			dbHelper = new JidelakDbHelper(ctx);
+
+			dbHelper.registerObserver(dailyMenuObserver);
+			updateRestaurants();
+		}
+
+		private void updateRestaurants() {
+			restaurants = new RestaurantDao(dbHelper).findAll();
+			MealDao mdao = new MealDao(dbHelper);
+			for (Restaurant restaurant : restaurants) {
+				restaurant
+						.setMenu(mdao.findByDayAndRestaurant(day, restaurant));
+
+				Log.d(LOGGER_TAG, "Added " + restaurant.getMenu().size()
+						+ " meals.");
+			}
 		}
 
 		@Override
-		public void notifyDataSetChanged() {
-			dbHelper.notifyDataSetChanged();
+		public int getGroupCount() {
+			return restaurants.size();
 		}
 
 		@Override
-		public void registerDataSetObserver(DataSetObserver observer) {
-			dbHelper.registerObserver(observer);
+		public int getChildrenCount(int paramInt) {
+			Log.d(LOGGER_TAG, "MEnu count: "
+					+ getGroup(paramInt).getMenu().size());
+			return getGroup(paramInt).getMenu().size();
 		}
 
 		@Override
-		public void unregisterDataSetObserver(DataSetObserver observer) {
-			dbHelper.unregisterObserver(observer);
+		public Restaurant getGroup(int paramInt) {
+			return restaurants.get(paramInt);
 		}
 
-		private void updateMeals() {
-
-			MealDao mealDao = new MealDao(dbHelper);
-			meals = mealDao.findByDayAndRestaurant(day, restaurant);
-			notifyDataSetChanged();
+		@Override
+		public Meal getChild(int paramInt1, int paramInt2) {
+			return getGroup(paramInt1).getMenu().get(paramInt2);
 		}
 
-		public int getCount() {
-			updateMeals();
-			return meals.size();
+		@Override
+		public long getGroupId(int paramInt) {
+			return getGroup(paramInt).getId();
 		}
 
-		public Meal getItem(int paramInt) {
-			updateMeals();
-			return meals.get(paramInt);
+		@Override
+		public long getChildId(int paramInt1, int paramInt2) {
+			return getChild(paramInt1, paramInt2).getId();
 		}
 
-		public long getItemId(int paramInt) {
-			// updateMeals();
-			return meals.get(paramInt).getId();
-		}
-
+		@Override
 		public boolean hasStableIds() {
 			return false;
 		}
 
-		public View getView(int paramInt, View paramView,
-				ViewGroup paramViewGroup) {
+		@Override
+		public View getGroupView(int paramInt, boolean paramBoolean,
+				View paramView, ViewGroup paramViewGroup) {
+
+			if (paramView == null) {
+				paramView = View.inflate(ctx, R.layout.restaurant_daily_menu,
+						null);
+			}
+
+			Restaurant restaurant = getGroup(paramInt);
+
+			TextView nameView = (TextView) paramView.findViewById(R.id.name);
+			nameView.setText(restaurant.getName());
+
+			TextView openingView = (TextView) paramView.findViewById(R.id.open);
+			openingView.setText(Restaurant.openingHoursToString(restaurant
+					.getOpeningHours(day)));
+
+			return paramView;
+		}
+
+		@Override
+		public View getChildView(int paramInt1, int paramInt2,
+				boolean paramBoolean, View paramView, ViewGroup paramViewGroup) {
+
+			Log.d(LOGGER_TAG, "MEal view");
 
 			if (paramView == null)
-				paramView = View.inflate(ctx, R.layout.meal, paramViewGroup);
+				paramView = View.inflate(ctx, R.layout.meal, null);
 
-			Meal meal = getItem(paramInt);
+			Meal meal = getChild(paramInt1, paramInt2);
+
 			((TextView) paramView.findViewById(R.id.name)).setText(meal
 					.getTitle());
 			((TextView) paramView.findViewById(R.id.description)).setText(meal
@@ -153,104 +205,10 @@ public class JidelakMainActivity extends ActionBarActivity {
 			return paramView;
 		}
 
-		public int getItemViewType(int paramInt) {
-			return 0;
-		}
-
-		public int getViewTypeCount() {
-			return 0;
-		}
-
-		public boolean isEmpty() {
-			updateMeals();
-			return meals.isEmpty();
-		}
-
-		public boolean areAllItemsEnabled() {
-			return true;
-		}
-
-		public boolean isEnabled(int paramInt) {
-			return true;
-		}
-
-	}
-
-	public static class DailyMenuAdapter extends BaseAdapter implements
-			ListAdapter {
-
-		private final Calendar day;
-		private final JidelakDbHelper dbHelper;
-		private List<Restaurant> restaurants;
-		private Context ctx;
-
-		public DailyMenuAdapter(Context ctx, Calendar day) {
-			this.day = day;
-			this.ctx = ctx;
-			dbHelper = new JidelakDbHelper(ctx);
-		}
-
 		@Override
-		public void notifyDataSetChanged() {
-			dbHelper.notifyDataSetChanged();
+		public boolean isChildSelectable(int paramInt1, int paramInt2) {
+			return false;
 		}
-
-		@Override
-		public void registerDataSetObserver(DataSetObserver observer) {
-			dbHelper.registerObserver(observer);
-		}
-
-		@Override
-		public void unregisterDataSetObserver(DataSetObserver observer) {
-			dbHelper.unregisterObserver(observer);
-		}
-
-		public int getCount() {
-			updateRestaurants();
-			return restaurants.size();
-		}
-
-		private void updateRestaurants() {
-			restaurants = new RestaurantDao(dbHelper).findAll();
-			notifyDataSetChanged();
-		}
-
-		public Restaurant getItem(int position) {
-			updateRestaurants();
-			return restaurants.get(position);
-		}
-
-		public long getItemId(int position) {
-			return getItem(position).getId();
-		}
-
-		public View getView(int position, View convertView, ViewGroup parent) {
-
-			if (convertView == null) {
-				convertView = View.inflate(ctx, R.layout.restaurant_daily_menu,
-						parent);
-			}
-
-			Restaurant restaurant = getItem(position);
-
-			TextView nameView = (TextView) convertView.findViewById(R.id.name);
-			nameView.setText(restaurant.getName());
-
-			TextView openingView = (TextView) convertView
-					.findViewById(R.id.open);
-			openingView.setText(Restaurant.openingHoursToString(restaurant
-					.getOpeningHours(day)));
-
-			ListView menuListView = (ListView) convertView
-					.findViewById(R.id.menu_list);
-
-			ListAdapter menuListAdapter = new MenuListAdapter(ctx, day,
-					restaurant);
-			menuListView.setAdapter(menuListAdapter);
-
-			return convertView;
-		}
-
 	}
 
 	public static class DayFragment extends Fragment {
@@ -263,43 +221,72 @@ public class JidelakMainActivity extends ActionBarActivity {
 			Bundle args = getArguments();
 
 			View rootView = inflater.inflate(R.layout.day, container, false);
-			ListView menuList = (ListView) rootView
+			ExpandableListView menuList = (ExpandableListView) rootView
 					.findViewById(R.id.menu_list);
 
 			Calendar day = Calendar.getInstance(Locale.getDefault());
-			day.setTime(new Date(args.getLong(DayFragment.ARG_DAY)));
+			Long time = args.getLong(DayFragment.ARG_DAY);
+			if (time == null)
+				time = System.currentTimeMillis();
+			day.setTime(new Date(time));
 
-			menuList.setAdapter(new DailyMenuAdapter(getActivity()
-					.getApplicationContext(), day));
+			Log.d(LOGGER_TAG, "Creating new DayFragment for "
+					+ new SimpleDateFormat("yyyy-MM-dd").format(day.getTime()));
+			DailyMenuAdapter ad = new DailyMenuAdapter(getActivity()
+					.getApplicationContext(), day);
+			menuList.setAdapter(ad);
+
+			for (int i = 0; i < ad.getGroupCount(); i++) {
+				Log.d(LOGGER_TAG, "expanging group " + i);
+				menuList.expandGroup(i);
+			}
 
 			return rootView;
 		}
 	}
 
+	static final String LOGGER_TAG = "JidelakMainActivity";
+
 	public class DayPagerAdapter extends FragmentStatePagerAdapter {
 
 		private List<Availability> dates = new ArrayList<Availability>();
+		private DataSetObserver dayPagerDatasetObserver = new DataSetObserver() {
+			@Override
+			public void onChanged() {
+				super.onChanged();
+				updateDates();
+			}
+
+			@Override
+			public void onInvalidated() {
+				super.onInvalidated();
+				updateDates();
+			}
+		};
 
 		public DayPagerAdapter(FragmentManager fm) {
 			super(fm);
+
+			getDbHelper().registerObserver(dayPagerDatasetObserver);
+			updateDates();
+
 		}
 
 		@Override
 		public int getCount() {
-			updateDates();
+			// updateDates();
+			Log.d(LOGGER_TAG, "Dates getSount: " + dates.size());
 			return dates.size();
 		}
 
 		private void updateDates() {
 			AvailabilityDao ad = new AvailabilityDao(getDbHelper());
-
 			dates = ad.findAllDays();
-
 			notifyDataSetChanged();
 		}
 
 		private Calendar getDateByPosition(int position) {
-			updateDates();
+			// updateDates();
 			return dates.get(position).getCalendar();
 		}
 

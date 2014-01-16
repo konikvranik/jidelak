@@ -62,6 +62,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
 		av.setMonth(unpackColumnValue(cursor, MONTH, Integer.class));
 		av.setDay(unpackColumnValue(cursor, DAY, Integer.class));
 		av.setId(unpackColumnValue(cursor, ID, Long.class));
+		av.setRestaurant(unpackColumnValue(cursor, RESTAURANT, Restaurant.class));
 		return av;
 	}
 
@@ -94,6 +95,8 @@ public class AvailabilityDao extends BaseDao<Availability> {
 		values.put(MONTH.getName(), obj.getMonth());
 		values.put(TO.getName(), obj.getTo());
 		values.put(YEAR.getName(), obj.getYear());
+		values.put(RESTAURANT.getName(), obj.getRestaurant() != null ? obj
+				.getRestaurant().getId() : null);
 		return values;
 	}
 

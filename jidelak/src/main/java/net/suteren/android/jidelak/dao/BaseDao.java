@@ -17,6 +17,7 @@ import java.util.Map;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.Utils;
 import net.suteren.android.jidelak.model.Identificable;
+import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.TimeOffsetType;
 import net.suteren.android.jidelak.model.TimeType;
 import android.content.ContentValues;
@@ -224,6 +225,19 @@ public abstract class BaseDao<T extends Identificable> {
 		db.close();
 	}
 
+	public void delete(Collection<T> obj) {
+
+		SQLiteDatabase db = getDbHelper().getWritableDatabase();
+		try {
+			for (T t : obj) {
+				db.delete(getTableName(), "id = ?",
+						new String[] { Long.toString(t.getId()) });
+			}
+		} finally {
+			db.close();
+		}
+	}
+
 	public void delete(T obj) {
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
 		try {
@@ -327,6 +341,9 @@ public abstract class BaseDao<T extends Identificable> {
 			value = (V) Utils.stringToLocale(cursor.getString(idx));
 		} else if (c == DateFormat.class) {
 			value = (V) new SimpleDateFormat(cursor.getString(idx), getLocale());
+		} else if (c == Restaurant.class) {
+			value = (V) new Restaurant();
+			((Restaurant) value).setId(cursor.getLong(idx));
 		} else if (c == URL.class) {
 			try {
 				value = (V) new URL(cursor.getString(idx));

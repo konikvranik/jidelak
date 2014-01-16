@@ -13,6 +13,7 @@ public class Availability implements Identificable {
 	private String to;
 	private Long id;
 	private Boolean closed;
+	private Restaurant restaurant;
 
 	public Availability(Calendar cal) {
 		super();
@@ -100,6 +101,14 @@ public class Availability implements Identificable {
 
 	public Boolean getClosed() {
 		return closed;
+	}
+
+	public Restaurant getRestaurant() {
+		return this.restaurant;
+	}
+
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
 	}
 
 }

@@ -4,17 +4,18 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@drawable/upper_shadow" >
-    </View>
+<!--     <View -->
+<!--         android:id="@+id/upper_shadow" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="8dp" -->
+<!--         android:background="@drawable/upper_shadow" -->
+<!--         android:visibility="gone" > -->
+<!--     </View> -->
 
     <RelativeLayout
         style="@style/RestaurantHeaderTheme"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp" >
+        android:layout_height="wrap_content" >
 
         <RelativeLayout
             android:id="@+id/header"
@@ -27,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:src="@drawable/ic_launcher" />
+                android:src="@android:drawable/ic_menu_compass" />
 
             <ImageButton
                 android:id="@+id/imageButton2"
@@ -35,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/imageButton1"
-                android:src="@drawable/ic_launcher" />
+                android:src="@android:drawable/ic_menu_call" />
 
             <TextView
                 android:id="@+id/open"
@@ -45,7 +46,7 @@
                 android:layout_alignBottom="@+id/textView2"
                 android:layout_toRightOf="@+id/textView2"
                 android:text="Small Text"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="@style/RestaurantTextLarge" />
 
             <TextView
                 android:id="@+id/name"
@@ -55,7 +56,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/imageButton2"
                 android:text="Restaurace"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="@style/RestaurantTextLarge" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -64,7 +65,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/name"
                 android:text="@string/open"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="@style/RestaurantTextSmall" />
         </RelativeLayout>
     </RelativeLayout>
 

@@ -36,8 +36,11 @@ import org.w3c.dom.Node;
 import org.w3c.tidy.Tidy;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
@@ -125,7 +128,11 @@ public class JidelakFeederService extends Service {
 				getDbHelper().notifyDataSetChanged();
 			}
 		}
-
+		SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+				null, Context.MODE_PRIVATE);
+		Editor editor = prefs.edit();
+		editor.putLong("last_updated", System.currentTimeMillis());
+		editor.commit();
 	}
 
 	private JidelakDbHelper getDbHelper() {

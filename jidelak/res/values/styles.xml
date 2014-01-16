@@ -26,12 +26,36 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="RestaurantText">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="RestaurantTextLarge" parent="RestaurantText">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="RestaurantTextSmall" parent="RestaurantText">
+        <item name="android:textSize">9sp</item>
+    </style>
+
     <style name="RestaurantTheme" parent="AppTheme">
-        <item name="android:background">@android:color/background_light</item>
+        <item name="android:background">@color/RestaurantBackground</item>
+        <item name="android:childDivider">@android:color/transparent</item>
+        <item name="android:groupIndicator">@null</item>
+        <item name="android:textAppearance">@style/RestaurantText</item>
+        <item name="android:dividerHeight">5dp</item>
+    </style>
+
+    <style name="RestaurantMenuTheme" parent="RestaurantTheme">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
     </style>
 
     <style name="RestaurantHeaderTheme" parent="RestaurantTheme">
-        <item name="android:background">@android:color/darker_gray</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@color/RestaurantHeaderBackground</item>
     </style>
 
 </resources>

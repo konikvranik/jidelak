@@ -149,7 +149,8 @@ public class JidelakMainActivity extends ActionBarActivity {
 
 		@Override
 		public int getChildrenCount(int paramInt) {
-
+			if (getGroup(paramInt).getMenu() == null)
+				return 0;
 			Log.d(LOGGER_TAG, "MEnu count: "
 					+ getGroup(paramInt).getMenu().size());
 			return getGroup(paramInt).getMenu().size();
@@ -189,6 +190,10 @@ public class JidelakMainActivity extends ActionBarActivity {
 						null);
 			}
 
+//			if (paramInt > 0)
+//				paramView.findViewById(R.id.upper_shadow).setVisibility(
+//						View.VISIBLE);
+
 			Restaurant restaurant = getGroup(paramInt);
 
 			TextView nameView = (TextView) paramView.findViewById(R.id.name);
@@ -203,10 +208,14 @@ public class JidelakMainActivity extends ActionBarActivity {
 
 		@Override
 		public View getChildView(int paramInt1, int paramInt2,
-				boolean paramBoolean, View paramView, ViewGroup paramViewGroup) {
+				boolean isLastChild, View paramView, ViewGroup paramViewGroup) {
 
 			if (paramView == null)
 				paramView = View.inflate(ctx, R.layout.meal, null);
+
+			if (isLastChild)
+				paramView.findViewById(R.id.bottom_shadow).setVisibility(
+						View.VISIBLE);
 
 			Meal meal = getChild(paramInt1, paramInt2);
 

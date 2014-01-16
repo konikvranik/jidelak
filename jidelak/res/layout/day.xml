@@ -3,8 +3,6 @@
     android:id="@+id/menu_list"
     style="@style/RestaurantTheme"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    android:childDivider="@android:color/transparent"
-    android:groupIndicator="@null" >
+    android:layout_height="fill_parent" >
 
 </ExpandableListView>

@@ -28,7 +28,7 @@ import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -369,7 +369,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		@Override
 		public CharSequence getPageTitle(int position) {
 			Availability d = dates.get(position);
-			return DateFormat.getDateInstance(DateFormat.SHORT,
+			return DateFormat.getDateInstance(DateFormat.FULL,
 					Locale.getDefault()).format(d.getCalendar().getTime());
 
 		}
@@ -409,9 +409,16 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null)
 				convertView = new TextView(getApplicationContext());
+
+			int pd = (int) TypedValue.applyDimension(
+					TypedValue.COMPLEX_UNIT_DIP, 5, getResources()
+							.getDisplayMetrics());
+			convertView.setPadding(pd, pd, pd, pd);
+
 			((TextView) convertView).setText(DateFormat.getDateInstance(
 					DateFormat.SHORT, Locale.getDefault()).format(
 					dates.get(position).getCalendar().getTime()));
+
 			return convertView;
 		}
 
@@ -436,8 +443,14 @@ public class JidelakMainActivity extends ActionBarActivity implements
 			if (convertView == null)
 				convertView = new TextView(getApplicationContext());
 			((TextView) convertView).setText(DateFormat.getDateInstance(
-					DateFormat.SHORT, Locale.getDefault()).format(
+					DateFormat.FULL, Locale.getDefault()).format(
 					dates.get(position).getCalendar().getTime()));
+
+			int pd = (int) TypedValue.applyDimension(
+					TypedValue.COMPLEX_UNIT_DIP, 8, getResources()
+							.getDisplayMetrics());
+			convertView.setPadding(pd, pd, pd, pd);
+
 			return convertView;
 		}
 

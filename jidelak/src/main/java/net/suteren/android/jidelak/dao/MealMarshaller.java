@@ -5,15 +5,16 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Map;
 
-import android.util.Log;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Source;
+import android.util.Log;
 
 public class MealMarshaller extends BaseMarshaller<Meal> {
 
+	private static final String LOGGER_TAG = "MEalMArshaller";
 	private Source source;
 
 	@Override
@@ -27,12 +28,14 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 		meal.setDish(Dish.valueOf(data.get(prefix + "meal@dish").toUpperCase(
 				Locale.ENGLISH)));
 
-		Log.d("Test", "Dish set to: " + meal.getDish().name());
-		
-		meal.setPosition(Integer.parseInt(data.get(prefix + "meal@order")));
+		Log.d(LOGGER_TAG, "Dish set to: " + meal.getDish().name());
 
+		String o = data.get(prefix + "meal@order");
+		if (o != null)
+			meal.setPosition(Integer.parseInt(o));
+
+		String x = data.get(prefix + "meal@time");
 		try {
-			String x = data.get(prefix + "meal@time");
 			Calendar cal = Calendar.getInstance(getSource().getLocale());
 			switch (getSource().getTimeType()) {
 			case RELATIVE:
@@ -51,6 +54,9 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 				break;
 
 			case ABSOLUTE:
+
+				Log.d(LOGGER_TAG, "Parsing " + x + " by "
+						+ getSource().getDateFormatString());
 				if (x != null)
 					cal.setTime(getSource().getDateFormat().parse(x));
 				break;

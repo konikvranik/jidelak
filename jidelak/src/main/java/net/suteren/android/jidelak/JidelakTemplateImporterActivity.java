@@ -14,7 +14,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.nio.CharBuffer;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,16 +26,14 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Restaurant;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -74,53 +71,6 @@ public class JidelakTemplateImporterActivity extends Activity {
 		if (sourceUri != null)
 			ask();
 
-	}
-
-	private void showIntent() {
-		Intent intent = getIntent();
-
-		if (intent == null) {
-			Toast.makeText(getApplicationContext(), "No intent",
-					Toast.LENGTH_LONG).show();
-			return;
-		}
-
-		StringBuffer sb = new StringBuffer(
-				intent.toUri(Intent.URI_INTENT_SCHEME));
-		sb.append("\nAction: ");
-		sb.append(intent.getAction());
-		sb.append("\nscheme: ");
-		sb.append(intent.getScheme());
-		sb.append("\ntype: ");
-		sb.append(intent.getType());
-		sb.append("\ndata: ");
-		sb.append(sourceUri.toString());
-
-		if (intent.getExtras() != null)
-			sb.append(showBundle(intent.getExtras()));
-
-		if (intent.getCategories() != null) {
-			sb.append("\n--- Categories: ---");
-			for (String category : intent.getCategories()) {
-				sb.append("\n\t");
-				sb.append(category);
-			}
-		}
-		Log.d(LOGGING_TAG, sb.toString());
-		Toast.makeText(getApplicationContext(), sb.toString(),
-				Toast.LENGTH_LONG).show();
-
-	}
-
-	private Object showBundle(Bundle extras) {
-		StringBuffer sb = new StringBuffer();
-		for (String key : extras.keySet()) {
-			sb.append("\n");
-			sb.append(key);
-			sb.append("=>");
-			sb.append(extras.get(key));
-		}
-		return sb.toString();
 	}
 
 	private void ask() {
@@ -191,6 +141,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 		}
 	}
 
+	@SuppressLint("WorldReadableFiles")
 	void parseConfig(InputStream fileStream, Restaurant restaurant)
 			throws JidelakException {
 

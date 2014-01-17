@@ -24,8 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/name"
+            android:layout_toLeftOf="@+id/price"
             android:text="Popis"
             android:textAppearance="@style/RestaurantTextSmall" />
 
@@ -35,17 +35,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_marginLeft="15dp"
             android:text="100,- Kč"
             android:textAppearance="@style/RestaurantTextSmall"
             android:textStyle="italic" />
     </RelativeLayout>
-
-    <View
-        android:id="@+id/bottom_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@drawable/bottom_shadow"
-        android:visibility="gone" >
-    </View>
 
 </LinearLayout>

@@ -12,7 +12,7 @@ import android.database.Cursor;
 
 public class MealDao extends BaseDao<Meal> {
 
-	public static final Column PRICE = new Column("price", SQLiteDataTypes.REAL);
+	public static final Column PRICE = new Column("price", SQLiteDataTypes.TEXT);
 	public static final Column DISH = new Column("dish",
 			SQLiteDataTypes.INTEGER);
 	public static final Column POSITION = new Column("position",
@@ -86,7 +86,8 @@ public class MealDao extends BaseDao<Meal> {
 		meal.setAvailability(new AvailabilityDao(getDbHelper())
 				.findById(unpackColumnValue(cursor, AVAILABILITY, Long.class)));
 		meal.setDish(unpackColumnValue(cursor, DISH, Dish.class));
-		meal.setPosition(unpackColumnValue(cursor, POSITION, Integer.class));
+		meal.setPrice(unpackColumnValue(cursor, PRICE, String.class));
+			meal.setPosition(unpackColumnValue(cursor, POSITION, Integer.class));
 		meal.setRestaurant(new RestaurantDao(getDbHelper())
 				.findById(unpackColumnValue(cursor, RESTAURANT, Long.class)));
 		return meal;

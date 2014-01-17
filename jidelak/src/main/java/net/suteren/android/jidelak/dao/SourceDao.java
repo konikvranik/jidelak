@@ -106,8 +106,10 @@ public class SourceDao extends BaseDao<Source> {
 	protected ContentValues getValues(Source obj) {
 		ContentValues values = new ContentValues();
 		values.put(ID.getName(), obj.getId());
-		values.put(TIME_TYPE.getName(), obj.getTimeType().ordinal());
-		values.put(BASE_TIME.getName(), obj.getOffsetBase().ordinal());
+		if (obj.getTimeType() != null)
+			values.put(TIME_TYPE.getName(), obj.getTimeType().ordinal());
+		if (obj.getOffsetBase() != null)
+			values.put(BASE_TIME.getName(), obj.getOffsetBase().ordinal());
 		values.put(FIRST_DAY_OF_WEEK.getName(), obj.getFirstdayofweek());
 		values.put(OFFSET.getName(), obj.getOffset());
 		values.put(URL.getName(), obj.getUrl().toString());

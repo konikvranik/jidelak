@@ -1,14 +1,12 @@
 package net.suteren.android.jidelak;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
-import java.util.zip.DataFormatException;
 
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
@@ -36,12 +34,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class JidelakMainActivity extends ActionBarActivity implements
 		TabListener, OnNavigationListener {
@@ -241,6 +237,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 			return false;
 		}
 
+		@SuppressWarnings("unused")
 		@Override
 		public View getGroupView(int paramInt, boolean paramBoolean,
 				View paramView, ViewGroup paramViewGroup) {
@@ -249,8 +246,13 @@ public class JidelakMainActivity extends ActionBarActivity implements
 				paramView = View.inflate(ctx, R.layout.restaurant, null);
 			}
 
+			paramView.invalidate();
+
 			if (paramInt > 0 && ENABLE_UPPER_SHADOW)
 				paramView.findViewById(R.id.upper_shadow).setVisibility(
+						View.VISIBLE);
+			if (paramInt > 0)
+				paramView.findViewById(R.id.bottom_shadow).setVisibility(
 						View.VISIBLE);
 
 			Restaurant restaurant = getGroup(paramInt);
@@ -270,10 +272,6 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 			if (paramView == null)
 				paramView = View.inflate(ctx, R.layout.meal, null);
-
-			if (isLastChild)
-				paramView.findViewById(R.id.bottom_shadow).setVisibility(
-						View.VISIBLE);
 
 			Meal meal = getChild(paramInt1, paramInt2);
 
@@ -313,8 +311,6 @@ public class JidelakMainActivity extends ActionBarActivity implements
 				time = System.currentTimeMillis();
 			day.setTime(new Date(time));
 
-			Log.d(LOGGER_TAG, "Creating new DayFragment for "
-					+ new SimpleDateFormat("yyyy-MM-dd").format(day.getTime()));
 			final DailyMenuAdapter ad = new DailyMenuAdapter(getActivity()
 					.getApplicationContext(), day);
 			menuList.setAdapter(ad);

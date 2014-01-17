@@ -2,12 +2,11 @@ package net.suteren.android.jidelak;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.io.StringWriter;
 import java.net.URLConnection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -20,7 +19,6 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
@@ -30,11 +28,10 @@ import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.tidy.Tidy;
-
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -48,7 +45,6 @@ import android.util.Log;
 public class JidelakFeederService extends Service {
 	static final String LOGGING_TAG = "JidelakFeederService";
 	private JidelakDbHelper dbHelper;
-	private boolean force = false;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -87,7 +83,7 @@ public class JidelakFeederService extends Service {
 				InputStream template = openFileInput(source.getRestaurant()
 						.getTemplateName());
 
-				Node result = retrieve(source.getUrl(), template);
+				Node result = retrieve(source, template);
 
 				Restaurant restaurant = source.getRestaurant();
 
@@ -141,21 +137,33 @@ public class JidelakFeederService extends Service {
 		return dbHelper;
 	}
 
-	Node retrieve(URL url, InputStream inXsl) throws IOException,
+	Node retrieve(Source source, InputStream inXsl) throws IOException,
 			TransformerException, ParserConfigurationException {
-		URLConnection con = url.openConnection();
+		URLConnection con = source.getUrl().openConnection();
 		InputStream is = con.getInputStream();
+		String enc = con.getContentEncoding();
+		if (enc == null)
+			enc = source.getEncoding();
 		Document d = getTidy(con.getContentEncoding()).parseDOM(is, null);
 		is.close();
 		DOMResult res = transform(d, inXsl);
+
+		StringWriter sw = new StringWriter();
+		Transformer tr = TransformerFactory.newInstance().newTransformer();
+		tr.setOutputProperty(OutputKeys.INDENT, "yes");
+		tr.transform(new DOMSource(res.getNode()), new StreamResult(sw));
+		Log.d(LOGGING_TAG, sw.toString());
+
 		return res.getNode();
 	}
 
 	private Tidy getTidy(String enc) throws IOException {
 
+		Log.d(LOGGING_TAG, "Enc: " + enc);
+
 		Tidy t = new Tidy();
 
-		t.setInputEncoding(enc == null ? "cp1250" : enc);
+		t.setInputEncoding(enc == null ? "UTF-8" : enc);
 		// t.setNumEntities(false);
 		// t.setQuoteMarks(false);
 		// t.setQuoteAmpersand(false);
@@ -174,6 +182,7 @@ public class JidelakFeederService extends Service {
 		return t;
 	}
 
+	@SuppressLint("WorldReadableFiles")
 	private DOMResult transform(Document d, InputStream inXsl)
 			throws IOException, TransformerConfigurationException,
 			TransformerFactoryConfigurationError, ParserConfigurationException,

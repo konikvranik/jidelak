@@ -35,14 +35,15 @@ public class JidelakFeederReceiver extends BroadcastReceiver {
 	private boolean decideIfStart(Context context) {
 		SharedPreferences prefs = context.getSharedPreferences(null,
 				Context.MODE_PRIVATE);
-		long schedule = prefs.getLong("last_updated", -1);
+		long schedule = prefs.getLong(JidelakFeederService.LAST_UPDATED, -1);
 		long time = System.currentTimeMillis();
 
 		if (schedule != -1)
-			schedule += prefs.getLong("update_interval", 3600000);
+			schedule += prefs.getLong(JidelakFeederService.UPDATE_INTERVAL,
+					JidelakFeederService.DEFAULT_UPDATE_INTERVAL);
 
 		if (time > schedule) {
-			prefs.edit().putLong("last_updated", time);
+			prefs.edit().putLong(JidelakFeederService.LAST_UPDATED, time);
 			return true;
 		} else
 			return false;

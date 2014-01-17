@@ -4,10 +4,11 @@
     <string name="app_name">Jidelak</string>
     <string name="action_settings">Settings</string>
     <string name="action_update">Update</string>
-    <string name="open">Otevřeno: </string>
+    <string name="open">Open:</string>
     <string name="download_failed">Failed to download data</string>
     <string name="unable_to_parse">Data not parsable</string>
     <string name="parser_configuration_error">Parser configuration error</string>
     <string name="data_updated">Data updated</string>
+    <string name="import_failed">Data import failed: </string>
 
 </resources>

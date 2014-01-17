@@ -7,6 +7,7 @@ import java.net.URLConnection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -19,6 +20,7 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
@@ -28,9 +30,11 @@ import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.tidy.Tidy;
+
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
@@ -39,12 +43,18 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 public class JidelakFeederService extends Service {
+	public static final String LAST_UPDATED = "last_updated";
 	static final String LOGGING_TAG = "JidelakFeederService";
+	public static final String UPDATE_INTERVAL = "update_interval";
 	private JidelakDbHelper dbHelper;
+	private Handler mHandler;
+	static final int DEFAULT_UPDATE_INTERVAL = 3600000;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -53,6 +63,7 @@ public class JidelakFeederService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		mHandler = new Handler();
 		Log.v(LOGGING_TAG, "JidelakFeederService.onStartCommand()");
 		// this.force = intent.getExtras().getBoolean("force", false);
 		new Worker().execute(new Void[0]);
@@ -113,7 +124,6 @@ public class JidelakFeederService extends Service {
 				adao.insert(restaurant.getOpeningHours());
 				rdao.update(restaurant);
 
-				// TODO Auto-generated method stub
 			} catch (IOException e) {
 				throw new JidelakException(e);
 			} catch (TransformerException e) {
@@ -127,7 +137,7 @@ public class JidelakFeederService extends Service {
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences(
 				null, Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
-		editor.putLong("last_updated", System.currentTimeMillis());
+		editor.putLong(LAST_UPDATED, System.currentTimeMillis());
 		editor.commit();
 	}
 
@@ -141,9 +151,9 @@ public class JidelakFeederService extends Service {
 			TransformerException, ParserConfigurationException {
 		URLConnection con = source.getUrl().openConnection();
 		InputStream is = con.getInputStream();
-		String enc = con.getContentEncoding();
+		String enc = source.getEncoding();
 		if (enc == null)
-			enc = source.getEncoding();
+			enc = con.getContentEncoding();
 		Document d = getTidy(con.getContentEncoding()).parseDOM(is, null);
 		is.close();
 		DOMResult res = transform(d, inXsl);
@@ -218,16 +228,28 @@ public class JidelakFeederService extends Service {
 		protected Void doInBackground(Void... params) {
 			try {
 				updateData();
-
-				// Toast.makeText(getApplicationContext(), "data imported",
-				// Toast.LENGTH_LONG).show();
-
 			} catch (JidelakException e) {
 				Log.e(LOGGING_TAG, e.getMessage(), e);
-				// TODO Auto-generated catch block
+				mHandler.post(new ToastRunnable(getResources().getString(
+						R.string.import_failed)
+						+ e.getMessage()));
 			}
 			return null;
 		}
 
+	}
+
+	private class ToastRunnable implements Runnable {
+		String mText;
+
+		public ToastRunnable(String text) {
+			mText = text;
+		}
+
+		@Override
+		public void run() {
+			Toast.makeText(getApplicationContext(), mText, Toast.LENGTH_LONG)
+					.show();
+		}
 	}
 }

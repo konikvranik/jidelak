@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Jídelák</string>
+    <string name="action_settings">Nastavení</string>
+    <string name="action_update">Aktualizovat</string>
+    <string name="open">Otevřeno: </string>
+    <string name="download_failed">Nepodařilo se nahrát data</string>
+    <string name="unable_to_parse">Nepodařilo se zpracovat data</string>
+    <string name="parser_configuration_error">Chyba v konfiguraci parseru</string>
+    <string name="data_updated">Data byl aktualizována</string>
+    <string name="import_failed">Nepodařilo se naimportovat data: </string>
+
+</resources>

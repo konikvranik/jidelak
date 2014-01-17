@@ -183,15 +183,6 @@ public class JidelakMainActivity extends ActionBarActivity implements
 						.findByDayAndRestaurant(day, restaurant)));
 				restaurant.setOpeningHours(new TreeSet<Availability>(adao
 						.findByRestaurant(restaurant)));
-				Log.d(LOGGER_TAG, "Added " + restaurant.getMenu().size()
-						+ " meals.");
-				Log.d(LOGGER_TAG, "Added "
-						+ restaurant.getOpeningHours().size()
-						+ " openning hours.");
-
-				Log.d(LOGGER_TAG, "Added "
-						+ restaurant.getOpeningHours(day).size()
-						+ " openning hours for day.");
 			}
 		}
 
@@ -204,8 +195,6 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		public int getChildrenCount(int paramInt) {
 			if (getGroup(paramInt).getMenu() == null)
 				return 0;
-			Log.d(LOGGER_TAG, "MEnu count: "
-					+ getGroup(paramInt).getMenu().size());
 			return getGroup(paramInt).getMenu().size();
 		}
 

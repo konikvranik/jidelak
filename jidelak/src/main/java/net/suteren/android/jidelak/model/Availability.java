@@ -153,6 +153,15 @@ public class Availability implements Identificable, Comparable<Availability> {
 				return c;
 		}
 
+		if (getDow() == null) {
+			if (another.getDow() != null)
+				return -1;
+		} else {
+			c = getDow().compareTo(another.getDow());
+			if (c != 0)
+				return c;
+		}
+
 		if (getClosed() == null) {
 			if (another.getClosed() != null)
 				return -1;

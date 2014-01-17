@@ -62,6 +62,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
 		av.setYear(unpackColumnValue(cursor, YEAR, Integer.class));
 		av.setMonth(unpackColumnValue(cursor, MONTH, Integer.class));
 		av.setDay(unpackColumnValue(cursor, DAY, Integer.class));
+		av.setDow(unpackColumnValue(cursor, DOW, Integer.class));
 		av.setId(unpackColumnValue(cursor, ID, Long.class));
 		av.setFrom(unpackColumnValue(cursor, FROM, String.class));
 		av.setTo(unpackColumnValue(cursor, TO, String.class));

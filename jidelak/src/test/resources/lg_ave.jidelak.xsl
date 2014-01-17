@@ -42,7 +42,6 @@
 				<term day-of-week="St" from="8:00" to="17:00" />
 				<term day-of-week="Čt" from="8:00" to="17:00" />
 				<term day-of-week="Pá" from="8:00" to="17:00" />
-				<term date="1. 1. 2010" closed="true" />
 			</open>
 
 			<menu>

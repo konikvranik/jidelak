@@ -154,7 +154,7 @@ public class JidelakFeederService extends Service {
 		String enc = source.getEncoding();
 		if (enc == null)
 			enc = con.getContentEncoding();
-		Document d = getTidy(con.getContentEncoding()).parseDOM(is, null);
+		Document d = getTidy(enc).parseDOM(is, null);
 		is.close();
 		DOMResult res = transform(d, inXsl);
 

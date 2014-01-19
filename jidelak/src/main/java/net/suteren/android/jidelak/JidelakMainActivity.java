@@ -45,6 +45,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 	private JidelakDbHelper dbHelper;
 	private ViewPager pagerView;
 	private ActionBar ab;
+	DayPagerAdapter dpa;
 
 	public JidelakDbHelper getDbHelper() {
 		if (dbHelper == null)
@@ -69,10 +70,11 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		pagerView = (ViewPager) findViewById(R.id.pager);
 
 		ab = getSupportActionBar();
+		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayShowHomeEnabled(true);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-		final DayPagerAdapter dpa = new DayPagerAdapter(
-				getSupportFragmentManager());
+		dpa = new DayPagerAdapter(getSupportFragmentManager());
 		pagerView.setAdapter(dpa);
 
 		ab.setListNavigationCallbacks(dpa, this);
@@ -86,9 +88,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 				});
 
-		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		cal.setTimeInMillis(System.currentTimeMillis());
-		pagerView.setCurrentItem(dpa.getPositionByDate(cal));
+		goToday();
 
 		getDbHelper().registerObserver(new DataSetObserver() {
 			@Override
@@ -135,6 +135,12 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 	}
 
+	private void goToday() {
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		cal.setTimeInMillis(System.currentTimeMillis());
+		pagerView.setCurrentItem(dpa.getPositionByDate(cal));
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -151,6 +157,10 @@ public class JidelakMainActivity extends ActionBarActivity implements
 					JidelakFeederService.class).putExtra("force", true));
 
 		case R.id.action_settings:
+			return true;
+
+		case android.R.id.home:
+			goToday();
 			return true;
 
 		default:
@@ -379,7 +389,14 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		}
 
 		int getPositionByDate(Calendar cal) {
-			return dates.indexOf(new Availability(cal));
+			int i = dates.indexOf(new Availability(cal));
+			if (i < 0) {
+				Availability a = new Availability(cal);
+				TreeSet<Availability> g = new TreeSet<Availability>(dates);
+				a = g.ceiling(a);
+				return dates.indexOf(a);
+			}
+			return i;
 		}
 
 		public Fragment getItem(Calendar day) {

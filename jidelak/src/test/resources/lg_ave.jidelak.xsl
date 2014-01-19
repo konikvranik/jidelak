@@ -29,11 +29,11 @@
 			<address>Radlická 714/113a</address>
 			<zip>158 00</zip>
 
-			<source time="relative" base="week" firstDayOfWeek="Po"
-				timeOffset="0" encoding="cp1250" dateFormat="d.M.y" locale="cs_CZ"
+			<source time="relative" base="day" firstDayOfWeek="Po"
+				timeOffset="-1" encoding="cp1250" dateFormat="d.M.y" locale="cs_CZ"
 				url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php" />
-			<source time="relative" base="week" firstDayOfWeek="Po"
-				timeOffset="0" encoding="cp1250" dateFormat="d.M.y" locale="cs_CZ"
+			<source time="relative" base="day" firstDayOfWeek="Po"
+				timeOffset="-1" encoding="cp1250" dateFormat="d.M.y" locale="cs_CZ"
 				url="http://lgavenir.cateringmelodie.cz/cz/denni-menu-pristi-tyden-tisk.php" />
 
 			<open>
@@ -59,35 +59,35 @@
 
 		<xsl:apply-templates
 			select="../../tr[2]/td[$pos]/p[normalize-space(translate(.,'&#160;', ' ')) != '']">
-			<xsl:with-param name="type" select="'normal'" />
+			<xsl:with-param name="type" select="'1-normal'" />
 			<xsl:with-param name="dish" select="'soup'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
 		</xsl:apply-templates>
 		<xsl:apply-templates
 			select="../../tr[position() &gt; 2]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
-			<xsl:with-param name="type" select="'normal'" />
+			<xsl:with-param name="type" select="'1-normal'" />
 			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
 		</xsl:apply-templates>
 		<xsl:apply-templates
 			select="../../../following-sibling::table[@class='tb_jidelak' and ( position() = 1)]/tbody/tr[2]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
-			<xsl:with-param name="type" select="'superior'" />
+			<xsl:with-param name="type" select="'2-superior'" />
 			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
 		</xsl:apply-templates>
 		<xsl:apply-templates
 			select="../../../following-sibling::table[@class='tb_jidelak' and (position() = 2 )]/tbody/tr[2]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
-			<xsl:with-param name="type" select="'live'" />
+			<xsl:with-param name="type" select="'3-live'" />
 			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
 		</xsl:apply-templates>
 		<xsl:apply-templates
 			select="../../../following-sibling::table[@class='tb_jidelak' and position() = 3]/tbody/tr[2]/td[normalize-space(translate(.,'&#160;', ' ')) != '']">
-			<xsl:with-param name="type" select="'pasta'" />
+			<xsl:with-param name="type" select="'4-pasta'" />
 			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
@@ -107,7 +107,7 @@
 			</title>
 			<description></description>
 			<xsl:choose>
-				<xsl:when test="$type = 'normal'">
+				<xsl:when test="$type = '1-normal'">
 					<price></price>
 				</xsl:when>
 				<xsl:otherwise>

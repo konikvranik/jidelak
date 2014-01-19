@@ -99,39 +99,60 @@ public class Meal implements Identificable, Comparable<Meal> {
 		if (another == null)
 			return 1;
 
-		if (getDish() == null && another.getDish() != null)
-			return -1;
-		int r = getDish().compareTo(another.getDish());
+		int r = 0;
+		if (getDish() == null) {
+			if (another.getDish() != null)
+				return -1;
+		} else
+			r = getDish().compareTo(another.getDish());
 		if (r != 0)
 			return r;
 
-		if (getPosition() == null && another.getPosition() != null)
-			return -1;
-		r = getPosition().compareTo(another.getPosition());
+		if (getCategory() == null) {
+			if (another.getCategory() != null)
+				return -1;
+		} else
+			r = getCategory().compareTo(another.getCategory());
 		if (r != 0)
 			return r;
 
-		if (getId() == null && another.getId() != null)
-			return -1;
-		r = getId().compareTo(another.getId());
+		if (getPosition() == null) {
+			if (another.getPosition() != null)
+				return -1;
+		} else
+			r = getPosition().compareTo(another.getPosition());
 		if (r != 0)
 			return r;
 
-		if (getTitle() == null && another.getTitle() != null)
-			return -1;
-		r = getTitle().compareTo(another.getTitle());
+		if (getId() == null) {
+			if (another.getId() != null)
+				return -1;
+		} else
+			r = getId().compareTo(another.getId());
 		if (r != 0)
 			return r;
 
-		if (getDescription() == null && another.getDescription() != null)
-			return -1;
-		r = getDescription().compareTo(another.getDescription());
+		if (getTitle() == null) {
+			if (another.getTitle() != null)
+				return -1;
+		} else
+			r = getTitle().compareTo(another.getTitle());
 		if (r != 0)
 			return r;
 
-		if (getPrice() == null && another.getPrice() != null)
-			return -1;
-		r = getPrice().compareTo(another.getPrice());
+		if (getDescription() == null) {
+			if (another.getDescription() != null)
+				return -1;
+		} else
+			r = getDescription().compareTo(another.getDescription());
+		if (r != 0)
+			return r;
+
+		if (getPrice() == null) {
+			if (another.getPrice() != null)
+				return -1;
+		} else
+			r = getPrice().compareTo(another.getPrice());
 		if (r != 0)
 			return r;
 

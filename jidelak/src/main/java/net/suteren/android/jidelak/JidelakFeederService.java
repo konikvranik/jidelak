@@ -131,7 +131,6 @@ public class JidelakFeederService extends Service {
 			} catch (ParserConfigurationException e) {
 				throw new JidelakException(e);
 			} finally {
-				getDbHelper().notifyDataSetChanged();
 			}
 		}
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences(
@@ -139,6 +138,8 @@ public class JidelakFeederService extends Service {
 		Editor editor = prefs.edit();
 		editor.putLong(LAST_UPDATED, System.currentTimeMillis());
 		editor.commit();
+
+		getDbHelper().notifyDataSetChanged();
 	}
 
 	private JidelakDbHelper getDbHelper() {

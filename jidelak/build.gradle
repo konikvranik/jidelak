@@ -53,6 +53,7 @@ sourceSets {
 repositories { mavenCentral() }
 
 android {
+
 	compileSdkVersion 19
 	buildToolsVersion "19.0.0"
 
@@ -78,7 +79,7 @@ android {
 			assets.srcDirs = ['tests/assets']
 			resources.srcDirs = ['tests/src']
 		}
-		
+
 		instrumentTest.setRoot('tests')
 		instrumentTest {
 			java.srcDirs = ['tests/src']
@@ -87,30 +88,29 @@ android {
 			resources.srcDirs = ['tests/src']
 		}
 	}
-	
-	 signingConfigs {
-          release {
-              storeFile file("release.keystore")
-              storePassword "lopata"
-              keyAlias "jidelak"
-              keyPassword "lopata"
-         }
-     }
-     buildTypes {
-        release {
-            signingConfig signingConfigs.release
-        }
-    }
+
+	signingConfigs {
+		release {
+			storeFile file("release.keystore")
+			storePassword "lopata"
+			keyAlias "jidelak"
+			keyPassword "lopata"
+		}
+	}
+
+	buildTypes {
+		release { signingConfig signingConfigs.release }
+	}
 }
 
 dependencies {
 	compile 'com.android.support:support-v4:19.0.0'
 	compile 'com.android.support:appcompat-v7:19.0.0'
 	compile 'net.sf.jtidy:jtidy:r938'
-	
+
 	testCompile 'org.slf4j:slf4j-api:1.7.5'
 	testCompile 'org.slf4j:slf4j-log4j12:1.7.5'
 	testCompile 'log4j:log4j:1.2.17'
-            
+
 }
 

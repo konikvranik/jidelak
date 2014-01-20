@@ -37,6 +37,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 		String x = data.get(prefix + "meal@time");
 		try {
 			Calendar cal = Calendar.getInstance(getSource().getLocale());
+			cal.setTimeInMillis(System.currentTimeMillis());
 			switch (getSource().getTimeType()) {
 			case RELATIVE:
 

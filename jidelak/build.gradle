@@ -87,6 +87,20 @@ android {
 			resources.srcDirs = ['tests/src']
 		}
 	}
+	
+	 signingConfigs {
+          release {
+              storeFile file("release.keystore")
+              storePassword "lopata"
+              keyAlias "jidelak"
+              keyPassword "lopata"
+         }
+     }
+     buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
 }
 
 dependencies {

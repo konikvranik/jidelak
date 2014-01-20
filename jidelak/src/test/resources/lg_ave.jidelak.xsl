@@ -18,7 +18,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant>
+		<restaurant> 
 			<id>praha-dinner-garden-avenir</id>
 			<name>Lunch Garden Avenir</name>
 			<phone>+420 731 401 714</phone>

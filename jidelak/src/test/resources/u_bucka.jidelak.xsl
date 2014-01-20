@@ -18,25 +18,27 @@
 
 	<xsl:template name="restaurant">
 		<restaurant>
-			<id>praha-gastronom</id>
-			<name>Restaurace U Majerů</name>
-			<phone>(+420) 251 612 775</phone>
-			<web>http://www.restauraceumajeru.cz/</web>
+			<id>u-bucka</id>
+			<name>Restaurace U Bůčka</name>
+			<phone>(+420) 737 780 745, 737 711 968</phone>
+			<web>http://www.restauraceubucka.cz/</web>
+			<e-mail>info@restauraceubucka.cz</e-mail>
 			<city>Praha 5</city>
 			<country>Česká republika</country>
-			<address>U Jinonického rybníčka 3a/602</address>
+			<address>Mezi Lány 15</address>
 			<zip>158 00</zip>
 
-			<source time="relative" firstDayOfWeek="Po" encoding="utf8"
-				timeOffset="-1" base="day" dateFormat="d.M. y" locale="cs_CZ"
-				url="http://www.lunchtime.cz/umajeru/a/denni-menu/" />
+			<source time="absolute" firstDayOfWeek="Po" encoding="utf8"
+				locale="cs_CZ" url="http://www.restauraceubucka.cz/restauraceubucka/3-Denni-nabidka" />
 
 			<open>
-				<term day-of-week="Po" from="10:30" to="14:00" />
-				<term day-of-week="Út" from="10:30" to="14:00" />
-				<term day-of-week="St" from="10:30" to="14:00" />
-				<term day-of-week="Čt" from="10:30" to="14:00" />
-				<term day-of-week="Pá" from="10:30" to="14:00" />
+				<term day-of-week="Po" from="10:30" to="23:00" />
+				<term day-of-week="Út" from="10:30" to="23:00" />
+				<term day-of-week="St" from="10:30" to="23:00" />
+				<term day-of-week="Čt" from="10:30" to="23:00" />
+				<term day-of-week="Pá" from="10:30" to="23:00" />
+				<term day-of-week="So" from="11:00" to="23:00" />
+				<term day-of-week="Ne" from="11:00" to="22:00" />
 			</open>
 
 			<!-- <xsl:apply-templates select="//div[@id='levy']/div[@class='poledni_menu']" 

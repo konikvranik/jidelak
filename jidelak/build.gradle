@@ -4,7 +4,7 @@ apply plugin: 'android'
 //apply plugin: 'eclipse'
 
 sourceCompatibility = 1.6
-version = '0.1-SNAPSHOT'
+version = '0.3-SNAPSHOT'
 group = "net.suteren.android.jidelak"
 
 //configurations { provided }

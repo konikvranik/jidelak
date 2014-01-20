@@ -72,6 +72,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		ab = getSupportActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setDisplayShowHomeEnabled(true);
+		ab.setDisplayShowTitleEnabled(false);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 		dpa = new DayPagerAdapter(getSupportFragmentManager());

@@ -125,11 +125,12 @@ public class JidelakFeederService extends Service {
 				rdao.update(restaurant);
 
 			} catch (IOException e) {
-				throw new JidelakException(e);
+				throw new JidelakException(R.string.feeder_io_exception, e);
 			} catch (TransformerException e) {
-				throw new JidelakException(e);
+				throw new JidelakException(R.string.transformer_exception, e);
 			} catch (ParserConfigurationException e) {
-				throw new JidelakException(e);
+				throw new JidelakException(
+						R.string.parser_configuration_exception, e);
 			} finally {
 			}
 		}

@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import net.suteren.android.jidelak.JidelakException;
+import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Meal;
@@ -69,7 +70,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 			meal.setAvailability(new Availability(cal));
 
 		} catch (ParseException e) {
-			throw new JidelakException(e);
+			throw new JidelakException(R.string.meal_invalid_date_format, e);
 		}
 
 	}

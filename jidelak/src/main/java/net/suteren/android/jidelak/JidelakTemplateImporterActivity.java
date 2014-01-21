@@ -14,6 +14,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.nio.CharBuffer;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,13 +27,16 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Restaurant;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -40,6 +44,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract.Instances;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -135,7 +140,10 @@ public class JidelakTemplateImporterActivity extends Activity {
 		} catch (Exception e) {
 			deleteFile(restaurant.getTemplateName());
 			restaurantDao.delete(restaurant);
-			throw new JidelakException(e);
+			if (e instanceof JidelakException)
+				throw (JidelakException) e;
+			else
+				throw new JidelakException(R.string.unexpected_exception, e);
 		} finally {
 			dbh.notifyDataSetChanged();
 		}
@@ -166,7 +174,10 @@ public class JidelakTemplateImporterActivity extends Activity {
 				tr.transform(new DOMSource(res.getNode()), deb);
 				os.close();
 			} catch (Throwable e) {
-				throw new JidelakException(e);
+				if (e instanceof JidelakException)
+					throw (JidelakException) e;
+				else
+					throw new JidelakException(R.string.unexpected_exception, e);
 			}
 
 			RestaurantMarshaller rm = new RestaurantMarshaller();
@@ -174,18 +185,21 @@ public class JidelakTemplateImporterActivity extends Activity {
 			rm.unmarshall("#document.jidelak.config", res.getNode(), restaurant);
 
 		} catch (ParserConfigurationException e) {
-			throw new JidelakException(e);
+			throw new JidelakException(R.string.parser_configuration_exception,
+					e);
 		} catch (TransformerConfigurationException e) {
-			throw new JidelakException(e);
+			throw new JidelakException(
+					R.string.transformer_configuration_exception, e);
 		} catch (TransformerFactoryConfigurationError e) {
-			throw new JidelakException(e);
+			throw new JidelakException(
+					R.string.transformer_factory_configuration_exception, e);
 		} catch (TransformerException e) {
-			throw new JidelakException(e);
+			throw new JidelakException(R.string.transformer_exception, e);
 		} finally {
 			try {
 				fileStream.close();
 			} catch (IOException e) {
-				throw new JidelakException(e);
+				throw new JidelakException(R.string.unexpected_exception, e);
 			}
 		}
 	}

@@ -19,7 +19,7 @@
 
 	<xsl:template name="restaurant">
 		<restaurant> 
-			<id>praha-dinner-garden-avenir</id>
+			<id>praha-lunch-garden-avenir</id>
 			<name>Lunch Garden Avenir</name>
 			<phone>+420 731 401 714</phone>
 			<e-mail>pavel.pechaty.ml@cateringmelodie.cz</e-mail>

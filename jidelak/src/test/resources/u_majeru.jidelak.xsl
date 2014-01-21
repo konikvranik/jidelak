@@ -18,7 +18,7 @@
 
 	<xsl:template name="restaurant">
 		<restaurant>
-			<id>praha-gastronom</id>
+			<id>praha-u-majeru</id>
 			<name>Restaurace U Majerů</name>
 			<phone>(+420) 251 612 775</phone>
 			<web>http://www.restauraceumajeru.cz/</web>

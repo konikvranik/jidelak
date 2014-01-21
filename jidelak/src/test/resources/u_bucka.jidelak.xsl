@@ -18,7 +18,7 @@
 
 	<xsl:template name="restaurant">
 		<restaurant>
-			<id>u-bucka</id>
+			<id>praha-u-bucka</id>
 			<name>Restaurace U Bůčka</name>
 			<phone>(+420) 737 780 745, 737 711 968</phone>
 			<web>http://www.restauraceubucka.cz/</web>

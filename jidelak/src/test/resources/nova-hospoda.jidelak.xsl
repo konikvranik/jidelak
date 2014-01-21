@@ -18,7 +18,7 @@
 
 	<xsl:template name="restaurant">
 		<restaurant>
-			<id>nova-hospoda</id>
+			<id>praha-nova-hospoda</id>
 			<name>Nová Hospoda</name>
 			<phone>(+420) 777826112, 608511616</phone>
 			<web>http://novahospoda.eu/</web>

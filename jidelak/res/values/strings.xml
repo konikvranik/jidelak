@@ -10,7 +10,7 @@
     <string name="parser_configuration_error">Parser configuration error</string>
     <string name="data_updated">Data updated</string>
     <string name="import_failed">Data import failed: </string>
-    <string name="source_malformed_url">URL in source is infalid</string>
+    <string name="source_malformed_url">URL in source is invalid</string>
     <string name="first_day_of_week_malformed">First day of week in source is in invalid format</string>
     <string name="meal_invalid_date_format">Date in meal is in invalid format</string>
     <string name="opening_hours_invalid_date">Date in opening hours is in invalid format</string>
@@ -21,5 +21,7 @@
     <string name="transformer_factory_configuration_exception">Transformer factory configuration is damaged. See error log</string>
     <string name="transformer_exception">Error ocured when parsing source. See error log</string>
     <string name="feeder_io_exception">Unable to load data</string>
+    <string name="importing_template">Importing template %s&#8230;</string>
+    <string name="import_template_question">Are you sure to import template %s?</string>
 
 </resources>

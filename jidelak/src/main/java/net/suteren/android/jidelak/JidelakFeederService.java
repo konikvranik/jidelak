@@ -2,6 +2,7 @@ package net.suteren.android.jidelak;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URLConnection;
 import java.util.HashSet;
@@ -36,6 +37,7 @@ import org.w3c.dom.Node;
 import org.w3c.tidy.Tidy;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +47,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -224,6 +227,8 @@ public class JidelakFeederService extends Service {
 		return res;
 	}
 
+	private NotificationManager mNotificationManager;
+
 	private class Worker extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -235,8 +240,28 @@ public class JidelakFeederService extends Service {
 				mHandler.post(new ToastRunnable(getResources().getString(
 						R.string.import_failed)
 						+ e.getMessage()));
+
+				int notifyID = 1;
+
+				StringWriter sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+
+				NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+						getApplicationContext())
+						.setSmallIcon(android.R.drawable.alert_dark_frame)
+						.setContentTitle(
+								getResources().getString(e.getResource()))
+						.setContentText(sw.toString());
+
+				getNotificationManager().notify(notifyID, mBuilder.build());
 			}
 			return null;
+		}
+
+		private NotificationManager getNotificationManager() {
+			if (mNotificationManager == null)
+				mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			return mNotificationManager;
 		}
 
 	}

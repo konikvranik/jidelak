@@ -11,4 +11,19 @@
     <string name="data_updated">Data byl aktualizována</string>
     <string name="import_failed">Nepodařilo se naimportovat data: </string>
 
+        <string name="source_malformed_url">Neplatná URL v source</string>
+    <string name="first_day_of_week_malformed">První den v týdnu je v neplatném formátu</string>
+    <string name="meal_invalid_date_format">Datum v &lt;meal&gt; je v neplatném formátu</string>
+    <string name="opening_hours_invalid_date">Datum otevíracích hodin je v neplatném formátu</string>
+    <string name="opening_hours_invalid_day_of_week">Den v týdnu otevíracích hodin je v neplatném formátu</string>
+    <string name="unexpected_exception">Vyskytla se neočekávaná chyba - koukněte do error logu</string>
+    <string name="parser_configuration_exception">Je poškozená konfigurace parseru - koukněte do error logu</string>
+    <string name="transformer_configuration_exception">Je poškozená konfigurace transformeru -  koukněte do error logu</string>
+    <string name="transformer_factory_configuration_exception">Je poškozená konfigurace transformer factory - koukněte do error logu</string>
+    <string name="transformer_exception">Při parsování &lt;source&gt; se vyskytla chyba - koukněte do error logu</string>
+    <string name="feeder_io_exception">Nelze načíst data</string>
+    <string name="importing_template">Načítam šablonu %s&#8230;</string>
+    <string name="import_template_question">Chcete naimportovat šabonu %s?</string>
+    
+    
 </resources>

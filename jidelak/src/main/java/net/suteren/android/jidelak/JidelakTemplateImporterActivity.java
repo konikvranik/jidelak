@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.nio.CharBuffer;
@@ -40,11 +42,13 @@ import org.w3c.dom.Node;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CalendarContract.Instances;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -78,6 +82,8 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 	}
 
+	private NotificationManager mNotificationManager;
+
 	private void ask() {
 
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -91,7 +97,23 @@ public class JidelakTemplateImporterActivity extends Activity {
 						importTemplate();
 					} catch (JidelakException e) {
 						Log.e(LOGGING_TAG, e.getMessage(), e);
-						// TODO Auto-generated catch block
+
+						int notifyID = 1;
+
+						StringWriter sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+
+						NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+								getApplicationContext())
+								.setSmallIcon(
+										android.R.drawable.alert_dark_frame)
+								.setContentTitle(
+										getResources().getString(
+												e.getResource()))
+								.setContentText(sw.toString());
+
+						getNotificationManager().notify(notifyID,
+								mBuilder.build());
 					}
 					break;
 
@@ -102,12 +124,18 @@ public class JidelakTemplateImporterActivity extends Activity {
 				finish();
 			}
 
+			private NotificationManager getNotificationManager() {
+				if (mNotificationManager == null)
+					mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				return mNotificationManager;
+			}
+
 		};
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(
-				getIntent().getAction() + " - Are you sure to import "
-						+ sourceUri + "?")
+				getResources().getString(R.string.import_template_question,
+						sourceUri.getLastPathSegment()))
 				.setPositiveButton("Yes", dialogClickListener)
 				.setNegativeButton("No", dialogClickListener)
 				.setCancelable(false).show();
@@ -115,8 +143,10 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 	void importTemplate() throws JidelakException {
 
-		Toast.makeText(getApplicationContext(),
-				"Importing " + sourceUri.toString() + "...", Toast.LENGTH_LONG)
+		Toast.makeText(
+				getApplicationContext(),
+				getResources().getString(R.string.importing_template,
+						sourceUri.getLastPathSegment()), Toast.LENGTH_SHORT)
 				.show();
 
 		JidelakDbHelper dbh = new JidelakDbHelper(getApplicationContext());

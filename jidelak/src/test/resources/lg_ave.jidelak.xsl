@@ -119,6 +119,9 @@
 				<xsl:when test="$type = '3-live'">
 					<price>110 Kč</price>
 				</xsl:when>
+				<xsl:when test="$type = '4-pasta'">
+					<price>84 Kč</price>
+				</xsl:when>
 				<xsl:otherwise>
 					<price></price>
 				</xsl:otherwise>

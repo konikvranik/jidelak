@@ -29,7 +29,8 @@ public class Restaurant implements Identificable {
 	}
 
 	SortedSet<Availability> openingHours;
-	SortedSet<Meal> menu;
+	SortedSet<Meal> menu = new TreeSet<Meal>();
+	List<Meal> menuList;
 	private Long id;
 	private Set<Source> source;
 
@@ -109,6 +110,7 @@ public class Restaurant implements Identificable {
 
 	public void setMenu(SortedSet<Meal> menu) {
 		this.menu = menu;
+		menuList = new ArrayList<Meal>(menu);
 	}
 
 	public SortedSet<Meal> getMenu() {
@@ -119,12 +121,14 @@ public class Restaurant implements Identificable {
 		if (menu == null)
 			menu = new TreeSet<Meal>();
 		menu.add(meal);
+		menuList = new ArrayList<Meal>(menu);
 	}
 
 	public void addMenuAll(Collection<Meal> meal) {
 		if (menu == null)
 			menu = new TreeSet<Meal>();
 		menu.addAll(meal);
+		menuList = new ArrayList<Meal>(menu);
 	}
 
 	public SortedSet<Meal> getMenu(Calendar day) {
@@ -227,8 +231,8 @@ public class Restaurant implements Identificable {
 	}
 
 	public List<Meal> getMenuAsList() {
-		if (getMenu() == null)
-			return null;
-		return new ArrayList<Meal>(getMenu());
+		if (menuList == null)
+			return new ArrayList<Meal>();
+		return menuList;
 	}
 }

@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9195959"
-     inkscape:cx="203.62985"
-     inkscape:cy="577.06568"
+     inkscape:zoom="2.8"
+     inkscape:cx="190.82122"
+     inkscape:cy="589.38542"
      inkscape:document-units="px"
      inkscape:current-layer="g4033"
      showgrid="false"
@@ -92,106 +92,112 @@
            d="m 292.78115,439.29468 c -0.72525,-0.0455 -1.48695,0.28942 -1.53125,0.96875 l 0,19.40625 c -0.0312,0.0173 -0.0618,0.0113 -0.0937,0.0312 -1.46637,2.67272 -1.49665,6.0306 -1.59375,9.09375 0.002,1.64866 0.11292,3.30929 0.34375,4.9375 0.0305,1.34126 0.86254,4.5374 1.96875,4.4375 0.38109,0.19409 0.87431,0.23822 1.375,0.125 0.46593,0.006 0.79495,-0.46832 0.78125,-0.90625 l 0,-7.1875 c 0.0218,-0.79324 0.0267,-1.58188 0,-2.375 l 0,-27.3125 c 0.14518,-0.76807 -0.52475,-1.17321 -1.25,-1.21875 z"
            style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none" />
       </g>
-      <path
-         style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ff9741;stroke-opacity:1"
-         d="m 238.59017,482.68658 c 0.13103,9.43608 -5.93397,18.53637 -14.65599,22.11075 -8.56841,3.73182 -19.21233,1.80089 -25.89669,-4.74043 -6.77349,-6.29371 -9.24492,-16.66259 -6.08353,-25.34469 3.05708,-8.99922 11.89739,-15.63438 21.40484,-15.99092 9.24235,-0.59738 18.48047,4.75973 22.60616,13.04084 1.72884,3.36422 2.63096,7.14285 2.62521,10.92445 z"
-         id="path2986-4"
-         inkscape:connector-curvature="0"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none"
-         d="M 231.158 479.36835 C 231.37777 480.45813 231.4885 481.57057 231.48112 482.68658 L 231.48112 482.68658 L 231.48112 482.68658 C 231.53491 485.43651 230.82579 488.12687 229.54913 490.52035 "
-         id="path3815"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none"
-         d="M 229.92418 475.60332 C 230.10411 475.99234 230.26944 476.3881 230.41964 476.78951 "
-         id="path3811"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none"
-         d="M 227.95221 472.34965 C 228.20679 472.6795 228.44904 473.01878 228.67846 473.36648 "
-         id="path3807"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none"
-         d="M 215.85968 465.86519 C 219.44202 466.12667 222.94108 467.48294 225.64525 469.91716 C 225.8189 470.066 225.98925 470.21847 226.1562 470.37441 "
-         id="path3800"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none"
-         d="M 202.24831 471.12677 C 202.83549 470.50195 203.47595 469.92356 204.16755 469.40097 C 206.69566 467.33663 209.82107 466.16911 213.03002 465.88625 "
-         id="path3788"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none"
-         d="M 199.47952 490.23704 C 199.44289 490.16105 199.40687 490.0847 199.37147 490.00799 C 197.70206 486.6871 197.32659 482.86008 198.07475 479.26568 "
-         id="path3829"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none"
-         d="M 211.80858 499.35158 C 207.43681 498.58648 203.36453 496.08879 200.79205 492.45924 "
-         id="path3822"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none"
-         d="M 228.20206 492.65632 C 225.74759 495.98903 222.11527 498.46076 217.99707 499.23096 C 217.28363 499.3904 216.56332 499.49668 215.84128 499.55239 "
-         id="path3784"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;stroke:#ff9741;stroke-opacity:1"
-         d="M 216.81216 483.18533 L 221.24596 480.62267 C 221.48836 481.04052 221.72394 481.47215 221.96074 481.8929 C 222.2531 483.23537 223.86103 483.4997 224.89693 482.91664 L 224.90693 482.95614 L 234.77049 477.24882 L 234.76969 477.24908 L 234.76969 477.24908 L 233.459 475.0119 L 225.16139 479.81893 L 225.13549 479.80533 C 224.94399 479.43724 224.74765 479.09317 224.5367 478.7336 L 232.81801 473.95245 L 231.53318 471.72886 L 223.25187 476.51001 C 223.13784 476.3085 223.0117 476.11862 222.90439 475.91416 C 222.83379 475.76047 222.74214 475.59812 222.65336 475.43815 L 230.95097 470.63112 L 229.64029 468.39395 L 219.79272 474.07483 C 219.75692 474.09323 219.72862 474.10493 219.69235 474.12583 C 218.90984 474.56133 218.51137 475.52705 218.77309 476.29513 C 219.14739 477.00905 219.55876 477.69975 219.96113 478.39908 L 215.8401 480.78097 "
-         id="path3852"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;stroke:#ff9741;stroke-opacity:1"
-         d="M 211.71908 483.16286 L 197.75519 491.23377 L 199.04002 493.45736 L 212.69365 485.56577 "
-         id="path3857"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;stroke:#ff9741;stroke-opacity:1"
-         d="M 213.06868 481.00077 L 208.66921 478.45777 C 209.1111 476.03866 207.32917 473.21098 204.95007 471.95937 C 202.7653 470.67882 199.83043 470.34835 197.82049 471.68575 C 195.55019 473.11914 195.69936 476.25155 197.29207 478.40177 L 197.29211 478.40166 L 197.29211 478.40166 C 197.51964 478.70883 197.79469 479.00317 198.07835 479.2613 C 200.42819 481.76446 204.95386 482.82015 207.4387 480.67262 L 213.06825 483.92258 "
-         id="path3838"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;stroke:#ff9741;stroke-opacity:1"
-         d="M 215.84604 485.52621 L 229.84594 493.60841 L 231.09289 491.41922 L 215.85744 482.61275 "
-         id="path3834"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
-      <path
-         style="fill:none;stroke:#ff9741;stroke-opacity:1"
-         d="m 214.58248,464.24752 c -0.72525,-0.0455 -1.48695,0.28942 -1.53125,0.96875 l 0,19.40625 c -0.0312,0.0173 -0.0618,0.0113 -0.0937,0.0312 -1.46637,2.67272 -1.49665,6.0306 -1.59375,9.09375 0.002,1.64866 0.11292,3.30929 0.34375,4.9375 0.0305,1.34126 0.86254,4.5374 1.96875,4.4375 0.38109,0.19409 0.87431,0.23822 1.375,0.125 0.46593,0.006 0.79495,-0.46832 0.78125,-0.90625 l 0,-7.1875 c 0.0218,-0.79324 0.0267,-1.58188 0,-2.375 l 0,-27.3125 c 0.14518,-0.76807 -0.52475,-1.17321 -1.25,-1.21875 z"
-         id="rect2988-4-5"
-         inkscape:connector-curvature="0"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
+      <g
+         id="g3099"
+         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\src\main\graphics\ic_launcher.png"
+         inkscape:export-xdpi="940.22998"
+         inkscape:export-ydpi="940.22998">
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           inkscape:connector-curvature="0"
+           id="path2986-4"
+           d="m 238.59017,482.68658 c 0.13103,9.43608 -5.93397,18.53637 -14.65599,22.11075 -8.56841,3.73182 -19.21233,1.80089 -25.89669,-4.74043 -6.77349,-6.29371 -9.24492,-16.66259 -6.08353,-25.34469 3.05708,-8.99922 11.89739,-15.63438 21.40484,-15.99092 9.24235,-0.59738 18.48047,4.75973 22.60616,13.04084 1.72884,3.36422 2.63096,7.14285 2.62521,10.92445 z"
+           style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ff9741;stroke-opacity:1" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           id="path3815"
+           d="M 231.158 479.36835 C 231.37777 480.45813 231.4885 481.57057 231.48112 482.68658 L 231.48112 482.68658 L 231.48112 482.68658 C 231.53491 485.43651 230.82579 488.12687 229.54913 490.52035 "
+           style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           id="path3811"
+           d="M 229.92418 475.60332 C 230.10411 475.99234 230.26944 476.3881 230.41964 476.78951 "
+           style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           id="path3807"
+           d="M 227.95221 472.34965 C 228.20679 472.6795 228.44904 473.01878 228.67846 473.36648 "
+           style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           id="path3800"
+           d="M 215.85968 465.86519 C 219.44202 466.12667 222.94108 467.48294 225.64525 469.91716 C 225.8189 470.066 225.98925 470.21847 226.1562 470.37441 "
+           style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           id="path3788"
+           d="M 202.24831 471.12677 C 202.83549 470.50195 203.47595 469.92356 204.16755 469.40097 C 206.69566 467.33663 209.82107 466.16911 213.03002 465.88625 "
+           style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           id="path3829"
+           d="M 199.47952 490.23704 C 199.44289 490.16105 199.40687 490.0847 199.37147 490.00799 C 197.70206 486.6871 197.32659 482.86008 198.07475 479.26568 "
+           style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           id="path3822"
+           d="M 211.80858 499.35158 C 207.43681 498.58648 203.36453 496.08879 200.79205 492.45924 "
+           style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           id="path3784"
+           d="M 228.20206 492.65632 C 225.74759 495.98903 222.11527 498.46076 217.99707 499.23096 C 217.28363 499.3904 216.56332 499.49668 215.84128 499.55239 "
+           style="fill:none;fill-opacity:1;stroke:#ff9741;stroke-width:1;stroke-miterlimit:73.19999694999999900;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           id="path3852"
+           d="M 216.81216 483.18533 L 221.24596 480.62267 C 221.48836 481.04052 221.72394 481.47215 221.96074 481.8929 C 222.2531 483.23537 223.86103 483.4997 224.89693 482.91664 L 224.90693 482.95614 L 234.77049 477.24882 L 234.76969 477.24908 L 234.76969 477.24908 L 233.459 475.0119 L 225.16139 479.81893 L 225.13549 479.80533 C 224.94399 479.43724 224.74765 479.09317 224.5367 478.7336 L 232.81801 473.95245 L 231.53318 471.72886 L 223.25187 476.51001 C 223.13784 476.3085 223.0117 476.11862 222.90439 475.91416 C 222.83379 475.76047 222.74214 475.59812 222.65336 475.43815 L 230.95097 470.63112 L 229.64029 468.39395 L 219.79272 474.07483 C 219.75692 474.09323 219.72862 474.10493 219.69235 474.12583 C 218.90984 474.56133 218.51137 475.52705 218.77309 476.29513 C 219.14739 477.00905 219.55876 477.69975 219.96113 478.39908 L 215.8401 480.78097 "
+           style="fill:none;stroke:#ff9741;stroke-opacity:1" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           id="path3857"
+           d="M 211.71908 483.16286 L 197.75519 491.23377 L 199.04002 493.45736 L 212.69365 485.56577 "
+           style="fill:none;stroke:#ff9741;stroke-opacity:1" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           id="path3838"
+           d="M 213.06868 481.00077 L 208.66921 478.45777 C 209.1111 476.03866 207.32917 473.21098 204.95007 471.95937 C 202.7653 470.67882 199.83043 470.34835 197.82049 471.68575 C 195.55019 473.11914 195.69936 476.25155 197.29207 478.40177 L 197.29211 478.40166 L 197.29211 478.40166 C 197.51964 478.70883 197.79469 479.00317 198.07835 479.2613 C 200.42819 481.76446 204.95386 482.82015 207.4387 480.67262 L 213.06825 483.92258 "
+           style="fill:none;stroke:#ff9741;stroke-opacity:1" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           id="path3834"
+           d="M 215.84604 485.52621 L 229.84594 493.60841 L 231.09289 491.41922 L 215.85744 482.61275 "
+           style="fill:none;stroke:#ff9741;stroke-opacity:1" />
+        <path
+           inkscape:export-ydpi="160"
+           inkscape:export-xdpi="160"
+           inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher.png"
+           inkscape:connector-curvature="0"
+           id="rect2988-4-5"
+           d="m 214.58248,464.24752 c -0.72525,-0.0455 -1.48695,0.28942 -1.53125,0.96875 l 0,19.40625 c -0.0312,0.0173 -0.0618,0.0113 -0.0937,0.0312 -1.46637,2.67272 -1.49665,6.0306 -1.59375,9.09375 0.002,1.64866 0.11292,3.30929 0.34375,4.9375 0.0305,1.34126 0.86254,4.5374 1.96875,4.4375 0.38109,0.19409 0.87431,0.23822 1.375,0.125 0.46593,0.006 0.79495,-0.46832 0.78125,-0.90625 l 0,-7.1875 c 0.0218,-0.79324 0.0267,-1.58188 0,-2.375 l 0,-27.3125 c 0.14518,-0.76807 -0.52475,-1.17321 -1.25,-1.21875 z"
+           style="fill:none;stroke:#ff9741;stroke-opacity:1" />
+      </g>
     </g>
   </g>
 </svg>

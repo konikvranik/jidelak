@@ -165,7 +165,6 @@ public class DayFragment extends Fragment {
 			log.debug("Update restaurants got restaurants");
 
 			MealDao mdao = new MealDao(dbHelper);
-			AvailabilityDao adao = new AvailabilityDao(dbHelper);
 
 			long partMilis = System.currentTimeMillis();
 
@@ -173,10 +172,12 @@ public class DayFragment extends Fragment {
 			for (Meal m : mdao.findByDay(day)) {
 				SortedSet<Meal> s = mmap.get(m.getRestaurant().getId());
 				if (s == null)
-					s = new TreeSet<Meal>();
+					mmap.put(m.getRestaurant().getId(), s = new TreeSet<Meal>());
+
 				s.add(m);
-				mmap.put(m.getRestaurant().getId(), s);
 			}
+
+			AvailabilityDao adao = new AvailabilityDao(dbHelper);
 
 			log.debug("Update restaurants update start");
 			for (Restaurant restaurant : restaurants) {

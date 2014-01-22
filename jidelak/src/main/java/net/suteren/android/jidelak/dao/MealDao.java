@@ -65,8 +65,7 @@ public class MealDao extends BaseDao<Meal> {
 						+ AvailabilityDao.MONTH + " is null and a."
 						+ AvailabilityDao.DAY + " is null and (a."
 						+ AvailabilityDao.DOW + " = ? or a."
-						+ AvailabilityDao.DOW + " is null))) order by m."
-						+ DISH + ", m." + CATEGORY,
+						+ AvailabilityDao.DOW + " is null)))",
 				new String[] { String.valueOf(restaurant.getId()),
 						String.valueOf(day.get(Calendar.YEAR)),
 						String.valueOf(day.get(Calendar.MONTH)),
@@ -86,8 +85,7 @@ public class MealDao extends BaseDao<Meal> {
 						+ AvailabilityDao.MONTH + " is null and a."
 						+ AvailabilityDao.DAY + " is null and (a."
 						+ AvailabilityDao.DOW + " = ? or a."
-						+ AvailabilityDao.DOW + " is null))) order by m."
-						+ DISH + ", m." + CATEGORY,
+						+ AvailabilityDao.DOW + " is null))) ",
 				new String[] { String.valueOf(day.get(Calendar.YEAR)),
 						String.valueOf(day.get(Calendar.MONTH)),
 						String.valueOf(day.get(Calendar.DAY_OF_MONTH)),

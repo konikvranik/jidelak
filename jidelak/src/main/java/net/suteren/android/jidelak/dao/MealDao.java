@@ -52,23 +52,45 @@ public class MealDao extends BaseDao<Meal> {
 	}
 
 	public List<Meal> findByDayAndRestaurant(Calendar day, Restaurant restaurant) {
-		return query(
-				RESTAURANT + "= ? and " + AVAILABILITY
-						+ " in ( select id from " + AvailabilityDao.TABLE_NAME
-						+ " a where (a." + AvailabilityDao.YEAR + " = ? and a."
+		return rawQuery(
+				"select m.* from " + getTableName() + " m, "
+						+ AvailabilityDao.getTable().getName() + " a where m."
+						+ RESTAURANT + "= ? and m." + AVAILABILITY + " = a."
+						+ AvailabilityDao.ID + " and ((a."
+						+ AvailabilityDao.YEAR + " = ? and a."
 						+ AvailabilityDao.MONTH + " = ? and a."
 						+ AvailabilityDao.DAY + " = ?) or (a."
 						+ AvailabilityDao.YEAR + " is null and a."
 						+ AvailabilityDao.MONTH + " is null and a."
 						+ AvailabilityDao.DAY + " is null and (a."
 						+ AvailabilityDao.DOW + " = ? or a."
-						+ AvailabilityDao.DOW + " is null)))",
+						+ AvailabilityDao.DOW + " is null))) order by m."
+						+ DISH + ", m." + CATEGORY,
 				new String[] { String.valueOf(restaurant.getId()),
 						String.valueOf(day.get(Calendar.YEAR)),
 						String.valueOf(day.get(Calendar.MONTH)),
 						String.valueOf(day.get(Calendar.DAY_OF_MONTH)),
-						String.valueOf(day.get(Calendar.DAY_OF_WEEK)) }, null,
-				null, DISH + ", " + CATEGORY);
+						String.valueOf(day.get(Calendar.DAY_OF_WEEK)) });
+	}
+
+	public List<Meal> findByDay(Calendar day) {
+		return rawQuery(
+				"select m.* from " + getTableName() + " m, "
+						+ AvailabilityDao.getTable().getName() + " a where m."
+						+ AVAILABILITY + " = a." + AvailabilityDao.ID
+						+ " and ((a." + AvailabilityDao.YEAR + " = ? and a."
+						+ AvailabilityDao.MONTH + " = ? and a."
+						+ AvailabilityDao.DAY + " = ?) or (a."
+						+ AvailabilityDao.YEAR + " is null and a."
+						+ AvailabilityDao.MONTH + " is null and a."
+						+ AvailabilityDao.DAY + " is null and (a."
+						+ AvailabilityDao.DOW + " = ? or a."
+						+ AvailabilityDao.DOW + " is null))) order by m."
+						+ DISH + ", m." + CATEGORY,
+				new String[] { String.valueOf(day.get(Calendar.YEAR)),
+						String.valueOf(day.get(Calendar.MONTH)),
+						String.valueOf(day.get(Calendar.DAY_OF_MONTH)),
+						String.valueOf(day.get(Calendar.DAY_OF_WEEK)) });
 	}
 
 	@Override
@@ -87,7 +109,7 @@ public class MealDao extends BaseDao<Meal> {
 				.findById(unpackColumnValue(cursor, AVAILABILITY, Long.class)));
 		meal.setDish(unpackColumnValue(cursor, DISH, Dish.class));
 		meal.setPrice(unpackColumnValue(cursor, PRICE, String.class));
-			meal.setPosition(unpackColumnValue(cursor, POSITION, Integer.class));
+		meal.setPosition(unpackColumnValue(cursor, POSITION, Integer.class));
 		meal.setRestaurant(new RestaurantDao(getDbHelper())
 				.findById(unpackColumnValue(cursor, RESTAURANT, Long.class)));
 		return meal;

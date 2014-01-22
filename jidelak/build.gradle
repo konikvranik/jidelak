@@ -1,12 +1,16 @@
+import java.security.KeyStore.Builder;
+
 import org.gradle.plugins.ide.eclipse.model.SourceFolder
 
 apply plugin: 'android'
 //apply plugin: 'eclipse'
 
-sourceCompatibility = 1.6
-version = '0.6-SNAPSHOT'
+version = '0.8-SNAPSHOT'
+android.defaultConfig.versionCode = 8
+
 group = "net.suteren.android.jidelak"
 
+sourceCompatibility = 1.6
 //configurations { provided }
 //
 //eclipse {
@@ -60,6 +64,7 @@ android {
 	defaultConfig {
 		minSdkVersion 9
 		targetSdkVersion 19
+		versionName = project.version
 	}
 
 	sourceSets {
@@ -107,9 +112,10 @@ dependencies {
 	compile 'com.android.support:support-v4:19.0.0'
 	compile 'com.android.support:appcompat-v7:19.0.0'
 	compile 'net.sf.jtidy:jtidy:r938'
+	compile 'org.slf4j:slf4j-api:1.6.1'
+	compile 'org.slf4j:slf4j-android:1.6.1-RC1'
 
-	testCompile 'org.slf4j:slf4j-api:1.7.5'
-	testCompile 'org.slf4j:slf4j-log4j12:1.7.5'
+	testCompile 'org.slf4j:slf4j-log4j12:1.6.1'
 	testCompile 'log4j:log4j:1.2.17'
 
 }

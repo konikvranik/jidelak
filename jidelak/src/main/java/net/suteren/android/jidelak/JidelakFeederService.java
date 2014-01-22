@@ -32,6 +32,8 @@ import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.tidy.Tidy;
@@ -48,10 +50,13 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 public class JidelakFeederService extends Service {
+
+	private static Logger log = LoggerFactory
+			.getLogger(JidelakFeederService.class);
+
 	public static final String LAST_UPDATED = "last_updated";
 	static final String LOGGING_TAG = "JidelakFeederService";
 	public static final String UPDATE_INTERVAL = "update_interval";
@@ -67,7 +72,7 @@ public class JidelakFeederService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		mHandler = new Handler();
-		Log.v(LOGGING_TAG, "JidelakFeederService.onStartCommand()");
+		log.trace("JidelakFeederService.onStartCommand()");
 		// this.force = intent.getExtras().getBoolean("force", false);
 		new Worker().execute(new Void[0]);
 		return START_REDELIVER_INTENT;
@@ -76,7 +81,7 @@ public class JidelakFeederService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.v(LOGGING_TAG, "JidelakFeederService.onCreate()");
+		log.trace("JidelakFeederService.onCreate()");
 
 		registerReceiver(new JidelakFeederReceiver(), new IntentFilter(
 				Intent.ACTION_TIME_TICK));
@@ -178,14 +183,14 @@ public class JidelakFeederService extends Service {
 		Transformer tr = TransformerFactory.newInstance().newTransformer();
 		tr.setOutputProperty(OutputKeys.INDENT, "yes");
 		tr.transform(new DOMSource(res.getNode()), new StreamResult(sw));
-		Log.d(LOGGING_TAG, sw.toString());
+		log.debug(sw.toString());
 
 		return res.getNode();
 	}
 
 	private Tidy getTidy(String enc) throws IOException {
 
-		Log.d(LOGGING_TAG, "Enc: " + enc);
+		log.debug("Enc: " + enc);
 
 		Tidy t = new Tidy();
 
@@ -247,7 +252,7 @@ public class JidelakFeederService extends Service {
 			try {
 				updateData();
 			} catch (JidelakException e) {
-				Log.e(LOGGING_TAG, e.getMessage(), e);
+				log.error(e.getMessage(), e);
 				mHandler.post(new ToastRunnable(getResources().getString(
 						R.string.import_failed)
 						+ e.getMessage()));

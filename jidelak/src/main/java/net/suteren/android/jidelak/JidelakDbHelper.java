@@ -4,17 +4,22 @@ import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.SourceDao;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class JidelakDbHelper extends SQLiteOpenHelper {
 
-	public static final int DATABASE_VERSION = 1;
+	private static Logger log = LoggerFactory.getLogger(JidelakDbHelper.class);
+
+	public static final int DATABASE_VERSION = 4;
 	public static final String DATABASE_NAME = "Jidelak.db";
 
 	private static final String SQL_CREATE_RESTAURANT = RestaurantDao
@@ -28,7 +33,6 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 			.createClausule();
 
 	private final static DataSetObservable mDataSetObservable = new DataSetObservable();
-	private static final String LOGGER_TAG = "JidelakDbHelper";
 
 	public JidelakDbHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -43,10 +47,10 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		Log.d(LOGGER_TAG, SQL_CREATE_RESTAURANT);
-		Log.d(LOGGER_TAG, SQL_CREATE_AVAILABILITY);
-		Log.d(LOGGER_TAG, SQL_CREATE_MEAL);
-		Log.d(LOGGER_TAG, SQL_CREATE_SOURCE);
+		log.debug(SQL_CREATE_RESTAURANT);
+		log.debug(SQL_CREATE_AVAILABILITY);
+		log.debug(SQL_CREATE_MEAL);
+		log.debug(SQL_CREATE_SOURCE);
 
 		db.execSQL(SQL_CREATE_RESTAURANT);
 		db.execSQL(SQL_CREATE_AVAILABILITY);
@@ -63,7 +67,71 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
+
+		switch (oldVersion) {
+		case 1:
+
+			db.execSQL("create index " + AvailabilityDao.getTable().getName()
+					+ "_date on " + AvailabilityDao.getTable().getName() + "("
+					+ AvailabilityDao.YEAR + "," + AvailabilityDao.MONTH + ","
+					+ AvailabilityDao.DAY + ")");
+			db.execSQL("create index " + AvailabilityDao.getTable().getName()
+					+ "_" + AvailabilityDao.DOW + " on "
+					+ AvailabilityDao.getTable().getName() + "("
+					+ AvailabilityDao.DOW + ")");
+
+			if (newVersion <= 2)
+				break;
+
+		case 2:
+			db.execSQL("create index " + AvailabilityDao.getTable().getName()
+					+ "_" + AvailabilityDao.YEAR + " on "
+					+ AvailabilityDao.getTable().getName() + "("
+					+ AvailabilityDao.YEAR + ")");
+			db.execSQL("create index " + AvailabilityDao.getTable().getName()
+					+ "_" + AvailabilityDao.MONTH + " on "
+					+ AvailabilityDao.getTable().getName() + "("
+					+ AvailabilityDao.MONTH + ")");
+			db.execSQL("create index " + AvailabilityDao.getTable().getName()
+					+ "_" + AvailabilityDao.DAY + " on "
+					+ AvailabilityDao.getTable().getName() + "("
+					+ AvailabilityDao.DAY + ")");
+
+			db.execSQL("create index " + AvailabilityDao.getTable().getName()
+					+ "_" + AvailabilityDao.RESTAURANT + " on "
+					+ AvailabilityDao.getTable().getName() + "("
+					+ AvailabilityDao.RESTAURANT + ")");
+
+			db.execSQL("create index " + MealDao.getTable().getName() + "_"
+					+ MealDao.RESTAURANT + " on "
+					+ MealDao.getTable().getName() + "(" + MealDao.RESTAURANT
+					+ ")");
+			db.execSQL("create index " + MealDao.getTable().getName() + "_"
+					+ MealDao.AVAILABILITY + " on "
+					+ MealDao.getTable().getName() + "(" + MealDao.AVAILABILITY
+					+ ")");
+
+			db.execSQL("create index " + SourceDao.getTable().getName() + "_"
+					+ SourceDao.RESTAURANT + " on "
+					+ SourceDao.getTable().getName() + "("
+					+ SourceDao.RESTAURANT + ")");
+
+			if (newVersion <= 3)
+				break;
+
+		case 3:
+
+			db.execSQL("create index " + AvailabilityDao.getTable().getName()
+					+ "_whole on " + AvailabilityDao.getTable().getName() + "("
+					+ AvailabilityDao.YEAR + "," + AvailabilityDao.MONTH + ","
+					+ AvailabilityDao.DAY + ", " + AvailabilityDao.DOW + ")");
+
+			if (newVersion <= 4)
+				break;
+
+		default:
+			break;
+		}
 
 	}
 
@@ -86,7 +154,7 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 	 * net.suteren.android.jidelak.INotifyingDbHelper#notifyDataSetChanged()
 	 */
 	public void notifyDataSetChanged() {
-		Log.d(LOGGER_TAG,"notifyDataSetChanged");
+		log.debug("notifyDataSetChanged");
 		mDataSetObservable.notifyChanged();
 	}
 
@@ -98,7 +166,7 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 	 * .database.DataSetObserver)
 	 */
 	public void registerObserver(DataSetObserver observer) {
-		Log.d(LOGGER_TAG, "Registering observer: " + observer);
+		log.debug("Registering observer: " + observer);
 		mDataSetObservable.registerObserver(observer);
 	}
 
@@ -110,12 +178,12 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 	 * .database.DataSetObserver)
 	 */
 	public void unregisterObserver(DataSetObserver observer) {
-		Log.d(LOGGER_TAG, "UnRegistering observer: " + observer);
+		log.debug("UnRegistering observer: " + observer);
 		mDataSetObservable.unregisterObserver(observer);
 	}
 
 	public void notifyDataSetInvalidated() {
-		Log.d(LOGGER_TAG,"notifyDataSetInvalidated");
+		log.debug("notifyDataSetInvalidated");
 		mDataSetObservable.notifyInvalidated();
 	}
 

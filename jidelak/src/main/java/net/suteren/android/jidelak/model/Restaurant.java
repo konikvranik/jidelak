@@ -12,11 +12,14 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.location.Address;
-import android.util.Log;
 
 public class Restaurant implements Identificable {
 
+	private static Logger log = LoggerFactory.getLogger(Restaurant.class);
 	private String name;
 	private Address address;
 
@@ -50,8 +53,8 @@ public class Restaurant implements Identificable {
 
 	private boolean testDay(Calendar day, Availability availability) {
 
-		Log.d("Test", "day: " + day);
-		Log.d("Test", "av: " + day);
+		log.debug("day: " + day);
+		log.debug("av: " + day);
 
 		if (day == null)
 			return true;
@@ -59,17 +62,14 @@ public class Restaurant implements Identificable {
 		if (availability == null)
 			return false;
 
-		Log.d("Test",
-				"cal: "
-						+ DateFormat.getDateInstance(DateFormat.LONG,
-								Locale.ENGLISH));
-		Log.d("Test", "D: " + availability.getDay());
-		Log.d("Test", "M: " + availability.getMonth());
-		Log.d("Test", "Y: " + availability.getYear());
-		Log.d("Test", "W: " + availability.getDow());
+		log.debug("cal: "
+				+ DateFormat.getDateInstance(DateFormat.LONG, Locale.ENGLISH));
+		log.debug("D: " + availability.getDay());
+		log.debug("M: " + availability.getMonth());
+		log.debug("Y: " + availability.getYear());
+		log.debug("W: " + availability.getDow());
 
-		Log.d("Test",
-				"F: " + availability.getFrom() + " T:" + availability.getTo());
+		log.debug("F: " + availability.getFrom() + " T:" + availability.getTo());
 
 		if (availability.getDay() != null
 				&& day.get(Calendar.DAY_OF_MONTH) != availability.getDay())
@@ -110,7 +110,10 @@ public class Restaurant implements Identificable {
 
 	public void setMenu(SortedSet<Meal> menu) {
 		this.menu = menu;
-		menuList = new ArrayList<Meal>(menu);
+		if (menu == null)
+			menuList = null;
+		else
+			menuList = new ArrayList<Meal>(menu);
 	}
 
 	public SortedSet<Meal> getMenu() {

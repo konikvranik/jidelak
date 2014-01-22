@@ -11,12 +11,14 @@ import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Source;
-import android.util.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MealMarshaller extends BaseMarshaller<Meal> {
 
-	private static final String LOGGER_TAG = "MEalMArshaller";
 	private Source source;
+	private static Logger log = LoggerFactory.getLogger(MealMarshaller.class);
 
 	@Override
 	protected void unmarshallHelper(String prefix, Map<String, String> data,
@@ -29,7 +31,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 		meal.setDish(Dish.valueOf(data.get(prefix + "meal@dish").toUpperCase(
 				Locale.ENGLISH)));
 
-		Log.d(LOGGER_TAG, "Dish set to: " + meal.getDish().name());
+		log.debug("Dish set to: " + meal.getDish().name());
 
 		String o = data.get(prefix + "meal@order");
 		if (o != null)
@@ -57,7 +59,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 
 			case ABSOLUTE:
 
-				Log.d(LOGGER_TAG, "Parsing " + x + " by "
+				log.debug("Parsing " + x + " by "
 						+ getSource().getDateFormatString());
 				if (x != null)
 					cal.setTime(getSource().getDateFormat().parse(x));

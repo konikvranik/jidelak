@@ -36,6 +36,8 @@ import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Restaurant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -49,7 +51,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -58,7 +59,9 @@ import android.widget.Toast;
  */
 public class JidelakTemplateImporterActivity extends Activity {
 
-	private static final String LOGGING_TAG = "JidelakTemplateImporterService";
+	private static Logger log = LoggerFactory
+			.getLogger(JidelakTemplateImporterActivity.class);
+
 	private Uri sourceUri;
 
 	@Override
@@ -96,7 +99,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 					try {
 						importTemplate();
 					} catch (JidelakException e) {
-						Log.e(LOGGING_TAG, e.getMessage(), e);
+						log.error(e.getMessage(), e);
 
 						int notifyID = 1;
 

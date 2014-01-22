@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.Utils;
 import net.suteren.android.jidelak.model.Dish;
@@ -28,6 +31,9 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
 public abstract class BaseDao<T extends Identificable> {
+
+	protected static Logger log = LoggerFactory.getLogger(BaseDao.class);
+
 	public static class Table {
 
 		private String name;
@@ -272,32 +278,81 @@ public abstract class BaseDao<T extends Identificable> {
 
 	protected List<T> query(String selection, String[] selectionArgs,
 			String groupBy, String having, String orderBy) {
-		ArrayList<T> results = new ArrayList<T>();
+
+		long milis = System.currentTimeMillis();
+		log.debug("query before get db");
+
 		SQLiteDatabase db = getDbHelper().getReadableDatabase();
+
+		log.debug("query after get db");
+
 		try {
 			Cursor cursor = db.query(getTableName(), getColumnNames(),
 					selection, selectionArgs, groupBy, having, orderBy);
-			try {
 
-				while (!cursor.isAfterLast()) {
-					if (cursor.isBeforeFirst())
-						cursor.moveToNext();
-					if (cursor.isAfterLast())
-						break;
+			log.debug("query after query");
 
-					results.add(parseRow(cursor));
-					cursor.moveToNext();
-
-				}
-			} finally {
-				cursor.close();
-			}
+			return parseResults(cursor);
 		} finally {
 			db.close();
+
+			log.debug("query after closing db: "
+					+ (System.currentTimeMillis() - milis));
+
 		}
 
-		return results;
+	}
 
+	protected List<T> rawQuery(String selection, String[] selectionArgs) {
+
+		long milis = System.currentTimeMillis();
+		log.debug("query before get db");
+
+		SQLiteDatabase db = getDbHelper().getReadableDatabase();
+
+		log.debug("query after get db");
+
+		try {
+			Cursor cursor = db.rawQuery(selection, selectionArgs);
+
+			log.debug("query after query");
+
+			return parseResults(cursor);
+		} finally {
+			db.close();
+
+			log.debug("query after closing db: "
+					+ (System.currentTimeMillis() - milis));
+
+		}
+
+	}
+
+	private List<T> parseResults(Cursor cursor) {
+
+		ArrayList<T> results = new ArrayList<T>();
+
+		try {
+
+			while (!cursor.isAfterLast()) {
+				if (cursor.isBeforeFirst())
+					cursor.moveToNext();
+				if (cursor.isAfterLast())
+					break;
+
+				results.add(parseRow(cursor));
+				cursor.moveToNext();
+
+			}
+
+			log.debug("query after parsing data");
+
+		} finally {
+			cursor.close();
+
+			log.debug("query after closing cursor");
+		}
+		return results;
 	}
 
 	protected abstract T parseRow(Cursor cursor);

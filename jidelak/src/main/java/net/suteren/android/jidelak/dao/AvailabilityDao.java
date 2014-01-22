@@ -11,6 +11,8 @@ import android.database.Cursor;
 
 public class AvailabilityDao extends BaseDao<Availability> {
 
+	private static final String SQL_SEPARATOR = ", ";
+
 	public static final String TABLE_NAME = "availability";
 
 	public static final Column YEAR = new Column("year",
@@ -52,8 +54,8 @@ public class AvailabilityDao extends BaseDao<Availability> {
 
 		return query(DAY + " is not null and " + MONTH + " is not null and "
 				+ YEAR + " is not null and " + RESTAURANT + " is null", null,
-				YEAR + ", " + MONTH + ", " + DAY, null, YEAR + ", " + MONTH
-						+ ", " + DAY);
+				YEAR + SQL_SEPARATOR + MONTH + SQL_SEPARATOR + DAY, null, YEAR
+						+ SQL_SEPARATOR + MONTH + SQL_SEPARATOR + DAY);
 	}
 
 	@Override

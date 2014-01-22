@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	<xsl:output indent="yes" method="xml" encoding="UTF-8" />
 
@@ -18,7 +18,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant> 
+		<restaurant>
 			<id>praha-lunch-garden-avenir</id>
 			<name>Lunch Garden Avenir</name>
 			<phone>+420 731 401 714</phone>
@@ -107,8 +107,17 @@
 			</title>
 			<description></description>
 			<xsl:choose>
+				<xsl:when test="$dish = 'soup'">
+					<price>18 Kč</price>
+				</xsl:when>
 				<xsl:when test="$type = '1-normal'">
-					<price></price>
+					<price>74 Kč</price>
+				</xsl:when>
+				<xsl:when test="$type = '2-superior'">
+					<price>90 Kč</price>
+				</xsl:when>
+				<xsl:when test="$type = '3-live'">
+					<price>110 Kč</price>
 				</xsl:when>
 				<xsl:otherwise>
 					<price></price>

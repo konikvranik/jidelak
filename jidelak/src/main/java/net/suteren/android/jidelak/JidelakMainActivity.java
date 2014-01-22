@@ -251,9 +251,16 @@ public class JidelakMainActivity extends ActionBarActivity implements
 			if (paramInt > 0 && ENABLE_UPPER_SHADOW)
 				paramView.findViewById(R.id.upper_shadow).setVisibility(
 						View.VISIBLE);
+			else
+				paramView.findViewById(R.id.upper_shadow).setVisibility(
+						View.GONE);
+
 			if (paramInt > 0)
 				paramView.findViewById(R.id.bottom_shadow).setVisibility(
 						View.VISIBLE);
+			else
+				paramView.findViewById(R.id.bottom_shadow).setVisibility(
+						View.GONE);
 
 			Restaurant restaurant = getGroup(paramInt);
 

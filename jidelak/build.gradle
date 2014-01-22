@@ -4,7 +4,7 @@ apply plugin: 'android'
 //apply plugin: 'eclipse'
 
 sourceCompatibility = 1.6
-version = '0.5-SNAPSHOT'
+version = '0.6-SNAPSHOT'
 group = "net.suteren.android.jidelak"
 
 //configurations { provided }
@@ -58,7 +58,7 @@ android {
 	buildToolsVersion "19.0.0"
 
 	defaultConfig {
-		minSdkVersion 8
+		minSdkVersion 9
 		targetSdkVersion 19
 	}
 

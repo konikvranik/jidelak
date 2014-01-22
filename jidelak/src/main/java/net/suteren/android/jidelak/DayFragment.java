@@ -129,6 +129,11 @@ public class DayFragment extends Fragment {
 				paramView.findViewById(R.id.bottom_shadow).setVisibility(
 						View.GONE);
 
+			if (getChildrenCount(paramInt) > 0)
+				paramView.findViewById(R.id.empty).setVisibility(View.GONE);
+			else
+				paramView.findViewById(R.id.empty).setVisibility(View.VISIBLE);
+
 			Restaurant restaurant = getGroup(paramInt);
 
 			TextView nameView = (TextView) paramView.findViewById(R.id.name);
@@ -206,9 +211,9 @@ public class DayFragment extends Fragment {
 
 		ExpandableListView menuList = (ExpandableListView) rootView
 				.findViewById(R.id.menu_list);
-		menuList.setAdapter(ad);
 		menuList.setEmptyView(inflater.inflate(R.layout.empty_menu, container,
 				false));
+		menuList.setAdapter(ad);
 
 		for (int i = 0; i < ad.getGroupCount(); i++) {
 			menuList.expandGroup(i);

@@ -24,5 +24,6 @@
     <string name="importing_template">Načítam šablonu %s&#8230;</string>
     <string name="import_template_question">Chcete naimportovat šabonu %s?</string>
     <string name="http_error_response">Server vrátil kód %1$s: %1$s</string>
+    <string name="no_menu">Nabídka není k dispozici</string>
 
 </resources>

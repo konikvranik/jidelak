@@ -191,28 +191,14 @@ public class JidelakMainActivity extends ActionBarActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		pagerView = (ViewPager) findViewById(R.id.pager);
 
-		ab = getSupportActionBar();
-		ab.setDisplayHomeAsUpEnabled(true);
-		ab.setDisplayShowHomeEnabled(true);
-		ab.setDisplayShowTitleEnabled(false);
-		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		setContentView(R.layout.activity_main);
 
 		dpa = new DayPagerAdapter(getSupportFragmentManager());
-		pagerView.setAdapter(dpa);
 
-		ab.setListNavigationCallbacks(dpa, this);
+		setupActiveBar();
 
-		pagerView
-				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						ab.setSelectedNavigationItem(position);
-					}
-
-				});
+		setupPagerView();
 
 		goToday();
 
@@ -259,6 +245,28 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 		});
 
+	}
+
+	private void setupPagerView() {
+		pagerView = (ViewPager) findViewById(R.id.pager);
+		pagerView.setAdapter(dpa);
+		pagerView
+				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+					@Override
+					public void onPageSelected(int position) {
+						ab.setSelectedNavigationItem(position);
+					}
+
+				});
+	}
+
+	private void setupActiveBar() {
+		ab = getSupportActionBar();
+		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayShowHomeEnabled(true);
+		ab.setDisplayShowTitleEnabled(false);
+		ab.setListNavigationCallbacks(dpa, this);
 	}
 
 	@Override

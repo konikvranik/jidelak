@@ -157,6 +157,8 @@ public class Availability implements Identificable<Availability> {
 			if (another.getDow() != null)
 				return -1;
 		} else {
+			if (another.getDow() == null)
+				return 1;
 			c = getDow().compareTo(another.getDow());
 			if (c != 0)
 				return c;

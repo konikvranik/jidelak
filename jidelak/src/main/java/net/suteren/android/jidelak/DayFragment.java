@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import net.suteren.android.jidelak.dao.AvailabilityDao;
@@ -162,23 +164,22 @@ public class DayFragment extends Fragment {
 
 			long partMilis = System.currentTimeMillis();
 
-			// TreeMap<Long, SortedSet<Meal>> mmap = new TreeMap<Long,
-			// SortedSet<Meal>>();
-			// for (Meal m : mdao.findByDay(day)) {
-			// SortedSet<Meal> s = mmap.get(m.getRestaurant().getId());
-			// if (s == null)
-			// s = new TreeSet<Meal>();
-			// s.add(m);
-			// mmap.put(m.getRestaurant().getId(), s);
-			// }
+			TreeMap<Long, SortedSet<Meal>> mmap = new TreeMap<Long, SortedSet<Meal>>();
+			for (Meal m : mdao.findByDay(day)) {
+				SortedSet<Meal> s = mmap.get(m.getRestaurant().getId());
+				if (s == null)
+					s = new TreeSet<Meal>();
+				s.add(m);
+				mmap.put(m.getRestaurant().getId(), s);
+			}
 
 			log.debug("Update restaurants update start");
 			for (Restaurant restaurant : restaurants) {
-				restaurant
-						.setMenu(mdao.findByDayAndRestaurant(day, restaurant));
-				// SortedSet<Meal> m = mmap.get(restaurant.getId());
-				// if (m != null)
-				// restaurant.setMenu(m);
+				// restaurant
+				// .setMenu(mdao.findByDayAndRestaurant(day, restaurant));
+				SortedSet<Meal> m = mmap.get(restaurant.getId());
+				if (m != null)
+					restaurant.setMenu(m);
 				restaurant.setOpeningHours(new TreeSet<Availability>(adao
 						.findByRestaurant(restaurant)));
 			}
@@ -199,18 +200,15 @@ public class DayFragment extends Fragment {
 		Bundle args = getArguments();
 
 		View rootView = inflater.inflate(R.layout.day, container, false);
-		ExpandableListView menuList = (ExpandableListView) rootView
-				.findViewById(R.id.menu_list);
-
-		Calendar day = Calendar.getInstance(Locale.getDefault());
-		Long time = args.getLong(DayFragment.ARG_DAY);
-		if (time == null)
-			time = System.currentTimeMillis();
-		day.setTime(new Date(time));
 
 		final DayFragment.DailyMenuAdapter ad = new DailyMenuAdapter(
-				getActivity().getApplicationContext(), day);
+				getActivity().getApplicationContext(), prepareDay(args));
+
+		ExpandableListView menuList = (ExpandableListView) rootView
+				.findViewById(R.id.menu_list);
 		menuList.setAdapter(ad);
+		menuList.setEmptyView(inflater.inflate(R.layout.empty_menu, container,
+				false));
 
 		for (int i = 0; i < ad.getGroupCount(); i++) {
 			menuList.expandGroup(i);
@@ -246,5 +244,14 @@ public class DayFragment extends Fragment {
 		});
 
 		return rootView;
+	}
+
+	private Calendar prepareDay(Bundle args) {
+		Calendar day = Calendar.getInstance(Locale.getDefault());
+		Long time = args.getLong(DayFragment.ARG_DAY);
+		if (time == null)
+			time = System.currentTimeMillis();
+		day.setTime(new Date(time));
+		return day;
 	}
 }

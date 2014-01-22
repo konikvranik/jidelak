@@ -111,11 +111,13 @@ public class Meal implements Identificable<Meal> {
 		if (getCategory() == null) {
 			if (another.getCategory() != null)
 				return -1;
-		} else
+		} else {
+			if (another.getCategory() == null)
+				return 1;
 			r = getCategory().compareTo(another.getCategory());
-		if (r != 0)
-			return r;
-
+			if (r != 0)
+				return r;
+		}
 		if (getPosition() == null) {
 			if (another.getPosition() != null)
 				return -1;

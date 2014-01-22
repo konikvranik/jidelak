@@ -1,18 +1,8 @@
 package net.suteren.android.jidelak;
 
-import static org.junit.Assert.*;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.nio.CharBuffer;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -28,7 +18,6 @@ import org.junit.Test;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.OpenableColumns;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 
@@ -118,7 +107,7 @@ public class JidelakTemplateImporterActivityTest extends
 
 		RestaurantDao rdao = new RestaurantDao(dbh);
 
-		List<Restaurant> rests = rdao.findAll();
+		SortedSet<Restaurant> rests = rdao.findAll();
 
 		assertTrue(rests.size() > 0);
 

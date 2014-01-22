@@ -3,7 +3,7 @@ package net.suteren.android.jidelak.model;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class Availability implements Identificable, Comparable<Availability> {
+public class Availability implements Identificable<Availability> {
 
 	private Integer day;
 	private Integer month;
@@ -185,6 +185,15 @@ public class Availability implements Identificable, Comparable<Availability> {
 				return -1;
 		} else {
 			c = getTo().compareTo(another.getTo());
+			if (c != 0)
+				return c;
+		}
+
+		if (getId() == null) {
+			if (another.getId() != null)
+				return -1;
+		} else {
+			c = getId().compareTo(another.getId());
 			if (c != 0)
 				return c;
 		}

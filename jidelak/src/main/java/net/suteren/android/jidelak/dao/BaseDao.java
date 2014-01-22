@@ -13,9 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.Utils;
@@ -24,13 +23,17 @@ import net.suteren.android.jidelak.model.Identificable;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.TimeOffsetType;
 import net.suteren.android.jidelak.model.TimeType;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
-public abstract class BaseDao<T extends Identificable> {
+public abstract class BaseDao<T extends Identificable<T>> {
 
 	protected static Logger log = LoggerFactory.getLogger(BaseDao.class);
 
@@ -258,7 +261,7 @@ public abstract class BaseDao<T extends Identificable> {
 		}
 	}
 
-	public List<T> findAll() {
+	public SortedSet<T> findAll() {
 		return query(null, null, null, null, null);
 	}
 
@@ -267,16 +270,16 @@ public abstract class BaseDao<T extends Identificable> {
 	}
 
 	public T findById(long obj) {
-		List<T> result = query(ID + " = ?",
+		SortedSet<T> result = query(ID + " = ?",
 				new String[] { Long.toString(obj) }, null, null, null);
 		if (result.size() > 1)
 			throw new SQLiteConstraintException();
 		else if (result.isEmpty())
 			return null;
-		return result.get(0);
+		return result.first();
 	}
 
-	protected List<T> query(String selection, String[] selectionArgs,
+	protected SortedSet<T> query(String selection, String[] selectionArgs,
 			String groupBy, String having, String orderBy) {
 
 		long milis = System.currentTimeMillis();
@@ -303,7 +306,7 @@ public abstract class BaseDao<T extends Identificable> {
 
 	}
 
-	protected List<T> rawQuery(String selection, String[] selectionArgs) {
+	protected SortedSet<T> rawQuery(String selection, String[] selectionArgs) {
 
 		long milis = System.currentTimeMillis();
 		log.debug("query before get db");
@@ -328,9 +331,9 @@ public abstract class BaseDao<T extends Identificable> {
 
 	}
 
-	private List<T> parseResults(Cursor cursor) {
+	private SortedSet<T> parseResults(Cursor cursor) {
 
-		ArrayList<T> results = new ArrayList<T>();
+		SortedSet<T> results = new TreeSet<T>();
 
 		try {
 

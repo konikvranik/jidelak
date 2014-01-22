@@ -1,5 +1,6 @@
 package net.suteren.android.jidelak;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -151,7 +152,8 @@ public class DayFragment extends Fragment {
 			long milis = System.currentTimeMillis();
 			log.debug("Update restaurants start");
 
-			restaurants = new RestaurantDao(dbHelper).findAll();
+			restaurants = new ArrayList<Restaurant>(
+					new RestaurantDao(dbHelper).findAll());
 
 			log.debug("Update restaurants got restaurants");
 
@@ -160,22 +162,23 @@ public class DayFragment extends Fragment {
 
 			long partMilis = System.currentTimeMillis();
 
-//			TreeMap<Long, SortedSet<Meal>> mmap = new TreeMap<Long, SortedSet<Meal>>();
-//			for (Meal m : mdao.findByDay(day)) {
-//				SortedSet<Meal> s = mmap.get(m.getRestaurant().getId());
-//				if (s == null)
-//					s = new TreeSet<Meal>();
-//				s.add(m);
-//				mmap.put(m.getRestaurant().getId(), s);
-//			}
+			// TreeMap<Long, SortedSet<Meal>> mmap = new TreeMap<Long,
+			// SortedSet<Meal>>();
+			// for (Meal m : mdao.findByDay(day)) {
+			// SortedSet<Meal> s = mmap.get(m.getRestaurant().getId());
+			// if (s == null)
+			// s = new TreeSet<Meal>();
+			// s.add(m);
+			// mmap.put(m.getRestaurant().getId(), s);
+			// }
 
 			log.debug("Update restaurants update start");
 			for (Restaurant restaurant : restaurants) {
-				 restaurant.setMenu(new TreeSet<Meal>(mdao
-				 .findByDayAndRestaurant(day, restaurant)));
-//				SortedSet<Meal> m = mmap.get(restaurant.getId());
-//				if (m != null)
-//					restaurant.setMenu(m);
+				restaurant
+						.setMenu(mdao.findByDayAndRestaurant(day, restaurant));
+				// SortedSet<Meal> m = mmap.get(restaurant.getId());
+				// if (m != null)
+				// restaurant.setMenu(m);
 				restaurant.setOpeningHours(new TreeSet<Availability>(adao
 						.findByRestaurant(restaurant)));
 			}

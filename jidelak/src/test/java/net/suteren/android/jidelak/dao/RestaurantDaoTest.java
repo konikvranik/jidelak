@@ -1,6 +1,6 @@
 package net.suteren.android.jidelak.dao;
 
-import java.util.List;
+import java.util.SortedSet;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakMainActivity;
@@ -94,7 +94,7 @@ public class RestaurantDaoTest extends
 
 	public void testFindAll() {
 
-		List<Restaurant> restaurants = dao.findAll();
+		SortedSet<Restaurant> restaurants = dao.findAll();
 
 		assertFalse(restaurants.isEmpty());
 

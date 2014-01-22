@@ -1,6 +1,6 @@
 package net.suteren.android.jidelak.model;
 
-public class Meal implements Identificable, Comparable<Meal> {
+public class Meal implements Identificable<Meal> {
 
 	private String title;
 	private String description;

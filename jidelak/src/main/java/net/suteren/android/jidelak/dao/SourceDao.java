@@ -2,8 +2,8 @@ package net.suteren.android.jidelak.dao;
 
 import java.net.URL;
 import java.text.DateFormat;
-import java.util.List;
 import java.util.Locale;
+import java.util.SortedSet;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Restaurant;
@@ -57,7 +57,7 @@ public class SourceDao extends BaseDao<Source> {
 		super(dbHelper);
 	}
 
-	public List<Source> findByRestaurant(Restaurant restaurant) {
+	public SortedSet<Source> findByRestaurant(Restaurant restaurant) {
 		return query(RESTAURANT + "= ?",
 				new String[] { String.valueOf(restaurant.getId()) }, null,
 				null, null);

@@ -1,7 +1,7 @@
 package net.suteren.android.jidelak.dao;
 
 import java.util.Calendar;
-import java.util.List;
+import java.util.SortedSet;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Dish;
@@ -51,7 +51,8 @@ public class MealDao extends BaseDao<Meal> {
 		super(dbHelper);
 	}
 
-	public List<Meal> findByDayAndRestaurant(Calendar day, Restaurant restaurant) {
+	public SortedSet<Meal> findByDayAndRestaurant(Calendar day,
+			Restaurant restaurant) {
 		return rawQuery(
 				"select m.* from " + getTableName() + " m, "
 						+ AvailabilityDao.getTable().getName() + " a where m."
@@ -73,7 +74,7 @@ public class MealDao extends BaseDao<Meal> {
 						String.valueOf(day.get(Calendar.DAY_OF_WEEK)) });
 	}
 
-	public List<Meal> findByDay(Calendar day) {
+	public SortedSet<Meal> findByDay(Calendar day) {
 		return rawQuery(
 				"select m.* from " + getTableName() + " m, "
 						+ AvailabilityDao.getTable().getName() + " a where m."

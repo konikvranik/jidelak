@@ -12,7 +12,7 @@ import java.util.Locale;
 
 import net.suteren.android.jidelak.Utils;
 
-public class Source implements Identificable {
+public class Source implements Identificable<Source> {
 	TimeType timeType;
 	TimeOffsetType offsetBase;
 	Integer firstdayofweek;
@@ -172,5 +172,20 @@ public class Source implements Identificable {
 
 	public void setDate(Calendar date) {
 		this.date = date;
+	}
+
+	@Override
+	public int compareTo(Source another) {
+
+		int r = getId() != null ? getId().compareTo(another.getId()) : 0;
+		if (r != 0)
+			return r;
+
+		r = getUrl() != null ? getUrl().toString().compareTo(
+				another.getUrl().toString()) : 0;
+		if (r != 0)
+			return r;
+
+		return 0;
 	}
 }

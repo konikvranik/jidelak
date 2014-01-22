@@ -6,8 +6,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -114,7 +114,7 @@ public class JidelakFeederService extends Service {
 				}
 
 				for (Availability av : avs) {
-					List<Meal> atd = mdao.findByDayAndRestaurant(
+					SortedSet<Meal> atd = mdao.findByDayAndRestaurant(
 							av.getCalendar(), restaurant);
 					mdao.delete(atd);
 				}

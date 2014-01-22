@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import android.location.Address;
 
-public class Restaurant implements Identificable {
+public class Restaurant implements Identificable<Restaurant> {
 
 	private static Logger log = LoggerFactory.getLogger(Restaurant.class);
 	private String name;
@@ -238,4 +238,19 @@ public class Restaurant implements Identificable {
 			return new ArrayList<Meal>();
 		return menuList;
 	}
+
+	@Override
+	public int compareTo(Restaurant another) {
+
+		int r = getId() != null ? getId().compareTo(another.getId()) : 0;
+		if (r != 0)
+			return r;
+
+		r = getName() != null ? getName().compareTo(another.getName()) : 0;
+		if (r != 0)
+			return r;
+
+		return r;
+	}
+
 }

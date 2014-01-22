@@ -1,7 +1,7 @@
 package net.suteren.android.jidelak.dao;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.SortedSet;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Availability;
@@ -50,8 +50,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
 		super(dbHelper);
 	}
 
-	public List<Availability> findAllDays() {
-
+	public SortedSet<Availability> findAllDays() {
 		return query(DAY + " is not null and " + MONTH + " is not null and "
 				+ YEAR + " is not null and " + RESTAURANT + " is null", null,
 				YEAR + SQL_SEPARATOR + MONTH + SQL_SEPARATOR + DAY, null, YEAR
@@ -86,7 +85,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
 		return findByRestaurant(restaurant.getId());
 	}
 
-	public List<Availability> findByRestaurant(long restaurant) {
+	public SortedSet<Availability> findByRestaurant(long restaurant) {
 		return query(RESTAURANT + " = ?",
 				new String[] { Long.toString(restaurant) }, null, null, null);
 	}

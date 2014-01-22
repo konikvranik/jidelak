@@ -153,7 +153,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 			log.debug("Update dates start");
 			AvailabilityDao ad = new AvailabilityDao(getDbHelper());
-			dates = ad.findAllDays();
+			dates = new ArrayList<Availability>(ad.findAllDays());
 			log.debug("Update dates end");
 		}
 

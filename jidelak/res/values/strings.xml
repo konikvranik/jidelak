@@ -23,5 +23,6 @@
     <string name="feeder_io_exception">Unable to load data</string>
     <string name="importing_template">Importing template %s&#8230;</string>
     <string name="import_template_question">Are you sure to import template %s?</string>
+    <string name="http_error_response">Server returned code %1$s: %2$s</string>
 
 </resources>

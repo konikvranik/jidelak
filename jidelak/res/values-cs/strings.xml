@@ -10,8 +10,7 @@
     <string name="parser_configuration_error">Chyba v konfiguraci parseru</string>
     <string name="data_updated">Data byl aktualizována</string>
     <string name="import_failed">Nepodařilo se naimportovat data: </string>
-
-        <string name="source_malformed_url">Neplatná URL v source</string>
+    <string name="source_malformed_url">Neplatná URL v source</string>
     <string name="first_day_of_week_malformed">První den v týdnu je v neplatném formátu</string>
     <string name="meal_invalid_date_format">Datum v &lt;meal&gt; je v neplatném formátu</string>
     <string name="opening_hours_invalid_date">Datum otevíracích hodin je v neplatném formátu</string>
@@ -24,6 +23,6 @@
     <string name="feeder_io_exception">Nelze načíst data</string>
     <string name="importing_template">Načítam šablonu %s&#8230;</string>
     <string name="import_template_question">Chcete naimportovat šabonu %s?</string>
-    
-    
+    <string name="http_error_response">Server vrátil kód %1$s: %1$s</string>
+
 </resources>

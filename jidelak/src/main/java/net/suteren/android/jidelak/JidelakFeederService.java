@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.URLConnection;
+import java.net.HttpURLConnection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -153,14 +153,25 @@ public class JidelakFeederService extends Service {
 	}
 
 	Node retrieve(Source source, InputStream inXsl) throws IOException,
-			TransformerException, ParserConfigurationException {
-		URLConnection con = source.getUrl().openConnection();
+			TransformerException, ParserConfigurationException,
+			JidelakException {
+		HttpURLConnection con = (HttpURLConnection) source.getUrl()
+				.openConnection();
+		con.connect();
+		if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
+			throw new JidelakException(R.string.http_error_response,
+					new String[] {
+							Integer.valueOf(con.getResponseCode()).toString(),
+							con.getResponseMessage() });
+		}
 		InputStream is = con.getInputStream();
 		String enc = source.getEncoding();
 		if (enc == null)
 			enc = con.getContentEncoding();
 		Document d = getTidy(enc).parseDOM(is, null);
 		is.close();
+		con.disconnect();
+
 		DOMResult res = transform(d, inXsl);
 
 		StringWriter sw = new StringWriter();

@@ -5,8 +5,8 @@ import org.gradle.plugins.ide.eclipse.model.SourceFolder
 apply plugin: 'android'
 //apply plugin: 'eclipse'
 
-version = '0.10-SNAPSHOT'
-android.defaultConfig.versionCode = 10
+version = '0.12-SNAPSHOT'
+android.defaultConfig.versionCode = 12
 
 group = "net.suteren.android.jidelak"
 
@@ -112,7 +112,6 @@ dependencies {
 	compile 'com.android.support:support-v4:19.0.0'
 	compile 'com.android.support:appcompat-v7:19.0.0'
 	compile 'net.sf.jtidy:jtidy:r938'
-	compile 'org.slf4j:slf4j-api:1.6.1'
 	compile 'org.slf4j:slf4j-android:1.6.1-RC1'
 
 	testCompile 'org.slf4j:slf4j-log4j12:1.6.1'

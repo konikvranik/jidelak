@@ -212,8 +212,6 @@ public class DayFragment extends Fragment {
 
 		ExpandableListView menuList = (ExpandableListView) rootView
 				.findViewById(R.id.menu_list);
-		menuList.setEmptyView(inflater.inflate(R.layout.empty_menu, container,
-				false));
 		menuList.setAdapter(ad);
 
 		for (int i = 0; i < ad.getGroupCount(); i++) {

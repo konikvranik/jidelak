@@ -12,6 +12,7 @@ import net.suteren.android.jidelak.model.TimeOffsetType;
 import net.suteren.android.jidelak.model.TimeType;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 public class SourceDao extends BaseDao<Source> {
 
@@ -124,4 +125,16 @@ public class SourceDao extends BaseDao<Source> {
 	public static Table getTable() {
 		return getTable(TABLE_NAME);
 	}
+
+	public void delete(Restaurant r) {
+		SQLiteDatabase db = getDbHelper().getWritableDatabase();
+		try {
+			db.delete(getTableName(), RESTAURANT + " = ?",
+					new String[] { Long.toString(r.getId()) });
+		} finally {
+			db.close();
+		}
+
+	}
+
 }

@@ -9,6 +9,7 @@ import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 public class MealDao extends BaseDao<Meal> {
 
@@ -137,5 +138,16 @@ public class MealDao extends BaseDao<Meal> {
 
 	public static Table getTable() {
 		return getTable(TABLE_NAME);
+	}
+
+	public void delete(Restaurant r) {
+		SQLiteDatabase db = getDbHelper().getWritableDatabase();
+		try {
+			db.delete(getTableName(), RESTAURANT + " = ?",
+					new String[] { Long.toString(r.getId()) });
+		} finally {
+			db.close();
+		}
+
 	}
 }

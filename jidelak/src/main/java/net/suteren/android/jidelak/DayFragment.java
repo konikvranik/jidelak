@@ -5,13 +5,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
+import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
@@ -19,27 +18,40 @@ import net.suteren.android.jidelak.model.Restaurant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.DataSetObserver;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class DayFragment extends Fragment {
 
 	private static Logger log = LoggerFactory.getLogger(DayFragment.class);
 
-	public static class DailyMenuAdapter extends BaseExpandableListAdapter {
+	private JidelakDbHelper dbHelper;
+
+	public class DailyMenuAdapter extends BaseExpandableListAdapter {
 
 		private static final boolean ENABLE_UPPER_SHADOW = false;
 		private Context ctx;
 		private final Calendar day;
-		private final JidelakDbHelper dbHelper;
 		private List<Restaurant> restaurants;
 
 		public DailyMenuAdapter(Context ctx, Calendar day) {
@@ -115,6 +127,16 @@ public class DayFragment extends Fragment {
 
 			paramView.invalidate();
 
+			ImageButton ib = (ImageButton) paramView
+					.findViewById(R.id.btn_menu);
+			ib.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					act.openContextMenu(v);
+				}
+			});
+
 			if (paramInt > 0 && ENABLE_UPPER_SHADOW)
 				paramView.findViewById(R.id.upper_shadow).setVisibility(
 						View.VISIBLE);
@@ -168,24 +190,25 @@ public class DayFragment extends Fragment {
 
 			long partMilis = System.currentTimeMillis();
 
-			TreeMap<Long, SortedSet<Meal>> mmap = new TreeMap<Long, SortedSet<Meal>>();
-			for (Meal m : mdao.findByDay(day)) {
-				SortedSet<Meal> s = mmap.get(m.getRestaurant().getId());
-				if (s == null)
-					mmap.put(m.getRestaurant().getId(), s = new TreeSet<Meal>());
-
-				s.add(m);
-			}
+			// TreeMap<Long, SortedSet<Meal>> mmap = new TreeMap<Long,
+			// SortedSet<Meal>>();
+			// for (Meal m : mdao.findByDay(day)) {
+			// SortedSet<Meal> s = mmap.get(m.getRestaurant().getId());
+			// if (s == null)
+			// mmap.put(m.getRestaurant().getId(), s = new TreeSet<Meal>());
+			//
+			// s.add(m);
+			// }
 
 			AvailabilityDao adao = new AvailabilityDao(dbHelper);
 
 			log.debug("Update restaurants update start");
 			for (Restaurant restaurant : restaurants) {
-				// restaurant
-				// .setMenu(mdao.findByDayAndRestaurant(day, restaurant));
-				SortedSet<Meal> m = mmap.get(restaurant.getId());
-				if (m != null)
-					restaurant.setMenu(m);
+				restaurant
+						.setMenu(mdao.findByDayAndRestaurant(day, restaurant));
+				// SortedSet<Meal> m = mmap.get(restaurant.getId());
+				// if (m != null)
+				// restaurant.setMenu(m);
 				restaurant.setOpeningHours(new TreeSet<Availability>(adao
 						.findByRestaurant(restaurant)));
 			}
@@ -198,6 +221,9 @@ public class DayFragment extends Fragment {
 	}
 
 	public static final String ARG_DAY = "day";
+	private DailyMenuAdapter ad;
+	private ExpandableListView menuList;
+	private FragmentActivity act;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -205,14 +231,15 @@ public class DayFragment extends Fragment {
 
 		Bundle args = getArguments();
 
+		act = getActivity();
 		View rootView = inflater.inflate(R.layout.day, container, false);
 
-		final DayFragment.DailyMenuAdapter ad = new DailyMenuAdapter(
-				getActivity().getApplicationContext(), prepareDay(args));
+		ad = new DailyMenuAdapter(getActivity().getApplicationContext(),
+				prepareDay(args));
 
-		ExpandableListView menuList = (ExpandableListView) rootView
-				.findViewById(R.id.menu_list);
+		menuList = (ExpandableListView) rootView.findViewById(R.id.menu_list);
 		menuList.setAdapter(ad);
+		registerForContextMenu(menuList);
 
 		for (int i = 0; i < ad.getGroupCount(); i++) {
 			menuList.expandGroup(i);
@@ -248,6 +275,74 @@ public class DayFragment extends Fragment {
 		});
 
 		return rootView;
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getActivity().getMenuInflater();
+		inflater.inflate(R.menu.restaurant_context_menu, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+
+		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item
+				.getMenuInfo();
+
+		final Restaurant r = ad.getGroup(ExpandableListView
+				.getPackedPositionGroup(info.packedPosition));
+
+		switch (item.getItemId()) {
+
+		case R.id.action_call:
+
+			Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
+					+ r.getAddress().getPhone()));
+			log.debug("tel:" + r.getAddress().getPhone());
+			startActivity(intent);
+
+			return true;
+
+		case R.id.action_locate:
+			// TODO
+			return true;
+
+		case R.id.action_delete:
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setMessage(
+					getResources().getString(R.string.delete_restaurant,r.getName()))
+					.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+
+									MealDao mdao = new MealDao(dbHelper);
+									mdao.delete(r);
+									AvailabilityDao adao = new AvailabilityDao(
+											dbHelper);
+									adao.delete(r);
+									SourceDao sdao = new SourceDao(dbHelper);
+									sdao.delete(r);
+									RestaurantDao rdao = new RestaurantDao(
+											dbHelper);
+									rdao.delete(r);
+									getActivity().deleteFile(
+											r.getTemplateName());
+									dbHelper.notifyDataSetChanged();
+
+								}
+							}).setNegativeButton("No", null)
+					.setCancelable(false).show();
+			return true;
+
+		default:
+			return super.onContextItemSelected(item);
+		}
 	}
 
 	private Calendar prepareDay(Bundle args) {

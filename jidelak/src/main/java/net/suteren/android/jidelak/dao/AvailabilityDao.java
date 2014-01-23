@@ -8,6 +8,7 @@ import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 public class AvailabilityDao extends BaseDao<Availability> {
 
@@ -107,6 +108,17 @@ public class AvailabilityDao extends BaseDao<Availability> {
 
 	public static Table getTable() {
 		return getTable(TABLE_NAME);
+	}
+
+	public void delete(Restaurant r) {
+		SQLiteDatabase db = getDbHelper().getWritableDatabase();
+		try {
+			db.delete(getTableName(), RESTAURANT + " = ?",
+					new String[] { Long.toString(r.getId()) });
+		} finally {
+			db.close();
+		}
+
 	}
 
 }

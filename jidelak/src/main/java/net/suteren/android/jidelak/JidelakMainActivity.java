@@ -291,6 +291,9 @@ public class JidelakMainActivity extends ActionBarActivity implements
 					JidelakFeederService.class).putExtra("force", true));
 
 		case R.id.action_settings:
+
+			startActivity(new Intent(this, RestaurantManagerActivity.class));
+
 			return true;
 
 		case android.R.id.home:

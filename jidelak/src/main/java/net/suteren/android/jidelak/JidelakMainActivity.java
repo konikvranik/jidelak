@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.TreeSet;
+
+import net.suteren.android.jidelak.dao.AvailabilityDao;
+import net.suteren.android.jidelak.model.Availability;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.suteren.android.jidelak.dao.AvailabilityDao;
-import net.suteren.android.jidelak.model.Availability;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -107,14 +107,17 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		}
 
 		int getPositionByDate(Calendar cal) {
-			int i = dates.indexOf(new Availability(cal));
-			if (i < 0) {
-				Availability a = new Availability(cal);
-				TreeSet<Availability> g = new TreeSet<Availability>(dates);
-				a = g.ceiling(a);
-				return dates.indexOf(a);
+
+			if (dates == null || dates.isEmpty())
+				return -1;
+
+			Availability a = new Availability(cal);
+			for (int i = 0; i < dates.size(); i++) {
+				if (a.compareTo(dates.get(i)) < 0)
+					return i;
 			}
-			return i;
+
+			return 0;
 		}
 
 		@Override

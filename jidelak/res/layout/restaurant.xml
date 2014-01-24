@@ -68,7 +68,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:onClick="onMenuButtonClick"
-            android:src="@drawable/abc_ic_menu_moreoverflow_normal_holo_dark" />
+            android:src="@drawable/abc_ic_menu_moreoverflow_normal_holo_light" />
     </RelativeLayout>
 
     <View

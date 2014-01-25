@@ -65,7 +65,7 @@ public class DayFragment extends Fragment {
 		@Override
 		public Meal getChild(int paramInt1, int paramInt2) {
 			List<Meal> ml = getGroup(paramInt1).getMenuAsList();
-			if (ml == null)
+			if (ml == null || ml.isEmpty())
 				return null;
 			return ml.get(paramInt2);
 		}
@@ -313,7 +313,8 @@ public class DayFragment extends Fragment {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setMessage(
-					getResources().getString(R.string.delete_restaurant,r.getName()))
+					getResources().getString(R.string.delete_restaurant,
+							r.getName()))
 					.setPositiveButton("Yes",
 							new DialogInterface.OnClickListener() {
 

@@ -1,8 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.terlici.dragndroplist.DragNDropListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/restaurants"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-</com.terlici.dragndroplist.DragNDropListView>
+    <com.terlici.dragndroplist.DragNDropListView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/restaurants"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_gravity="top"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+    </com.terlici.dragndroplist.DragNDropListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/save" />
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel" />
+    </LinearLayout>
+
+</LinearLayout>

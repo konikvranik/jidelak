@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -205,22 +206,29 @@ public abstract class BaseDao<T extends Identificable<T>> {
 
 	public void insert(Collection<T> objs) {
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
-		for (T obj : objs) {
-			long result = db.insert(getTableName(), null, getValues(obj));
-			if (result == -1)
-				throw new SQLException();
-			obj.setId(result);
+		try {
+			for (T obj : objs) {
+				insert(db, obj);
+			}
+		} finally {
+			db.close();
 		}
-		db.close();
 	}
 
-	public void insert(T obj) {
-		SQLiteDatabase db = getDbHelper().getWritableDatabase();
+	protected void insert(SQLiteDatabase db, T obj) {
 		long result = db.insert(getTableName(), null, getValues(obj));
 		if (result == -1)
 			throw new SQLException();
 		obj.setId(result);
-		db.close();
+	}
+
+	public void insert(T obj) {
+		SQLiteDatabase db = getDbHelper().getWritableDatabase();
+		try {
+			insert(db, obj);
+		} finally {
+			db.close();
+		}
 	}
 
 	protected abstract ContentValues getValues(T obj);
@@ -228,11 +236,26 @@ public abstract class BaseDao<T extends Identificable<T>> {
 	public void update(T obj) {
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
 		try {
-			int result = db.update(getTableName(), getValues(obj), "id = ?",
-					new String[] { Long.toString(obj.getId()) });
-			if (result != 1)
-				throw new RuntimeException("Updated " + result
-						+ " rows. 1 expected.");
+			update(db, obj);
+		} finally {
+			db.close();
+		}
+	}
+
+	protected void update(SQLiteDatabase db, T obj) {
+		int result = db.update(getTableName(), getValues(obj), "id = ?",
+				new String[] { Long.toString(obj.getId()) });
+		if (result != 1)
+			throw new RuntimeException("Updated " + result
+					+ " rows. 1 expected.");
+	}
+
+	public void update(Collection<T> objs) {
+		SQLiteDatabase db = getDbHelper().getWritableDatabase();
+		try {
+			for (T obj : objs) {
+				update(db, obj);
+			}
 		} finally {
 			db.close();
 		}
@@ -281,54 +304,36 @@ public abstract class BaseDao<T extends Identificable<T>> {
 
 	protected SortedSet<T> query(String selection, String[] selectionArgs,
 			String groupBy, String having, String orderBy) {
-
-		long milis = System.currentTimeMillis();
-		log.debug("query before get db");
-
+		long millis1 = System.currentTimeMillis();
 		SQLiteDatabase db = getDbHelper().getReadableDatabase();
-
-		log.debug("query after get db");
-
+		long millis2 = System.currentTimeMillis();
 		try {
 			Cursor cursor = db.query(getTableName(), getColumnNames(),
 					selection, selectionArgs, groupBy, having, orderBy);
-
-			log.debug("query after query");
-
 			return parseResults(cursor);
 		} finally {
+			long now = System.currentTimeMillis();
+			log.debug("SQL query: " + getTableName() + " - " + selection
+					+ Arrays.toString(selectionArgs) + " / times: "
+					+ (now - millis1) + ", " + (now - millis2));
 			db.close();
-
-			log.debug("query after closing db: "
-					+ (System.currentTimeMillis() - milis));
-
 		}
-
 	}
 
 	protected SortedSet<T> rawQuery(String selection, String[] selectionArgs) {
-
-		long milis = System.currentTimeMillis();
-		log.debug("query before get db");
-
+		long millis1 = System.currentTimeMillis();
 		SQLiteDatabase db = getDbHelper().getReadableDatabase();
-
-		log.debug("query after get db");
-
+		long millis2 = System.currentTimeMillis();
 		try {
 			Cursor cursor = db.rawQuery(selection, selectionArgs);
-
-			log.debug("query after query");
-
 			return parseResults(cursor);
 		} finally {
+			long now = System.currentTimeMillis();
+			log.debug("SQL raw query: " + selection
+					+ Arrays.toString(selectionArgs) + " / times: "
+					+ (now - millis1) + ", " + (now - millis2));
 			db.close();
-
-			log.debug("query after closing db: "
-					+ (System.currentTimeMillis() - milis));
-
 		}
-
 	}
 
 	private SortedSet<T> parseResults(Cursor cursor) {

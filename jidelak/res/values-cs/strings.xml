@@ -29,5 +29,7 @@
     <string name="delete">smazat</string>
     <string name="locate">navigovat</string>
     <string name="delete_restaurant">Odstranit restauraci %s?</string>
+    <string name="save">Uložit</string>
+    <string name="cancel">Zrušit</string>
 
 </resources>

@@ -177,12 +177,14 @@ public class Source implements Identificable<Source> {
 	@Override
 	public int compareTo(Source another) {
 
-		int r = getId() != null ? getId().compareTo(another.getId()) : 0;
+		int r = getId() != null ? getId().compareTo(another.getId()) : (another
+				.getId() == null ? 0 : -1);
 		if (r != 0)
 			return r;
 
 		r = getUrl() != null ? getUrl().toString().compareTo(
-				another.getUrl().toString()) : 0;
+				another.getUrl().toString()) : (another.getUrl() == null ? 0
+				: -1);
 		if (r != 0)
 			return r;
 

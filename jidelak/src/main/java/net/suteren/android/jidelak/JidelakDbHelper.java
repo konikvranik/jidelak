@@ -1,6 +1,8 @@
 package net.suteren.android.jidelak;
 
 import net.suteren.android.jidelak.dao.AvailabilityDao;
+import net.suteren.android.jidelak.dao.BaseDao.Column;
+import net.suteren.android.jidelak.dao.BaseDao.Table;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.SourceDao;
@@ -19,7 +21,7 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 
 	private static Logger log = LoggerFactory.getLogger(JidelakDbHelper.class);
 
-	public static final int DATABASE_VERSION = 4;
+	public static final int DATABASE_VERSION = 5;
 	public static final String DATABASE_NAME = "Jidelak.db";
 
 	private static final String SQL_CREATE_RESTAURANT = RestaurantDao
@@ -71,68 +73,76 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 		switch (oldVersion) {
 		case 1:
 
-			db.execSQL("create index " + AvailabilityDao.getTable().getName()
-					+ "_date on " + AvailabilityDao.getTable().getName() + "("
-					+ AvailabilityDao.YEAR + "," + AvailabilityDao.MONTH + ","
-					+ AvailabilityDao.DAY + ")");
-			db.execSQL("create index " + AvailabilityDao.getTable().getName()
-					+ "_" + AvailabilityDao.DOW + " on "
-					+ AvailabilityDao.getTable().getName() + "("
-					+ AvailabilityDao.DOW + ")");
+			createIndex(db, AvailabilityDao.getTable(), "date",
+					AvailabilityDao.YEAR, AvailabilityDao.MONTH,
+					AvailabilityDao.DAY);
+			createIndex(db, AvailabilityDao.getTable(), AvailabilityDao.DOW);
 
 			if (newVersion <= 2)
 				break;
 
 		case 2:
-			db.execSQL("create index " + AvailabilityDao.getTable().getName()
-					+ "_" + AvailabilityDao.YEAR + " on "
-					+ AvailabilityDao.getTable().getName() + "("
-					+ AvailabilityDao.YEAR + ")");
-			db.execSQL("create index " + AvailabilityDao.getTable().getName()
-					+ "_" + AvailabilityDao.MONTH + " on "
-					+ AvailabilityDao.getTable().getName() + "("
-					+ AvailabilityDao.MONTH + ")");
-			db.execSQL("create index " + AvailabilityDao.getTable().getName()
-					+ "_" + AvailabilityDao.DAY + " on "
-					+ AvailabilityDao.getTable().getName() + "("
-					+ AvailabilityDao.DAY + ")");
+			createIndex(db, AvailabilityDao.getTable(), AvailabilityDao.YEAR);
+			createIndex(db, AvailabilityDao.getTable(), AvailabilityDao.MONTH);
+			createIndex(db, AvailabilityDao.getTable(), AvailabilityDao.DAY);
+			createIndex(db, AvailabilityDao.getTable(),
+					AvailabilityDao.RESTAURANT);
 
-			db.execSQL("create index " + AvailabilityDao.getTable().getName()
-					+ "_" + AvailabilityDao.RESTAURANT + " on "
-					+ AvailabilityDao.getTable().getName() + "("
-					+ AvailabilityDao.RESTAURANT + ")");
+			createIndex(db, MealDao.getTable(), MealDao.RESTAURANT);
+			createIndex(db, MealDao.getTable(), MealDao.AVAILABILITY);
 
-			db.execSQL("create index " + MealDao.getTable().getName() + "_"
-					+ MealDao.RESTAURANT + " on "
-					+ MealDao.getTable().getName() + "(" + MealDao.RESTAURANT
-					+ ")");
-			db.execSQL("create index " + MealDao.getTable().getName() + "_"
-					+ MealDao.AVAILABILITY + " on "
-					+ MealDao.getTable().getName() + "(" + MealDao.AVAILABILITY
-					+ ")");
-
-			db.execSQL("create index " + SourceDao.getTable().getName() + "_"
-					+ SourceDao.RESTAURANT + " on "
-					+ SourceDao.getTable().getName() + "("
-					+ SourceDao.RESTAURANT + ")");
+			createIndex(db, SourceDao.getTable(), SourceDao.RESTAURANT);
 
 			if (newVersion <= 3)
 				break;
 
 		case 3:
 
-			db.execSQL("create index " + AvailabilityDao.getTable().getName()
-					+ "_whole on " + AvailabilityDao.getTable().getName() + "("
-					+ AvailabilityDao.YEAR + "," + AvailabilityDao.MONTH + ","
-					+ AvailabilityDao.DAY + ", " + AvailabilityDao.DOW + ")");
+			createIndex(db, AvailabilityDao.getTable(), "whole",
+					AvailabilityDao.YEAR, AvailabilityDao.MONTH,
+					AvailabilityDao.DAY, AvailabilityDao.DOW);
 
 			if (newVersion <= 4)
+				break;
+
+		case 4:
+
+			addColumn(db, RestaurantDao.getTable(), RestaurantDao.POSITION);
+
+			if (newVersion <= 5)
 				break;
 
 		default:
 			break;
 		}
 
+	}
+
+	protected void addColumn(SQLiteDatabase db, Table table, Column column) {
+		db.execSQL("alter table " + table.getName() + " add column "
+				+ column.createClausule());
+	}
+
+	protected void createIndex(SQLiteDatabase db, Table table,
+			Column... columns) {
+		createIndex(db, table, join(columns, "_"), columns);
+	}
+
+	protected void createIndex(SQLiteDatabase db, Table table, String name,
+			Column... columns) {
+		db.execSQL("create index " + table.getName() + "_" + name + " on "
+				+ table.getName() + "(" + join(columns, ",") + ")");
+	}
+
+	private String join(Column[] columns, String delimiter) {
+		if (columns.length < 1)
+			return "";
+		StringBuffer sb = new StringBuffer(columns[0].getName());
+		for (int i = 0; i < columns.length; i++) {
+			sb.append(delimiter);
+			sb.append(columns[i].getName());
+		}
+		return sb.toString();
 	}
 
 	/*

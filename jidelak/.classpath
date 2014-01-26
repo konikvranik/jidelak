@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="src/test/java"/>
-	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="lib" path="eclipseLibs/jcl-over-slf4j-1.7.2.jar"/>
 	<classpathentry kind="lib" path="eclipseLibs/jul-to-slf4j-1.7.2.jar"/>
 	<classpathentry kind="lib" path="eclipseLibs/log4j-over-slf4j-1.7.2.jar"/>

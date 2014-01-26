@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.app.Activity;
@@ -12,7 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.terlici.dragndroplist.DragNDropAdapter;
@@ -31,26 +30,11 @@ public class RestaurantManagerActivity extends Activity {
 	private class DragNDropRestaurantListAdapter extends BaseAdapter implements
 			DragNDropAdapter {
 
-		int mPosition[];
 		private List<Restaurant> restaurants;
 
 		public DragNDropRestaurantListAdapter(Collection<Restaurant> restaurants) {
 			super();
 			this.restaurants = new ArrayList<Restaurant>(restaurants);
-			setup(getCount());
-		}
-
-		private void setup(int size) {
-			mPosition = new int[size];
-
-			for (int i = 0; i < size; ++i)
-				mPosition[i] = i;
-		}
-
-		@Override
-		public void notifyDataSetChanged() {
-			super.notifyDataSetChanged();
-			setup(getCount());
 		}
 
 		@Override
@@ -74,13 +58,8 @@ public class RestaurantManagerActivity extends Activity {
 
 			if (paramView == null) {
 				paramView = View.inflate(getApplicationContext(),
-						R.layout.restaurant, null);
+						R.layout.draggable_restaurant, null);
 			}
-
-			ImageButton ib = (ImageButton) paramView
-					.findViewById(R.id.btn_menu);
-
-			ib.setVisibility(View.INVISIBLE);
 
 			Restaurant restaurant = getItem(paramInt);
 
@@ -103,21 +82,23 @@ public class RestaurantManagerActivity extends Activity {
 		@Override
 		public void onItemDrop(DragNDropListView parent, View view,
 				int startPosition, int endPosition, long id) {
-			int position = mPosition[startPosition];
+			Restaurant restaurant = restaurants.remove(startPosition);
+			restaurants.add(endPosition, restaurant);
 
-			if (startPosition < endPosition)
-				for (int i = startPosition; i < endPosition; ++i)
-					mPosition[i] = mPosition[i + 1];
-			else if (endPosition < startPosition)
-				for (int i = startPosition; i > endPosition; --i)
-					mPosition[i] = mPosition[i - 1];
+			for (int i = 0; i < restaurants.size(); i++)
+				restaurants.get(i).setPosition(i);
 
-			mPosition[endPosition] = position;
+			notifyDataSetChanged();
+
 		}
 
 		@Override
 		public int getDragHandler() {
-			return R.id.header;
+			return R.id.handler;
+		}
+
+		public List<Restaurant> getRestaurants() {
+			return restaurants;
 		}
 
 	}
@@ -133,15 +114,30 @@ public class RestaurantManagerActivity extends Activity {
 
 		setContentView(R.layout.restaurants_manager);
 
+		Button cancel = (Button) getWindow().findViewById(R.id.cancel);
+		cancel.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+
 		DragNDropListView ddlv = (DragNDropListView) getWindow().findViewById(
 				R.id.restaurants);
 
-		DragNDropAdapter ddsa = (DragNDropAdapter) new DragNDropRestaurantListAdapter(
+		final DragNDropRestaurantListAdapter ddsa = new DragNDropRestaurantListAdapter(
 				new RestaurantDao(new JidelakDbHelper(this)).findAll());
 		ddlv.setDragNDropAdapter(ddsa);
 
-		// TODO Auto-generated method stub
-
+		Button save = (Button) getWindow().findViewById(R.id.save);
+		save.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				JidelakDbHelper dbHelper = new JidelakDbHelper(getApplication());
+				new RestaurantDao(dbHelper).update(ddsa.getRestaurants());
+				dbHelper.notifyDataSetChanged();
+				finish();
+			}
+		});
 	}
-
 }

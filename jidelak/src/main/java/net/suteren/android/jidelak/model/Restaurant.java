@@ -22,6 +22,7 @@ public class Restaurant implements Identificable<Restaurant> {
 	private static Logger log = LoggerFactory.getLogger(Restaurant.class);
 	private String name;
 	private Address address;
+	private Integer position;
 
 	public Address getAddress() {
 		return address;
@@ -225,6 +226,14 @@ public class Restaurant implements Identificable<Restaurant> {
 		this.source.add(source);
 	}
 
+	public Integer getPosition() {
+		return position;
+	}
+
+	public void setPosition(Integer position) {
+		this.position = position;
+	}
+
 	public String getTemplateName() {
 		return "restaurant-" + getId() + ".template.xsl";
 	}
@@ -242,11 +251,22 @@ public class Restaurant implements Identificable<Restaurant> {
 	@Override
 	public int compareTo(Restaurant another) {
 
-		int r = getId() != null ? getId().compareTo(another.getId()) : 0;
+		if (another == null)
+			return 1;
+
+		int r = getPosition() != null ? getPosition().compareTo(
+				another.getPosition()) : (another.getPosition() == null ? 0
+				: -1);
 		if (r != 0)
 			return r;
 
-		r = getName() != null ? getName().compareTo(another.getName()) : 0;
+		r = getId() != null ? getId().compareTo(another.getId()) : (another
+				.getId() == null ? 0 : -1);
+		if (r != 0)
+			return r;
+
+		r = getName() != null ? getName().compareTo(another.getName())
+				: (another.getName() == null ? 0 : -1);
 		if (r != 0)
 			return r;
 

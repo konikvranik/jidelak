@@ -29,5 +29,7 @@
     <string name="delete">delete</string>
     <string name="locate">locate</string>
     <string name="delete_restaurant">Delete restaurant %s?</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

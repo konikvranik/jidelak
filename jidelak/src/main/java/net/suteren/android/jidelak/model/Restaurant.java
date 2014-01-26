@@ -273,4 +273,22 @@ public class Restaurant implements Identificable<Restaurant> {
 		return r;
 	}
 
+	public static void cloneAddress(Address source, Address target) {
+		for (int i = 0; i < source.getMaxAddressLineIndex(); i++)
+			target.setAddressLine(i, source.getAddressLine(i));
+		target.setAdminArea(source.getAdminArea());
+		target.setCountryCode(source.getCountryCode());
+		target.setCountryName(source.getCountryName());
+		target.setExtras(source.getExtras());
+		target.setFeatureName(source.getFeatureName());
+		target.setLocality(source.getLocality());
+		target.setPhone(source.getPhone());
+		target.setPostalCode(source.getPostalCode());
+		target.setPremises(source.getPremises());
+		target.setSubAdminArea(source.getSubAdminArea());
+		target.setSubLocality(source.getSubLocality());
+		target.setSubThoroughfare(source.getSubThoroughfare());
+		target.setThoroughfare(source.getThoroughfare());
+		target.setUrl(source.getUrl());
+	}
 }

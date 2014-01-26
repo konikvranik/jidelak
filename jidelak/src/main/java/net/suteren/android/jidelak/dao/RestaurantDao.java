@@ -1,7 +1,5 @@
 package net.suteren.android.jidelak.dao;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
 
@@ -10,8 +8,6 @@ import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.os.Bundle;
 
@@ -129,7 +125,8 @@ public class RestaurantDao extends BaseDao<Restaurant> {
 			values.put(ADDRESS.getName(), address.toString());
 			values.put(CITY.getName(), addr.getLocality());
 			values.put(COUNTRY.getName(), addr.getCountryName());
-			values.put(ZIP.getName(), addr.getPostalCode());
+			values.put(ZIP.getName(), addr.getPostalCode() == null ? null
+					: addr.getPostalCode().replaceAll("\\s", ""));
 			values.put(PHONE.getName(), addr.getPhone());
 			values.put(WEB.getName(), addr.getUrl());
 			if (addr.getExtras() != null)

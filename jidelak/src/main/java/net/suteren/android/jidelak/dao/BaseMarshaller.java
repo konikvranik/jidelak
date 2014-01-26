@@ -1,16 +1,28 @@
 package net.suteren.android.jidelak.dao;
 
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import net.suteren.android.jidelak.JidelakException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 public abstract class BaseMarshaller<T> {
+
+	protected static Logger log = LoggerFactory.getLogger(BaseMarshaller.class);
 
 	protected Map<String, String> data = new HashMap<String, String>();
 
@@ -34,6 +46,21 @@ public abstract class BaseMarshaller<T> {
 
 	public void unmarshall(String prefix, Node n, T object)
 			throws JidelakException {
+
+		if (log.isDebugEnabled()) {
+			try {
+				Transformer tr = TransformerFactory.newInstance()
+						.newTransformer();
+				StringWriter sw = new StringWriter();
+				tr.transform(new DOMSource(n), new StreamResult(sw));
+				log.debug("Unmarshalling:\n" + sw);
+			} catch (TransformerFactoryConfigurationError e) {
+				// TODO Auto-generated catch block
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+			}
+		}
+
 		synchronized (path) {
 
 			root = n;

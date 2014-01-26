@@ -31,5 +31,7 @@
     <string name="delete_restaurant">Odstranit restauraci %s?</string>
     <string name="save">Uložit</string>
     <string name="cancel">Zrušit</string>
+    <string name="unable_to_get_location">Nelze lokalizovat místo</string>
+    <string name="action_reorder_restaurants">Přeskupit</string>
 
 </resources>

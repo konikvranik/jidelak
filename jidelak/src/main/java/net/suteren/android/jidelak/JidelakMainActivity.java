@@ -1,5 +1,6 @@
 package net.suteren.android.jidelak;
 
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +30,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -179,7 +181,8 @@ public class JidelakMainActivity extends ActionBarActivity implements
 	private void goToday() {
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
 		cal.setTimeInMillis(System.currentTimeMillis());
-		pagerView.setCurrentItem(dpa.getPositionByDate(cal));
+		goToDay(dpa.getPositionByDate(cal));
+		ab.setDisplayHomeAsUpEnabled(false);
 	}
 
 	/**
@@ -272,8 +275,23 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		ab.setListNavigationCallbacks(dpa, this);
 	}
 
+	private void getOverflowMenu() {
+		try {
+			ViewConfiguration config = ViewConfiguration.get(this);
+			Field menuKeyField = ViewConfiguration.class
+					.getDeclaredField("sHasPermanentMenuKey");
+			if (menuKeyField != null) {
+				menuKeyField.setAccessible(true);
+				menuKeyField.setBoolean(config, false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		getOverflowMenu();
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.jidelak, menu);
 		return true;
@@ -281,8 +299,13 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onNavigationItemSelected(int arg0, long arg1) {
-		pagerView.setCurrentItem(arg0);
+		goToDay(arg0);
 		return true;
+	}
+
+	protected void goToDay(int arg0) {
+		pagerView.setCurrentItem(arg0);
+		ab.setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -293,9 +316,13 @@ public class JidelakMainActivity extends ActionBarActivity implements
 			return null != startService(new Intent(this,
 					JidelakFeederService.class).putExtra("force", true));
 
-		case R.id.action_settings:
+		case R.id.action_reorder_restaurants:
 
 			startActivity(new Intent(this, RestaurantManagerActivity.class));
+
+			return true;
+
+		case R.id.action_settings:
 
 			return true;
 
@@ -316,7 +343,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction arg1) {
-		pagerView.setCurrentItem(tab.getPosition());
+		goToDay(tab.getPosition());
 
 	}
 

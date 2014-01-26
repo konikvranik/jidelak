@@ -21,7 +21,7 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 
 	private static Logger log = LoggerFactory.getLogger(JidelakDbHelper.class);
 
-	public static final int DATABASE_VERSION = 5;
+	public static final int DATABASE_VERSION = 6;
 	public static final String DATABASE_NAME = "Jidelak.db";
 
 	private static final String SQL_CREATE_RESTAURANT = RestaurantDao
@@ -112,6 +112,13 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 			if (newVersion <= 5)
 				break;
 
+		case 5:
+
+			cleanup(db);
+
+			if (newVersion <= 6)
+				break;
+
 		default:
 			break;
 		}
@@ -195,6 +202,10 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 	public void notifyDataSetInvalidated() {
 		log.debug("notifyDataSetInvalidated");
 		mDataSetObservable.notifyInvalidated();
+	}
+
+	public void cleanup(SQLiteDatabase db) {
+		db.execSQL("delete from availability where restaurant is null and id not in (select a2.id from availability a2, meal m where m.availability = a2.id)");
 	}
 
 }

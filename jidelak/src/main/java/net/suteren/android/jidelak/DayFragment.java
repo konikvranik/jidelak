@@ -1,5 +1,6 @@
 package net.suteren.android.jidelak;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,6 +24,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,6 +43,7 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DayFragment extends Fragment {
 
@@ -294,19 +298,62 @@ public class DayFragment extends Fragment {
 		final Restaurant r = ad.getGroup(ExpandableListView
 				.getPackedPositionGroup(info.packedPosition));
 
+		String uri;
 		switch (item.getItemId()) {
 
 		case R.id.action_call:
 
-			Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
-					+ r.getAddress().getPhone()));
-			log.debug("tel:" + r.getAddress().getPhone());
+			uri = "tel:" + r.getAddress().getPhone();
+			Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(uri));
+			log.debug("Opening dialer: " + uri);
 			startActivity(intent);
 
 			return true;
 
 		case R.id.action_locate:
-			// TODO
+			Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+			try {
+				try {
+					log.debug("Requesting position for " + r.getAddress());
+					Address addr = new Address(r.getAddress().getLocale());
+
+					Restaurant.cloneAddress(r.getAddress(), addr);
+
+					List<Address> addresses = geocoder.getFromLocationName(
+							addr.toString(), 1);
+
+					if (addresses.isEmpty()) {
+
+						addr.setCountryName(null);
+						addr.setPostalCode(null);
+						addr.setPhone(null);
+						addr.setExtras(null);
+						addr.setUrl(null);
+						addr.setLocality(addr.getLocality().replaceAll("\\d*",
+								""));
+
+						log.debug("Rerequesting position for " + r.getAddress());
+						geocoder.getFromLocationName(addr.toString(), 1);
+						if (addresses.isEmpty()) {
+							throw new JidelakException(
+									R.string.unable_to_get_location);
+						}
+					}
+					Address address = addresses.get(0);
+					uri = "geo:" + address.getLatitude() + ","
+							+ address.getLongitude();
+					log.debug("Opening map: " + uri);
+					startActivity(new Intent(
+							android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+
+				} catch (IOException e) {
+					throw new JidelakException(R.string.unable_to_get_location,
+							e);
+				}
+			} catch (JidelakException e1) {
+				Toast.makeText(getActivity(), R.string.unable_to_get_location,
+						Toast.LENGTH_LONG).show();
+			}
 			return true;
 
 		case R.id.action_delete:

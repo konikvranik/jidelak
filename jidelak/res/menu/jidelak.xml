@@ -9,9 +9,15 @@
         android:icon="@drawable/ic_action_refresh"
         app:showAsAction="ifRoom" />
     
+    <item android:id="@+id/action_reorder_restaurants"
+        android:title="@string/action_reorder_restaurants"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_sort_alphabetically"
+        app:showAsAction="never" />
+    
      <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_preferences"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 </menu>

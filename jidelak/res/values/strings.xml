@@ -31,5 +31,7 @@
     <string name="delete_restaurant">Delete restaurant %s?</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="unable_to_get_location">Unable to get location</string>
+    <string name="action_reorder_restaurants">Reorder</string>
 
 </resources>

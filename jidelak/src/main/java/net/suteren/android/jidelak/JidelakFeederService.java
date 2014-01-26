@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
@@ -117,6 +119,12 @@ public class JidelakFeederService extends Service {
 					SortedSet<Meal> atd = mdao.findByDayAndRestaurant(
 							av.getCalendar(), restaurant);
 					mdao.delete(atd);
+
+					Collection<Availability> mav = new ArrayList<Availability>();
+					for (Meal m : atd) {
+						mav.add(m.getAvailability());
+					}
+					adao.delete(mav);
 				}
 
 				for (Meal meal : restaurant.getMenu()) {
@@ -124,12 +132,13 @@ public class JidelakFeederService extends Service {
 					mdao.insert(meal);
 				}
 
-				Restaurant savedRestaurant = rdao.findById(restaurant);
-				if (savedRestaurant != null
-						&& savedRestaurant.getOpeningHours() != null)
-					adao.delete(savedRestaurant.getOpeningHours());
-
-				adao.insert(restaurant.getOpeningHours());
+				if (!restaurant.getOpeningHours().isEmpty()) {
+					Restaurant savedRestaurant = rdao.findById(restaurant);
+					if (savedRestaurant != null
+							&& savedRestaurant.getOpeningHours() != null)
+						adao.delete(savedRestaurant.getOpeningHours());
+					adao.insert(restaurant.getOpeningHours());
+				}
 				rdao.update(restaurant);
 
 			} catch (IOException e) {

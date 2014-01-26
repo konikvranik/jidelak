@@ -33,5 +33,8 @@
     <string name="cancel">Zrušit</string>
     <string name="unable_to_get_location">Nelze lokalizovat místo</string>
     <string name="action_reorder_restaurants">Přeskupit</string>
+    <string name="versionName">Verze:</string>
+    <string name="versionCode">Kód:</string>
+    <string name="action_about">O aplikaci</string>
 
 </resources>

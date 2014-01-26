@@ -48,6 +48,8 @@
         </activity>
         <!--created by Petr at 2014-01-23 22:28:18-->
         <activity android:name=".RestaurantManagerActivity"/>
+        <!--created by Petr at 2014-01-26 21:50:43-->
+        <activity android:name=".AboutActivity"/>
         <service android:exported="false" android:name="net.suteren.android.jidelak.JidelakFeederService">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>

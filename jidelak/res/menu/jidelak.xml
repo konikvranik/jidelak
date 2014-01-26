@@ -2,22 +2,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".JidelakActivity" >
-    
-    <item android:id="@+id/action_update"
-        android:title="@string/action_update"
-        android:orderInCategory="10"
+
+    <item
+        android:id="@+id/action_update"
         android:icon="@drawable/ic_action_refresh"
-        app:showAsAction="ifRoom" />
-    
-    <item android:id="@+id/action_reorder_restaurants"
-        android:title="@string/action_reorder_restaurants"
-        android:orderInCategory="100"
+        android:orderInCategory="10"
+        android:title="@string/action_update"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_reorder_restaurants"
         android:icon="@android:drawable/ic_menu_sort_alphabetically"
-        app:showAsAction="never" />
-    
-     <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
         android:orderInCategory="100"
+        android:title="@string/action_reorder_restaurants"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_settings"
         android:icon="@android:drawable/ic_menu_preferences"
-        app:showAsAction="never" />
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_about"
+        android:icon="@android:drawable/ic_menu_help"
+        android:orderInCategory="100"
+        android:title="@string/action_about"
+        app:showAsAction="never"/>
+
 </menu>

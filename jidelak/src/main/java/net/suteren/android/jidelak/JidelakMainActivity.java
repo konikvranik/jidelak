@@ -317,13 +317,14 @@ public class JidelakMainActivity extends ActionBarActivity implements
 					JidelakFeederService.class).putExtra("force", true));
 
 		case R.id.action_reorder_restaurants:
-
 			startActivity(new Intent(this, RestaurantManagerActivity.class));
-
 			return true;
 
 		case R.id.action_settings:
+			return true;
 
+		case R.id.action_about:
+			startActivity(new Intent(this, AboutActivity.class));
 			return true;
 
 		case android.R.id.home:

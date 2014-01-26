@@ -140,9 +140,21 @@ public class MealDao extends BaseDao<Meal> {
 		return getTable(TABLE_NAME);
 	}
 
+	protected void delete(SQLiteDatabase db, Meal obj) {
+		db.delete(getTableName(), "id = ?",
+				new String[] { Long.toString(obj.getId()) });
+		db.delete(AvailabilityDao.getTable().getName(), AvailabilityDao.ID
+				+ " = ?", new String[] { String.format("%d", obj
+				.getAvailability().getId()) });
+	}
+
 	public void delete(Restaurant r) {
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
 		try {
+			db.delete(AvailabilityDao.getTable().getName(), AvailabilityDao.ID
+					+ " in (select " + AVAILABILITY + " from " + getTableName()
+					+ " where " + RESTAURANT + " = ?)",
+					new String[] { Long.toString(r.getId()) });
 			db.delete(getTableName(), RESTAURANT + " = ?",
 					new String[] { Long.toString(r.getId()) });
 		} finally {

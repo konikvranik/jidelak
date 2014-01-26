@@ -6,8 +6,9 @@ import java.util.List;
 
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.model.Restaurant;
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -25,7 +26,7 @@ import com.terlici.dragndroplist.DragNDropListView;
  * @author Petr
  * 
  */
-public class RestaurantManagerActivity extends Activity {
+public class RestaurantManagerActivity extends ActionBarActivity {
 
 	private class DragNDropRestaurantListAdapter extends BaseAdapter implements
 			DragNDropAdapter {
@@ -103,6 +104,8 @@ public class RestaurantManagerActivity extends Activity {
 
 	}
 
+	private ActionBar ab;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -139,5 +142,14 @@ public class RestaurantManagerActivity extends Activity {
 				finish();
 			}
 		});
+		setupActionBar();
 	}
+
+	private void setupActionBar() {
+		ab = getSupportActionBar();
+		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayShowHomeEnabled(true);
+		ab.setDisplayShowTitleEnabled(false);
+	}
+
 }

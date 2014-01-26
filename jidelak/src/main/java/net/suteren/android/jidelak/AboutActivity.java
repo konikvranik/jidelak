@@ -6,19 +6,21 @@ package net.suteren.android.jidelak;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.TextView;
 
 /**
  * @author Petr
  * 
  */
-public class AboutActivity extends Activity {
+public class AboutActivity extends ActionBarActivity {
 
 	private static Logger log = LoggerFactory.getLogger(AboutActivity.class);
+	private ActionBar ab;
 
 	/*
 	 * (non-Javadoc)
@@ -47,7 +49,14 @@ public class AboutActivity extends Activity {
 
 		versionView = (TextView) getWindow().findViewById(R.id.versionCode);
 		versionView.setText(String.format("%d", versionCode));
+		setupActionBar();
 
 	}
 
+	private void setupActionBar() {
+		ab = getSupportActionBar();
+		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayShowHomeEnabled(true);
+		ab.setDisplayShowTitleEnabled(false);
+	}
 }

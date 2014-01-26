@@ -266,8 +266,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
 		try {
 			for (T t : obj) {
-				db.delete(getTableName(), "id = ?",
-						new String[] { Long.toString(t.getId()) });
+				delete(db, t);
 			}
 		} finally {
 			db.close();
@@ -277,11 +276,15 @@ public abstract class BaseDao<T extends Identificable<T>> {
 	public void delete(T obj) {
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
 		try {
-			db.delete(getTableName(), "id = ?",
-					new String[] { Long.toString(obj.getId()) });
+			delete(db, obj);
 		} finally {
 			db.close();
 		}
+	}
+
+	protected void delete(SQLiteDatabase db, T obj) {
+		db.delete(getTableName(), "id = ?",
+				new String[] { Long.toString(obj.getId()) });
 	}
 
 	public SortedSet<T> findAll() {

@@ -1,0 +1,28 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/app_name" >
+
+    <EditTextPreference
+        android:defaultValue="@integer/default_update_interval"
+        android:key="@string/update_interval_key"
+        android:summary="@string/refresh_period_description"
+        android:title="@string/refresh_period_title" >
+    </EditTextPreference>
+
+    <SwitchPreference
+        android:key="@string/category_background_key"
+        android:summary="@string/category_background_description"
+        android:title="@string/category_background_title" />
+
+    <!--
+    PreferenceCategory
+        android:key="colors"
+        android:title="Barvy jídel" >
+        <Preference
+            android:key="soup"
+            android:summary="Nastavit barvu pro polévku"
+            android:title="@string/soup" >
+        </Preference>
+    </PreferenceCategory
+    -->
+
+</PreferenceScreen>

@@ -3,6 +3,8 @@
  */
 package net.suteren.android.jidelak;
 
+import static net.suteren.android.jidelak.Constants.LAST_UPDATED_KEY;
+
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -58,8 +60,7 @@ public class AboutActivity extends ActionBarActivity {
 
 		SharedPreferences prefs = getSharedPreferences("default",
 				Context.MODE_PRIVATE);
-		Date lastUpdated = new Date(prefs.getLong(
-				JidelakFeederService.LAST_UPDATED, 0));
+		Date lastUpdated = new Date(prefs.getLong(LAST_UPDATED_KEY, 0));
 		versionView = (TextView) getWindow().findViewById(R.id.last_updated);
 		versionView.setText(String.format("%s %s",
 				DateFormat

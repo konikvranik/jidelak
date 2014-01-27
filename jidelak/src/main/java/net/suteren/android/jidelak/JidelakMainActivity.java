@@ -202,7 +202,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 		dpa = new DayPagerAdapter(getSupportFragmentManager());
 
-		setupActiveBar();
+		setupActionBar();
 
 		setupPagerView();
 
@@ -266,7 +266,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 				});
 	}
 
-	private void setupActiveBar() {
+	private void setupActionBar() {
 		ab = getSupportActionBar();
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		ab.setDisplayHomeAsUpEnabled(true);
@@ -321,6 +321,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 			return true;
 
 		case R.id.action_settings:
+			startActivity(new Intent(this, PreferencesActivity.class));
 			return true;
 
 		case R.id.action_about:

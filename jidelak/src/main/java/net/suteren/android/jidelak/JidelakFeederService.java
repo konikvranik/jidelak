@@ -1,5 +1,7 @@
 package net.suteren.android.jidelak;
 
+import static net.suteren.android.jidelak.Constants.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -57,12 +59,10 @@ public class JidelakFeederService extends Service {
 	private static Logger log = LoggerFactory
 			.getLogger(JidelakFeederService.class);
 
-	public static final String LAST_UPDATED = "last_updated";
 	static final String LOGGING_TAG = "JidelakFeederService";
-	public static final String UPDATE_INTERVAL = "update_interval";
+
 	private JidelakDbHelper dbHelper;
 	private Handler mHandler;
-	static final int DEFAULT_UPDATE_INTERVAL = 3600000;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -144,9 +144,9 @@ public class JidelakFeederService extends Service {
 			}
 		}
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences(
-				"default", Context.MODE_PRIVATE);
+				DEFAULT_PREFERENCES, Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
-		editor.putLong(LAST_UPDATED, System.currentTimeMillis());
+		editor.putLong(LAST_UPDATED_KEY, System.currentTimeMillis());
 		editor.commit();
 
 		getDbHelper().notifyDataSetChanged();

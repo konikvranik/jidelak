@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="last_updated_key">last_updated</string>
+    <string name="update_interval_key">update_interval</string>
+    <string name="category_background_key">category_background</string>
+
+    <integer name="default_update_interval">3600000</integer>
+
+</resources>

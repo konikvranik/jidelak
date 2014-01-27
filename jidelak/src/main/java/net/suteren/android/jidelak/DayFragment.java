@@ -1,5 +1,7 @@
 package net.suteren.android.jidelak;
 
+import static net.suteren.android.jidelak.Constants.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -126,42 +128,48 @@ public class DayFragment extends Fragment {
 			((TextView) paramView.findViewById(R.id.price)).setText(meal
 					.getPrice());
 
-			String cat = meal.getCategory();
-			View menuView = paramView.findViewById(R.id.menu);
-			if (cat != null) {
+			if (getActivity().getSharedPreferences(DEFAULT_PREFERENCES,
+					Context.MODE_PRIVATE).getBoolean(CATEGORY_BACKGROUND_KEY,
+					true)) {
+				String cat = meal.getCategory();
+				View menuView = paramView.findViewById(R.id.menu);
+				if (cat != null) {
 
-				Drawable background = getResources().getDrawable(
-						R.drawable.meal_background);
+					Drawable background = getResources().getDrawable(
+							R.drawable.meal_background);
 
-				Integer color = null;
-				if (cat.matches(".*(vegetar|salad).*")) {
-					color = getResources().getColor(R.color.vegeterian_meal);
-				} else if (cat.matches(".*pasta.*")) {
-					color = getResources().getColor(R.color.pasta_meal);
-				} else if (cat.matches(".*steak.*")) {
-					color = getResources().getColor(R.color.steak_meal);
-				}
-
-				log.debug("Color for category " + cat + ": " + color);
-
-				if (color != null) {
-					if (background instanceof ShapeDrawable) {
-						((ShapeDrawable) background).getPaint().setColor(color);
-						log.debug("Set color to ShapeDrawable");
-					} else if (background instanceof GradientDrawable) {
-						((GradientDrawable) background).setColor(color);
-						log.debug("Set color to GradientDrawable");
+					Integer color = null;
+					if (cat.matches(".*(vegetar|salad).*")) {
+						color = getResources()
+								.getColor(R.color.vegeterian_meal);
+					} else if (cat.matches(".*pasta.*")) {
+						color = getResources().getColor(R.color.pasta_meal);
+					} else if (cat.matches(".*steak.*")) {
+						color = getResources().getColor(R.color.steak_meal);
 					}
-					background.setAlpha(50);
-					menuView.setBackgroundDrawable(background);
+
+					log.debug("Color for category " + cat + ": " + color);
+
+					if (color != null) {
+						if (background instanceof ShapeDrawable) {
+							((ShapeDrawable) background).getPaint().setColor(
+									color);
+							log.debug("Set color to ShapeDrawable");
+						} else if (background instanceof GradientDrawable) {
+							((GradientDrawable) background).setColor(color);
+							log.debug("Set color to GradientDrawable");
+						}
+						background.setAlpha(50);
+						menuView.setBackgroundDrawable(background);
+					} else {
+						menuView.setBackgroundColor(getResources().getColor(
+								R.color.RestaurantBackground));
+					}
+
 				} else {
 					menuView.setBackgroundColor(getResources().getColor(
 							R.color.RestaurantBackground));
 				}
-
-			} else {
-				menuView.setBackgroundColor(getResources().getColor(
-						R.color.RestaurantBackground));
 			}
 
 			return paramView;

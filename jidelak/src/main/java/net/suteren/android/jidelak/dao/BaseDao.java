@@ -316,7 +316,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 			return parseResults(cursor);
 		} finally {
 			long now = System.currentTimeMillis();
-			log.debug("SQL query: " + getTableName() + " - " + selection
+			log.trace("SQL query: " + getTableName() + " - " + selection
 					+ Arrays.toString(selectionArgs) + " / times: "
 					+ (now - millis1) + ", " + (now - millis2));
 			db.close();
@@ -332,7 +332,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 			return parseResults(cursor);
 		} finally {
 			long now = System.currentTimeMillis();
-			log.debug("SQL raw query: " + selection
+			log.trace("SQL raw query: " + selection
 					+ Arrays.toString(selectionArgs) + " / times: "
 					+ (now - millis1) + ", " + (now - millis2));
 			db.close();

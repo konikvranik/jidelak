@@ -266,6 +266,8 @@ public class DayFragment extends Fragment {
 	private ExpandableListView menuList;
 	private FragmentActivity act;
 
+	private ExpandableListContextMenuInfo lastMenuInfo;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -331,6 +333,16 @@ public class DayFragment extends Fragment {
 
 		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item
 				.getMenuInfo();
+
+		if (info == null) {
+			info = lastMenuInfo;
+		} else {
+			lastMenuInfo = info;
+		}
+
+		log.debug("Item: " + item);
+		log.debug("Info: " + info);
+		log.debug("Adapter: " + ad);
 
 		final Restaurant r = ad.getGroup(ExpandableListView
 				.getPackedPositionGroup(info.packedPosition));

@@ -311,8 +311,8 @@ public class DayFragment extends Fragment {
 				prepareDay(args));
 
 		menuList = (ExpandableListView) rootView.findViewById(R.id.menu_list);
-		menuList.setAdapter(ad);
 		registerForContextMenu(menuList);
+		menuList.setAdapter(ad);
 
 		for (int i = 0; i < ad.getGroupCount(); i++) {
 			menuList.expandGroup(i);

@@ -51,5 +51,6 @@
     <string name="refresh_period_title">Interval aktualizace</string>
     <string name="category_background_title">Obarvit manu podle kategorií</string>
     <string name="category_background_description">Pokud je zapnuto, jídla ve známých kategoriích budou barevně zvýrazněna.</string>
+    <string name="no_restaurants_disclaimer"><p>Gratuluji! Máš nainstalovanou aplikaci Jídelák, připravenou k načtení šablon restaurací.</p><p>Jídelák je navržen jako prohlížeč menu restaurací, přičemž menu je nutno načíst z webových stránek restaurace. Na to, aby Jídelák věděl odkud menu načíst a co které položky na stránce znamenají je potřeba šablony.</p><p>Šablony jsou ve formátu XSL a můžeš si je buďto sám vytvořit, nebo stáhnout z internetu šablony, které již někdo připravil. Pro tyto případy je tu diskusní fórum, na kterém nalezneš jak tyto šablony, tak návod na vytvoření své vlastní.</p><p>Adresa fóra je: <a href="https://groups.google.com/forum/#!forum/jidelak">https://groups.google.com/forum/#!forum/jidelak</a>.</p><p>Děkuji že jsi si zvolil Jídelák  a přeji Ti dobrou chuť.</p><p>PS: Pokud by Ti něco v Jídeláku chybělo, nebo by jsi narazil na problém, který je možné řešit, dej mi, prosím vědět pomocí Issue trackingu na adrese <a href="https://code.google.com/p/jidelak/issues/list">https://code.google.com/p/jidelak/issues/list</a>.</p></string>
 
 </resources>

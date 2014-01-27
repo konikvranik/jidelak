@@ -57,6 +57,9 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		}
 
 		Calendar getDateByPosition(int position) {
+			if (dates == null || dates.isEmpty())
+				return null;
+
 			return dates.get(position).getCalendar();
 		}
 
@@ -92,6 +95,8 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 		@Override
 		public long getItemId(int position) {
+			if (getDateByPosition(position) == null)
+				return -1;
 			return getDateByPosition(position).getTime().getDate();
 		}
 
@@ -102,7 +107,14 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			Availability d = dates.get(position);
+			Availability d;
+			if (dates == null || dates.isEmpty()) {
+				Calendar cal = Calendar.getInstance(Locale.getDefault());
+				cal.setTimeInMillis(System.currentTimeMillis());
+				d = new Availability(cal);
+			} else {
+				d = dates.get(position);
+			}
 			return DateFormat.getDateInstance(DateFormat.FULL,
 					Locale.getDefault()).format(d.getCalendar().getTime());
 

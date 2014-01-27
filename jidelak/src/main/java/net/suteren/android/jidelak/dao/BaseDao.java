@@ -340,9 +340,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 	}
 
 	private SortedSet<T> parseResults(Cursor cursor) {
-
 		SortedSet<T> results = new TreeSet<T>();
-
 		try {
 
 			while (!cursor.isAfterLast()) {
@@ -353,15 +351,9 @@ public abstract class BaseDao<T extends Identificable<T>> {
 
 				results.add(parseRow(cursor));
 				cursor.moveToNext();
-
 			}
-
-			log.debug("query after parsing data");
-
 		} finally {
 			cursor.close();
-
-			log.debug("query after closing cursor");
 		}
 		return results;
 	}

@@ -1,6 +1,7 @@
 package net.suteren.android.jidelak;
 
-import static net.suteren.android.jidelak.Constants.*;
+import static net.suteren.android.jidelak.Constants.CATEGORY_BACKGROUND_KEY;
+import static net.suteren.android.jidelak.Constants.DEFAULT_PREFERENCES;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import net.suteren.android.jidelak.dao.AvailabilityDao;
@@ -128,11 +131,13 @@ public class DayFragment extends Fragment {
 			((TextView) paramView.findViewById(R.id.price)).setText(meal
 					.getPrice());
 
+			View menuView = paramView.findViewById(R.id.menu);
+			menuView.setBackgroundColor(getResources().getColor(
+					R.color.RestaurantBackground));
 			if (getActivity().getSharedPreferences(DEFAULT_PREFERENCES,
 					Context.MODE_PRIVATE).getBoolean(CATEGORY_BACKGROUND_KEY,
 					true)) {
 				String cat = meal.getCategory();
-				View menuView = paramView.findViewById(R.id.menu);
 				if (cat != null) {
 
 					Drawable background = getResources().getDrawable(
@@ -161,14 +166,7 @@ public class DayFragment extends Fragment {
 						}
 						background.setAlpha(50);
 						menuView.setBackgroundDrawable(background);
-					} else {
-						menuView.setBackgroundColor(getResources().getColor(
-								R.color.RestaurantBackground));
 					}
-
-				} else {
-					menuView.setBackgroundColor(getResources().getColor(
-							R.color.RestaurantBackground));
 				}
 			}
 
@@ -264,25 +262,24 @@ public class DayFragment extends Fragment {
 
 			long partMilis = System.currentTimeMillis();
 
-			// TreeMap<Long, SortedSet<Meal>> mmap = new TreeMap<Long,
-			// SortedSet<Meal>>();
-			// for (Meal m : mdao.findByDay(day)) {
-			// SortedSet<Meal> s = mmap.get(m.getRestaurant().getId());
-			// if (s == null)
-			// mmap.put(m.getRestaurant().getId(), s = new TreeSet<Meal>());
-			//
-			// s.add(m);
-			// }
+			TreeMap<Long, SortedSet<Meal>> mmap = new TreeMap<Long, SortedSet<Meal>>();
+			for (Meal m : mdao.findByDay(day)) {
+				SortedSet<Meal> s = mmap.get(m.getRestaurant().getId());
+				if (s == null)
+					mmap.put(m.getRestaurant().getId(), s = new TreeSet<Meal>());
+
+				s.add(m);
+			}
 
 			AvailabilityDao adao = new AvailabilityDao(dbHelper);
 
 			log.debug("Update restaurants update start");
 			for (Restaurant restaurant : restaurants) {
-				restaurant
-						.setMenu(mdao.findByDayAndRestaurant(day, restaurant));
-				// SortedSet<Meal> m = mmap.get(restaurant.getId());
-				// if (m != null)
-				// restaurant.setMenu(m);
+				// restaurant
+				// .setMenu(mdao.findByDayAndRestaurant(day, restaurant));
+				SortedSet<Meal> m = mmap.get(restaurant.getId());
+				if (m != null)
+					restaurant.setMenu(m);
 				restaurant.setOpeningHours(new TreeSet<Availability>(adao
 						.findByRestaurant(restaurant)));
 			}

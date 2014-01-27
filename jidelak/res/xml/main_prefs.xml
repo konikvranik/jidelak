@@ -2,14 +2,14 @@
     android:title="@string/app_name" >
 
     <EditTextPreference
-        android:defaultValue="@integer/default_update_interval"
-        android:key="@string/update_interval_key"
+        android:defaultValue="3600000"
+        android:key="update_interval"
         android:summary="@string/refresh_period_description"
         android:title="@string/refresh_period_title" >
     </EditTextPreference>
 
     <SwitchPreference
-        android:key="@string/category_background_key"
+        android:key="category_background"
         android:summary="@string/category_background_description"
         android:title="@string/category_background_title" />
 

@@ -8,15 +8,18 @@
         android:id="@+id/dish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:text="Polévky"
         android:textAppearance="@style/RestaurantText"
-        android:layout_marginBottom="16dp"
         android:visibility="gone" />
 
     <RelativeLayout
         style="@style/RestaurantMenuTheme"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp" >
 
         <TextView
             android:id="@+id/name"

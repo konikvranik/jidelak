@@ -3,6 +3,7 @@
     <color name="shadow">#A000</color>
     <color name="RestaurantHeaderBackground">#EFA</color>
     <color name="RestaurantBackground">@android:color/background_light</color>
-    <color name="vegeterian_meal">#AFE</color>
-
+    <color name="vegeterian_meal">#AFB</color>
+    <color name="pasta_meal">#FEA</color>
+    
 </resources>

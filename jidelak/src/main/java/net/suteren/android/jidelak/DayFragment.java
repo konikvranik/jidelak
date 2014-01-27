@@ -24,6 +24,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -125,18 +127,39 @@ public class DayFragment extends Fragment {
 					.getPrice());
 
 			String cat = meal.getCategory();
+			View menuView = paramView.findViewById(R.id.menu);
 			if (cat != null) {
 
-				if (cat.matches("vegetar")) {
+				Drawable background = getResources().getDrawable(
+						R.drawable.meal_background);
 
-					ShapeDrawable background = (ShapeDrawable) getResources()
-							.getDrawable(R.drawable.meal_background);
-					background.getPaint().setColor(
-							getResources().getColor(R.color.vegeterian_meal));
-					background.setAlpha(50);
-					paramView.setBackgroundDrawable(background);
+				Integer color = null;
+				if (cat.matches(".*(vegetar|salad).*")) {
+					color = getResources().getColor(R.color.vegeterian_meal);
+				} else if (cat.matches(".*pasta.*")) {
+					color = getResources().getColor(R.color.pasta_meal);
 				}
 
+				log.debug("Color for category " + cat + ": " + color);
+
+				if (color != null) {
+					if (background instanceof ShapeDrawable) {
+						((ShapeDrawable) background).getPaint().setColor(color);
+						log.debug("Set color to ShapeDrawable");
+					} else if (background instanceof GradientDrawable) {
+						((GradientDrawable) background).setColor(color);
+						log.debug("Set color to GradientDrawable");
+					}
+					background.setAlpha(50);
+					menuView.setBackgroundDrawable(background);
+				} else {
+					menuView.setBackgroundColor(getResources().getColor(
+							R.color.RestaurantBackground));
+				}
+
+			} else {
+				menuView.setBackgroundColor(getResources().getColor(
+						R.color.RestaurantBackground));
 			}
 
 			return paramView;

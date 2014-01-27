@@ -5,8 +5,8 @@ import org.gradle.plugins.ide.eclipse.model.SourceFolder
 apply plugin: 'android'
 //apply plugin: 'eclipse'
 
-version = '0.20-SNAPSHOT'
-android.defaultConfig.versionCode = 20
+version = '0.21-SNAPSHOT'
+android.defaultConfig.versionCode = 21
 
 group = "net.suteren.android.jidelak"
 

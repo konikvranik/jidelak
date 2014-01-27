@@ -4,6 +4,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
+    <TextView
+        android:id="@+id/dish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Polévky"
+        android:textAppearance="@style/RestaurantText"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone" />
+
     <RelativeLayout
         style="@style/RestaurantMenuTheme"
         android:layout_width="match_parent"

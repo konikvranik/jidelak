@@ -3,9 +3,15 @@
  */
 package net.suteren.android.jidelak;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
@@ -49,6 +55,20 @@ public class AboutActivity extends ActionBarActivity {
 
 		versionView = (TextView) getWindow().findViewById(R.id.versionCode);
 		versionView.setText(String.format("%d", versionCode));
+
+		SharedPreferences prefs = getSharedPreferences("default",
+				Context.MODE_PRIVATE);
+		Date lastUpdated = new Date(prefs.getLong(
+				JidelakFeederService.LAST_UPDATED, 0));
+		versionView = (TextView) getWindow().findViewById(R.id.last_updated);
+		versionView.setText(String.format("%s %s",
+				DateFormat
+						.getDateInstance(DateFormat.LONG, Locale.getDefault())
+						.format(lastUpdated),
+				DateFormat
+						.getTimeInstance(DateFormat.LONG, Locale.getDefault())
+						.format(lastUpdated)));
+
 		setupActionBar();
 
 	}

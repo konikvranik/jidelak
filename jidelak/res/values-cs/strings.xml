@@ -37,5 +37,15 @@
     <string name="versionCode">Kód:</string>
     <string name="action_about">o aplikaci</string>
     <string name="other_actions">další</string>
+    <string name="last_updated">Naposledy staženo</string>
+    <string name="breakfast">Snídaně</string>
+    <string name="snack">Svačiny</string>
+    <string name="starter">Předkrmy</string>
+    <string name="soup">Polévky</string>
+    <string name="dinner">Hlavní jídla</string>
+    <string name="trimmings">Přílohy</string>
+    <string name="desert">Zákusky</string>
+    <string name="lunch">Svačiny</string>
+    <string name="supper">Večeře</string>
 
 </resources>

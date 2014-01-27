@@ -37,5 +37,16 @@
     <string name="versionCode">Code:</string>
     <string name="action_about">about</string>
     <string name="other_actions">other</string>
+    <string name="last_updated">Last updated</string>
+    
+    <string name="breakfast">Breakfast</string>
+    <string name="snack">Snack</string>
+    <string name="starter">Starter</string>
+    <string name="soup">Soup</string>
+    <string name="dinner">Dinner</string>
+    <string name="trimmings">TRimmings</string>
+    <string name="desert">Desert</string>
+    <string name="lunch">Lunch</string>
+    <string name="supper">Supper</string>
 
 </resources>

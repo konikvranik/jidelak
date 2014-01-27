@@ -35,7 +35,7 @@ public class JidelakFeederReceiver extends BroadcastReceiver {
 	}
 
 	private boolean decideIfStart(Context context) {
-		SharedPreferences prefs = context.getSharedPreferences(null,
+		SharedPreferences prefs = context.getSharedPreferences("default",
 				Context.MODE_PRIVATE);
 		long schedule = prefs.getLong(JidelakFeederService.LAST_UPDATED, -1);
 		long time = System.currentTimeMillis();

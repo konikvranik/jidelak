@@ -144,7 +144,7 @@ public class JidelakFeederService extends Service {
 			}
 		}
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences(
-				null, Context.MODE_PRIVATE);
+				"default", Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
 		editor.putLong(LAST_UPDATED, System.currentTimeMillis());
 		editor.commit();

@@ -95,6 +95,27 @@ public class DayFragment extends Fragment {
 
 			Meal meal = getChild(paramInt1, paramInt2);
 
+			boolean showDish = false;
+			if (paramInt2 > 0) {
+				Meal prevMeal = getChild(paramInt1, paramInt2 - 1);
+				if (prevMeal.getDish() != meal.getDish()) {
+					showDish = true;
+				} else {
+					showDish = false;
+				}
+			} else {
+				showDish = true;
+			}
+
+			TextView dishView = (TextView) paramView.findViewById(R.id.dish);
+
+			if (showDish) {
+				dishView.setText(meal.getDish().getResource());
+				dishView.setVisibility(View.VISIBLE);
+			} else {
+				dishView.setVisibility(View.GONE);
+			}
+
 			((TextView) paramView.findViewById(R.id.name)).setText(meal
 					.getTitle());
 			((TextView) paramView.findViewById(R.id.description)).setText(meal

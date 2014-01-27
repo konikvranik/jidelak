@@ -138,6 +138,8 @@ public class DayFragment extends Fragment {
 					color = getResources().getColor(R.color.vegeterian_meal);
 				} else if (cat.matches(".*pasta.*")) {
 					color = getResources().getColor(R.color.pasta_meal);
+				} else if (cat.matches(".*steak.*")) {
+					color = getResources().getColor(R.color.steak_meal);
 				}
 
 				log.debug("Color for category " + cat + ": " + color);

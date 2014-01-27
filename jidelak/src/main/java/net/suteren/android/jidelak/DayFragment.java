@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.drawable.ShapeDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -122,6 +123,21 @@ public class DayFragment extends Fragment {
 					.getDescription());
 			((TextView) paramView.findViewById(R.id.price)).setText(meal
 					.getPrice());
+
+			String cat = meal.getCategory();
+			if (cat != null) {
+
+				if (cat.matches("vegetar")) {
+
+					ShapeDrawable background = (ShapeDrawable) getResources()
+							.getDrawable(R.drawable.meal_background);
+					background.getPaint().setColor(
+							getResources().getColor(R.color.vegeterian_meal));
+					background.setAlpha(50);
+					paramView.setBackgroundDrawable(background);
+				}
+
+			}
 
 			return paramView;
 		}

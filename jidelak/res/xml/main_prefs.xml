@@ -8,12 +8,12 @@
         android:title="@string/refresh_period_title" >
     </EditTextPreference>
 
-    <net.suteren.android.ligelak.EditIntPreference
+    <net.suteren.android.jidelak.EditIntPreference
         android:dialogLayout="@layout/slider_preference"
         android:key="update_interval"
         android:summary="@string/refresh_period_description"
         android:title="@string/refresh_period_title" >
-    </net.suteren.android.ligelak.EditIntPreference>
+    </net.suteren.android.jidelak.EditIntPreference>
 
     <SwitchPreference
         android:key="category_background"
@@ -31,5 +31,8 @@
         </Preference>
     </PreferenceCategory
     -->
+
+    <net.suteren.android.jidelak.EditIntPreference>
+    </net.suteren.android.jidelak.EditIntPreference>
 
 </PreferenceScreen>

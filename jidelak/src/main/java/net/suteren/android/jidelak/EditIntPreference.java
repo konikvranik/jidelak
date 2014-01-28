@@ -1,6 +1,8 @@
 package net.suteren.android.jidelak;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
@@ -8,6 +10,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class EditIntPreference extends DialogPreference {
+
+	private SeekBar myView;
 
 	public EditIntPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -18,10 +22,16 @@ public class EditIntPreference extends DialogPreference {
 	}
 
 	@Override
-	protected View onCreateDialogView() {
-		final View result = super.onCreateDialogView();
-		SeekBar sb = (SeekBar) result.findViewById(R.id.value);
-		sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+	protected void onBindDialogView(final View view) {
+		super.onBindDialogView(view);
+
+		myView = (SeekBar) view.findViewById(R.id.value);
+
+		SharedPreferences sharedPreferences = getSharedPreferences();
+		myView.setProgress(getMultiplier()
+				/ (sharedPreferences.getInt(getKey(), 0) + 1));
+
+		myView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
 			@Override
 			public void onStopTrackingTouch(SeekBar paramSeekBar) {
@@ -34,21 +44,26 @@ public class EditIntPreference extends DialogPreference {
 			@Override
 			public void onProgressChanged(SeekBar paramSeekBar, int paramInt,
 					boolean paramBoolean) {
-				TextView display = (TextView) result.findViewById(R.id.display);
-				display.setText(paramInt);
+				TextView display = (TextView) view.findViewById(R.id.display);
+				display.setText("" + paramInt);
 			}
 		});
-		return result;
 	}
 
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
 		super.onDialogClosed(positiveResult);
 
-		SeekBar value = (SeekBar) getDialog().getCurrentFocus().findViewById(
-				R.id.value);
-		int result = 3600000 * 24 * 7 * value.getMax() / value.getProgress();
-		getEditor().putInt(getKey(), result);
+		if (!positiveResult)
+			return;
 
+		int result = getMultiplier() / (myView.getProgress() + 1);
+		Editor e = getEditor();
+		e.putInt(getKey(), result);
+		e.commit();
+	}
+
+	protected int getMultiplier() {
+		return 3600000 * 24 * 7 * myView.getMax();
 	}
 }

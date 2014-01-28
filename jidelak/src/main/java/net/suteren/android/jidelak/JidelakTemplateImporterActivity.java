@@ -44,7 +44,9 @@ import org.w3c.dom.Node;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -115,8 +117,13 @@ public class JidelakTemplateImporterActivity extends Activity {
 												e.getResource()))
 								.setContentText(sw.toString());
 
-						getNotificationManager().notify(notifyID,
-								mBuilder.build());
+						Notification notification = mBuilder.build();
+						notification.contentIntent = PendingIntent.getActivity(
+								getApplicationContext(), 0, new Intent(
+										getApplication(),
+										JidelakTemplateImporterActivity.class),
+								0);
+						getNotificationManager().notify(notifyID, notification);
 					}
 					break;
 

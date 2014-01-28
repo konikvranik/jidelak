@@ -29,7 +29,9 @@ public class Utils {
 		for (position = 0; position < plurals.length
 				&& plurals[position] <= Math.abs(count); position++)
 			;
+		if (position > plurals.length)
+			position = plurals.length - 1;
 
-		return res.getStringArray(key)[position - 1];
+		return res.getStringArray(key)[position];
 	}
 }

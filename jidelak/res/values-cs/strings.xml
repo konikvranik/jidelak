@@ -53,21 +53,25 @@
     <string name="category_background_description">Pokud je zapnuto, jídla ve známých kategoriích budou barevně zvýrazněna.</string>
 
     <string-array name="weeks">
+        <item>týdnů</item>
         <item>týden</item>
         <item>týdny</item>
         <item>týdnů</item>
     </string-array>
     <string-array name="days">
+        <item>dnů</item>
         <item>den</item>
         <item>dny</item>
         <item>dnů</item>
     </string-array>
     <string-array name="hours">
+        <item>hodin</item>
         <item>hodina</item>
         <item>hodiny</item>
         <item>hodin</item>
     </string-array>
     <string-array name="minutes">
+        <item>minut</item>
         <item>minuta</item>
         <item>minuty</item>
         <item>minut</item>

@@ -7,7 +7,6 @@ import static net.suteren.android.jidelak.Constants.DEFAULT_PREFERENCES;
 import static net.suteren.android.jidelak.Constants.DEFAULT_UPDATE_INTERVAL;
 import static net.suteren.android.jidelak.Constants.LAST_UPDATED_KEY;
 import static net.suteren.android.jidelak.Constants.UPDATE_INTERVAL_KEY;
-import static net.suteren.android.jidelak.Constants.UPDATE_INTERVAL_STRING_KEY;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +46,8 @@ public class JidelakFeederReceiver extends BroadcastReceiver {
 		long time = System.currentTimeMillis();
 
 		if (schedule != -1)
-			schedule += prefs.getLong(UPDATE_INTERVAL_KEY, Integer
-					.parseInt(prefs.getString(UPDATE_INTERVAL_STRING_KEY, ""
-							+ DEFAULT_UPDATE_INTERVAL)));
+			schedule += prefs.getLong(UPDATE_INTERVAL_KEY,
+					DEFAULT_UPDATE_INTERVAL);
 
 		if (time > schedule) {
 			prefs.edit().putLong(LAST_UPDATED_KEY, time);

@@ -11,21 +11,19 @@
     </ExpandableListView>
 
     <LinearLayout
-        android:id="@android:id/empty"
+        android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="0dip"
-            android:layout_weight="1"
-            android:text="EMPTY!!" />
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <WebView
+            android:id="@+id/empty_text"
+            style="@style/RestaurantTheme"
             android:layout_width="match_parent"
             android:layout_height="0dip"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:clickable="true" >
         </WebView>
     </LinearLayout>
 

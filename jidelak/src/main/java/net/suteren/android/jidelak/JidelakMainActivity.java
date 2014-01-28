@@ -18,7 +18,7 @@ import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -41,7 +41,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 	private static Logger log = LoggerFactory
 			.getLogger(JidelakMainActivity.class);
 
-	public class DayPagerAdapter extends FragmentStatePagerAdapter implements
+	public class DayPagerAdapter extends FragmentPagerAdapter implements
 			SpinnerAdapter {
 
 		private List<Availability> dates = new ArrayList<Availability>();
@@ -53,6 +53,8 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 		@Override
 		public int getCount() {
+			if (dates == null || dates.isEmpty())
+				return 1;
 			return dates.size();
 		}
 
@@ -81,15 +83,18 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		}
 
 		public Fragment getItem(Calendar day) {
+			log.debug("getFragment: " + day);
 			Fragment fragment = new DayFragment();
 			Bundle args = new Bundle();
-			args.putLong(DayFragment.ARG_DAY, day.getTime().getTime());
+			if (!isEmpty())
+				args.putLong(DayFragment.ARG_DAY, day.getTime().getTime());
 			fragment.setArguments(args);
 			return fragment;
 		}
 
 		@Override
 		public Fragment getItem(int position) {
+			log.debug("getFragment: " + position);
 			return getItem(getDateByPosition(position));
 		}
 
@@ -144,9 +149,10 @@ public class JidelakMainActivity extends ActionBarActivity implements
 							.getDisplayMetrics());
 			convertView.setPadding(pd, pd, pd, pd);
 
-			((TextView) convertView).setText(DateFormat.getDateInstance(
-					DateFormat.SHORT, Locale.getDefault()).format(
-					dates.get(position).getCalendar().getTime()));
+			if (!isEmpty())
+				((TextView) convertView).setText(DateFormat.getDateInstance(
+						DateFormat.SHORT, Locale.getDefault()).format(
+						dates.get(position).getCalendar().getTime()));
 
 			return convertView;
 		}

@@ -46,6 +46,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
@@ -310,6 +312,21 @@ public class DayFragment extends Fragment {
 		ad = new DailyMenuAdapter(getActivity().getApplicationContext(),
 				prepareDay(args));
 
+		if (ad.isEmpty()) {
+			rootView.findViewById(R.id.menu_list).setVisibility(View.GONE);
+			rootView.findViewById(R.id.empty).setVisibility(View.VISIBLE);
+			WebView disclaimerView = (WebView) rootView
+					.findViewById(R.id.empty_text);
+
+			WebSettings settings = disclaimerView.getSettings();
+			settings.setLoadWithOverviewMode(false);
+			disclaimerView
+					.loadUrl("file:///android_res/raw/no_restaurants_disclaimer.html");
+		} else {
+			rootView.findViewById(R.id.menu_list).setVisibility(View.VISIBLE);
+			rootView.findViewById(R.id.empty).setVisibility(View.GONE);
+
+		}
 		menuList = (ExpandableListView) rootView.findViewById(R.id.menu_list);
 		registerForContextMenu(menuList);
 		menuList.setAdapter(ad);

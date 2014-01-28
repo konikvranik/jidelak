@@ -9,6 +9,7 @@ public class Constants {
 
 	public static final String CATEGORY_BACKGROUND_KEY = "category_background";
 	public static final String UPDATE_INTERVAL_KEY = "update_interval";
+	public static final String UPDATE_INTERVAL_STRING_KEY = "update_interval_string";
 
 	public static final int DEFAULT_UPDATE_INTERVAL = 3600000;
 

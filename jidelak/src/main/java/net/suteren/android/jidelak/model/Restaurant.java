@@ -255,8 +255,8 @@ public class Restaurant implements Identificable<Restaurant> {
 			return 1;
 
 		int r = getPosition() != null ? getPosition().compareTo(
-				another.getPosition()) : (another.getPosition() == null ? 0
-				: -1);
+				another.getPosition() == null ? 0 : another.getPosition())
+				: (another.getPosition() == null ? 0 : -1);
 		if (r != 0)
 			return r;
 

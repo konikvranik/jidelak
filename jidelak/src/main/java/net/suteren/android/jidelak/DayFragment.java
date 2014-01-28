@@ -108,7 +108,9 @@ public class DayFragment extends Fragment {
 			boolean showDish = false;
 			if (paramInt2 > 0) {
 				Meal prevMeal = getChild(paramInt1, paramInt2 - 1);
-				if (prevMeal.getDish() != meal.getDish()) {
+				if (((prevMeal == null || prevMeal.getDish() == null) && meal
+						.getDish() != null)
+						|| prevMeal.getDish() != meal.getDish()) {
 					showDish = true;
 				} else {
 					showDish = false;

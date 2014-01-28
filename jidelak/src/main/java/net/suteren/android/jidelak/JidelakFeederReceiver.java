@@ -45,9 +45,13 @@ public class JidelakFeederReceiver extends BroadcastReceiver {
 		long schedule = prefs.getLong(LAST_UPDATED_KEY, -1);
 		long time = System.currentTimeMillis();
 
-		if (schedule != -1)
-			schedule += prefs.getLong(UPDATE_INTERVAL_KEY,
-					DEFAULT_UPDATE_INTERVAL);
+		try {
+			if (schedule != -1)
+				schedule += prefs.getLong(UPDATE_INTERVAL_KEY,
+						DEFAULT_UPDATE_INTERVAL);
+		} catch (ClassCastException e) {
+			prefs.edit().putLong(UPDATE_INTERVAL_KEY, DEFAULT_UPDATE_INTERVAL);
+		}
 
 		if (time > schedule) {
 			prefs.edit().putLong(LAST_UPDATED_KEY, time);

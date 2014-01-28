@@ -10,9 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.nio.CharBuffer;
@@ -44,15 +42,10 @@ import org.w3c.dom.Node;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 /**
@@ -87,8 +80,6 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 	}
 
-	private NotificationManager mNotificationManager;
-
 	private void ask() {
 
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -105,25 +96,9 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 						int notifyID = 1;
 
-						StringWriter sw = new StringWriter();
-						e.printStackTrace(new PrintWriter(sw));
-
-						NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-								getApplicationContext())
-								.setSmallIcon(
-										android.R.drawable.alert_dark_frame)
-								.setContentTitle(
-										getResources().getString(
-												e.getResource()))
-								.setContentText(sw.toString());
-
-						Notification notification = mBuilder.build();
-						notification.contentIntent = PendingIntent.getActivity(
-								getApplicationContext(), 0, new Intent(
-										getApplication(),
-										JidelakTemplateImporterActivity.class),
-								0);
-						getNotificationManager().notify(notifyID, notification);
+						Utils.makeNotification(getApplicationContext(),
+								JidelakTemplateImporterActivity.class,
+								notifyID, e);
 					}
 					break;
 
@@ -132,12 +107,6 @@ public class JidelakTemplateImporterActivity extends Activity {
 					break;
 				}
 				finish();
-			}
-
-			private NotificationManager getNotificationManager() {
-				if (mNotificationManager == null)
-					mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-				return mNotificationManager;
 			}
 
 		};

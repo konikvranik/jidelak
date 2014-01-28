@@ -1,9 +1,17 @@
 package net.suteren.android.jidelak;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.support.v4.app.NotificationCompat;
 
 public class Utils {
 
@@ -33,5 +41,27 @@ public class Utils {
 			position = plurals.length - 1;
 
 		return res.getStringArray(key)[position];
+	}
+
+	public static void makeNotification(Context ctx, Class<?> clz,
+			int notifyID, JidelakException e) {
+		StringWriter sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		makeNotification(ctx, clz, notifyID, e.getResource(), sw.toString());
+	}
+
+	public static void makeNotification(Context ctx, Class<?> clz,
+			int notifyID, int title, String description) {
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+				ctx).setSmallIcon(android.R.drawable.alert_dark_frame)
+				.setContentTitle(ctx.getResources().getString(title))
+				.setContentText(description);
+
+		Notification notification = mBuilder.build();
+		notification.contentIntent = PendingIntent.getActivity(ctx, 0,
+				new Intent(ctx, clz), 0);
+		((NotificationManager) ctx
+				.getSystemService(Context.NOTIFICATION_SERVICE)).notify(
+				notifyID, notification);
 	}
 }

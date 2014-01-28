@@ -52,4 +52,25 @@
     <string name="category_background_title">Obarvit menu podle kategorií</string>
     <string name="category_background_description">Pokud je zapnuto, jídla ve známých kategoriích budou barevně zvýrazněna.</string>
 
+    <string-array name="weeks">
+        <item>týden</item>
+        <item>týdny</item>
+        <item>týdnů</item>
+    </string-array>
+    <string-array name="days">
+        <item>den</item>
+        <item>dny</item>
+        <item>dnů</item>
+    </string-array>
+    <string-array name="hours">
+        <item>hodina</item>
+        <item>hodiny</item>
+        <item>hodin</item>
+    </string-array>
+    <string-array name="minutes">
+        <item>minuta</item>
+        <item>minuty</item>
+        <item>minut</item>
+    </string-array>
+
 </resources>

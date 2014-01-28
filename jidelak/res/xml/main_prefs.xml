@@ -1,18 +1,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:suteren="http://suteren.net/"
     android:title="@string/app_name" >
-
-    <EditTextPreference
-        android:defaultValue="3600000"
-        android:key="update_interval_string"
-        android:summary="@string/refresh_period_description"
-        android:title="@string/refresh_period_title" >
-    </EditTextPreference>
 
     <net.suteren.android.jidelak.EditIntPreference
         android:dialogLayout="@layout/slider_preference"
         android:key="update_interval"
         android:summary="@string/refresh_period_description"
-        android:title="@string/refresh_period_title" >
+        android:title="@string/refresh_period_title"
+        suteren:values="@array/update_times" >
     </net.suteren.android.jidelak.EditIntPreference>
 
     <SwitchPreference

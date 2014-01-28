@@ -3,6 +3,8 @@ package net.suteren.android.jidelak;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import android.content.res.Resources;
+
 public class Utils {
 
 	public Utils() {
@@ -19,5 +21,15 @@ public class Utils {
 		if (tempStringTokenizer.hasMoreTokens())
 			c = (String) tempStringTokenizer.nextElement();
 		return new Locale(l, c);
+	}
+
+	public static String getPlural(Resources res, int key, long count) {
+		int[] plurals = res.getIntArray(R.array.plurals);
+		int position = 0;
+		for (position = 0; position < plurals.length
+				&& plurals[position] <= Math.abs(count); position++)
+			;
+
+		return res.getStringArray(key)[position - 1];
 	}
 }

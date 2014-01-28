@@ -52,4 +52,21 @@
     <string name="category_background_title">Colorize background by category</string>
     <string name="category_background_description">When enabled, backgrounds of known categories will be highlighted by colors</string>
 
+    <string-array name="weeks">
+        <item>week</item>
+        <item>weeks</item>
+    </string-array>
+    <string-array name="days">
+        <item>day</item>
+        <item>days</item>
+    </string-array>
+    <string-array name="hours">
+        <item>hour</item>
+        <item>hours</item>
+    </string-array>
+    <string-array name="minutes">
+        <item>minute</item>
+        <item>minutes</item>
+    </string-array>
+
 </resources>

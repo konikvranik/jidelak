@@ -17,4 +17,6 @@ public class Constants {
 
 	public static final long DEFAULT_UPDATE_INTERVAL = HOUR_IN_MILLIS;
 
+	public static final String EXCEPTION = "exception";
+
 }

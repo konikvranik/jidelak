@@ -1,5 +1,7 @@
 package net.suteren.android.jidelak;
 
+import static net.suteren.android.jidelak.Constants.EXCEPTION;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Locale;
@@ -47,19 +49,28 @@ public class Utils {
 			int notifyID, JidelakException e) {
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
-		makeNotification(ctx, clz, notifyID, e.getResource(), sw.toString());
+		Intent intent = new Intent(ctx, clz);
+		intent.getExtras().putSerializable(EXCEPTION, e);
+		makeNotification(ctx, clz, notifyID, e.getResource(), sw.toString(),
+				intent);
 	}
 
 	public static void makeNotification(Context ctx, Class<?> clz,
 			int notifyID, int title, String description) {
+		makeNotification(ctx, clz, notifyID, title, description, new Intent(
+				ctx, clz));
+	}
+
+	public static void makeNotification(Context ctx, Class<?> clz,
+			int notifyID, int title, String description, Intent intent) {
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 				ctx).setSmallIcon(android.R.drawable.alert_dark_frame)
 				.setContentTitle(ctx.getResources().getString(title))
 				.setContentText(description);
 
 		Notification notification = mBuilder.build();
-		notification.contentIntent = PendingIntent.getActivity(ctx, 0,
-				new Intent(ctx, clz), 0);
+		notification.contentIntent = PendingIntent.getActivity(ctx, 0, intent,
+				0);
 		((NotificationManager) ctx
 				.getSystemService(Context.NOTIFICATION_SERVICE)).notify(
 				notifyID, notification);

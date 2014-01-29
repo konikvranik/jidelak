@@ -129,7 +129,7 @@ public class JidelakFeederService extends Service {
 						adao.delete(savedRestaurant.getOpeningHours());
 					adao.insert(restaurant.getOpeningHours());
 				}
-				rdao.update(restaurant);
+				rdao.update(restaurant, false);
 
 			} catch (IOException e) {
 				throw new JidelakException(R.string.feeder_io_exception, e);

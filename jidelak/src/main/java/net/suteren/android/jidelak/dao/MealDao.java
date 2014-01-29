@@ -121,18 +121,26 @@ public class MealDao extends BaseDao<Meal> {
 	}
 
 	@Override
-	protected ContentValues getValues(Meal obj) {
+	protected ContentValues getValues(Meal obj, boolean updateNull) {
 		ContentValues values = new ContentValues();
-		values.put(AVAILABILITY.getName(), obj.getAvailability().getId());
-		values.put(DESCRIPTION.getName(), obj.getDescription());
-
-		values.put(DISH.getName(), obj.getDish().ordinal());
-		values.put(ID.getName(), obj.getId());
-		values.put(POSITION.getName(), obj.getPosition());
-		values.put(TITLE.getName(), obj.getTitle());
-		values.put(CATEGORY.getName(), obj.getCategory());
-		values.put(PRICE.getName(), obj.getPrice());
-		values.put(RESTAURANT.getName(), obj.getRestaurant().getId());
+		if (obj.getAvailability() != null || updateNull)
+			values.put(AVAILABILITY.getName(), obj.getAvailability().getId());
+		if (obj.getDescription() != null || updateNull)
+			values.put(DESCRIPTION.getName(), obj.getDescription());
+		if (obj.getDish() != null || updateNull)
+			values.put(DISH.getName(), obj.getDish().ordinal());
+		if (obj.getId() != null || updateNull)
+			values.put(ID.getName(), obj.getId());
+		if (obj.getPosition() != null || updateNull)
+			values.put(POSITION.getName(), obj.getPosition());
+		if (obj.getTitle() != null || updateNull)
+			values.put(TITLE.getName(), obj.getTitle());
+		if (obj.getCategory() != null || updateNull)
+			values.put(CATEGORY.getName(), obj.getCategory());
+		if (obj.getPrice() != null || updateNull)
+			values.put(PRICE.getName(), obj.getPrice());
+		if (obj.getRestaurant() != null || updateNull)
+			values.put(RESTAURANT.getName(), obj.getRestaurant().getId());
 		return values;
 	}
 

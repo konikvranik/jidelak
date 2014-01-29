@@ -104,20 +104,30 @@ public class SourceDao extends BaseDao<Source> {
 	}
 
 	@Override
-	protected ContentValues getValues(Source obj) {
+	protected ContentValues getValues(Source obj, boolean updateNull) {
 		ContentValues values = new ContentValues();
-		values.put(ID.getName(), obj.getId());
-		if (obj.getTimeType() != null)
-			values.put(TIME_TYPE.getName(), obj.getTimeType().ordinal());
-		if (obj.getOffsetBase() != null)
-			values.put(BASE_TIME.getName(), obj.getOffsetBase().ordinal());
-		values.put(FIRST_DAY_OF_WEEK.getName(), obj.getFirstdayofweek());
-		values.put(OFFSET.getName(), obj.getOffset());
-		values.put(URL.getName(), obj.getUrl().toString());
-		values.put(DATE_FORMAT.getName(), obj.getDateFormatString());
-		values.put(LOCALE.getName(), obj.getLocaleString());
-		values.put(ENCODING.getName(), obj.getEncoding());
-		values.put(RESTAURANT.getName(), obj.getRestaurant().getId());
+		if (obj.getId() != null || updateNull)
+			values.put(ID.getName(), obj.getId());
+		if (obj.getTimeType() != null || updateNull)
+			values.put(TIME_TYPE.getName(), obj.getTimeType() == null ? null
+					: obj.getTimeType().ordinal());
+		if (obj.getOffsetBase() != null || updateNull)
+			values.put(BASE_TIME.getName(), obj.getOffsetBase() == null ? null
+					: obj.getOffsetBase().ordinal());
+		if (obj.getFirstdayofweek() != null || updateNull)
+			values.put(FIRST_DAY_OF_WEEK.getName(), obj.getFirstdayofweek());
+		if (obj.getOffset() != null || updateNull)
+			values.put(OFFSET.getName(), obj.getOffset());
+		if (obj.getUrl() != null || updateNull)
+			values.put(URL.getName(), obj.getUrl().toString());
+		if (obj.getDateFormat() != null || updateNull)
+			values.put(DATE_FORMAT.getName(), obj.getDateFormatString());
+		if (obj.getLocaleString() != null || updateNull)
+			values.put(LOCALE.getName(), obj.getLocaleString());
+		if (obj.getEncoding() != null || updateNull)
+			values.put(ENCODING.getName(), obj.getEncoding());
+		if (obj.getRestaurant() != null || updateNull)
+			values.put(RESTAURANT.getName(), obj.getRestaurant().getId());
 
 		return values;
 	}

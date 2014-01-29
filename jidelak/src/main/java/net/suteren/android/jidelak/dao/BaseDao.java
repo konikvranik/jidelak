@@ -216,7 +216,12 @@ public abstract class BaseDao<T extends Identificable<T>> {
 	}
 
 	protected void insert(SQLiteDatabase db, T obj) {
-		long result = db.insert(getTableName(), null, getValues(obj));
+		insert(db, obj, true);
+	}
+
+	protected void insert(SQLiteDatabase db, T obj, boolean updateNull) {
+		long result = db.insert(getTableName(), null,
+				getValues(obj, updateNull));
 		if (result == -1)
 			throw new SQLException();
 		obj.setId(result);
@@ -231,30 +236,38 @@ public abstract class BaseDao<T extends Identificable<T>> {
 		}
 	}
 
-	protected abstract ContentValues getValues(T obj);
+	protected abstract ContentValues getValues(T obj, boolean updateNull);
 
-	public void update(T obj) {
+	public void update(T obj, boolean updateNull) {
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
 		try {
-			update(db, obj);
+			update(db, obj, updateNull);
 		} finally {
 			db.close();
 		}
 	}
 
-	protected void update(SQLiteDatabase db, T obj) {
-		int result = db.update(getTableName(), getValues(obj), "id = ?",
-				new String[] { Long.toString(obj.getId()) });
+	public void update(T obj) {
+		update(obj, true);
+	}
+
+	protected void update(SQLiteDatabase db, T obj, boolean updateNull) {
+		int result = db.update(getTableName(), getValues(obj, updateNull),
+				"id = ?", new String[] { Long.toString(obj.getId()) });
 		if (result != 1)
 			throw new RuntimeException("Updated " + result
 					+ " rows. 1 expected.");
 	}
 
 	public void update(Collection<T> objs) {
+		update(objs, true);
+	}
+
+	public void update(Collection<T> objs, boolean updateNull) {
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
 		try {
 			for (T obj : objs) {
-				update(db, obj);
+				update(db, obj, updateNull);
 			}
 		} finally {
 			db.close();

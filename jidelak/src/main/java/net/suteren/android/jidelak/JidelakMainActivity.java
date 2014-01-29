@@ -68,6 +68,10 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		@Override
 		public View getDropDownView(int position, View convertView,
 				ViewGroup parent) {
+			
+			if (dates == null || dates.isEmpty())
+				return convertView;
+			
 			if (convertView == null)
 				convertView = new TextView(getApplicationContext());
 			((TextView) convertView).setText(DateFormat.getDateInstance(

@@ -92,17 +92,26 @@ public class AvailabilityDao extends BaseDao<Availability> {
 	}
 
 	@Override
-	protected ContentValues getValues(Availability obj) {
+	protected ContentValues getValues(Availability obj, boolean updateNull) {
 		ContentValues values = new ContentValues();
-		values.put(DAY.getName(), obj.getDay());
-		values.put(DOW.getName(), obj.getDow());
-		values.put(FROM.getName(), obj.getFrom());
-		values.put(ID.getName(), obj.getId());
-		values.put(MONTH.getName(), obj.getMonth());
-		values.put(TO.getName(), obj.getTo());
-		values.put(YEAR.getName(), obj.getYear());
-		values.put(RESTAURANT.getName(), obj.getRestaurant() != null ? obj
-				.getRestaurant().getId() : null);
+
+		if (obj.getDay() != null || updateNull)
+			values.put(DAY.getName(), obj.getDay());
+		if (obj.getDow() != null || updateNull)
+			values.put(DOW.getName(), obj.getDow());
+		if (obj.getFrom() != null || updateNull)
+			values.put(FROM.getName(), obj.getFrom());
+		if (obj.getId() != null || updateNull)
+			values.put(ID.getName(), obj.getId());
+		if (obj.getMonth() != null || updateNull)
+			values.put(MONTH.getName(), obj.getMonth());
+		if (obj.getTo() != null || updateNull)
+			values.put(TO.getName(), obj.getTo());
+		if (obj.getYear() != null || updateNull)
+			values.put(YEAR.getName(), obj.getYear());
+		if (obj.getRestaurant() != null || updateNull)
+			values.put(RESTAURANT.getName(), obj.getRestaurant() != null ? obj
+					.getRestaurant().getId() : null);
 		return values;
 	}
 

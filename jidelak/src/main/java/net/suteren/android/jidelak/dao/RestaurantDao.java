@@ -108,34 +108,49 @@ public class RestaurantDao extends BaseDao<Restaurant> {
 	}
 
 	@Override
-	protected ContentValues getValues(Restaurant obj) {
+	protected ContentValues getValues(Restaurant obj, boolean updateNull) {
 		ContentValues values = new ContentValues();
-
-		values.put(ID.getName(), obj.getId());
-		values.put(NAME.getName(), obj.getName());
-		values.put(POSITION.getName(), obj.getPosition());
+		if (obj.getId() != null || updateNull)
+			values.put(ID.getName(), obj.getId());
+		if (obj.getName() != null || updateNull)
+			values.put(NAME.getName(), obj.getName());
+		if (obj.getPosition() != null || updateNull)
+			values.put(POSITION.getName(), obj.getPosition());
 
 		Address addr = obj.getAddress();
 		if (addr != null) {
-			StringBuffer address = new StringBuffer();
-			String line = addr.getAddressLine(0);
-			for (int i = 0; line != null; line = addr.getAddressLine(++i)) {
-				address.append(line);
+			StringBuffer address = null;
+			if (addr.getMaxAddressLineIndex() >= 0) {
+				address = new StringBuffer();
+				String line = addr.getAddressLine(0);
+				for (int i = 0; line != null; line = addr.getAddressLine(++i)) {
+					address.append(line);
+				}
 			}
-			values.put(ADDRESS.getName(), address.toString());
-			values.put(CITY.getName(), addr.getLocality());
-			values.put(COUNTRY.getName(), addr.getCountryName());
-			values.put(ZIP.getName(), addr.getPostalCode() == null ? null
-					: addr.getPostalCode().replaceAll("\\s", ""));
-			values.put(PHONE.getName(), addr.getPhone());
-			values.put(WEB.getName(), addr.getUrl());
+			if (address != null || updateNull)
+				values.put(ADDRESS.getName(), address.toString());
+			if (addr.getLocality() != null || updateNull)
+				values.put(CITY.getName(), addr.getLocality());
+			if (addr.getCountryName() != null || updateNull)
+				values.put(COUNTRY.getName(), addr.getCountryName());
+			if (addr.getPostalCode() != null || updateNull)
+				values.put(ZIP.getName(), addr.getPostalCode() == null ? null
+						: addr.getPostalCode().replaceAll("\\s", ""));
+			if (addr.getPhone() != null || updateNull)
+				values.put(PHONE.getName(), addr.getPhone());
+			if (addr.getUrl() != null || updateNull)
+				values.put(WEB.getName(), addr.getUrl());
 			if (addr.getExtras() != null)
-				values.put(E_MAIL.getName(),
-						addr.getExtras().getString(E_MAIL.getName()));
-			if (addr.hasLatitude())
-				values.put(LATITUDE.getName(), addr.getLatitude());
-			if (addr.hasLongitude())
-				values.put(LONGITUDE.getName(), addr.getLongitude());
+				if (addr.getExtras().getString(E_MAIL.getName()) != null
+						|| updateNull)
+					values.put(E_MAIL.getName(),
+							addr.getExtras().getString(E_MAIL.getName()));
+			if (addr.hasLatitude() || updateNull)
+				values.put(LATITUDE.getName(),
+						addr.hasLatitude() ? addr.getLatitude() : null);
+			if (addr.hasLongitude() || updateNull)
+				values.put(LONGITUDE.getName(),
+						addr.hasLongitude() ? addr.getLongitude() : null);
 		}
 		return values;
 	}

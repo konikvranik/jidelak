@@ -1,78 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<manifest android:versionCode="8" package="net.suteren.android.jidelak"
-    xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="19"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <application android:allowBackup="true"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    package="net.suteren.android.jidelak"
+    android:versionCode="8" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" android:theme="@style/AppTheme">
-        <activity android:launchMode="singleTask" android:name="net.suteren.android.jidelak.JidelakMainActivity">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="net.suteren.android.jidelak.JidelakMainActivity"
+            android:launchMode="singleTask" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <!-- created by Petr at 2014-01-05 12:39:35 -->
-        <activity android:exported="true"
-            android:name="net.suteren.android.jidelak.JidelakTemplateImporterActivity" android:theme="@style/DialogTheme">
+        <activity
+            android:name="net.suteren.android.jidelak.JidelakTemplateImporterActivity"
+            android:exported="true"
+            android:theme="@style/DialogTheme" >
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="*"
-                    android:pathPattern=".*\\.jidelak\\.xsl" android:scheme="http"/>
-                <data android:host="*"
-                    android:pathPattern=".*\\.jidelak\\.xsl" android:scheme="https"/>
-                <data android:host="*"
-                    android:pathPattern=".*\\.jidelak\\.xsl" android:scheme="ftps"/>
-                <data android:host="*"
-                    android:pathPattern=".*\\.jidelak\\.xsl" android:scheme="ftp"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:pathPattern=".*\\.jidelak\\.xsl"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:pathPattern=".*\\.jidelak\\.xsl"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:pathPattern=".*\\.jidelak\\.xsl"
+                    android:scheme="ftps" />
+                <data
+                    android:host="*"
+                    android:pathPattern=".*\\.jidelak\\.xsl"
+                    android:scheme="ftp" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="*" android:mimeType="*/*"
-                    android:pathPattern=".*\\.jidelak\\.xsl" android:scheme="file"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.jidelak\\.xsl"
+                    android:scheme="file" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <action android:name="android.intent.action.SENDTO"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:mimeType="application/xml"/>
-                <data android:mimeType="application/xslt+xml"/>
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SENDTO" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="application/xml" />
+                <data android:mimeType="application/xslt+xml" />
             </intent-filter>
         </activity>
         <!-- created by Petr at 2014-01-23 22:28:18 -->
-        <activity android:name=".RestaurantManagerActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".JidelakMainActivity"/>
+        <activity android:name=".RestaurantManagerActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".JidelakMainActivity" />
         </activity>
         <!-- created by Petr at 2014-01-26 21:50:43 -->
-        <activity android:name=".AboutActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".JidelakMainActivity"/>
+        <activity android:name=".AboutActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".JidelakMainActivity" />
         </activity>
-        <activity android:name=".PreferencesActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".JidelakMainActivity"/>
+        <activity android:name=".ErrorViewActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".JidelakMainActivity" />
         </activity>
-        <service android:exported="false" android:name="net.suteren.android.jidelak.JidelakFeederService">
+        <activity android:name=".PreferencesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".JidelakMainActivity" />
+        </activity>
+
+        <service
+            android:name="net.suteren.android.jidelak.JidelakFeederService"
+            android:exported="false" >
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </service>
+
         <receiver
-            android:name="net.suteren.android.jidelak.JidelakFeederReceiver" android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            android:name="net.suteren.android.jidelak.JidelakFeederReceiver"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-                <action android:name="android.intent.action.TIME_TICK"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.TIME_TICK" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <uses-library android:name="android.test.runner"/>
+
+        <uses-library android:name="android.test.runner" />
     </application>
-    <instrumentation android:label="your tests label"
-        android:name="android.test.InstrumentationTestRunner" android:targetPackage="net.suteren.android.jidelak"/>
+
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:label="your tests label"
+        android:targetPackage="net.suteren.android.jidelak" />
+
 </manifest>

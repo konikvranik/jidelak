@@ -51,6 +51,8 @@
     <string name="refresh_period_title">Interval aktualizace</string>
     <string name="category_background_title">Obarvit menu podle kategorií</string>
     <string name="category_background_description">Pokud je zapnuto, jídla ve známých kategoriích budou barevně zvýrazněna.</string>
+    <string name="send_to">Sdílet</string>
+    <string name="send_error">Odeslat chybu</string>
 
     <string-array name="weeks">
         <item>týdnů</item>

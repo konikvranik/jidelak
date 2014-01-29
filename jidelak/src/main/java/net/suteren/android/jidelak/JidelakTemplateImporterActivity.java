@@ -45,7 +45,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Toast;
 
 /**
@@ -54,16 +56,32 @@ import android.widget.Toast;
  */
 public class JidelakTemplateImporterActivity extends Activity {
 
+	private class ToastRunnable implements Runnable {
+		String mText;
+
+		public ToastRunnable(String text) {
+			mText = text;
+		}
+
+		@Override
+		public void run() {
+			Toast.makeText(getApplicationContext(), mText, Toast.LENGTH_LONG)
+					.show();
+		}
+	}
+
 	private static Logger log = LoggerFactory
 			.getLogger(JidelakTemplateImporterActivity.class);
 
 	private Uri sourceUri;
 
+	private Handler mHandler;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-
+		mHandler = new Handler();
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
@@ -89,17 +107,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 				switch (which) {
 				case DialogInterface.BUTTON_POSITIVE:
 					// Yes button clicked
-					try {
-						importTemplate();
-					} catch (JidelakException e) {
-						log.error(e.getMessage(), e);
-
-						int notifyID = 1;
-
-						Utils.makeNotification(getApplicationContext(),
-								JidelakTemplateImporterActivity.class,
-								notifyID, e);
-					}
+					new Worker().execute(new Void[0]);
 					break;
 
 				case DialogInterface.BUTTON_NEGATIVE:
@@ -122,11 +130,8 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 	void importTemplate() throws JidelakException {
 
-		Toast.makeText(
-				getApplicationContext(),
-				getResources().getString(R.string.importing_template,
-						sourceUri.getLastPathSegment()), Toast.LENGTH_SHORT)
-				.show();
+		mHandler.post(new ToastRunnable(getResources().getString(
+				R.string.importing_template, sourceUri.getLastPathSegment())));
 
 		JidelakDbHelper dbh = new JidelakDbHelper(getApplicationContext());
 		RestaurantDao restaurantDao = new RestaurantDao(dbh);
@@ -235,5 +240,24 @@ public class JidelakTemplateImporterActivity extends Activity {
 			bw.close();
 		}
 		return fileName;
+	}
+
+	private class Worker extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			try {
+				importTemplate();
+			} catch (JidelakException e) {
+				log.error(e.getMessage(), e);
+
+				int notifyID = 1;
+
+				Utils.makeNotification(getApplicationContext(),
+						JidelakTemplateImporterActivity.class, notifyID, e);
+			}
+			return null;
+		}
+
 	}
 }

@@ -13,6 +13,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
 public class Utils {
@@ -50,7 +51,9 @@ public class Utils {
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
 		Intent intent = new Intent(ctx, clz);
-		intent.getExtras().putSerializable(EXCEPTION, e);
+		Bundle b = new Bundle();
+		b.putSerializable(EXCEPTION, e);
+		intent.putExtras(b);
 		makeNotification(ctx, clz, notifyID, e.getResource(), sw.toString(),
 				intent);
 	}

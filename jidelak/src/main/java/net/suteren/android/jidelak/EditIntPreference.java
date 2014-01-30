@@ -7,6 +7,9 @@ import static net.suteren.android.jidelak.Constants.WEEK_IN_MILLIS;
 
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -14,6 +17,7 @@ import android.content.res.TypedArray;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -21,6 +25,9 @@ public class EditIntPreference extends DialogPreference {
 
 	private SeekBar myView;
 	private TypedArray values;
+	private int titleRes;
+	private static Logger log = LoggerFactory
+			.getLogger(EditIntPreference.class);
 
 	public EditIntPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -36,6 +43,8 @@ public class EditIntPreference extends DialogPreference {
 		values = getContext().getResources().obtainTypedArray(
 				attrs.getAttributeResourceValue("suteren", "values",
 						R.array.update_times));
+		titleRes = attrs.getAttributeResourceValue("android", "title",
+				R.string.refresh_period_title);
 	}
 
 	@Override
@@ -45,7 +54,6 @@ public class EditIntPreference extends DialogPreference {
 		myView = (SeekBar) view.findViewById(R.id.value);
 
 		myView.setMax(values.length() - 1);
-
 		SharedPreferences sharedPreferences = getSharedPreferences();
 		long sv = sharedPreferences.getLong(getKey(), 0);
 		for (int i = 0; i < values.length(); i++) {
@@ -123,6 +131,56 @@ public class EditIntPreference extends DialogPreference {
 		e.putLong(getKey(), result);
 		e.commit();
 		values.recycle();
+		notifyChanged();
+	}
+
+	@Override
+	protected void onBindView(View view) {
+		super.onBindView(view);
+
+		TextView title = (TextView) view.findViewById(android.R.id.title);
+
+		title.setText(getContext().getResources().getString(titleRes) + ": "
+				+ prettyPrintValue(getSharedPreferences().getLong(getKey(), 0)));
+		// view.findViewById(android.R.id.summary);
+		// view.findViewById(android.R.id.widget_frame);
+		// view.findViewById(android.R.id.icon);
+
+		// debugViewIds(view);
+	}
+
+	public static View debugViewIds(View view) {
+		log.debug("traversing: " + view.getClass().getSimpleName() + ", id: "
+				+ view.getId());
+		if (view.getParent() != null && (view.getParent() instanceof ViewGroup)) {
+			return debugViewIds((View) view.getParent());
+		} else {
+			debugChildViewIds(view, 0);
+			return view;
+		}
+	}
+
+	private static void debugChildViewIds(View view, int spaces) {
+		if (view instanceof ViewGroup) {
+			ViewGroup group = (ViewGroup) view;
+			for (int i = 0; i < group.getChildCount(); i++) {
+				View child = group.getChildAt(i);
+				log.debug(padString("view: " + child.getClass().getSimpleName()
+						+ "(" + child.getId() + ")", spaces));
+				debugChildViewIds(child, spaces + 1);
+			}
+		}
+	}
+
+	private static String padString(String str, int noOfSpaces) {
+		if (noOfSpaces <= 0) {
+			return str;
+		}
+		StringBuilder builder = new StringBuilder(str.length() + noOfSpaces);
+		for (int i = 0; i < noOfSpaces; i++) {
+			builder.append(' ');
+		}
+		return builder.append(str).toString();
 	}
 
 }

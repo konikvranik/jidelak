@@ -8,6 +8,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="48dp"
+        android:layout_marginTop="48dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -29,6 +31,8 @@
         android:id="@+id/value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:layout_marginTop="48dp"
         android:max="20" />
 
 </LinearLayout>

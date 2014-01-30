@@ -54,6 +54,7 @@
     <string name="send_to">Share</string>
     <string name="send_error">Send Error</string>
     <string name="unsupported_protocol">Unsupported protocol</string>
+    <string name="malformed_url">Malformed URL</string>
 
     <string-array name="weeks">
         <item>weeks</item>

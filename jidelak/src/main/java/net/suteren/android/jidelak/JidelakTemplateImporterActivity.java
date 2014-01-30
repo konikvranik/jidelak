@@ -12,8 +12,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.CharBuffer;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -224,32 +222,21 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 		String fileName = restaurant.getTemplateName();
 
-		InputStream sourceStream;
-		if ("file".equals(uri.getScheme())) {
-			sourceStream = new URL(uri.toString()).openStream();
-		} else if (uri.getScheme().startsWith("http")) {
-			HttpURLConnection con = ((HttpURLConnection) new URL(uri.toString())
-					.openConnection());
-			con.connect();
-			if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-				throw new JidelakException(R.string.http_error_response,
-						new String[] {
-								Integer.valueOf(con.getResponseCode())
-										.toString(), con.getResponseMessage() });
-			}
-			sourceStream = con.getInputStream();
-		} else {
-			throw new JidelakException(R.string.unsupported_protocol);
-		}
+		log.debug("URI: " + uri);
+
+		InputStream sourceStream = Utils.streamFromUrl(uri);
+
+		log.debug("Available: " + sourceStream.available());
 
 		FileOutputStream out = openFileOutput(fileName, MODE_PRIVATE);
 
 		Writer bw = new BufferedWriter(new OutputStreamWriter(out));
+		long cnt = 0;
 		try {
 			Reader br = new BufferedReader(new InputStreamReader(sourceStream));
 			try {
 				CharBuffer buf = CharBuffer.allocate(64);
-				while (br.read(buf) >= 0) {
+				while ((cnt += br.read(buf)) >= 0) {
 					bw.append((CharSequence) buf.flip());
 					buf.clear();
 				}
@@ -258,6 +245,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 			}
 		} finally {
 			bw.close();
+			log.debug("read " + cnt + " bytes");
 		}
 		return fileName;
 	}
@@ -273,8 +261,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 				int notifyID = 1;
 
-				Utils.makeNotification(getApplicationContext(),
-						JidelakTemplateImporterActivity.class, notifyID, e);
+				Utils.makeNotification(getApplicationContext(), notifyID, e);
 			}
 			return null;
 		}

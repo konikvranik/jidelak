@@ -159,6 +159,7 @@ public class JidelakFeederService extends Service {
 	Node retrieve(Source source, InputStream inXsl) throws IOException,
 			TransformerException, ParserConfigurationException,
 			JidelakException {
+
 		HttpURLConnection con = (HttpURLConnection) source.getUrl()
 				.openConnection();
 		con.connect();
@@ -168,6 +169,7 @@ public class JidelakFeederService extends Service {
 							Integer.valueOf(con.getResponseCode()).toString(),
 							con.getResponseMessage() });
 		}
+
 		InputStream is = con.getInputStream();
 		String enc = source.getEncoding();
 		if (enc == null)
@@ -256,8 +258,7 @@ public class JidelakFeederService extends Service {
 
 				int notifyID = 2;
 
-				Utils.makeNotification(getApplicationContext(),
-						JidelakFeederService.class, notifyID, e);
+				Utils.makeNotification(getApplicationContext(), notifyID, e);
 
 			}
 			return null;

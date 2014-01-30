@@ -54,6 +54,7 @@
     <string name="send_to">Sdílet</string>
     <string name="send_error">Odeslat chybu</string>
     <string name="unsupported_protocol">Nepodporovaný protokol</string>
+    <string name="malformed_url">Neplatná URL</string>
 
     <string-array name="weeks">
         <item>týdnů</item>

@@ -55,10 +55,12 @@ public class MealDao extends BaseDao<Meal> {
 	public SortedSet<Meal> findByDayAndRestaurant(Calendar day,
 			Restaurant restaurant) {
 		return rawQuery(
-				"select m.* from " + getTableName() + " m, "
-						+ AvailabilityDao.getTable().getName() + " a where m."
-						+ RESTAURANT + "= ? and m." + AVAILABILITY + " = a."
-						+ AvailabilityDao.ID + " and ((a."
+				"select m.* from "
+
+				+ AvailabilityDao.getTable().getName() + " a" + " inner join "
+						+ getTableName() + " m" + " on " + " m." + RESTAURANT
+						+ "= ? and m." + AVAILABILITY + " = a."
+						+ AvailabilityDao.ID + " where" + " (a."
 						+ AvailabilityDao.YEAR + " = ? and a."
 						+ AvailabilityDao.MONTH + " = ? and a."
 						+ AvailabilityDao.DAY + " = ?) or (a."
@@ -66,7 +68,7 @@ public class MealDao extends BaseDao<Meal> {
 						+ AvailabilityDao.MONTH + " is null and a."
 						+ AvailabilityDao.DAY + " is null and (a."
 						+ AvailabilityDao.DOW + " = ? or a."
-						+ AvailabilityDao.DOW + " is null)))",
+						+ AvailabilityDao.DOW + " is null))",
 				new String[] { String.valueOf(restaurant.getId()),
 						String.valueOf(day.get(Calendar.YEAR)),
 						String.valueOf(day.get(Calendar.MONTH)),

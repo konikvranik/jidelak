@@ -53,6 +53,7 @@
     <string name="category_background_description">Pokud je zapnuto, jídla ve známých kategoriích budou barevně zvýrazněna.</string>
     <string name="send_to">Sdílet</string>
     <string name="send_error">Odeslat chybu</string>
+    <string name="unsupported_protocol">Nepodporovaný protokol</string>
 
     <string-array name="weeks">
         <item>týdnů</item>

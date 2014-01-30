@@ -53,6 +53,7 @@
     <string name="category_background_description">When enabled, backgrounds of known categories will be highlighted by colors</string>
     <string name="send_to">Share</string>
     <string name="send_error">Send Error</string>
+    <string name="unsupported_protocol">Unsupported protocol</string>
 
     <string-array name="weeks">
         <item>weeks</item>

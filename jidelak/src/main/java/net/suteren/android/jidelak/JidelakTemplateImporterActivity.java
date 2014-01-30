@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.CharBuffer;
 
@@ -218,10 +219,29 @@ public class JidelakTemplateImporterActivity extends Activity {
 		}
 	}
 
-	String saveLocally(Uri uri, Restaurant restaurant) throws IOException {
+	String saveLocally(Uri uri, Restaurant restaurant) throws IOException,
+			JidelakException {
 
 		String fileName = restaurant.getTemplateName();
-		InputStream sourceStream = new URL(uri.toString()).openStream();
+
+		InputStream sourceStream;
+		if ("file".equals(uri.getScheme())) {
+			sourceStream = new URL(uri.toString()).openStream();
+		} else if (uri.getScheme().startsWith("http")) {
+			HttpURLConnection con = ((HttpURLConnection) new URL(uri.toString())
+					.openConnection());
+			con.connect();
+			if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
+				throw new JidelakException(R.string.http_error_response,
+						new String[] {
+								Integer.valueOf(con.getResponseCode())
+										.toString(), con.getResponseMessage() });
+			}
+			sourceStream = con.getInputStream();
+		} else {
+			throw new JidelakException(R.string.unsupported_protocol);
+		}
+
 		FileOutputStream out = openFileOutput(fileName, MODE_PRIVATE);
 
 		Writer bw = new BufferedWriter(new OutputStreamWriter(out));

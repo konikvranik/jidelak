@@ -10,11 +10,10 @@
         suteren:values="@array/update_times" >
     </net.suteren.android.jidelak.EditIntPreference>
 
-    <CheckBoxPreference
-        android:defaultValue="true"
+    <SwitchPreference
         android:key="category_background"
         android:summary="@string/category_background_description"
-        android:title="@string/category_background_title" />
+        android:title="@string/category_background_title" android:defaultValue="true" />
 
     <!--
     PreferenceCategory

@@ -19,6 +19,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 /**
@@ -69,6 +70,9 @@ public class AboutActivity extends ActionBarActivity {
 				DateFormat
 						.getTimeInstance(DateFormat.LONG, Locale.getDefault())
 						.format(lastUpdated)));
+
+		WebView usage = (WebView) getWindow().findViewById(R.id.usage);
+		usage.loadUrl("file:///android_res/raw/no_restaurants_disclaimer.html");
 
 		setupActionBar();
 

@@ -66,16 +66,18 @@ public class Utils {
 
 	public static void makeNotification(Context ctx, Class<?> clz,
 			int notifyID, int title, String description, Intent intent) {
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-				ctx).setSmallIcon(android.R.drawable.alert_dark_frame)
-				.setContentTitle(ctx.getResources().getString(title))
-				.setContentText(description);
 
-		Notification notification = mBuilder.build();
-		notification.contentIntent = PendingIntent.getActivity(ctx, 0, intent,
-				0);
+		Notification notification = new NotificationCompat.Builder(ctx)
+				.setSmallIcon(android.R.drawable.alert_dark_frame)
+				.setContentTitle(ctx.getResources().getString(title))
+				.setContentText(description)
+				.setContentIntent(
+						PendingIntent.getActivity(ctx, 0, intent,
+								PendingIntent.FLAG_UPDATE_CURRENT)).build();
+
 		((NotificationManager) ctx
 				.getSystemService(Context.NOTIFICATION_SERVICE)).notify(
 				notifyID, notification);
+
 	}
 }

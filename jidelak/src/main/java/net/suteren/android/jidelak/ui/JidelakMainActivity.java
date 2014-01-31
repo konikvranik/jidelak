@@ -1,4 +1,4 @@
-package net.suteren.android.jidelak;
+package net.suteren.android.jidelak.ui;
 
 import java.lang.reflect.Field;
 import java.text.DateFormat;
@@ -7,6 +7,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import net.suteren.android.jidelak.JidelakDbHelper;
+import net.suteren.android.jidelak.R;
+import net.suteren.android.jidelak.R.id;
+import net.suteren.android.jidelak.R.layout;
+import net.suteren.android.jidelak.R.menu;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.model.Availability;
 

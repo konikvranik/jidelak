@@ -1,13 +1,17 @@
 /**
  * 
  */
-package net.suteren.android.jidelak;
+package net.suteren.android.jidelak.ui;
 
 import static net.suteren.android.jidelak.Constants.LAST_UPDATED_KEY;
 
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import net.suteren.android.jidelak.R;
+import net.suteren.android.jidelak.R.id;
+import net.suteren.android.jidelak.R.layout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

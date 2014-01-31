@@ -1,7 +1,7 @@
 /**
  *
  */
-package net.suteren.android.jidelak;
+package net.suteren.android.jidelak.ui;
 
 import static net.suteren.android.jidelak.Constants.DEFAULT_PREFERENCES;
 import static net.suteren.android.jidelak.Constants.DEFAULT_UPDATE_INTERVAL;
@@ -9,6 +9,7 @@ import static net.suteren.android.jidelak.Constants.DEFAULT_WIFI_ONLY;
 import static net.suteren.android.jidelak.Constants.LAST_UPDATED_KEY;
 import static net.suteren.android.jidelak.Constants.UPDATE_INTERVAL_KEY;
 import static net.suteren.android.jidelak.Constants.WIFI_ONLY_KEY;
+import net.suteren.android.jidelak.Utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import android.content.Context;
+
 public class JidelakException extends Exception {
 
 	private int resource;
@@ -54,5 +56,9 @@ public class JidelakException extends Exception {
 		aOutputStream.defaultWriteObject();
 		// aOutputStream.writeObject(resource);
 		// aOutputStream.writeObject(args);
+	}
+
+	public String toString(Context ctx) {
+		return ctx.getResources().getString(getResource(), getArgs());
 	}
 }

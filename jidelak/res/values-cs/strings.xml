@@ -10,11 +10,11 @@
     <string name="parser_configuration_error">Chyba v konfiguraci parseru</string>
     <string name="data_updated">Data byl aktualizována</string>
     <string name="import_failed">Nepodařilo se naimportovat data: </string>
-    <string name="source_malformed_url">Neplatná URL v source</string>
-    <string name="first_day_of_week_malformed">První den v týdnu je v neplatném formátu</string>
-    <string name="meal_invalid_date_format">Datum v &lt;meal&gt; je v neplatném formátu</string>
-    <string name="opening_hours_invalid_date">Datum otevíracích hodin je v neplatném formátu</string>
-    <string name="opening_hours_invalid_day_of_week">Den v týdnu otevíracích hodin je v neplatném formátu</string>
+    <string name="source_malformed_url">Neplatná URL "%s" v source</string>
+    <string name="first_day_of_week_malformed">První den v týdnu "%s" neodpovídá formátu "%s":</string>
+    <string name="meal_invalid_date_format">Datum v &lt;meal&gt; "%s" neodpovídá formátu "%s":</string>
+    <string name="opening_hours_invalid_date">Datum otevíracích hodin "%s" neodpovídá formátu "%s":</string>
+    <string name="opening_hours_invalid_day_of_week">Den v týdnu otevíracích hodin "%s" neodpovídá formátu "%s":</string>
     <string name="unexpected_exception">Vyskytla se neočekávaná chyba - koukněte do error logu</string>
     <string name="parser_configuration_exception">Je poškozená konfigurace parseru - koukněte do error logu</string>
     <string name="transformer_configuration_exception">Je poškozená konfigurace transformeru -  koukněte do error logu</string>
@@ -57,7 +57,7 @@
     <string name="malformed_url">Neplatná URL</string>
     <string name="only_wifi_title">Pouze přes WiFi</string>
     <string name="only_wifi_description">Nestahovat data na pozadí přes mobilní sítě, ale pouze přes WiFi. Pokud budete data aktualizovat ručně, dojde ke stažení i přes mobilní síť.</string>
-    
+
     <string-array name="weeks">
         <item>týdnů</item>
         <item>týden</item>

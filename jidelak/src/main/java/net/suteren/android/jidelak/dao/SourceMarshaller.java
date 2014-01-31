@@ -7,6 +7,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import net.suteren.android.jidelak.JidelakException;
+import net.suteren.android.jidelak.JidelakMalformedURLException;
+import net.suteren.android.jidelak.JidelakParseException;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.model.Source;
 import net.suteren.android.jidelak.model.TimeOffsetType;
@@ -37,7 +39,9 @@ public class SourceMarshaller extends BaseMarshaller<Source> {
 		try {
 			source.setUrl(new URL(data.get(prefix + "source@url")));
 		} catch (MalformedURLException e) {
-			throw new JidelakException(R.string.source_malformed_url,e);
+			throw new JidelakMalformedURLException(
+					R.string.source_malformed_url, data.get(prefix
+							+ "source@url"), e);
 		}
 
 		x = data.get(prefix + "source@firstDayOfWeek");
@@ -45,7 +49,8 @@ public class SourceMarshaller extends BaseMarshaller<Source> {
 			try {
 				source.setFirstdayofweek(x);
 			} catch (ParseException e) {
-				throw new JidelakException(R.string.first_day_of_week_malformed,e);
+				throw new JidelakParseException(
+						R.string.first_day_of_week_malformed, "E", x, e);
 			}
 
 		x = data.get(prefix + "source@base");

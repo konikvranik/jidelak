@@ -1,4 +1,4 @@
-package net.suteren.android.jidelak;
+package net.suteren.android.jidelak.ui;
 
 import static net.suteren.android.jidelak.Constants.CATEGORY_BACKGROUND_KEY;
 import static net.suteren.android.jidelak.Constants.DEFAULT_PREFERENCES;
@@ -13,6 +13,15 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import net.suteren.android.jidelak.JidelakDbHelper;
+import net.suteren.android.jidelak.JidelakException;
+import net.suteren.android.jidelak.R;
+import net.suteren.android.jidelak.R.color;
+import net.suteren.android.jidelak.R.drawable;
+import net.suteren.android.jidelak.R.id;
+import net.suteren.android.jidelak.R.layout;
+import net.suteren.android.jidelak.R.menu;
+import net.suteren.android.jidelak.R.string;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;

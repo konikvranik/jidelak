@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Map;
 
 import net.suteren.android.jidelak.JidelakException;
+import net.suteren.android.jidelak.JidelakParseException;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Source;
@@ -28,11 +29,13 @@ public class AvailabilityMarshaller extends BaseMarshaller<Availability> {
 				avail.setMonth(cal.get(Calendar.MONTH) + 1);
 				avail.setYear(cal.get(Calendar.YEAR));
 			} catch (ParseException e) {
-				throw new JidelakException(R.string.opening_hours_invalid_date,
-						e);
+				throw new JidelakParseException(
+						R.string.opening_hours_invalid_date, getSource()
+								.getDateFormatString(), x, e);
 			}
 
 		x = data.get(prefix + "term@day-of-week");
+
 		if (x != null)
 			try {
 				DateFormat df = new SimpleDateFormat("E", getSource()
@@ -40,8 +43,8 @@ public class AvailabilityMarshaller extends BaseMarshaller<Availability> {
 				cal.setTime(df.parse(x));
 				avail.setDow(cal.get(Calendar.DAY_OF_WEEK));
 			} catch (ParseException e) {
-				throw new JidelakException(
-						R.string.opening_hours_invalid_day_of_week, e);
+				throw new JidelakParseException(
+						R.string.opening_hours_invalid_day_of_week, "E", x, e);
 			}
 
 		avail.setFrom(data.get(prefix + "term@from"));

@@ -1,4 +1,4 @@
-package net.suteren.android.jidelak;
+package net.suteren.android.jidelak.ui;
 
 import static net.suteren.android.jidelak.Constants.DAY_IN_MILLIS;
 import static net.suteren.android.jidelak.Constants.HOUR_IN_MILLIS;
@@ -6,6 +6,12 @@ import static net.suteren.android.jidelak.Constants.MINUTE_IN_MILLIS;
 import static net.suteren.android.jidelak.Constants.WEEK_IN_MILLIS;
 
 import java.util.Locale;
+
+import net.suteren.android.jidelak.R;
+import net.suteren.android.jidelak.Utils;
+import net.suteren.android.jidelak.R.array;
+import net.suteren.android.jidelak.R.id;
+import net.suteren.android.jidelak.R.string;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

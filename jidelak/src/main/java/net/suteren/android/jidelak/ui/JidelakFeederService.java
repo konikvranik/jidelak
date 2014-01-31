@@ -1,4 +1,4 @@
-package net.suteren.android.jidelak;
+package net.suteren.android.jidelak.ui;
 
 import static net.suteren.android.jidelak.Constants.DEFAULT_PREFERENCES;
 import static net.suteren.android.jidelak.Constants.LAST_UPDATED_KEY;
@@ -24,6 +24,12 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import net.suteren.android.jidelak.JidelakDbHelper;
+import net.suteren.android.jidelak.JidelakException;
+import net.suteren.android.jidelak.JidelakTransformerException;
+import net.suteren.android.jidelak.R;
+import net.suteren.android.jidelak.Utils;
+import net.suteren.android.jidelak.R.string;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
@@ -134,7 +140,10 @@ public class JidelakFeederService extends Service {
 			} catch (IOException e) {
 				throw new JidelakException(R.string.feeder_io_exception, e);
 			} catch (TransformerException e) {
-				throw new JidelakException(R.string.transformer_exception, e);
+				throw new JidelakTransformerException(
+						R.string.transformer_exception, source.getRestaurant()
+								.getTemplateName(), source.getUrl().toString(),
+						e);
 			} catch (ParserConfigurationException e) {
 				throw new JidelakException(
 						R.string.parser_configuration_exception, e);
@@ -180,16 +189,18 @@ public class JidelakFeederService extends Service {
 
 		DOMResult res = transform(d, inXsl);
 
-		StringWriter sw = new StringWriter();
-		Transformer tr = TransformerFactory.newInstance().newTransformer();
-		tr.setOutputProperty(OutputKeys.INDENT, "yes");
-		tr.transform(new DOMSource(res.getNode()), new StreamResult(sw));
-		log.debug(sw.toString());
+		if (log.isDebugEnabled()) {
+			StringWriter sw = new StringWriter();
+			Transformer tr = TransformerFactory.newInstance().newTransformer();
+			tr.setOutputProperty(OutputKeys.INDENT, "yes");
+			tr.transform(new DOMSource(res.getNode()), new StreamResult(sw));
+			log.debug(sw.toString());
+		}
 
 		return res.getNode();
 	}
 
-	private Tidy getTidy(String enc) throws IOException {
+	private Tidy getTidy(String enc) {
 
 		log.debug("Enc: " + enc);
 

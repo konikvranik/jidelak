@@ -12,6 +12,8 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import net.suteren.android.jidelak.ui.ErrorViewActivity;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

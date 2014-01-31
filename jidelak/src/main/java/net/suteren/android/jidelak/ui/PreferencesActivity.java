@@ -1,9 +1,11 @@
 /**
  * 
  */
-package net.suteren.android.jidelak;
+package net.suteren.android.jidelak.ui;
 
 import static net.suteren.android.jidelak.Constants.DEFAULT_PREFERENCES;
+import net.suteren.android.jidelak.R;
+import net.suteren.android.jidelak.R.xml;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;

@@ -15,6 +15,11 @@
         android:key="category_background"
         android:summary="@string/category_background_description"
         android:title="@string/category_background_title" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="only_wifi"
+        android:summary="@string/only_wifi_description"
+        android:title="@string/only_wifi_title" />
 
     <!--
     PreferenceCategory

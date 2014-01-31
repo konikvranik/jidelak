@@ -5,8 +5,10 @@ package net.suteren.android.jidelak;
 
 import static net.suteren.android.jidelak.Constants.DEFAULT_PREFERENCES;
 import static net.suteren.android.jidelak.Constants.DEFAULT_UPDATE_INTERVAL;
+import static net.suteren.android.jidelak.Constants.DEFAULT_WIFI_ONLY;
 import static net.suteren.android.jidelak.Constants.LAST_UPDATED_KEY;
 import static net.suteren.android.jidelak.Constants.UPDATE_INTERVAL_KEY;
+import static net.suteren.android.jidelak.Constants.WIFI_ONLY_KEY;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +42,18 @@ public class JidelakFeederReceiver extends BroadcastReceiver {
 	}
 
 	private boolean decideIfStart(Context context) {
+
+		if (!Utils.isConnected(context))
+			return false;
+
 		SharedPreferences prefs = context.getSharedPreferences(
 				DEFAULT_PREFERENCES, Context.MODE_PRIVATE);
 		long schedule = prefs.getLong(LAST_UPDATED_KEY, -1);
 		long time = System.currentTimeMillis();
+
+		if (prefs.getBoolean(WIFI_ONLY_KEY, DEFAULT_WIFI_ONLY)
+				&& Utils.isConnectedMobile(context))
+			return false;
 
 		try {
 			if (schedule != -1)
@@ -54,7 +64,6 @@ public class JidelakFeederReceiver extends BroadcastReceiver {
 		}
 
 		if (time > schedule) {
-			prefs.edit().putLong(LAST_UPDATED_KEY, time);
 			return true;
 		} else
 			return false;

@@ -55,6 +55,8 @@
     <string name="send_error">Send Error</string>
     <string name="unsupported_protocol">Unsupported protocol</string>
     <string name="malformed_url">Malformed URL</string>
+    <string name="only_wifi_title">Download on WiFi only</string>
+    <string name="only_wifi_description">Don\'t download baskground data over 3G networks. Use WiFi only. If you update data manually, it will be downloaded even over mobile network.</string>
 
     <string-array name="weeks">
         <item>weeks</item>

@@ -83,6 +83,8 @@ public class JidelakFeederService extends Service {
 
 	private Worker worker;
 
+	private JidelakFeederReceiver timerReceiver;
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		mHandler = new Handler();
@@ -114,8 +116,14 @@ public class JidelakFeederService extends Service {
 		super.onCreate();
 		log.trace("JidelakFeederService.onCreate()");
 
-		registerReceiver(new JidelakFeederReceiver(), new IntentFilter(
-				Intent.ACTION_TIME_TICK));
+		registerReceiver(timerReceiver = new JidelakFeederReceiver(),
+				new IntentFilter(Intent.ACTION_TIME_TICK));
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(timerReceiver);
 	}
 
 	void updateData() throws JidelakException {
@@ -306,12 +314,7 @@ public class JidelakFeederService extends Service {
 		protected void onPostExecute(Void result) {
 			log.debug("finito1");
 			super.onPostExecute(result);
-			log.debug("finito2");
-			JidelakFeederService.this.stopForeground(true);
-			log.debug("finito3");
 			JidelakFeederService.this.stopSelf();
-			log.debug("finito4");
-			
 
 		}
 

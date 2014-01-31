@@ -355,22 +355,28 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		log.debug("Start refresh");
 		Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotate);
 		rotation.setRepeatCount(Animation.INFINITE);
-		LayoutInflater inflater = (LayoutInflater) this
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		ImageView iv = (ImageView) inflater.inflate(
-				R.layout.refresh_action_view, null);
-		iv.startAnimation(rotation);
 
 		MenuItem refreshItem = mainMenu.findItem(R.id.action_update);
 
-		refreshItem.setActionView(iv);
+		ImageView iv = (ImageView) refreshItem.getActionView();
+		if (iv == null) {
+			LayoutInflater inflater = (LayoutInflater) this
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			iv = (ImageView) inflater.inflate(R.layout.refresh_action_view,
+					null);
+			refreshItem.setActionView(iv);
+		}
+		iv.startAnimation(rotation);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	void stopRefreshHc() {
 		log.debug("Stop refresh");
 		MenuItem refreshItem = mainMenu.findItem(R.id.action_update);
-		refreshItem.setActionView(null);
+
+		ImageView iv = (ImageView) refreshItem.getActionView();
+		if (iv != null)
+			iv.setAnimation(null);
 	}
 
 	void startRefreshFr() {

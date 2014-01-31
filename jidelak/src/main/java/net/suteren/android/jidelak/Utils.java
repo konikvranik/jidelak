@@ -9,6 +9,7 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
@@ -17,6 +18,8 @@ import net.suteren.android.jidelak.ui.ErrorViewActivity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -253,5 +256,20 @@ public class Utils {
 		} else {
 			return false;
 		}
+	}
+
+	public static boolean isServiceRunning(Context ctx, String serviceClassName) {
+		final ActivityManager activityManager = (ActivityManager) ctx
+				.getSystemService(Context.ACTIVITY_SERVICE);
+		final List<RunningServiceInfo> services = activityManager
+				.getRunningServices(Integer.MAX_VALUE);
+
+		for (RunningServiceInfo runningServiceInfo : services) {
+			if (runningServiceInfo.service.getClassName().equals(
+					serviceClassName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

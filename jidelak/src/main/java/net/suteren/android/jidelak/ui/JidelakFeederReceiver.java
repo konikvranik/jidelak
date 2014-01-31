@@ -44,7 +44,9 @@ public class JidelakFeederReceiver extends BroadcastReceiver {
 
 	private boolean decideIfStart(Context context) {
 
-		if (!Utils.isConnected(context))
+		if (!Utils.isConnected(context)
+				|| Utils.isServiceRunning(context,
+						JidelakFeederService.class.getName()))
 			return false;
 
 		SharedPreferences prefs = context.getSharedPreferences(

@@ -9,9 +9,6 @@ import java.util.Locale;
 
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.Utils;
-import net.suteren.android.jidelak.R.array;
-import net.suteren.android.jidelak.R.id;
-import net.suteren.android.jidelak.R.string;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -6,8 +6,6 @@ import java.util.List;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.R;
-import net.suteren.android.jidelak.R.id;
-import net.suteren.android.jidelak.R.layout;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.os.Bundle;

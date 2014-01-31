@@ -10,8 +10,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import net.suteren.android.jidelak.R;
-import net.suteren.android.jidelak.R.id;
-import net.suteren.android.jidelak.R.layout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

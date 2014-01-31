@@ -11,10 +11,10 @@
     <string name="data_updated">Data byl aktualizována</string>
     <string name="import_failed">Nepodařilo se naimportovat data: </string>
     <string name="source_malformed_url">Neplatná URL "%s" v source</string>
-    <string name="first_day_of_week_malformed">První den v týdnu "%s" neodpovídá formátu "%s":</string>
-    <string name="meal_invalid_date_format">Datum v &lt;meal&gt; "%s" neodpovídá formátu "%s":</string>
-    <string name="opening_hours_invalid_date">Datum otevíracích hodin "%s" neodpovídá formátu "%s":</string>
-    <string name="opening_hours_invalid_day_of_week">Den v týdnu otevíracích hodin "%s" neodpovídá formátu "%s":</string>
+    <string name="first_day_of_week_malformed">První den v týdnu "%1$s" neodpovídá formátu "%2$s":</string>
+    <string name="meal_invalid_date_format">Datum v &lt;meal&gt; "%1$s" neodpovídá formátu "%2$s":</string>
+    <string name="opening_hours_invalid_date">Datum otevíracích hodin "%1$s" neodpovídá formátu "%2$s":</string>
+    <string name="opening_hours_invalid_day_of_week">Den v týdnu otevíracích hodin "%1$s" neodpovídá formátu "%2$s":</string>
     <string name="unexpected_exception">Vyskytla se neočekávaná chyba - koukněte do error logu</string>
     <string name="parser_configuration_exception">Je poškozená konfigurace parseru - koukněte do error logu</string>
     <string name="transformer_configuration_exception">Je poškozená konfigurace transformeru -  koukněte do error logu</string>

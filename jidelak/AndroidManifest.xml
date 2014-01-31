@@ -32,7 +32,7 @@
         <!-- created by Petr at 2014-01-05 12:39:35 -->
         <activity
             android:exported="true"
-            android:namne=".ui.JidelakTemplateImporterActivityity"
+            android:name=".ui.JidelakTemplateImporterActivityity"
             android:theme="@style/DialogTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

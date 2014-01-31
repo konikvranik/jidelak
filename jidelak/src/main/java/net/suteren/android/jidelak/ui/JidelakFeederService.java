@@ -29,7 +29,6 @@ import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.JidelakTransformerException;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.Utils;
-import net.suteren.android.jidelak.R.string;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;

@@ -33,7 +33,4 @@
     </PreferenceCategory
     -->
 
-    <net.suteren.android.jidelak.EditIntPreference>
-    </net.suteren.android.jidelak.EditIntPreference>
-
 </PreferenceScreen>

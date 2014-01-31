@@ -12,9 +12,9 @@
     <string name="import_failed">Data import failed: </string>
     <string name="source_malformed_url">URL "%s" in source is invalid</string>
     <string name="first_day_of_week_malformed">First day of week in source does not match format %s:</string>
-    <string name="meal_invalid_date_format">Date "%s" in meal does not match format %s:</string>
-    <string name="opening_hours_invalid_date">Date "%s" in opening hours does not match format %s:</string>
-    <string name="opening_hours_invalid_day_of_week">Day of week "%s" in opening hours does not match format %s:</string>
+    <string name="meal_invalid_date_format">Date "%1$s" in meal does not match format %2$s:</string>
+    <string name="opening_hours_invalid_date">Date "%1$s" in opening hours does not match format %2$s:</string>
+    <string name="opening_hours_invalid_day_of_week">Day of week "%1$s" in opening hours does not match format %2$s:</string>
     <string name="unexpected_exception">Unexpected exception ocured - see error log</string>
     <string name="parser_configuration_exception">Parser configuration is damaged. See error log</string>
     <string name="transformer_configuration_exception">Transformer configuration is damaged. See error log</string>
@@ -56,7 +56,7 @@
     <string name="unsupported_protocol">Unsupported protocol</string>
     <string name="malformed_url">Malformed URL</string>
     <string name="only_wifi_title">Download on WiFi only</string>
-    <string name="only_wifi_description">Don\'t download baskground data over 3G networks. Use WiFi only. If you update data manually, it will be downloaded even over mobile network.</string>
+    <string name="only_wifi_description">Don\'t download background data over 3G networks. Use WiFi only. If you update data manually, it will be downloaded even over mobile network.</string>
 
     <string-array name="weeks">
         <item>weeks</item>

@@ -59,6 +59,7 @@ public class JidelakException extends Exception {
 	}
 
 	public String toString(Context ctx) {
-		return ctx.getResources().getString(getResource(), getArgs());
+		return ctx.getResources()
+				.getString(getResource(), (Object[]) getArgs());
 	}
 }

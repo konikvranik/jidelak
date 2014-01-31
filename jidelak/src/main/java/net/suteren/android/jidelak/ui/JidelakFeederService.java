@@ -53,23 +53,51 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
 
 public class JidelakFeederService extends Service {
 
+	/**
+	 * Class used for the client Binder. Because we know this service always
+	 * runs in the same process as its clients, we don't need to deal with IPC.
+	 */
+	public class LocalBinder extends Binder {
+		JidelakFeederService getService() {
+			// Return this instance of LocalService so clients can call public
+			// methods
+			return JidelakFeederService.this;
+		}
+	}
+
 	private static Logger log = LoggerFactory
 			.getLogger(JidelakFeederService.class);
 
+	private final IBinder mBinder = new LocalBinder();
 	static final String LOGGING_TAG = "JidelakFeederService";
 
 	private JidelakDbHelper dbHelper;
 	private Handler mHandler;
 
+	private Worker worker;
+
 	@Override
 	public IBinder onBind(Intent intent) {
-		return null;
+		mHandler = new Handler();
+		log.trace("JidelakFeederService.onBind()");
+		setWorker(new Worker());
+		getWorker().execute(new Void[0]);
+		return mBinder;
+	}
+
+	private void setWorker(Worker worker) {
+		this.worker = worker;
+	}
+
+	public Worker getWorker() {
+		return worker;
 	}
 
 	@Override
@@ -272,6 +300,19 @@ public class JidelakFeederService extends Service {
 
 			}
 			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			log.debug("finito1");
+			super.onPostExecute(result);
+			log.debug("finito2");
+			JidelakFeederService.this.stopForeground(true);
+			log.debug("finito3");
+			JidelakFeederService.this.stopSelf();
+			log.debug("finito4");
+			
+
 		}
 
 	}

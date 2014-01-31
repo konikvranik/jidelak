@@ -11,13 +11,21 @@ import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.model.Availability;
+import net.suteren.android.jidelak.ui.JidelakFeederService.LocalBinder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.annotation.TargetApi;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.DataSetObserver;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -29,11 +37,15 @@ import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
@@ -42,6 +54,10 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 	private static Logger log = LoggerFactory
 			.getLogger(JidelakMainActivity.class);
+
+	boolean mBound = false;
+
+	JidelakFeederService mService;
 
 	public class DayPagerAdapter extends FragmentPagerAdapter implements
 			SpinnerAdapter {
@@ -196,6 +212,8 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 	private ViewPager pagerView;
 
+	private Menu mainMenu;
+
 	public JidelakDbHelper getDbHelper() {
 		if (dbHelper == null)
 			dbHelper = new JidelakDbHelper(getApplicationContext());
@@ -221,7 +239,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		getOverflowMenu();
 		setContentView(R.layout.activity_main);
 
 		dpa = new DayPagerAdapter(getSupportFragmentManager());
@@ -315,7 +333,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getOverflowMenu();
+		mainMenu = menu;
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.jidelak, menu);
 		return true;
@@ -332,13 +350,50 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		ab.setDisplayHomeAsUpEnabled(true);
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	void startRefreshHc() {
+		log.debug("Start refresh");
+		Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotate);
+		rotation.setRepeatCount(Animation.INFINITE);
+		LayoutInflater inflater = (LayoutInflater) this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		ImageView iv = (ImageView) inflater.inflate(
+				R.layout.refresh_action_view, null);
+		iv.startAnimation(rotation);
+
+		MenuItem refreshItem = mainMenu.findItem(R.id.action_update);
+
+		refreshItem.setActionView(iv);
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	void stopRefreshHc() {
+		log.debug("Stop refresh");
+		MenuItem refreshItem = mainMenu.findItem(R.id.action_update);
+		refreshItem.setActionView(null);
+	}
+
+	void startRefreshFr() {
+		log.debug("Start refresh old");
+
+	}
+
+	void stopRefreshFr() {
+		log.debug("Stop refresh old");
+
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 
 		case R.id.action_update:
-			return null != startService(new Intent(this,
-					JidelakFeederService.class).putExtra("force", true));
+			Intent intent = new Intent(this, JidelakFeederService.class);
+			startService(intent);
+			boolean res = bindService(intent, mConnection,
+					Context.BIND_NOT_FOREGROUND);
+			log.debug("Bind result: " + res);
+			return true;
 
 		case R.id.action_reorder_restaurants:
 			startActivity(new Intent(this, RestaurantManagerActivity.class));
@@ -378,4 +433,46 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		// Unbind from the service
+		if (mBound) {
+			unbindService(mConnection);
+			mBound = false;
+		}
+	}
+
+	/** Defines callbacks for service binding, passed to bindService() */
+	private ServiceConnection mConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			// We've bound to LocalService, cast the IBinder and get
+			// LocalService instance
+			log.debug("service connected");
+			LocalBinder binder = (LocalBinder) service;
+			mService = binder.getService();
+			mBound = true;
+			AsyncTask<Void, Void, Void> worker;
+			worker = mService.getWorker();
+			if (Build.VERSION.SDK_INT >= 3.0)
+				startRefreshHc();
+			else
+				startRefreshFr();
+
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+			log.debug("service disconnected");
+			mBound = false;
+			if (Build.VERSION.SDK_INT >= 3.0)
+				stopRefreshHc();
+			else
+				stopRefreshFr();
+
+		}
+	};
 }

@@ -373,9 +373,12 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		log.debug("Stop refresh");
 		MenuItem refreshItem = mainMenu.findItem(R.id.action_update);
 
+
 		ImageView iv = (ImageView) refreshItem.getActionView();
-		if (iv != null)
+		if (iv != null) {
 			iv.setAnimation(null);
+		}
+		refreshItem.setActionView(null);
 	}
 
 	void startRefreshFr() {

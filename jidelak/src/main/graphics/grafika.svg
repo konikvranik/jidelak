@@ -33,10 +33,10 @@
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1538"
-     inkscape:window-height="877"
-     inkscape:window-x="-8"
-     inkscape:window-y="172"
+     inkscape:window-width="1858"
+     inkscape:window-height="1057"
+     inkscape:window-x="1654"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata6">
@@ -239,9 +239,9 @@
          id="g4085"
          transform="matrix(0.65793458,0,0,0.65793458,23.435437,138.36355)"
          style="stroke-width:1.51990795;stroke-miterlimit:73.19999695;stroke-dasharray:none"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\src\main\graphics\ic_launcher_new.png"
-         inkscape:export-xdpi="1058.78"
-         inkscape:export-ydpi="1058.78">
+         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher_new.png"
+         inkscape:export-xdpi="160"
+         inkscape:export-ydpi="160">
         <g
            id="g4063"
            style="stroke-width:1.51990795;stroke-miterlimit:73.19999695;stroke-dasharray:none">
@@ -369,9 +369,9 @@
          y="371.37463"
          rx="1.1191132"
          ry="1.1312407"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\src\main\graphics\ic_launcher_new.png"
-         inkscape:export-xdpi="1058.78"
-         inkscape:export-ydpi="1058.78" />
+         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher_new.png"
+         inkscape:export-xdpi="160"
+         inkscape:export-ydpi="160" />
     </g>
   </g>
 </svg>

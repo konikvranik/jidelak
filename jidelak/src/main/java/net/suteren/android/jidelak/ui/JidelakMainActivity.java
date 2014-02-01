@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.R;
+import net.suteren.android.jidelak.Utils;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.ui.JidelakFeederService.LocalBinder;
@@ -47,6 +48,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class JidelakMainActivity extends ActionBarActivity implements
 		TabListener, OnNavigationListener {
@@ -395,10 +397,17 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		switch (item.getItemId()) {
 
 		case R.id.action_update:
+			if (Utils.isServiceRunning(getApplicationContext(),
+					JidelakFeederService.class.getName())) {
+				Toast.makeText(getApplicationContext(),
+						R.string.update_already_running, Toast.LENGTH_SHORT)
+						.show();
+				return true;
+			}
 			Intent intent = new Intent(this, JidelakFeederService.class);
 			startService(intent);
 			boolean res = bindService(intent, mConnection,
-					Context.BIND_WAIVE_PRIORITY);
+					Context.BIND_NOT_FOREGROUND);
 			log.debug("Bind result: " + res);
 			return true;
 

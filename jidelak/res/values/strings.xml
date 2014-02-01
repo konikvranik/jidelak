@@ -57,6 +57,10 @@
     <string name="malformed_url">Malformed URL</string>
     <string name="only_wifi_title">Download on WiFi only</string>
     <string name="only_wifi_description">Don\'t download background data over 3G networks. Use WiFi only. If you update data manually, it will be downloaded even over mobile network.</string>
+    <string name="delete_delay_title">Delete after</string>
+    <string name="delete_delay_description">Records older than this period will be deleted.</string>
+    <string name="never">never</string>
+    <string name="update_already_running">Upate already running</string>
 
     <string-array name="weeks">
         <item>weeks</item>

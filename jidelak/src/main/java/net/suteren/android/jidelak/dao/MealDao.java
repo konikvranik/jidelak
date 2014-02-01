@@ -4,11 +4,13 @@ import java.util.Calendar;
 import java.util.SortedSet;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
+import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
 public class MealDao extends BaseDao<Meal> {
@@ -55,7 +57,7 @@ public class MealDao extends BaseDao<Meal> {
 	public SortedSet<Meal> findByDayAndRestaurant(Calendar day,
 			Restaurant restaurant) {
 		return rawQuery(
-				"select m.* from "
+				"select * from "
 
 				+ AvailabilityDao.getTable().getName() + " a" + " inner join "
 						+ getTableName() + " m" + " on " + " m." + RESTAURANT
@@ -78,7 +80,7 @@ public class MealDao extends BaseDao<Meal> {
 
 	public SortedSet<Meal> findByDay(Calendar day) {
 		return rawQuery(
-				"select m.* from " + getTableName() + " m, "
+				"select * from " + getTableName() + " m, "
 						+ AvailabilityDao.getTable().getName() + " a where m."
 						+ AVAILABILITY + " = a." + AvailabilityDao.ID
 						+ " and ((a." + AvailabilityDao.YEAR + " = ? and a."
@@ -96,6 +98,27 @@ public class MealDao extends BaseDao<Meal> {
 	}
 
 	@Override
+	public SortedSet<Meal> findAll() {
+		return rawQuery("select * from " + getTableName()
+				+ " m left outer join " + AvailabilityDao.getTable().getName()
+				+ " a on m." + AVAILABILITY + " = a." + AvailabilityDao.ID,
+				new String[] {});
+	}
+
+	@Override
+	public Meal findById(long obj) {
+		SortedSet<Meal> result = rawQuery("select * from " + getTableName()
+				+ " m left outer join " + AvailabilityDao.getTable().getName()
+				+ " a on m." + AVAILABILITY + " = a." + AvailabilityDao.ID
+				+ " and m." + ID + "=?", new String[] { Long.toString(obj) });
+		if (result.size() > 1)
+			throw new SQLiteConstraintException();
+		else if (result.isEmpty())
+			return null;
+		return result.first();
+	}
+
+	@Override
 	protected String getTableName() {
 		return TABLE_NAME;
 	}
@@ -103,17 +126,21 @@ public class MealDao extends BaseDao<Meal> {
 	@Override
 	protected Meal parseRow(Cursor cursor) {
 		Meal meal = new Meal();
-		meal.setId(unpackColumnValue(cursor, ID, Long.class));
+		meal.setId(unpackColumnValue(cursor, "m." + ID, Long.class));
 		meal.setCategory(unpackColumnValue(cursor, CATEGORY, String.class));
 		meal.setTitle(unpackColumnValue(cursor, TITLE, String.class));
 		meal.setDescription(unpackColumnValue(cursor, DESCRIPTION, String.class));
-		meal.setAvailability(new AvailabilityDao(getDbHelper())
-				.findById(unpackColumnValue(cursor, AVAILABILITY, Long.class)));
+
+		Availability availability = new AvailabilityDao(getDbHelper())
+				.parseRow(cursor);
+		availability.setId(unpackColumnValue(cursor, "a." + AvailabilityDao.ID,
+				Long.class));
+		meal.setAvailability(availability);
 		meal.setDish(unpackColumnValue(cursor, DISH, Dish.class));
 		meal.setPrice(unpackColumnValue(cursor, PRICE, String.class));
 		meal.setPosition(unpackColumnValue(cursor, POSITION, Integer.class));
-		meal.setRestaurant(new RestaurantDao(getDbHelper())
-				.findById(unpackColumnValue(cursor, RESTAURANT, Long.class)));
+		meal.setRestaurant(new Restaurant(unpackColumnValue(cursor, "m."
+				+ RESTAURANT, Long.class)));
 		return meal;
 	}
 

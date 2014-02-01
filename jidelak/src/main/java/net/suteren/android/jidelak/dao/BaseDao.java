@@ -419,8 +419,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 		} else if (c == DateFormat.class) {
 			value = (V) new SimpleDateFormat(cursor.getString(idx), getLocale());
 		} else if (c == Restaurant.class) {
-			value = (V) new Restaurant();
-			((Restaurant) value).setId(cursor.getLong(idx));
+			value = (V) new Restaurant(cursor.getLong(idx));
 		} else if (c == URL.class) {
 			try {
 				value = (V) new URL(cursor.getString(idx));

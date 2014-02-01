@@ -89,8 +89,8 @@ public class SourceDao extends BaseDao<Source> {
 		source.setDateFormat(unpackColumnValue(cursor, DATE_FORMAT,
 				DateFormat.class));
 
-		Restaurant restaurant = new Restaurant();
-		restaurant.setId(unpackColumnValue(cursor, RESTAURANT, Long.class));
+		Restaurant restaurant = new Restaurant(unpackColumnValue(cursor,
+				RESTAURANT, Long.class));
 		source.setRestaurant(restaurant);
 		// source.setRestaurant(new RestaurantDao(getDbHelper())
 		// .findById(unpackColumnValue(cursor, RESTAURANT, Integer.class)));

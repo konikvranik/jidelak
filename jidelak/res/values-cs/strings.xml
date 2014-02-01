@@ -57,6 +57,10 @@
     <string name="malformed_url">Neplatná URL</string>
     <string name="only_wifi_title">Pouze přes WiFi</string>
     <string name="only_wifi_description">Nestahovat data na pozadí přes mobilní sítě, ale pouze přes WiFi. Pokud budete data aktualizovat ručně, dojde ke stažení i přes mobilní síť.</string>
+    <string name="delete_delay_title">Smazat po</string>
+    <string name="delete_delay_description">Záznamy starší než toto období budou smazány.</string>
+    <string name="never">nikdy</string>
+    <string name="update_already_running">Aktualizace již probíhá</string>
 
     <string-array name="weeks">
         <item>týdnů</item>

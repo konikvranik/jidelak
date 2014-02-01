@@ -24,20 +24,21 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class EditIntPreference extends DialogPreference {
+public class EditIntervalPreference extends DialogPreference {
 
 	private SeekBar myView;
 	private TypedArray values;
 	private int titleRes;
 	private static Logger log = LoggerFactory
-			.getLogger(EditIntPreference.class);
+			.getLogger(EditIntervalPreference.class);
 
-	public EditIntPreference(Context context, AttributeSet attrs) {
+	public EditIntervalPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setup(attrs);
 	}
 
-	public EditIntPreference(Context context, AttributeSet attrs, int defStyle) {
+	public EditIntervalPreference(Context context, AttributeSet attrs,
+			int defStyle) {
 		super(context, attrs, defStyle);
 		setup(attrs);
 	}
@@ -98,7 +99,10 @@ public class EditIntPreference extends DialogPreference {
 
 	private String prettyPrintValue(long value) {
 		String valueString = "-";
-		if (value >= WEEK_IN_MILLIS && (value % WEEK_IN_MILLIS) == 0) {
+
+		if (value < 0)
+			valueString = getContext().getResources().getString(R.string.never);
+		else if (value >= WEEK_IN_MILLIS && (value % WEEK_IN_MILLIS) == 0) {
 			valueString = String.format(Locale.getDefault(), "%d %s", value
 					/ WEEK_IN_MILLIS, Utils.getPlural(getContext()
 					.getResources(), R.array.weeks, value / WEEK_IN_MILLIS));

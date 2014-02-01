@@ -24,6 +24,13 @@ public class Restaurant implements Identificable<Restaurant> {
 	private Address address;
 	private Integer position;
 
+	public Restaurant(Long id) {
+		setId(id);
+	}
+
+	public Restaurant() {
+	}
+
 	public Address getAddress() {
 		return address;
 	}

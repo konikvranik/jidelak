@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant>
+		<restaurant version="1.0">
 			<id>praha-u-majeru</id>
 			<name>Svět Zábavy</name>
 			<phone>(+420) 606746380</phone>

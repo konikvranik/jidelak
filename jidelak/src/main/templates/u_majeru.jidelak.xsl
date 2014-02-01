@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant>
+		<restaurant version="1.0">
 			<id>praha-u-majeru</id>
 			<name>Restaurace U Majerů</name>
 			<phone>(+420) 251 612 775</phone>

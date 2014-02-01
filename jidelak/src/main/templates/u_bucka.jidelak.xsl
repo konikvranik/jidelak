@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant>
+		<restaurant version="1.0">
 			<id>praha-u-bucka</id>
 			<name>Restaurace U Bůčka</name>
 			<phone>(+420) 737 780 745, 737 711 968</phone>

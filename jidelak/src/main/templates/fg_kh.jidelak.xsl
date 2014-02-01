@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	<xsl:output indent="yes" method="xml" encoding="UTF-8" />
 
@@ -18,7 +18,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant> 
+		<restaurant version="1.0">
 			<id>praha-food-garden-kavci-hory</id>
 			<name>FOOD GARDEN KAVČÍ HORY</name>
 			<phone>+420 739 505 818</phone>
@@ -27,7 +27,8 @@
 			<city>Praha 4</city>
 			<country>Česká republika</country>
 			<address>Kavčí Hory Office Park
-Na Hřebenech II 1718/10</address>
+				Na Hřebenech II 1718/10
+			</address>
 			<zip>140 21</zip>
 
 			<source time="relative" base="day" firstDayOfWeek="Po"
@@ -49,7 +50,7 @@ Na Hřebenech II 1718/10</address>
 				<term day-of-week="St" from="11:00" to="15:00" />
 				<term day-of-week="Čt" from="11:00" to="15:00" />
 				<term day-of-week="Pá" from="11:00" to="15:00" />
-				</open>
+			</open>
 
 			<menu>
 				<xsl:apply-templates
@@ -72,8 +73,22 @@ Na Hřebenech II 1718/10</address>
 			<xsl:with-param name="time" select="$pos" />
 		</xsl:apply-templates>
 		<xsl:apply-templates
-			select="../../tr[position() &gt; 2]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
+			select="../../tr[position() &gt; 2 and position() &lt; 6]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
 			<xsl:with-param name="type" select="'1-normal'" />
+			<xsl:with-param name="dish" select="'dinner'" />
+			<xsl:with-param name="ref-time" select="$ref-time" />
+			<xsl:with-param name="time" select="$pos" />
+		</xsl:apply-templates>
+		<xsl:apply-templates
+			select="../../tr[6]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
+			<xsl:with-param name="type" select="'2-vegetarian'" />
+			<xsl:with-param name="dish" select="'dinner'" />
+			<xsl:with-param name="ref-time" select="$ref-time" />
+			<xsl:with-param name="time" select="$pos" />
+		</xsl:apply-templates>
+		<xsl:apply-templates
+			select="../../tr[7]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
+			<xsl:with-param name="type" select="'3-salad'" />
 			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
@@ -114,8 +129,20 @@ Na Hřebenech II 1718/10</address>
 			</title>
 			<description></description>
 			<xsl:choose>
+				<xsl:when test="$dish = 'soup'">
+					<price>18 Kč</price>
+				</xsl:when>
 				<xsl:when test="$type = '1-normal'">
-					<price></price>
+					<price>74 Kč</price>
+				</xsl:when>
+				<xsl:when test="$type = '2-superior'">
+					<price>90 Kč</price>
+				</xsl:when>
+				<xsl:when test="$type = '3-live'">
+					<price>110 Kč</price>
+				</xsl:when>
+				<xsl:when test="$type = '4-pasta'">
+					<price>84 Kč</price>
 				</xsl:when>
 				<xsl:otherwise>
 					<price></price>

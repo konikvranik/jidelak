@@ -27,8 +27,8 @@ import javax.xml.transform.stream.StreamSource;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.JidelakTransformerException;
+import net.suteren.android.jidelak.NotificationUtils;
 import net.suteren.android.jidelak.R;
-import net.suteren.android.jidelak.Utils;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
@@ -304,7 +304,8 @@ public class JidelakFeederService extends Service {
 
 				int notifyID = 2;
 
-				Utils.makeNotification(getApplicationContext(), notifyID, e);
+				NotificationUtils.makeNotification(getApplicationContext(),
+						notifyID, e);
 
 			}
 			return null;

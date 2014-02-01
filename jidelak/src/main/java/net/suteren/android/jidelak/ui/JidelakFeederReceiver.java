@@ -9,6 +9,7 @@ import static net.suteren.android.jidelak.Constants.DEFAULT_WIFI_ONLY;
 import static net.suteren.android.jidelak.Constants.LAST_UPDATED_KEY;
 import static net.suteren.android.jidelak.Constants.UPDATE_INTERVAL_KEY;
 import static net.suteren.android.jidelak.Constants.WIFI_ONLY_KEY;
+import net.suteren.android.jidelak.NetworkUtils;
 import net.suteren.android.jidelak.Utils;
 
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class JidelakFeederReceiver extends BroadcastReceiver {
 
 	private boolean decideIfStart(Context context) {
 
-		if (!Utils.isConnected(context)
+		if (!NetworkUtils.isConnected(context)
 				|| Utils.isServiceRunning(context,
 						JidelakFeederService.class.getName()))
 			return false;
@@ -55,7 +56,7 @@ public class JidelakFeederReceiver extends BroadcastReceiver {
 		long time = System.currentTimeMillis();
 
 		if (prefs.getBoolean(WIFI_ONLY_KEY, DEFAULT_WIFI_ONLY)
-				&& Utils.isConnectedMobile(context))
+				&& NetworkUtils.isConnectedMobile(context))
 			return false;
 
 		try {

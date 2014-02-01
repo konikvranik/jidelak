@@ -29,8 +29,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakException;
+import net.suteren.android.jidelak.NetworkUtils;
+import net.suteren.android.jidelak.NotificationUtils;
 import net.suteren.android.jidelak.R;
-import net.suteren.android.jidelak.Utils;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
@@ -228,7 +229,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 		log.debug("URI: " + uri);
 
-		InputStream sourceStream = Utils.streamFromUrl(uri);
+		InputStream sourceStream = NetworkUtils.streamFromUrl(uri);
 
 		log.debug("Available: " + sourceStream.available());
 
@@ -265,7 +266,8 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 				int notifyID = 1;
 
-				Utils.makeNotification(getApplicationContext(), notifyID, e);
+				NotificationUtils.makeNotification(getApplicationContext(),
+						notifyID, e);
 			}
 			return null;
 		}

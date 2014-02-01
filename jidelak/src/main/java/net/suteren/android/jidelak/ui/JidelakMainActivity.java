@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.DataSetObserver;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -461,8 +460,6 @@ public class JidelakMainActivity extends ActionBarActivity implements
 			LocalBinder binder = (LocalBinder) service;
 			mService = binder.getService();
 			mBound = true;
-			AsyncTask<Void, Void, Void> worker;
-			worker = mService.getWorker();
 			if (Build.VERSION.SDK_INT >= 3.0)
 				startRefreshHc();
 			else

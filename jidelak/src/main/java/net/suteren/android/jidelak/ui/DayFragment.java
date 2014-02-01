@@ -27,6 +27,7 @@ import net.suteren.android.jidelak.model.Restaurant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,6 +39,8 @@ import android.graphics.drawable.ShapeDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -70,6 +73,7 @@ public class DayFragment extends Fragment {
 		private Context ctx;
 		private final Calendar day;
 		private List<Restaurant> restaurants;
+		private MealUpdateWorker menuUpdater = new MealUpdateWorker();
 
 		public DailyMenuAdapter(Context ctx, Calendar day) {
 			this.day = day;
@@ -257,44 +261,107 @@ public class DayFragment extends Fragment {
 		}
 
 		private void updateRestaurants() {
-			long milis = System.currentTimeMillis();
-			log.debug("Update restaurants start");
 
-			restaurants = new ArrayList<Restaurant>(
-					new RestaurantDao(dbHelper).findAll());
+			menuUpdater.doInBackground(new Void[] {});
+		}
 
-			log.debug("Update restaurants got restaurants");
+		private class MealUpdateWorker extends AsyncTask<Void, Void, Void> {
 
-			MealDao mdao = new MealDao(dbHelper);
+			@Override
+			protected Void doInBackground(Void... params) {
 
-			long partMilis = System.currentTimeMillis();
+				long milis = System.currentTimeMillis();
+				log.debug("Update restaurants start");
 
-			TreeMap<Long, SortedSet<Meal>> mmap = new TreeMap<Long, SortedSet<Meal>>();
-			for (Meal m : mdao.findByDay(day)) {
-				SortedSet<Meal> s = mmap.get(m.getRestaurant().getId());
-				if (s == null)
-					mmap.put(m.getRestaurant().getId(), s = new TreeSet<Meal>());
+				restaurants = new ArrayList<Restaurant>(new RestaurantDao(
+						dbHelper).findAll());
 
-				s.add(m);
+				log.debug("Update restaurants got restaurants");
+
+				long partMilis = System.currentTimeMillis();
+				updateMenuInner();
+				long tmp = System.currentTimeMillis();
+				long innerTime = tmp - partMilis;
+				updateMenuOuter();
+				long outerTime = System.currentTimeMillis() - tmp;
+
+				log.debug("Update restaurants outer time: " + outerTime
+						+ "; inner time: " + innerTime);
+
+				log.debug("Update restaurants update end: "
+						+ (System.currentTimeMillis() - partMilis));
+
+				log.debug("Update restaurants end: "
+						+ (System.currentTimeMillis() - milis));
+				return null;
 			}
 
-			AvailabilityDao adao = new AvailabilityDao(dbHelper);
+			protected void updateMenuOuter() {
+				MealDao mdao = new MealDao(dbHelper);
 
-			log.debug("Update restaurants update start");
-			for (Restaurant restaurant : restaurants) {
-				// restaurant
-				// .setMenu(mdao.findByDayAndRestaurant(day, restaurant));
-				SortedSet<Meal> m = mmap.get(restaurant.getId());
-				if (m != null)
-					restaurant.setMenu(m);
-				restaurant.setOpeningHours(new TreeSet<Availability>(adao
-						.findByRestaurant(restaurant)));
+				TreeMap<Long, SortedSet<Meal>> mmap = new TreeMap<Long, SortedSet<Meal>>();
+				for (Meal m : mdao.findByDay(day)) {
+					SortedSet<Meal> s = mmap.get(m.getRestaurant().getId());
+					if (s == null)
+						mmap.put(m.getRestaurant().getId(),
+								s = new TreeSet<Meal>());
+
+					s.add(m);
+				}
+
+				AvailabilityDao adao = new AvailabilityDao(dbHelper);
+
+				log.debug("Update restaurants update start");
+				for (Restaurant restaurant : restaurants) {
+					SortedSet<Meal> m = mmap.get(restaurant.getId());
+					if (m != null)
+						restaurant.setMenu(m);
+					restaurant.setOpeningHours(new TreeSet<Availability>(adao
+							.findByRestaurant(restaurant)));
+				}
 			}
-			log.debug("Update restaurants update end: "
-					+ (System.currentTimeMillis() - partMilis));
 
-			log.debug("Update restaurants end: "
-					+ (System.currentTimeMillis() - milis));
+			protected void updateMenuInner() {
+				MealDao mdao = new MealDao(dbHelper);
+
+				AvailabilityDao adao = new AvailabilityDao(dbHelper);
+
+				log.debug("Update restaurants update start");
+				for (Restaurant restaurant : restaurants) {
+					restaurant.setMenu(mdao.findByDayAndRestaurant(day,
+							restaurant));
+					restaurant.setOpeningHours(new TreeSet<Availability>(adao
+							.findByRestaurant(restaurant)));
+				}
+			}
+
+			@Override
+			protected void onPostExecute(Void result) {
+				super.onPostExecute(result);
+				notifyAdapter();
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+				notifyAdapter();
+			}
+
+			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+			@Override
+			protected void onCancelled(Void result) {
+				super.onCancelled(result);
+				notifyAdapter();
+			}
+
+			private void notifyAdapter() {
+				act.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						ad.notifyDataSetChanged();
+					}
+				});
+			}
 		}
 	}
 
@@ -344,28 +411,14 @@ public class DayFragment extends Fragment {
 		act.getDbHelper().registerObserver(new DataSetObserver() {
 			@Override
 			public void onChanged() {
-				ad.updateRestaurants();
-				act.runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						ad.notifyDataSetChanged();
-					}
-				});
 				super.onChanged();
+				ad.updateRestaurants();
 			}
 
 			@Override
 			public void onInvalidated() {
-				ad.updateRestaurants();
-				act.runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						ad.notifyDataSetInvalidated();
-					}
-				});
 				super.onInvalidated();
+				ad.updateRestaurants();
 			}
 		});
 
@@ -502,4 +555,5 @@ public class DayFragment extends Fragment {
 		day.setTime(new Date(time));
 		return day;
 	}
+
 }

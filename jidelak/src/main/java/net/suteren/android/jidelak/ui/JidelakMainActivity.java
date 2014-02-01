@@ -373,7 +373,6 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		log.debug("Stop refresh");
 		MenuItem refreshItem = mainMenu.findItem(R.id.action_update);
 
-
 		ImageView iv = (ImageView) refreshItem.getActionView();
 		if (iv != null) {
 			iv.setAnimation(null);
@@ -399,7 +398,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 			Intent intent = new Intent(this, JidelakFeederService.class);
 			startService(intent);
 			boolean res = bindService(intent, mConnection,
-					Context.BIND_NOT_FOREGROUND);
+					Context.BIND_WAIVE_PRIORITY);
 			log.debug("Bind result: " + res);
 			return true;
 

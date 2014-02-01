@@ -66,8 +66,22 @@
 			<xsl:with-param name="time" select="$pos" />
 		</xsl:apply-templates>
 		<xsl:apply-templates
-			select="../../tr[position() &gt; 2]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
+			select="../../tr[position() &gt; 2 and position() &lt; 6]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
 			<xsl:with-param name="type" select="'1-normal'" />
+			<xsl:with-param name="dish" select="'dinner'" />
+			<xsl:with-param name="ref-time" select="$ref-time" />
+			<xsl:with-param name="time" select="$pos" />
+		</xsl:apply-templates>
+		<xsl:apply-templates
+			select="../../tr[6]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
+			<xsl:with-param name="type" select="'2-vegetarian'" />
+			<xsl:with-param name="dish" select="'dinner'" />
+			<xsl:with-param name="ref-time" select="$ref-time" />
+			<xsl:with-param name="time" select="$pos" />
+		</xsl:apply-templates>
+		<xsl:apply-templates
+			select="../../tr[7]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
+			<xsl:with-param name="type" select="'3-salad'" />
 			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />

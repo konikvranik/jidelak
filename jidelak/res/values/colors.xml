@@ -6,5 +6,7 @@
     <color name="vegeterian_meal">#AFB</color>
     <color name="pasta_meal">#FEA</color>
     <color name="steak_meal">#FAA</color>
+    <color name="cold_meal">#AAF</color>
+    <color name="live_meal">#FAE</color>
     
 </resources>

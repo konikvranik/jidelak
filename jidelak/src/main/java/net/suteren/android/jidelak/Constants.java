@@ -6,6 +6,8 @@ public class Constants {
 
 	public static final String LAST_UPDATED_KEY = "last_updated";
 
+	public static final String DELETE_DELAY_KEY = "delete_delay";
+
 	public static final String CATEGORY_BACKGROUND_KEY = "category_background";
 	public static final String UPDATE_INTERVAL_KEY = "update_interval";
 
@@ -16,6 +18,8 @@ public class Constants {
 	public static final long WEEK_IN_MILLIS = DAY_IN_MILLIS * 7;
 
 	public static final long DEFAULT_UPDATE_INTERVAL = HOUR_IN_MILLIS;
+
+	public static final long DEFAULT_DELETE_DELAY = WEEK_IN_MILLIS;
 
 	public static final String EXCEPTION = "exception";
 

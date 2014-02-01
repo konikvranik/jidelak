@@ -20,15 +20,14 @@
         android:key="only_wifi"
         android:summary="@string/only_wifi_description"
         android:title="@string/only_wifi_title" />
-    
-         <net.suteren.android.jidelak.ui.EditIntervalPreference
+
+    <net.suteren.android.jidelak.ui.EditIntervalPreference
         android:dialogLayout="@layout/slider_preference"
         android:key="delete_delay"
         android:summary="@string/delete_delay_description"
         android:title="@string/delete_delay_title"
         suteren:values="@array/delete_delays" >
     </net.suteren.android.jidelak.ui.EditIntervalPreference>
-    
 
     <!--
     PreferenceCategory

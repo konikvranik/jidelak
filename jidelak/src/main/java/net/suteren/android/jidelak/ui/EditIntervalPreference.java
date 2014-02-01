@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.TypedArray;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
@@ -27,7 +26,7 @@ import android.widget.TextView;
 public class EditIntervalPreference extends DialogPreference {
 
 	private SeekBar myView;
-	private TypedArray values;
+	private String[] values;
 	private int titleRes;
 	private static Logger log = LoggerFactory
 			.getLogger(EditIntervalPreference.class);
@@ -44,11 +43,11 @@ public class EditIntervalPreference extends DialogPreference {
 	}
 
 	private void setup(AttributeSet attrs) {
-		values = getContext().getResources().obtainTypedArray(
-				attrs.getAttributeResourceValue("suteren", "values",
-						R.array.update_times));
-		titleRes = attrs.getAttributeResourceValue("android", "title",
-				R.string.refresh_period_title);
+		values = getContext().getResources().getStringArray(
+				attrs.getAttributeResourceValue("http://suteren.net/",
+						"values", -1));
+		titleRes = attrs.getAttributeResourceValue(
+				"http://schemas.android.com/apk/res/android", "title", -1);
 	}
 
 	@Override
@@ -57,11 +56,11 @@ public class EditIntervalPreference extends DialogPreference {
 
 		myView = (SeekBar) view.findViewById(R.id.value);
 
-		myView.setMax(values.length() - 1);
+		myView.setMax(values.length - 1);
 		SharedPreferences sharedPreferences = getSharedPreferences();
-		long sv = sharedPreferences.getLong(getKey(), 0);
-		for (int i = 0; i < values.length(); i++) {
-			long v = Math.round(values.getFloat(i, 0));
+		long sv = sharedPreferences.getLong(getKey(), -1);
+		for (int i = 0; i < values.length; i++) {
+			long v = Long.parseLong(values[i]);
 			if (sv <= v) {
 				myView.setProgress(i);
 				break;
@@ -83,7 +82,7 @@ public class EditIntervalPreference extends DialogPreference {
 			@Override
 			public void onProgressChanged(SeekBar paramSeekBar, int paramInt,
 					boolean paramBoolean) {
-				long value = Math.round(values.getFloat(paramInt, 0));
+				long value = Long.parseLong(values[paramInt]);
 
 				updateDisplay(view, value);
 			}
@@ -132,12 +131,11 @@ public class EditIntervalPreference extends DialogPreference {
 		if (!positiveResult)
 			return;
 
-		long result = Math.round(values.getFloat(myView.getProgress(), 0));
+		long result = Long.parseLong(values[myView.getProgress()]);
 
 		Editor e = getEditor();
 		e.putLong(getKey(), result);
 		e.commit();
-		values.recycle();
 		notifyChanged();
 	}
 

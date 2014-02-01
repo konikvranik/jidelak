@@ -90,6 +90,10 @@ public abstract class BaseDao<T extends Identificable<T>> {
 			}
 			return colNames.toArray(new String[0]);
 		}
+
+		public Column[] getColumns() {
+			return columns.toArray(new Column[] {});
+		}
 	}
 
 	public static class Column {
@@ -144,6 +148,14 @@ public abstract class BaseDao<T extends Identificable<T>> {
 
 		public SQLiteDataTypes getType() {
 			return type;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o instanceof Column) {
+				return toString().equals(o.toString());
+			}
+			return false;
 		}
 
 	}
@@ -448,5 +460,21 @@ public abstract class BaseDao<T extends Identificable<T>> {
 
 	protected static void registerTable(String name) {
 		tables.put(name, new Table(name));
+	}
+
+	public static String columnNamesToClause(String alias, Column[] columns) {
+		StringBuffer sb = new StringBuffer();
+
+		for (int i = 0; i < columns.length; i++) {
+			if (i > 0)
+				sb.append(", ");
+			if (alias != null) {
+				sb.append(alias);
+				sb.append(".");
+			}
+			sb.append(columns[i]);
+		}
+		return sb.toString();
+
 	}
 }

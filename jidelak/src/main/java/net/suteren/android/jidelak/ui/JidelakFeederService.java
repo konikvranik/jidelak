@@ -1,13 +1,14 @@
 package net.suteren.android.jidelak.ui;
 
-import static net.suteren.android.jidelak.Constants.DEFAULT_PREFERENCES;
-import static net.suteren.android.jidelak.Constants.LAST_UPDATED_KEY;
+import static net.suteren.android.jidelak.Constants.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
+import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -190,6 +191,13 @@ public class JidelakFeederService extends Service {
 		Editor editor = prefs.edit();
 		editor.putLong(LAST_UPDATED_KEY, System.currentTimeMillis());
 		editor.commit();
+
+		long delay = prefs.getLong(DELETE_DELAY_KEY, DEFAULT_DELETE_DELAY);
+		if (delay >= 0) {
+			Calendar cal = Calendar.getInstance(Locale.getDefault());
+			cal.setTimeInMillis(System.currentTimeMillis() - delay);
+			mdao.deleteOlder(cal);
+		}
 
 		getDbHelper().notifyDataSetChanged();
 	}

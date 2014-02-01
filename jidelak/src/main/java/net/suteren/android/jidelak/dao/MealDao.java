@@ -1,7 +1,10 @@
 package net.suteren.android.jidelak.dao;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Availability;
@@ -34,6 +37,8 @@ public class MealDao extends BaseDao<Meal> {
 
 	public static final String TABLE_NAME = "meal";
 
+	public static final Column[] availabilityColumns;
+
 	static {
 
 		registerTable(TABLE_NAME);
@@ -48,6 +53,8 @@ public class MealDao extends BaseDao<Meal> {
 		getTable().addColumn(RESTAURANT);
 		getTable().addColumn(AVAILABILITY);
 
+		availabilityColumns = prepareAvailabilityColumns();
+
 	}
 
 	public MealDao(JidelakDbHelper dbHelper) {
@@ -57,14 +64,14 @@ public class MealDao extends BaseDao<Meal> {
 	public SortedSet<Meal> findByDayAndRestaurant(Calendar day,
 			Restaurant restaurant) {
 		return rawQuery(
-				"select * from "
-
-				+ AvailabilityDao.getTable().getName() + " a" + " inner join "
-						+ getTableName() + " m" + " on " + " m." + RESTAURANT
-						+ "= ? and m." + AVAILABILITY + " = a."
-						+ AvailabilityDao.ID + " where" + " (a."
-						+ AvailabilityDao.YEAR + " = ? and a."
-						+ AvailabilityDao.MONTH + " = ? and a."
+				"select " + columnNamesToClause("m", getTable().getColumns())
+						+ ", " + columnNamesToClause("a", availabilityColumns)
+						+ " from " + AvailabilityDao.getTable().getName()
+						+ " a" + " inner join " + getTableName() + " m"
+						+ " on " + " m." + RESTAURANT + "= ? and m."
+						+ AVAILABILITY + " = a." + AvailabilityDao.ID
+						+ " where" + " (a." + AvailabilityDao.YEAR
+						+ " = ? and a." + AvailabilityDao.MONTH + " = ? and a."
 						+ AvailabilityDao.DAY + " = ?) or (a."
 						+ AvailabilityDao.YEAR + " is null and a."
 						+ AvailabilityDao.MONTH + " is null and a."
@@ -79,8 +86,13 @@ public class MealDao extends BaseDao<Meal> {
 	}
 
 	public SortedSet<Meal> findByDay(Calendar day) {
+
+		AvailabilityDao.getTable().getColumns();
+
 		return rawQuery(
-				"select * from " + getTableName() + " m, "
+				"select " + columnNamesToClause("m", getTable().getColumns())
+						+ ", " + columnNamesToClause("a", availabilityColumns)
+						+ " from " + getTableName() + " m, "
 						+ AvailabilityDao.getTable().getName() + " a where m."
 						+ AVAILABILITY + " = a." + AvailabilityDao.ID
 						+ " and ((a." + AvailabilityDao.YEAR + " = ? and a."
@@ -97,20 +109,64 @@ public class MealDao extends BaseDao<Meal> {
 						String.valueOf(day.get(Calendar.DAY_OF_WEEK)) });
 	}
 
+	protected static Column[] prepareAvailabilityColumns() {
+		ArrayList<Column> ac = new ArrayList<BaseDao.Column>();
+		for (Column ca : AvailabilityDao.getTable().getColumns()) {
+			boolean add = true;
+			for (Column cm : getTable().getColumns()) {
+				if (ca.equals(cm)) {
+					add = false;
+					break;
+				}
+			}
+			if (add)
+				ac.add(ca);
+		}
+		return ac.toArray(new Column[] {});
+	}
+
+	public SortedSet<Meal> findOlder(Calendar day) {
+		return rawQuery(
+				"select " + columnNamesToClause("m", getTable().getColumns())
+						+ ", " + columnNamesToClause("a", availabilityColumns)
+						+ " from " + getTableName() + " m, "
+						+ AvailabilityDao.getTable().getName() + " a where m."
+						+ AVAILABILITY + " = a." + AvailabilityDao.ID
+						+ " and (" + "a." + AvailabilityDao.YEAR + " < ? "
+						+ " or " + "a." + AvailabilityDao.YEAR + " = ? "
+						+ " and a." + AvailabilityDao.MONTH + " < ? " + " or "
+						+ " or " + "a." + AvailabilityDao.YEAR + " = ? "
+						+ " and a." + AvailabilityDao.MONTH + " = ? "
+						+ " and a." + AvailabilityDao.DAY + " = ?" + ") ",
+				new String[] { String.valueOf(day.get(Calendar.YEAR)),
+						String.valueOf(day.get(Calendar.YEAR)),
+						String.valueOf(day.get(Calendar.MONTH)),
+						String.valueOf(day.get(Calendar.YEAR)),
+						String.valueOf(day.get(Calendar.MONTH)),
+						String.valueOf(day.get(Calendar.DAY_OF_MONTH)) });
+	}
+
 	@Override
 	public SortedSet<Meal> findAll() {
-		return rawQuery("select * from " + getTableName()
-				+ " m left outer join " + AvailabilityDao.getTable().getName()
-				+ " a on m." + AVAILABILITY + " = a." + AvailabilityDao.ID,
+		return rawQuery(
+				"select " + columnNamesToClause("m", getTable().getColumns())
+						+ ", " + columnNamesToClause("a", availabilityColumns)
+						+ " from " + getTableName() + " m left outer join "
+						+ AvailabilityDao.getTable().getName() + " a on m."
+						+ AVAILABILITY + " = a." + AvailabilityDao.ID,
 				new String[] {});
 	}
 
 	@Override
 	public Meal findById(long obj) {
-		SortedSet<Meal> result = rawQuery("select * from " + getTableName()
-				+ " m left outer join " + AvailabilityDao.getTable().getName()
-				+ " a on m." + AVAILABILITY + " = a." + AvailabilityDao.ID
-				+ " and m." + ID + "=?", new String[] { Long.toString(obj) });
+		SortedSet<Meal> result = rawQuery(
+				"select " + columnNamesToClause("m", getTable().getColumns())
+						+ ", " + columnNamesToClause("a", availabilityColumns)
+						+ " from " + getTableName() + " m left outer join "
+						+ AvailabilityDao.getTable().getName() + " a on m."
+						+ AVAILABILITY + " = a." + AvailabilityDao.ID
+						+ " and m." + ID + "=?",
+				new String[] { Long.toString(obj) });
 		if (result.size() > 1)
 			throw new SQLiteConstraintException();
 		else if (result.isEmpty())
@@ -125,22 +181,25 @@ public class MealDao extends BaseDao<Meal> {
 
 	@Override
 	protected Meal parseRow(Cursor cursor) {
+
+		log.debug("Column names: " + Arrays.toString(cursor.getColumnNames()));
+
 		Meal meal = new Meal();
-		meal.setId(unpackColumnValue(cursor, "m." + ID, Long.class));
+		meal.setId(unpackColumnValue(cursor, ID, Long.class));
 		meal.setCategory(unpackColumnValue(cursor, CATEGORY, String.class));
 		meal.setTitle(unpackColumnValue(cursor, TITLE, String.class));
 		meal.setDescription(unpackColumnValue(cursor, DESCRIPTION, String.class));
 
 		Availability availability = new AvailabilityDao(getDbHelper())
 				.parseRow(cursor);
-		availability.setId(unpackColumnValue(cursor, "a." + AvailabilityDao.ID,
-				Long.class));
+		availability.setId(unpackColumnValue(cursor, AVAILABILITY, Long.class));
+		availability.setRestaurant(null);
 		meal.setAvailability(availability);
 		meal.setDish(unpackColumnValue(cursor, DISH, Dish.class));
 		meal.setPrice(unpackColumnValue(cursor, PRICE, String.class));
 		meal.setPosition(unpackColumnValue(cursor, POSITION, Integer.class));
-		meal.setRestaurant(new Restaurant(unpackColumnValue(cursor, "m."
-				+ RESTAURANT, Long.class)));
+		meal.setRestaurant(new Restaurant(unpackColumnValue(cursor, RESTAURANT,
+				Long.class)));
 		return meal;
 	}
 
@@ -197,6 +256,18 @@ public class MealDao extends BaseDao<Meal> {
 		} finally {
 			db.close();
 		}
+
+	}
+
+	public void deleteOlder(Calendar day) {
+
+		SortedSet<Meal> meals = findOlder(day);
+		SortedSet<Availability> avails = new TreeSet<Availability>();
+		for (Meal m : meals)
+			avails.add(m.getAvailability());
+
+		delete(meals);
+		new AvailabilityDao(getDbHelper()).delete(avails);
 
 	}
 }

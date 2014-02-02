@@ -314,7 +314,6 @@ public class RestaurantActivity extends ActionBarActivity {
 					Intent intent = Intent.parseUri(url,
 							Intent.URI_INTENT_SCHEME);
 					view.getContext().startActivity(intent);
-					return true;
 				} catch (URISyntaxException e) {
 					Toast.makeText(
 							getApplicationContext(),
@@ -327,7 +326,7 @@ public class RestaurantActivity extends ActionBarActivity {
 									R.string.activity_not_found, url),
 							Toast.LENGTH_SHORT).show();
 				}
-				return false;
+				return true;
 			}
 		});
 		restaurantView.loadDataWithBaseURL(

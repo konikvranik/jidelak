@@ -32,7 +32,9 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import android.annotation.TargetApi;
 import android.location.Address;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -75,7 +77,8 @@ public class RestaurantActivity extends ActionBarActivity {
 		log.debug("restaurant x code: " + restaurant.getCode());
 		log.debug("restaurant x version: " + restaurant.getVersion());
 
-		StringBuffer sb = new StringBuffer("<h1>");
+		StringBuffer sb = new StringBuffer(
+				"<html><head><link rel='stylesheet' href='restaurant.css' type='text/css' /></head><body><h1>");
 		sb.append(restaurant.getName());
 		sb.append("</h1>");
 
@@ -89,12 +92,25 @@ public class RestaurantActivity extends ActionBarActivity {
 		}
 		metaInfo(restaurant, sb);
 
+		sb.append("</body></html>");
+
 		WebView restaurantView = (WebView) getWindow().findViewById(
 				R.id.restaurant);
+		if (Build.VERSION.SDK_INT >= 3.0)
+			transparencyHack(restaurantView);
 
-		restaurantView.loadDataWithBaseURL("", sb.toString(), "text/html",
+		restaurantView.loadDataWithBaseURL(
+				String.format("file:///android_res/raw/restaurant?id=%d",
+						restaurant.getId()), sb.toString(), "text/html",
 				"UTF-8", "");
 
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	protected void transparencyHack(WebView webView) {
+		webView.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));
+		webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
 	}
 
 	protected void metaInfo(Restaurant restaurant, StringBuffer sb) {

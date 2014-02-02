@@ -2,9 +2,13 @@ body {
 	color: #ddd;
 	background-color: #000;
 	background: transparent;
-	font-size: small;
 }
 
 a {
-	color: #ff9741
+	color: #ff9741;
+}
+
+th {
+	text-align: right;
+	font-size: small;
 }

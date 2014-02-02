@@ -135,9 +135,9 @@ public class MealDao extends BaseDao<Meal> {
 						+ " and (" + "a." + AvailabilityDao.YEAR + " < ? "
 						+ " or " + "a." + AvailabilityDao.YEAR + " = ? "
 						+ " and a." + AvailabilityDao.MONTH + " < ? " + " or "
-						+ " or " + "a." + AvailabilityDao.YEAR + " = ? "
-						+ " and a." + AvailabilityDao.MONTH + " = ? "
-						+ " and a." + AvailabilityDao.DAY + " = ?" + ") ",
+						+ "a." + AvailabilityDao.YEAR + " = ? " + " and a."
+						+ AvailabilityDao.MONTH + " = ? " + " and a."
+						+ AvailabilityDao.DAY + " = ?" + ") ",
 				new String[] { String.valueOf(day.get(Calendar.YEAR)),
 						String.valueOf(day.get(Calendar.YEAR)),
 						String.valueOf(day.get(Calendar.MONTH)),

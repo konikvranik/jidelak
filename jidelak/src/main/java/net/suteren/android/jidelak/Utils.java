@@ -7,10 +7,13 @@ import java.util.StringTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
+import android.webkit.WebView;
 
 public class Utils {
 
@@ -58,5 +61,12 @@ public class Utils {
 			}
 		}
 		return false;
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public static void transparencyHack(Context ctx, WebView usage) {
+		usage.setBackgroundColor(ctx.getResources().getColor(
+				android.R.color.transparent));
+		usage.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
 	}
 }

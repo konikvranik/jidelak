@@ -355,9 +355,10 @@ public class DayFragment extends Fragment {
 			rootView.findViewById(R.id.empty).setVisibility(View.VISIBLE);
 			WebView disclaimerView = (WebView) rootView
 					.findViewById(R.id.empty_text);
-
 			WebSettings settings = disclaimerView.getSettings();
-			settings.setLoadWithOverviewMode(false);
+			settings.setStandardFontFamily("serif");
+			disclaimerView.setBackgroundColor(getResources().getColor(
+					android.R.color.background_dark));
 			disclaimerView
 					.loadUrl("file:///android_res/raw/no_restaurants_disclaimer.html");
 		} else {

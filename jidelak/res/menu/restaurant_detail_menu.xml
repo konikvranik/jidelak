@@ -20,6 +20,6 @@
         android:icon="@android:drawable/ic_menu_delete"
         android:orderInCategory="30"
         android:title="@string/delete"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
 </menu>

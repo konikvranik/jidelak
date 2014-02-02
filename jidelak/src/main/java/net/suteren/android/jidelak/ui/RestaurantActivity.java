@@ -44,6 +44,7 @@ import org.w3c.dom.Node;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -315,6 +316,16 @@ public class RestaurantActivity extends ActionBarActivity {
 					view.getContext().startActivity(intent);
 					return true;
 				} catch (URISyntaxException e) {
+					Toast.makeText(
+							getApplicationContext(),
+							getResources().getString(R.string.malformed_url,
+									url), Toast.LENGTH_SHORT).show();
+				} catch (ActivityNotFoundException e) {
+					Toast.makeText(
+							getApplicationContext(),
+							getResources().getString(
+									R.string.activity_not_found, url),
+							Toast.LENGTH_SHORT).show();
 				}
 				return false;
 			}

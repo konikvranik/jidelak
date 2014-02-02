@@ -54,7 +54,7 @@
     <string name="send_to">Sdílet</string>
     <string name="send_error">Odeslat chybu</string>
     <string name="unsupported_protocol">Nepodporovaný protokol</string>
-    <string name="malformed_url">Neplatná URL</string>
+    <string name="malformed_url">Neplatná URL "%s"</string>
     <string name="only_wifi_title">Pouze přes WiFi</string>
     <string name="only_wifi_description">Nestahovat data na pozadí přes mobilní sítě, ale pouze přes WiFi. Pokud budete data aktualizovat ručně, dojde ke stažení i přes mobilní síť.</string>
     <string name="delete_delay_title">Smazat po</string>
@@ -70,6 +70,7 @@
     <string name="closed">Zavřeno</string>
     <string name="opening_hours">Otvírací doba</string>
     <string name="contact">Kontakt</string>
+    <string name="activity_not_found">Neexistuje aplikace, která by zpracovávala URL "%s"</string>
 
     <string-array name="weeks">
         <item>týdnů</item>

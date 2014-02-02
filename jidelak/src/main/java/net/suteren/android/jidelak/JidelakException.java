@@ -21,8 +21,13 @@ public class JidelakException extends Exception {
 		setResource(messageToUser);
 	}
 
-	public JidelakException(int messageToUser, String[] strings) {
+	public JidelakException(int messageToUser, String... strings) {
 		this(messageToUser);
+		args = strings;
+	}
+
+	public JidelakException(int malformedUrl, Exception e, String... strings) {
+		this(malformedUrl, e);
 		args = strings;
 	}
 

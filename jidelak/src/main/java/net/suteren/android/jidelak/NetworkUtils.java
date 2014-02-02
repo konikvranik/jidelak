@@ -57,7 +57,8 @@ public class NetworkUtils {
 		try {
 			return streamFromUrl(new URL(uri.toString()));
 		} catch (MalformedURLException e) {
-			throw new JidelakException(R.string.malformed_url, e);
+			throw new JidelakException(R.string.malformed_url, e,
+					uri.toString());
 		}
 	}
 

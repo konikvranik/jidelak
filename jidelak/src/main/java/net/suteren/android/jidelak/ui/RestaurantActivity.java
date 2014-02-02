@@ -148,6 +148,8 @@ public class RestaurantActivity extends ActionBarActivity {
 	}
 
 	private String makeLink(String string, String string2) {
+		if (string2 == null)
+			return null;
 		StringBuffer sb = new StringBuffer("<a href='");
 		if (string != null)
 			sb.append(string);

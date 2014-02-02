@@ -316,4 +316,5 @@ public class Restaurant implements Identificable<Restaurant> {
 	public String getVersion() {
 		return version;
 	}
+
 }

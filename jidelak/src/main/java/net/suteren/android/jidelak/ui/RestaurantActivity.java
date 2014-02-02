@@ -6,9 +6,13 @@ package net.suteren.android.jidelak.ui;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.SortedSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,6 +34,7 @@ import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.dao.SourceDao;
+import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 
 import org.slf4j.Logger;
@@ -51,6 +56,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.Toast;
 
@@ -60,24 +66,196 @@ import android.widget.Toast;
  */
 public class RestaurantActivity extends ActionBarActivity {
 
-	private ActionBar ab;
+	private static Logger log = LoggerFactory
+			.getLogger(RestaurantActivity.class);
 
-	@SuppressWarnings("unused")
-	private Menu mainMenu;
+	private ActionBar ab;
 
 	private JidelakDbHelper dbHelper;
 
 	private ExpandableListContextMenuInfo lastMenuInfo;
 
+	@SuppressWarnings("unused")
+	private Menu mainMenu;
+
 	private Restaurant restaurant;
 
-	private static Logger log = LoggerFactory
-			.getLogger(RestaurantActivity.class);
+	private void buildAddress(StringBuffer sb, Address address) {
+		if (address != null) {
+
+			sb.append("<div class='contact'>");
+			sb.append("<h2>");
+			sb.append(getResources().getString(R.string.contact));
+			sb.append("</h2>");
+
+			sb.append("<address class='phone'>");
+			buildParagraph(sb, "phone", parsePhone(address.getPhone()));
+			sb.append("</address>");
+
+			sb.append("<address class='internet'>");
+			buildParagraph(
+					sb,
+					"email",
+					makeLink(
+							"mailto:",
+							address.getExtras() == null ? null : address
+									.getExtras().getString(
+											RestaurantDao.E_MAIL.getName())));
+			buildParagraph(sb, "web", makeLink(null, address.getUrl()));
+			sb.append("</address>");
+
+			sb.append("<address class='postal'>");
+
+			buildParagraph(sb, "featurename", address.getFeatureName());
+			buildParagraph(sb, "premises", address.getPremises());
+
+			if (address.getMaxAddressLineIndex() > -1) {
+				sb.append("<p class='address'>");
+
+				for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+					if (i > 0)
+						sb.append("<br/>");
+					sb.append(address.getAddressLine(i));
+				}
+				sb.append("</p>");
+			}
+
+			buildParagraph(sb, "thoroughfare", address.getThoroughfare());
+			buildParagraph(sb, "subthoroughfare", address.getSubThoroughfare());
+			buildParagraph(sb, "sublocality", address.getSubLocality());
+			buildParagraph(sb, "locality", address.getLocality());
+			buildParagraph(sb, "zip", address.getPostalCode());
+			buildParagraph(sb, "subadmin", address.getSubAdminArea());
+			buildParagraph(sb, "admin", address.getAdminArea());
+			buildParagraph(sb, "country", address.getCountryName());
+			buildParagraph(sb, "countrycode", address.getCountryCode());
+
+			sb.append("</address>");
+			sb.append("</div>");
+		}
+	}
+
+	private String parsePhone(String phone) {
+		String[] phones = phone.split("[,;]");
+		StringBuffer sb = new StringBuffer();
+		for (String s : phones) {
+			sb.append(makeLink("tel:", s));
+			sb.append(", ");
+		}
+		sb.delete(sb.length() - 2, sb.length() - 1);
+		return sb.toString();
+	}
+
+	private String makeLink(String string, String string2) {
+		StringBuffer sb = new StringBuffer("<a href='");
+		if (string != null)
+			sb.append(string);
+		sb.append(string2);
+		sb.append("'>");
+		sb.append(string2);
+		sb.append("</a>");
+
+		return sb.toString();
+	}
+
+	protected void buildParagraph(StringBuffer sb, String clz, String content) {
+		if (content != null) {
+			sb.append("<p class='");
+			sb.append(clz);
+			sb.append("'>");
+			sb.append(content);
+			sb.append("</p>");
+		}
+	}
+
+	private void buildOpeningHours(StringBuffer sb,
+			SortedSet<Availability> openingHours) {
+
+		if (openingHours == null || openingHours.isEmpty())
+			return;
+		sb.append("<div class='serving'>");
+		sb.append("<h2>");
+		sb.append(getResources().getString(R.string.opening_hours));
+		sb.append("</h2>");
+		sb.append("<table class='serving'>");
+		sb.append("<tr class='header'><th></th><th>");
+		sb.append(getResources().getString(R.string.from));
+		sb.append("</th><th>");
+		sb.append(getResources().getString(R.string.to));
+		sb.append("</th></tr>");
+
+		for (Availability a : openingHours) {
+
+			log.debug("Opening hours: " + a);
+
+			sb.append("<tr><th>");
+			if (a.getDow() == null) {
+				sb.append(DateFormat.getDateInstance(DateFormat.SHORT,
+						Locale.getDefault()).format(a.getCalendar().getTime()));
+			} else {
+
+				Calendar cal = Calendar.getInstance(Locale.getDefault());
+				cal.set(Calendar.DAY_OF_WEEK, a.getDow());
+				sb.append(new SimpleDateFormat("E", Locale.getDefault())
+						.format(cal.getTime()));
+			}
+
+			if (a.getClosed() != null && a.getClosed()) {
+				sb.append("</th><td colspan='2' class='closed'>");
+				sb.append(getResources().getString(R.string.closed));
+			} else {
+
+				sb.append("</th><td class='from'>");
+				sb.append(a.getFrom());
+				sb.append("</td><td class='to'>");
+				sb.append(a.getTo());
+			}
+			sb.append("</td></tr>");
+
+		}
+
+		sb.append("</table>");
+		sb.append("</div>");
+
+	}
 
 	private JidelakDbHelper getDbHelper() {
 		if (dbHelper == null)
 			dbHelper = new JidelakDbHelper(this);
 		return dbHelper;
+	}
+
+	protected void buildMetaInfo(StringBuffer sb, Restaurant restaurant) {
+
+		sb.append("<div class='meta'>");
+		sb.append("<table class='meta'>");
+
+		sb.append("<tr class='code'><th>");
+		sb.append(getResources().getString(R.string.code));
+		sb.append("</th><td>");
+		sb.append(restaurant.getCode());
+		sb.append("</td></tr>");
+
+		sb.append("<tr class='version'><th>");
+		sb.append(getResources().getString(R.string.template_version));
+		sb.append("</th><td>");
+		sb.append(restaurant.getVersion());
+		sb.append("</td></tr>");
+
+		sb.append("<tr class='imported'><th>");
+		sb.append(getResources().getString(R.string.last_modified));
+		sb.append("</th><td>");
+		File f = getFileStreamPath(restaurant.getTemplateName());
+		long lm = f.lastModified();
+		sb.append(DateFormat.getDateInstance(DateFormat.SHORT,
+				Locale.getDefault()).format(lm));
+		sb.append(" ");
+		sb.append(DateFormat.getTimeInstance(DateFormat.SHORT,
+				Locale.getDefault()).format(lm));
+		sb.append("</td></tr>");
+
+		sb.append("</table>");
+		sb.append("</div>");
 	}
 
 	/*
@@ -105,21 +283,18 @@ public class RestaurantActivity extends ActionBarActivity {
 		log.debug("restaurant x code: " + restaurant.getCode());
 		log.debug("restaurant x version: " + restaurant.getVersion());
 
-		StringBuffer sb = new StringBuffer(
-				"<html><head><link rel='stylesheet' href='restaurant.css' type='text/css' /></head><body><h1>");
+		StringBuffer sb = new StringBuffer("<html><head>");
+		sb.append("<link rel='stylesheet' href='restaurant.css' type='text/css' />");
+		sb.append("<meta name=\"viewport\" content=\"target-densitydpi=device-dpi\" />");
+		sb.append("</head><body>");
+		sb.append("<h1>");
 		sb.append(restaurant.getName());
 		sb.append("</h1>");
 
-		restaurant.getOpeningHours();
+		buildOpeningHours(sb, restaurant.getOpeningHours());
 
-		Address address = restaurant.getAddress();
-		address = null;
-		if (address != null) {
-			sb.append("<address>");
-			sb.append(address.toString());
-			sb.append("</address>");
-		}
-		metaInfo(restaurant, sb);
+		buildAddress(sb, restaurant.getAddress());
+		buildMetaInfo(sb, restaurant);
 
 		sb.append("</body></html>");
 
@@ -128,86 +303,27 @@ public class RestaurantActivity extends ActionBarActivity {
 		if (Build.VERSION.SDK_INT >= 3.0)
 			transparencyHack(restaurantView);
 
+		restaurantView.getSettings().setDefaultFontSize(32);
+		restaurantView.getSettings().setSupportMultipleWindows(true);
+
+		restaurantView.setWebViewClient(new WebViewClient() {
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				try {
+					Intent intent = Intent.parseUri(url,
+							Intent.URI_INTENT_SCHEME);
+					view.getContext().startActivity(intent);
+					return true;
+				} catch (URISyntaxException e) {
+				}
+				return false;
+			}
+		});
 		restaurantView.loadDataWithBaseURL(
 				String.format("file:///android_res/raw/restaurant?id=%d",
 						restaurant.getId()), sb.toString(), "text/html",
 				"UTF-8", "");
 
-	}
-
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	protected void transparencyHack(WebView webView) {
-		webView.setBackgroundColor(getResources().getColor(
-				android.R.color.transparent));
-		webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-	}
-
-	protected void metaInfo(Restaurant restaurant, StringBuffer sb) {
-
-		sb.append("<table><tr><th>");
-		sb.append(getResources().getString(R.string.version));
-		sb.append("</th><td>");
-		sb.append(restaurant.getVersion());
-		sb.append("</td></tr><tr><th>");
-		sb.append(getResources().getString(R.string.code));
-		sb.append("</th><td>");
-		sb.append(restaurant.getCode());
-		sb.append("</td></tr><tr><th>");
-		sb.append(getResources().getString(R.string.last_modified));
-		sb.append("</th><td>");
-
-		File f = getFileStreamPath(restaurant.getTemplateName());
-		long lm = f.lastModified();
-		sb.append(DateFormat.getDateInstance(DateFormat.LONG,
-				Locale.getDefault()).format(lm));
-		sb.append(" ");
-		sb.append(DateFormat.getTimeInstance(DateFormat.LONG,
-				Locale.getDefault()).format(lm));
-
-		sb.append("</td></tr></table>");
-	}
-
-	protected Restaurant retrieveRestaurant(Restaurant restaurant)
-			throws JidelakException {
-
-		restaurant = new RestaurantDao(new JidelakDbHelper(
-				getApplicationContext())).findById(restaurant);
-
-		log.debug("restaurant name: " + restaurant.getName());
-		log.debug("restaurant template: " + restaurant.getTemplateName());
-
-		try {
-			RestaurantMarshaller rm = new RestaurantMarshaller();
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document d = db.newDocument();
-
-			Node n = d.appendChild(d.createElement("jidelak"));
-			n.appendChild(d.createElement("config"));
-			Transformer tr = TransformerFactory.newInstance().newTransformer(
-					new StreamSource(
-							openFileInput(restaurant.getTemplateName())));
-			DOMResult res = new DOMResult(DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder().newDocument());
-			tr.transform(new DOMSource(d), res);
-			rm.unmarshall("#document.jidelak.config", res.getNode(), restaurant);
-
-			log.debug("restaurant name: " + restaurant.getName());
-			log.debug("restaurant code: " + restaurant.getCode());
-			log.debug("restaurant version: " + restaurant.getVersion());
-
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-		} catch (TransformerFactoryConfigurationError e) {
-			// TODO Auto-generated catch block
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-		}
-		return restaurant;
 	}
 
 	@Override
@@ -334,10 +450,60 @@ public class RestaurantActivity extends ActionBarActivity {
 		}
 	}
 
+	protected Restaurant retrieveRestaurant(Restaurant restaurant)
+			throws JidelakException {
+
+		restaurant = new RestaurantDao(new JidelakDbHelper(
+				getApplicationContext())).findById(restaurant);
+
+		log.debug("restaurant name: " + restaurant.getName());
+		log.debug("restaurant template: " + restaurant.getTemplateName());
+
+		try {
+			RestaurantMarshaller rm = new RestaurantMarshaller();
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document d = db.newDocument();
+
+			Node n = d.appendChild(d.createElement("jidelak"));
+			n.appendChild(d.createElement("config"));
+			Transformer tr = TransformerFactory.newInstance().newTransformer(
+					new StreamSource(
+							openFileInput(restaurant.getTemplateName())));
+			DOMResult res = new DOMResult(DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder().newDocument());
+			tr.transform(new DOMSource(d), res);
+			rm.unmarshall("#document.jidelak.config", res.getNode(), restaurant);
+
+			log.debug("restaurant name: " + restaurant.getName());
+			log.debug("restaurant code: " + restaurant.getCode());
+			log.debug("restaurant version: " + restaurant.getVersion());
+
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+		} catch (TransformerFactoryConfigurationError e) {
+			// TODO Auto-generated catch block
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+		}
+		return restaurant;
+	}
+
 	private void setupActionBar() {
 		ab = getSupportActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setDisplayShowHomeEnabled(true);
 		ab.setDisplayShowTitleEnabled(false);
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	protected void transparencyHack(WebView webView) {
+		webView.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));
+		webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
 	}
 }

@@ -1,7 +1,13 @@
 package net.suteren.android.jidelak.model;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
+
+import net.suteren.android.jidelak.Utils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Availability implements Identificable<Availability> {
 
@@ -14,6 +20,9 @@ public class Availability implements Identificable<Availability> {
 	private Long id;
 	private Boolean closed;
 	private Restaurant restaurant;
+
+	@SuppressWarnings("unused")
+	private Logger log = LoggerFactory.getLogger(Availability.class);
 
 	public Availability(Calendar cal) {
 		super();
@@ -52,6 +61,25 @@ public class Availability implements Identificable<Availability> {
 
 	public Integer getDow() {
 		return dow;
+	}
+
+	public Integer getDowOrder() {
+
+		if (dow == null)
+			return null;
+
+		Locale l = getLocale();
+		if (l == null)
+			l = Locale.getDefault();
+		int fdow = Calendar.getInstance(l).getFirstDayOfWeek();
+
+		int r;
+		if (dow < fdow)
+			r = 7 + dow;
+		else
+			r = dow;
+
+		return r;
 	}
 
 	public void setDow(Integer dow) {
@@ -115,6 +143,16 @@ public class Availability implements Identificable<Availability> {
 		this.restaurant = restaurant;
 	}
 
+	private Locale locale;
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Availability) {
@@ -148,64 +186,37 @@ public class Availability implements Identificable<Availability> {
 			return 1;
 
 		int c = 0;
-		if (getCalendar() == null) {
-			if (another.getCalendar() != null)
-				return -1;
-		} else {
-			c = getCalendar().compareTo(another.getCalendar());
-			if (c != 0)
-				return c;
-		}
+		if ((c = Utils.compare(getYear(), another.getYear())) != 0)
+			return c;
 
-		if (getDow() == null) {
-			if (another.getDow() != null)
-				return -1;
-		} else {
-			if (another.getDow() == null)
-				return 1;
-			c = getDow().compareTo(another.getDow());
-			if (c != 0)
-				return c;
-		}
+		if ((c = Utils.compare(getMonth(), another.getMonth())) != 0)
+			return c;
 
-		if (getClosed() == null) {
-			if (another.getClosed() != null)
-				return -1;
-		} else {
-			if (another.getClosed() == null)
-				return 1;
-			c = getClosed().compareTo(another.getClosed());
-			if (c != 0)
-				return c;
-		}
+		if ((c = Utils.compare(getDay(), another.getDay())) != 0)
+			return c;
 
-		if (getFrom() == null) {
-			if (another.getFrom() != null)
-				return -1;
-		} else {
-			c = getFrom().compareTo(another.getFrom());
-			if (c != 0)
-				return c;
-		}
+		if ((c = Utils.compare(getDowOrder(), another.getDowOrder())) != 0)
+			return c;
 
-		if (getTo() == null) {
-			if (another.getTo() != null)
-				return -1;
-		} else {
-			c = getTo().compareTo(another.getTo());
-			if (c != 0)
-				return c;
-		}
+		if ((c = Utils.compare(getClosed(), another.getClosed())) != 0)
+			return c;
 
-		if (getId() == null) {
-			if (another.getId() != null)
-				return -1;
-		} else {
-			c = getId().compareTo(another.getId());
-			if (c != 0)
-				return c;
-		}
+		if ((c = Utils.compare(getFrom(), another.getFrom())) != 0)
+			return c;
+
+		if ((c = Utils.compare(getTo(), another.getTo())) != 0)
+			return c;
+
+		if ((c = Utils.compare(getId(), another.getId())) != 0)
+			return c;
 
 		return c;
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(new Object[] { getId(), getYear(), getMonth(),
+				getDay(), getDow(), getClosed(), getFrom(), getTo(),
+				getRestaurant() });
 	}
 }

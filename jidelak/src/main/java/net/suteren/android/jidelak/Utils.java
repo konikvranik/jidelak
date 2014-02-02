@@ -69,4 +69,18 @@ public class Utils {
 				android.R.color.transparent));
 		usage.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
 	}
+
+	public static <T extends Comparable<T>> int compare(T o1, T o2) {
+		if (o1 == null) {
+			if (o2 == null)
+				return 0;
+			else
+				return -1;
+		} else {
+			if (o2 == null)
+				return 1;
+			else
+				return o1.compareTo((T) o2);
+		}
+	}
 }

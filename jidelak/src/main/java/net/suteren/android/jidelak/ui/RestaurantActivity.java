@@ -250,9 +250,9 @@ public class RestaurantActivity extends ActionBarActivity {
 		sb.append("</th><td>");
 		File f = getFileStreamPath(restaurant.getTemplateName());
 		long lm = f.lastModified();
-		sb.append(DateFormat.getDateInstance(DateFormat.SHORT,
+		sb.append(DateFormat.getDateInstance(DateFormat.LONG,
 				Locale.getDefault()).format(lm));
-		sb.append(" ");
+		sb.append(" v ");
 		sb.append(DateFormat.getTimeInstance(DateFormat.SHORT,
 				Locale.getDefault()).format(lm));
 		sb.append("</td></tr>");

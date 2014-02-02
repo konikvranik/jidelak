@@ -398,6 +398,12 @@ public class DayFragment extends Fragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		ad.notifyDataSetChanged();
+	}
+
+	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);

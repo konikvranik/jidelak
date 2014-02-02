@@ -452,6 +452,8 @@ public class RestaurantActivity extends ActionBarActivity {
 													.getTemplateName());
 									getDbHelper().notifyDataSetChanged();
 
+									RestaurantActivity.this.finish();
+
 								}
 
 							}).setNegativeButton("No", null)

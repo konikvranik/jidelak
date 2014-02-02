@@ -142,7 +142,7 @@ public class SourceDao extends BaseDao<Source> {
 			db.delete(getTableName(), RESTAURANT + " = ?",
 					new String[] { Long.toString(r.getId()) });
 		} finally {
-			db.close();
+			//db.close();
 		}
 
 	}

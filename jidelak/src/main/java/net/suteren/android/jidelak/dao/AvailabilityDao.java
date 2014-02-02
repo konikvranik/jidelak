@@ -125,7 +125,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
 			db.delete(getTableName(), RESTAURANT + " = ?",
 					new String[] { Long.toString(r.getId()) });
 		} finally {
-			db.close();
+			//db.close();
 		}
 
 	}

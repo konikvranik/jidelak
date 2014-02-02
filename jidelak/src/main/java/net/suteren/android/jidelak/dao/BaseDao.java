@@ -225,7 +225,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 				insert(db, obj);
 			}
 		} finally {
-			db.close();
+			//db.close();
 		}
 	}
 
@@ -246,7 +246,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 		try {
 			insert(db, obj);
 		} finally {
-			db.close();
+			//db.close();
 		}
 	}
 
@@ -257,7 +257,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 		try {
 			update(db, obj, updateNull);
 		} finally {
-			db.close();
+			//db.close();
 		}
 	}
 
@@ -284,7 +284,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 				update(db, obj, updateNull);
 			}
 		} finally {
-			db.close();
+			//db.close();
 		}
 	}
 
@@ -296,7 +296,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 				delete(db, t);
 			}
 		} finally {
-			db.close();
+			//db.close();
 		}
 	}
 
@@ -305,7 +305,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 		try {
 			delete(db, obj);
 		} finally {
-			db.close();
+			//db.close();
 		}
 	}
 
@@ -346,7 +346,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 			log.trace("SQL query: " + getTableName() + " - " + selection
 					+ Arrays.toString(selectionArgs) + " / times: "
 					+ (now - millis1) + ", " + (now - millis2));
-			db.close();
+			//db.close();
 		}
 	}
 
@@ -362,7 +362,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 			log.trace("SQL raw query: " + selection
 					+ Arrays.toString(selectionArgs) + " / times: "
 					+ (now - millis1) + ", " + (now - millis2));
-			db.close();
+			//db.close();
 		}
 	}
 

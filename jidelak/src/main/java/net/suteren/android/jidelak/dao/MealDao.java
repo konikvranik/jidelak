@@ -254,7 +254,7 @@ public class MealDao extends BaseDao<Meal> {
 			db.delete(getTableName(), RESTAURANT + " = ?",
 					new String[] { Long.toString(r.getId()) });
 		} finally {
-			db.close();
+			//db.close();
 		}
 
 	}

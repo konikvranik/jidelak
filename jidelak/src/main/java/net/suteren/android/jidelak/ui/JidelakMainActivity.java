@@ -92,13 +92,14 @@ public class JidelakMainActivity extends ActionBarActivity implements
 				return convertView;
 
 			if (convertView == null) {
-				convertView = new TextView(getApplicationContext());
-				if (parent != null)
-					parent.addView(convertView);
+				convertView = View.inflate(getApplicationContext(),
+						R.layout.spinner_list, null);
 			}
-			((TextView) convertView).setText(DateFormat.getDateInstance(
-					DateFormat.FULL, Locale.getDefault()).format(
-					dates.get(position).getCalendar().getTime()));
+
+			String value = DateFormat.getDateInstance(DateFormat.FULL,
+					Locale.getDefault()).format(
+					dates.get(position).getCalendar().getTime());
+			((TextView) convertView.findViewById(R.id.value)).setText(value);
 
 			int pd = (int) TypedValue.applyDimension(
 					TypedValue.COMPLEX_UNIT_DIP, 8, getResources()
@@ -168,20 +169,16 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
-				convertView = new TextView(getApplicationContext());
-				if (parent != null)
-					parent.addView(convertView);
+				convertView = View.inflate(getApplicationContext(),
+						R.layout.spinner_view, null);
 			}
 
-			int pd = (int) TypedValue.applyDimension(
-					TypedValue.COMPLEX_UNIT_DIP, 5, getResources()
-							.getDisplayMetrics());
-			convertView.setPadding(pd, pd, pd, pd);
-
+			String value = " - ";
 			if (!isEmpty())
-				((TextView) convertView).setText(DateFormat.getDateInstance(
-						DateFormat.SHORT, Locale.getDefault()).format(
-						dates.get(position).getCalendar().getTime()));
+				value = DateFormat.getDateInstance(DateFormat.SHORT,
+						Locale.getDefault()).format(
+						dates.get(position).getCalendar().getTime());
+			((TextView) convertView.findViewById(R.id.value)).setText(value);
 
 			return convertView;
 		}

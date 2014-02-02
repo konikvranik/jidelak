@@ -288,7 +288,7 @@ public class RestaurantActivity extends ActionBarActivity {
 
 		StringBuffer sb = new StringBuffer("<html><head>");
 		sb.append("<link rel='stylesheet' href='restaurant.css' type='text/css' />");
-		sb.append("<meta name=\"viewport\" content=\"target-densitydpi=device-dpi\" />");
+//		sb.append("<meta name=\"viewport\" content=\"target-densitydpi=device-dpi\" />");
 		sb.append("</head><body>");
 		sb.append("<h1>");
 		sb.append(restaurant.getName());
@@ -306,7 +306,7 @@ public class RestaurantActivity extends ActionBarActivity {
 		if (Build.VERSION.SDK_INT >= 3.0)
 			transparencyHack(restaurantView);
 
-		restaurantView.getSettings().setDefaultFontSize(32);
+		restaurantView.getSettings().setDefaultFontSize(11);
 		restaurantView.getSettings().setSupportMultipleWindows(true);
 
 		restaurantView.setWebViewClient(new WebViewClient() {

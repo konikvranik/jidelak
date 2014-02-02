@@ -28,9 +28,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- created by Petr at 2014-01-05 12:39:35 -->
         <activity
-            android:name=".ui.JidelakTemplateImporterActivityity"
+            android:name=".ui.JidelakTemplateImporterActivity"
             android:exported="true"
             android:theme="@style/DialogTheme" >
             <intent-filter>
@@ -126,12 +125,7 @@
             </intent-filter>
         </receiver>
 
-        <uses-library android:name="android.test.runner" />
     </application>
 
-    <instrumentation
-        android:name="android.test.InstrumentationTestRunner"
-        android:label="your tests label"
-        android:targetPackage="net.suteren.android.jidelak" />
 
 </manifest>

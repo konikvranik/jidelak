@@ -250,7 +250,8 @@ public class DayFragment extends Fragment {
 			nameView.setText(restaurant.getName());
 
 			TextView openingView = (TextView) paramView.findViewById(R.id.open);
-			openingView.setText(restaurant.openingHoursToString(day));
+			openingView.setText(restaurant.openingHoursToString(getActivity(),
+					day));
 
 			return paramView;
 		}

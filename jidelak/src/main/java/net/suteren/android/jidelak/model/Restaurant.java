@@ -12,9 +12,12 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import net.suteren.android.jidelak.R;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.content.Context;
 import android.location.Address;
 
 public class Restaurant implements Identificable<Restaurant> {
@@ -162,11 +165,11 @@ public class Restaurant implements Identificable<Restaurant> {
 		this.id = id;
 	}
 
-	public String openingHoursToString() {
-		return openingHoursToString(getOpeningHours());
+	public String openingHoursToString(Context ctx) {
+		return openingHoursToString(ctx, getOpeningHours());
 	}
 
-	public static String openingHoursToString(
+	public static String openingHoursToString(Context ctx,
 			Collection<Availability> openingHours) {
 
 		TreeSet<Availability> tm = new TreeSet<Availability>(
@@ -205,6 +208,21 @@ public class Restaurant implements Identificable<Restaurant> {
 		}
 		StringBuffer sb = new StringBuffer();
 		for (Availability availability : tm) {
+
+			if (availability.getDescription() != null) {
+				sb.append(availability.getDescription());
+				sb.append(" ");
+			}
+
+			if (availability.getFrom() != null && availability.getTo() == null) {
+				sb.append(ctx.getResources().getString(R.string.from));
+				sb.append(": ");
+			}
+			if (availability.getTo() != null && availability.getFrom() == null) {
+				sb.append(ctx.getResources().getString(R.string.to));
+				sb.append(": ");
+			}
+
 			if (availability.getFrom() != null)
 				sb.append(availability.getFrom());
 			if (availability.getFrom() != null && availability.getTo() != null)
@@ -247,8 +265,8 @@ public class Restaurant implements Identificable<Restaurant> {
 		return "restaurant-" + getId() + ".template.xsl";
 	}
 
-	public String openingHoursToString(Calendar day) {
-		return openingHoursToString(getOpeningHours(day));
+	public String openingHoursToString(Context ctx, Calendar day) {
+		return openingHoursToString(ctx, getOpeningHours(day));
 	}
 
 	public List<Meal> getMenuAsList() {

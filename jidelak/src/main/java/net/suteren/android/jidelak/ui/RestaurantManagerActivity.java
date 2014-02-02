@@ -70,7 +70,8 @@ public class RestaurantManagerActivity extends ActionBarActivity {
 			nameView.setText(restaurant.getName());
 
 			TextView openingView = (TextView) paramView.findViewById(R.id.open);
-			openingView.setText(restaurant.openingHoursToString());
+			openingView.setText(restaurant
+					.openingHoursToString(getApplicationContext()));
 
 			return paramView;
 		}

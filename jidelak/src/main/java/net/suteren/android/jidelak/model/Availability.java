@@ -17,6 +17,7 @@ public class Availability implements Identificable<Availability> {
 	private Integer dow;
 	private String from;
 	private String to;
+	private String description;
 	private Long id;
 	private Boolean closed;
 	private Restaurant restaurant;
@@ -109,6 +110,14 @@ public class Availability implements Identificable<Availability> {
 	@Override
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Calendar getCalendar() {

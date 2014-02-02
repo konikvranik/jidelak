@@ -91,8 +91,11 @@ public class JidelakMainActivity extends ActionBarActivity implements
 			if (dates == null || dates.isEmpty())
 				return convertView;
 
-			if (convertView == null)
+			if (convertView == null) {
 				convertView = new TextView(getApplicationContext());
+				if (parent != null)
+					parent.addView(convertView);
+			}
 			((TextView) convertView).setText(DateFormat.getDateInstance(
 					DateFormat.FULL, Locale.getDefault()).format(
 					dates.get(position).getCalendar().getTime()));
@@ -164,8 +167,11 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			if (convertView == null)
+			if (convertView == null) {
 				convertView = new TextView(getApplicationContext());
+				if (parent != null)
+					parent.addView(convertView);
+			}
 
 			int pd = (int) TypedValue.applyDimension(
 					TypedValue.COMPLEX_UNIT_DIP, 5, getResources()

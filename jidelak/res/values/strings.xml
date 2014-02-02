@@ -61,6 +61,10 @@
     <string name="delete_delay_description">Records older than this period will be deleted.</string>
     <string name="never">never</string>
     <string name="update_already_running">Upate already running</string>
+    <string name="version">Version</string>
+    <string name="last_modified">Last modified</string>
+    <string name="code">Code</string>
+    <string name="other">Other</string>
 
     <string-array name="weeks">
         <item>weeks</item>

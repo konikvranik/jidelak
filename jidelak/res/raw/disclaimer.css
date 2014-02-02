@@ -1,4 +1,10 @@
 body {
 	font-family: serif;
 	font-size: small;
+	color: #eee;
+	background-color: #000;
+}
+
+a {
+	color: #fba;
 }

@@ -1,5 +1,6 @@
 package net.suteren.android.jidelak.dao;
 
+import java.util.Locale;
 import java.util.Map;
 
 import net.suteren.android.jidelak.JidelakException;
@@ -42,12 +43,23 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 		restaurant.setName(data.get(key));
 		log.debug("Name: " + data.get(key));
 
-		Address addr = new Address(source.getLocale());
+		key = prefix + "restaurant.id";
+		restaurant.setCode(data.get(key));
+		log.debug("Name: " + data.get(key));
+
+		key = prefix + "restaurant@version";
+		restaurant.setVersion(data.get(key));
+		log.debug("Name: " + data.get(key));
+
+		Address addr = new Address(source == null ? Locale.getDefault()
+				: source.getLocale());
 		key = prefix + "restaurant.address";
 		String addrString = data.get(key);
-		String[] addrLines = addrString.split("\n");
-		for (int i = 0; i < addrLines.length; i++) {
-			addr.setAddressLine(i, addrLines[i]);
+		if (addrString != null) {
+			String[] addrLines = addrString.split("\n");
+			for (int i = 0; i < addrLines.length; i++) {
+				addr.setAddressLine(i, addrLines[i]);
+			}
 		}
 
 		key = prefix + "restaurant.country";

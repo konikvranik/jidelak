@@ -143,6 +143,10 @@ public class Availability implements Identificable<Availability> {
 
 	@Override
 	public int compareTo(Availability another) {
+
+		if (another == null)
+			return 1;
+
 		int c = 0;
 		if (getCalendar() == null) {
 			if (another.getCalendar() != null)
@@ -168,6 +172,8 @@ public class Availability implements Identificable<Availability> {
 			if (another.getClosed() != null)
 				return -1;
 		} else {
+			if (another.getClosed() == null)
+				return 1;
 			c = getClosed().compareTo(another.getClosed());
 			if (c != 0)
 				return c;

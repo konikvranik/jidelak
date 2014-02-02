@@ -476,6 +476,11 @@ public class DayFragment extends Fragment {
 			}
 			return true;
 
+		case R.id.details:
+			startActivity(new Intent(getActivity(), RestaurantActivity.class)
+					.putExtra("restaurant", r.getId()));
+			return true;
+
 		case R.id.action_delete:
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

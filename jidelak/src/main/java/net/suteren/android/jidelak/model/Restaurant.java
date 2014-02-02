@@ -44,6 +44,8 @@ public class Restaurant implements Identificable<Restaurant> {
 	List<Meal> menuList;
 	private Long id;
 	private Set<Source> source;
+	private String version;
+	private String code;
 
 	public SortedSet<Availability> getOpeningHours() {
 		return openingHours;
@@ -297,5 +299,21 @@ public class Restaurant implements Identificable<Restaurant> {
 		target.setSubThoroughfare(source.getSubThoroughfare());
 		target.setThoroughfare(source.getThoroughfare());
 		target.setUrl(source.getUrl());
+	}
+
+	public void setCode(String string) {
+		code = string;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setVersion(String string) {
+		version = string;
+	}
+
+	public String getVersion() {
+		return version;
 	}
 }

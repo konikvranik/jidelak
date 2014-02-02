@@ -144,7 +144,6 @@ public class ErrorViewActivity extends ActionBarActivity {
 
 	private void setupActionBar() {
 		ab = getSupportActionBar();
-		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setDisplayShowHomeEnabled(true);
 		ab.setDisplayShowTitleEnabled(false);

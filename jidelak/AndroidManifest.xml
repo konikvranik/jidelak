@@ -25,14 +25,13 @@
             android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <!-- created by Petr at 2014-01-05 12:39:35 -->
         <activity
-            android:exported="true"
             android:name=".ui.JidelakTemplateImporterActivityity"
+            android:exported="true"
             android:theme="@style/DialogTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -84,23 +83,29 @@
         <activity android:name=".ui.RestaurantManagerActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".JidelakMainActivity" />
+                android:value=".ui.JidelakMainActivity" />
         </activity>
         <!-- created by Petr at 2014-01-26 21:50:43 -->
         <activity android:name=".ui.AboutActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".JidelakMainActivity" />
+                android:value=".ui.JidelakMainActivity" />
         </activity>
         <activity android:name=".ui.ErrorViewActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".JidelakMainActivity" />
+                android:value=".ui.JidelakMainActivity" />
         </activity>
         <activity android:name=".ui.PreferencesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".JidelakMainActivity" />
+                android:value=".ui.JidelakMainActivity" />
+        </activity>
+        <!-- created by Petr at 2014-02-01 23:32:25 -->
+        <activity android:name=".ui.RestaurantActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.JidelakMainActivity" />
         </activity>
 
         <service

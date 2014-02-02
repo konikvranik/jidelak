@@ -61,6 +61,10 @@
     <string name="delete_delay_description">Záznamy starší než toto období budou smazány.</string>
     <string name="never">nikdy</string>
     <string name="update_already_running">Aktualizace již probíhá</string>
+    <string name="version">Verze</string>
+    <string name="last_modified">Naposledy změněno</string>
+    <string name="code">Kód</string>
+    <string name="other">Detail</string>
 
     <string-array name="weeks">
         <item>týdnů</item>

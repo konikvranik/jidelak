@@ -474,7 +474,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 			LocalBinder binder = (LocalBinder) service;
 			mService = binder.getService();
 			mBound = true;
-			if (Build.VERSION.SDK_INT >= 3.0)
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 				startRefreshHc();
 			else
 				startRefreshFr();
@@ -485,7 +485,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		public void onServiceDisconnected(ComponentName arg0) {
 			log.debug("service disconnected");
 			mBound = false;
-			if (Build.VERSION.SDK_INT >= 3.0)
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 				stopRefreshHc();
 			else
 				stopRefreshFr();

@@ -71,6 +71,8 @@
     <string name="opening_hours">Otvírací doba</string>
     <string name="contact">Kontakt</string>
     <string name="activity_not_found">Neexistuje aplikace, která by zpracovávala URL "%s"</string>
+    <string name="android_version">Verze systému</string>
+    <string name="android_code">Kód systému</string>
 
     <string-array name="weeks">
         <item>týdnů</item>

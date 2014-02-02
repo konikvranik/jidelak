@@ -75,8 +75,13 @@ public class AboutActivity extends ActionBarActivity {
 						.getTimeInstance(DateFormat.LONG, Locale.getDefault())
 						.format(lastUpdated)));
 
+		versionView = (TextView) getWindow().findViewById(R.id.system_version);
+		versionView.setText(String.format("%d", Build.VERSION.SDK_INT));
+		versionView = (TextView) getWindow().findViewById(R.id.system_code);
+		versionView.setText(Build.VERSION.RELEASE);
+
 		WebView usage = (WebView) getWindow().findViewById(R.id.usage);
-		if (Build.VERSION.SDK_INT >= 3.0)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			Utils.transparencyHack(getApplicationContext(), usage);
 		usage.getSettings().setStandardFontFamily("sans-serif");
 		usage.loadUrl("file:///android_res/raw/no_restaurants_disclaimer.html");

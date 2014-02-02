@@ -303,7 +303,7 @@ public class RestaurantActivity extends ActionBarActivity {
 
 		WebView restaurantView = (WebView) getWindow().findViewById(
 				R.id.restaurant);
-		if (Build.VERSION.SDK_INT >= 3.0)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			transparencyHack(restaurantView);
 
 		restaurantView.getSettings().setDefaultFontSize(11);

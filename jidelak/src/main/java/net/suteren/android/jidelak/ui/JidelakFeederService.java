@@ -164,7 +164,8 @@ public class JidelakFeederService extends Service {
 					mdao.insert(meal);
 				}
 
-				if (!restaurant.getOpeningHours().isEmpty()) {
+				if (!(restaurant.getOpeningHours() == null || restaurant
+						.getOpeningHours().isEmpty())) {
 					Restaurant savedRestaurant = rdao.findById(restaurant);
 					if (savedRestaurant != null
 							&& savedRestaurant.getOpeningHours() != null)

@@ -71,6 +71,8 @@
     <string name="opening_hours">Opening hours</string>
     <string name="contact">Contact</string>
     <string name="activity_not_found">Activity not found for URL "%s"</string>
+    <string name="android_version">System version</string>
+    <string name="android_code">System code</string>
 
     <string-array name="weeks">
         <item>weeks</item>

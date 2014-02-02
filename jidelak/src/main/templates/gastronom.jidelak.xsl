@@ -40,6 +40,7 @@
 				<term day-of-week="Pá" from="11:00" to="01:00" />
 				<term day-of-week="So" from="12:00" to="01:00" />
 				<term day-of-week="Ne" from="12:00" to="23:00" />
+				<term to="15:00" />
 			</open>
 
 			<!-- <xsl:apply-templates select="//div[@id='levy']/div[@class='poledni_menu']" 
@@ -67,8 +68,7 @@
 		<xsl:when test="starts-with( td[@class='name'],'Polévka')">soup</xsl:when>
 		<xsl:otherwise>dinner</xsl:otherwise>
 		</xsl:choose></xsl:attribute>
-			<xsl:attribute name="order"><xsl:value-of
-				select="position()" /></xsl:attribute>
+			<xsl:attribute name="order"><xsl:value-of select="position()" /></xsl:attribute>
 			<xsl:attribute name="time"><xsl:value-of select="$date" />2014</xsl:attribute>
 			<title>
 				<xsl:value-of select="td[@class='text']" />

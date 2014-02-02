@@ -269,7 +269,37 @@ public class DayFragment extends Fragment {
 
 		private void updateRestaurants() {
 			log.debug("Update restaurants start");
-			menuUpdater.doInBackground(new Void[] {});
+			updateMenu();
+			// menuUpdater.doInBackground(new Void[] {});
+		}
+
+		protected void updateMenu() {
+			long milis = System.currentTimeMillis();
+			log.debug("Update restaurants background start");
+
+			restaurants = new ArrayList<Restaurant>(
+					new RestaurantDao(dbHelper).findAll());
+
+			log.debug("Update restaurants got restaurants");
+
+			long partMilis = System.currentTimeMillis();
+			MealDao mdao = new MealDao(dbHelper);
+
+			AvailabilityDao adao = new AvailabilityDao(dbHelper);
+
+			log.debug("Update restaurants update start");
+			for (Restaurant restaurant : restaurants) {
+				restaurant
+						.setMenu(mdao.findByDayAndRestaurant(day, restaurant));
+				restaurant.setOpeningHours(new TreeSet<Availability>(adao
+						.findByRestaurant(restaurant)));
+			}
+
+			log.debug("Update restaurants update end: "
+					+ (System.currentTimeMillis() - partMilis));
+
+			log.debug("Update restaurants background end: "
+					+ (System.currentTimeMillis() - milis));
 		}
 
 		private class MealUpdateWorker extends AsyncTask<Void, Void, Void> {
@@ -277,32 +307,7 @@ public class DayFragment extends Fragment {
 			@Override
 			protected Void doInBackground(Void... params) {
 
-				long milis = System.currentTimeMillis();
-				log.debug("Update restaurants background start");
-
-				restaurants = new ArrayList<Restaurant>(new RestaurantDao(
-						dbHelper).findAll());
-
-				log.debug("Update restaurants got restaurants");
-
-				long partMilis = System.currentTimeMillis();
-				MealDao mdao = new MealDao(dbHelper);
-
-				AvailabilityDao adao = new AvailabilityDao(dbHelper);
-
-				log.debug("Update restaurants update start");
-				for (Restaurant restaurant : restaurants) {
-					restaurant.setMenu(mdao.findByDayAndRestaurant(day,
-							restaurant));
-					restaurant.setOpeningHours(new TreeSet<Availability>(adao
-							.findByRestaurant(restaurant)));
-				}
-
-				log.debug("Update restaurants update end: "
-						+ (System.currentTimeMillis() - partMilis));
-
-				log.debug("Update restaurants background end: "
-						+ (System.currentTimeMillis() - milis));
+				updateMenu();
 				return null;
 			}
 

@@ -228,7 +228,6 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
 		cal.setTimeInMillis(System.currentTimeMillis());
 		goToDay(dpa.getPositionByDate(cal));
-		ab.setDisplayHomeAsUpEnabled(false);
 	}
 
 	/**
@@ -315,7 +314,6 @@ public class JidelakMainActivity extends ActionBarActivity implements
 	private void setupActionBar() {
 		ab = getSupportActionBar();
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setDisplayShowHomeEnabled(true);
 		ab.setDisplayShowTitleEnabled(false);
 		ab.setListNavigationCallbacks(dpa, this);
@@ -351,7 +349,11 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 	protected void goToDay(int arg0) {
 		pagerView.setCurrentItem(arg0);
-		ab.setDisplayHomeAsUpEnabled(true);
+		
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		cal.setTimeInMillis(System.currentTimeMillis());
+		
+		ab.setDisplayHomeAsUpEnabled(!(arg0==	dpa.getPositionByDate(cal)));
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)

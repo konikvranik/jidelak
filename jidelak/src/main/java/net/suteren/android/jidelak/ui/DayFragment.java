@@ -203,7 +203,7 @@ public class DayFragment extends Fragment {
 
 		@SuppressWarnings("unused")
 		@Override
-		public View getGroupView(int paramInt, boolean paramBoolean,
+		public View getGroupView(final int paramInt, boolean paramBoolean,
 				View paramView, ViewGroup paramViewGroup) {
 
 			if (paramView == null) {
@@ -218,7 +218,10 @@ public class DayFragment extends Fragment {
 
 				@Override
 				public void onClick(View v) {
-					act.openContextMenu(v);
+					startActivity(new Intent(getActivity(),
+							RestaurantActivity.class).putExtra("restaurant",
+							getGroupId(paramInt)));
+					// act.openContextMenu(v);
 				}
 			});
 

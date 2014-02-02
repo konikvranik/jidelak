@@ -18,7 +18,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.0">
+		<restaurant version="1.1">
 			<id>praha-lunch-garden-avenir</id>
 			<name>Lunch Garden Avenir</name>
 			<phone>+420 731 401 714</phone>
@@ -88,21 +88,21 @@
 		</xsl:apply-templates>
 		<xsl:apply-templates
 			select="../../../following-sibling::table[@class='tb_jidelak' and ( position() = 1)]/tbody/tr[2]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
-			<xsl:with-param name="type" select="'2-superior'" />
+			<xsl:with-param name="type" select="'4-superior'" />
 			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
 		</xsl:apply-templates>
 		<xsl:apply-templates
 			select="../../../following-sibling::table[@class='tb_jidelak' and (position() = 2 )]/tbody/tr[2]/td[$pos = position() and normalize-space(translate(.,'&#160;', ' ')) != '']">
-			<xsl:with-param name="type" select="'3-live'" />
+			<xsl:with-param name="type" select="'5-live'" />
 			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
 		</xsl:apply-templates>
 		<xsl:apply-templates
 			select="../../../following-sibling::table[@class='tb_jidelak' and position() = 3]/tbody/tr[2]/td[normalize-space(translate(.,'&#160;', ' ')) != '']">
-			<xsl:with-param name="type" select="'4-pasta'" />
+			<xsl:with-param name="type" select="'6-pasta'" />
 			<xsl:with-param name="dish" select="'dinner'" />
 			<xsl:with-param name="ref-time" select="$ref-time" />
 			<xsl:with-param name="time" select="$pos" />
@@ -125,13 +125,13 @@
 				<xsl:when test="$dish = 'soup'">
 					<price>18 Kč</price>
 				</xsl:when>
-				<xsl:when test="$type = '2-superior'">
+				<xsl:when test="$type = '4-superior'">
 					<price>90 Kč</price>
 				</xsl:when>
-				<xsl:when test="$type = '3-live'">
+				<xsl:when test="$type = '5-live'">
 					<price>110 Kč</price>
 				</xsl:when>
-				<xsl:when test="$type = '4-pasta'">
+				<xsl:when test="$type = '6-pasta'">
 					<price>84 Kč</price>
 				</xsl:when>
 				<xsl:otherwise>

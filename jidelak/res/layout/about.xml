@@ -50,26 +50,6 @@
             android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="@string/versionCode" />
-
-        <TextView
-            android:id="@+id/versionCode"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:layout_weight="1"
-            android:gravity="right"
             android:text="@string/last_updated" />
 
         <TextView
@@ -79,52 +59,12 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="@string/android_version" />
-
-        <TextView
-            android:id="@+id/system_version"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="@string/android_code" />
-
-        <TextView
-            android:id="@+id/system_code"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </LinearLayout>
-
     <WebView
-        android:layout_marginTop="8dp"
         android:id="@+id/usage"
         style="@style/RestaurantTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
         android:clickable="true" />
 

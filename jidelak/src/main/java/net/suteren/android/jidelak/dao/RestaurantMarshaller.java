@@ -19,19 +19,13 @@ import android.os.Bundle;
 public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 
 	private Source source;
-	private boolean updateOh;
+	private boolean updateOh = true;
 	private static Logger log = LoggerFactory
 			.getLogger(RestaurantMarshaller.class);
 
 	@Override
 	protected void unmarshallHelper(String prefix, Map<String, String> data,
 			Restaurant restaurant) {
-
-		if (restaurant.getOpeningHours() == null
-				|| restaurant.getOpeningHours().isEmpty())
-			updateOh = true;
-		else
-			updateOh = false;
 
 		if (log.isDebugEnabled()) {
 			StringBuffer sb = new StringBuffer();
@@ -142,5 +136,9 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 
 	public Source getSource() {
 		return source;
+	}
+
+	public void setUpdateOh(boolean updateOh) {
+		this.updateOh = updateOh;
 	}
 }

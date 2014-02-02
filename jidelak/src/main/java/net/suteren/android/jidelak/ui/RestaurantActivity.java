@@ -250,13 +250,14 @@ public class RestaurantActivity extends ActionBarActivity {
 		sb.append("</th><td>");
 		File f = getFileStreamPath(restaurant.getTemplateName());
 		long lm = f.lastModified();
-		sb.append(DateFormat.getDateInstance(DateFormat.LONG,
-				Locale.getDefault()).format(lm));
-		sb.append(" v ");
-		sb.append(DateFormat.getTimeInstance(DateFormat.SHORT,
-				Locale.getDefault()).format(lm));
+		sb.append(getResources().getString(
+				R.string.date_time,
+				DateFormat
+						.getDateInstance(DateFormat.LONG, Locale.getDefault())
+						.format(lm),
+				DateFormat.getDateInstance(DateFormat.SHORT,
+						Locale.getDefault()).format(lm)));
 		sb.append("</td></tr>");
-
 		sb.append("</table>");
 		sb.append("</div>");
 	}
@@ -288,7 +289,7 @@ public class RestaurantActivity extends ActionBarActivity {
 
 		StringBuffer sb = new StringBuffer("<html><head>");
 		sb.append("<link rel='stylesheet' href='restaurant.css' type='text/css' />");
-//		sb.append("<meta name=\"viewport\" content=\"target-densitydpi=device-dpi\" />");
+		// sb.append("<meta name=\"viewport\" content=\"target-densitydpi=device-dpi\" />");
 		sb.append("</head><body>");
 		sb.append("<h1>");
 		sb.append(restaurant.getName());
@@ -485,6 +486,8 @@ public class RestaurantActivity extends ActionBarActivity {
 			DOMResult res = new DOMResult(DocumentBuilderFactory.newInstance()
 					.newDocumentBuilder().newDocument());
 			tr.transform(new DOMSource(d), res);
+
+			rm.setUpdateOh(false);
 			rm.unmarshall("#document.jidelak.config", res.getNode(), restaurant);
 
 			log.debug("restaurant name: " + restaurant.getName());

@@ -58,27 +58,20 @@ public class AboutActivity extends ActionBarActivity {
 
 		TextView versionView = (TextView) getWindow()
 				.findViewById(R.id.version);
-		versionView.setText(versionName);
-
-		versionView = (TextView) getWindow().findViewById(R.id.versionCode);
-		versionView.setText(String.format("%d", versionCode));
+		versionView.setText(getResources().getString(R.string.versionString,
+				versionName, versionCode));
 
 		SharedPreferences prefs = getSharedPreferences("default",
 				Context.MODE_PRIVATE);
 		Date lastUpdated = new Date(prefs.getLong(LAST_UPDATED_KEY, 0));
 		versionView = (TextView) getWindow().findViewById(R.id.last_updated);
-		versionView.setText(String.format("%s %s",
+		versionView.setText(getResources().getString(
+				R.string.date_time,
 				DateFormat
 						.getDateInstance(DateFormat.LONG, Locale.getDefault())
 						.format(lastUpdated),
-				DateFormat
-						.getTimeInstance(DateFormat.LONG, Locale.getDefault())
-						.format(lastUpdated)));
-
-		versionView = (TextView) getWindow().findViewById(R.id.system_version);
-		versionView.setText(String.format("%d", Build.VERSION.SDK_INT));
-		versionView = (TextView) getWindow().findViewById(R.id.system_code);
-		versionView.setText(Build.VERSION.RELEASE);
+				DateFormat.getTimeInstance(DateFormat.SHORT,
+						Locale.getDefault()).format(lastUpdated)));
 
 		WebView usage = (WebView) getWindow().findViewById(R.id.usage);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)

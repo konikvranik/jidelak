@@ -298,6 +298,12 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		dpa.notifyDataSetChanged();
+	}
+
 	private void setupPagerView() {
 		pagerView = (ViewPager) findViewById(R.id.pager);
 		pagerView.setAdapter(dpa);
@@ -349,11 +355,11 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 	protected void goToDay(int arg0) {
 		pagerView.setCurrentItem(arg0);
-		
+
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
 		cal.setTimeInMillis(System.currentTimeMillis());
-		
-		ab.setDisplayHomeAsUpEnabled(!(arg0==	dpa.getPositionByDate(cal)));
+
+		ab.setDisplayHomeAsUpEnabled(!(arg0 == dpa.getPositionByDate(cal)));
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)

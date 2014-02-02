@@ -200,6 +200,9 @@ public class JidelakTemplateImporterActivity extends Activity {
 
 			RestaurantMarshaller rm = new RestaurantMarshaller();
 			// rm.setSource(source);
+
+			rm.setUpdateOh(restaurant.getOpeningHours() == null
+					|| restaurant.getOpeningHours().isEmpty());
 			rm.unmarshall("#document.jidelak.config", res.getNode(), restaurant);
 
 		} catch (ParserConfigurationException e) {

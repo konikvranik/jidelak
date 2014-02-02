@@ -13,6 +13,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.suteren.android.jidelak.R;
+import net.suteren.android.jidelak.Utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,28 +179,21 @@ public class Restaurant implements Identificable<Restaurant> {
 					@Override
 					public int compare(Availability lhs, Availability rhs) {
 
-						if (lhs == null) {
-							if (rhs == null) {
-								return 0;
-							} else {
-								return 1;
-							}
-						} else {
-							if (rhs == null) {
-								return -1;
-							}
-						}
+						if (lhs == null && rhs == null)
+							return 0;
+						if (lhs != null && rhs == null)
+							return 1;
+						if (lhs == null && rhs != null)
+							return -1;
 
 						int r = 0;
-						if (lhs.getFrom() != null
-								&& (r = lhs.getFrom().compareTo(rhs.getFrom())) != 0)
+
+						if ((r = Utils.compare(lhs.getFrom(), rhs.getFrom())) != 0)
 							return r;
 
-						if (lhs.getTo() != null
-								&& (r = lhs.getTo().compareTo(rhs.getTo())) != 0)
-							return r;
+						r = Utils.compare(lhs.getTo(), rhs.getTo());
 
-						return 0;
+						return r;
 					}
 				});
 

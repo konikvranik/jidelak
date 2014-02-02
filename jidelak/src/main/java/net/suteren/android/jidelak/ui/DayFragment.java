@@ -111,6 +111,9 @@ public class DayFragment extends Fragment {
 
 			Meal meal = getChild(paramInt1, paramInt2);
 
+			if (meal == null)
+				return null;
+
 			boolean showDish = false;
 			if (paramInt2 > 0) {
 				Meal prevMeal = getChild(paramInt1, paramInt2 - 1);

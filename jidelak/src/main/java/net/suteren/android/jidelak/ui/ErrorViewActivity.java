@@ -57,7 +57,7 @@ public class ErrorViewActivity extends ActionBarActivity {
 
 		WebView errorView = (WebView) getWindow().findViewById(R.id.error);
 
-		String text = e.getLocalizedMessage();
+		text = e.getLocalizedMessage();
 		if (text == null || "".equals(text))
 			text = e.getMessage();
 
@@ -81,15 +81,17 @@ public class ErrorViewActivity extends ActionBarActivity {
 					.toString(getApplicationContext()));
 
 		} else if (cause instanceof JidelakException) {
+
 			setText(((JidelakException) cause)
 					.toString(getApplicationContext()));
-
-		} else if (cause == null) {
+			
 			renderStacktrace(getException());
+
 		} else {
-			renderStacktrace(cause);
+			renderStacktrace(getException());
 
 		}
+
 	}
 
 	private void renderStacktrace(Throwable t) {
@@ -104,12 +106,13 @@ public class ErrorViewActivity extends ActionBarActivity {
 		setText(sb.toString());
 	}
 
-	private Throwable getKnownCause(Throwable exception) {
+	private Throwable getKnownCause(Throwable e) {
+		Throwable exception = e;
 		do {
 			if (exception instanceof JidelakException)
 				return exception;
 		} while ((exception = exception.getCause()) != null);
-		return exception;
+		return e;
 	}
 
 	private void setException(JidelakException e) {

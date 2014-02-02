@@ -217,6 +217,8 @@ public abstract class BaseDao<T extends Identificable<T>> {
 	}
 
 	public void insert(Collection<T> objs) {
+		if (objs == null)
+			return;
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
 		try {
 			for (T obj : objs) {

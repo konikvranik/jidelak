@@ -19,6 +19,7 @@ import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Availability;
+import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 
@@ -113,13 +114,10 @@ public class DayFragment extends Fragment {
 			boolean showDish = false;
 			if (paramInt2 > 0) {
 				Meal prevMeal = getChild(paramInt1, paramInt2 - 1);
-				if (((prevMeal == null || prevMeal.getDish() == null) && meal
-						.getDish() != null)
-						|| prevMeal.getDish() != meal.getDish()) {
-					showDish = true;
-				} else {
-					showDish = false;
-				}
+				Dish dish1 = meal.getDish();
+				Dish dish2 = prevMeal == null ? null : prevMeal.getDish();
+				showDish = !(dish1 != null && dish2 != null && dish1 == dish2)
+						|| (dish1 == null && dish2 == null);
 			} else {
 				showDish = true;
 			}

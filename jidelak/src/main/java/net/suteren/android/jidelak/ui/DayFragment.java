@@ -271,6 +271,7 @@ public class DayFragment extends Fragment {
 			log.debug("Update restaurants start");
 			updateMenu();
 			// menuUpdater.doInBackground(new Void[] {});
+			notifyAdapter();
 		}
 
 		protected void updateMenu() {
@@ -302,6 +303,16 @@ public class DayFragment extends Fragment {
 					+ (System.currentTimeMillis() - milis));
 		}
 
+		private void notifyAdapter() {
+			act.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					if (ad != null)
+						ad.notifyDataSetChanged();
+				}
+			});
+		}
+
 		private class MealUpdateWorker extends AsyncTask<Void, Void, Void> {
 
 			@Override
@@ -330,14 +341,6 @@ public class DayFragment extends Fragment {
 				notifyAdapter();
 			}
 
-			private void notifyAdapter() {
-				act.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						ad.notifyDataSetChanged();
-					}
-				});
-			}
 		}
 	}
 

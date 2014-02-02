@@ -132,9 +132,6 @@
 				<xsl:when test="$dish = 'soup'">
 					<price>18 Kč</price>
 				</xsl:when>
-				<xsl:when test="$type = '1-normal'">
-					<price>74 Kč</price>
-				</xsl:when>
 				<xsl:when test="$type = '2-superior'">
 					<price>90 Kč</price>
 				</xsl:when>
@@ -145,7 +142,7 @@
 					<price>84 Kč</price>
 				</xsl:when>
 				<xsl:otherwise>
-					<price></price>
+					<price>74 Kč</price>
 				</xsl:otherwise>
 			</xsl:choose>
 		</meal>

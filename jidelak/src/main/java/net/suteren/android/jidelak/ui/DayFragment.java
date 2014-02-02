@@ -127,7 +127,7 @@ public class DayFragment extends Fragment {
 
 			TextView dishView = (TextView) paramView.findViewById(R.id.dish);
 
-			if (showDish) {
+			if (showDish && meal.getDish() != null) {
 				dishView.setText(meal.getDish().getResource());
 				dishView.setVisibility(View.VISIBLE);
 			} else {

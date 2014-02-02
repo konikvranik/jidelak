@@ -29,6 +29,7 @@ import javax.xml.transform.stream.StreamSource;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.R;
+import net.suteren.android.jidelak.Utils;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
@@ -42,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -305,7 +305,10 @@ public class RestaurantActivity extends ActionBarActivity {
 		WebView restaurantView = (WebView) getWindow().findViewById(
 				R.id.restaurant);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			transparencyHack(restaurantView);
+			Utils.transparencyHack(getApplicationContext(), restaurantView);
+		else
+			restaurantView.setBackgroundColor(getResources().getColor(
+					android.R.color.black));
 
 		restaurantView.getSettings().setDefaultFontSize(11);
 		restaurantView.getSettings().setSupportMultipleWindows(true);
@@ -517,10 +520,4 @@ public class RestaurantActivity extends ActionBarActivity {
 		ab.setDisplayShowTitleEnabled(false);
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	protected void transparencyHack(WebView webView) {
-		webView.setBackgroundColor(getResources().getColor(
-				android.R.color.transparent));
-		webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-	}
 }

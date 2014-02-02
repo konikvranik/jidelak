@@ -76,6 +76,10 @@ public class AboutActivity extends ActionBarActivity {
 		WebView usage = (WebView) getWindow().findViewById(R.id.usage);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			Utils.transparencyHack(getApplicationContext(), usage);
+		else
+			usage.setBackgroundColor(getResources().getColor(
+					android.R.color.black));
+
 		usage.getSettings().setStandardFontFamily("sans-serif");
 		usage.loadUrl("file:///android_res/raw/no_restaurants_disclaimer.html");
 

@@ -192,15 +192,18 @@ public class RestaurantActivity extends ActionBarActivity {
 			log.debug("Opening hours: " + a);
 
 			sb.append("<tr><th>");
-			if (a.getDow() == null) {
-				sb.append(DateFormat.getDateInstance(DateFormat.SHORT,
-						Locale.getDefault()).format(a.getCalendar().getTime()));
-			} else {
+			if (a.getDow() != null) {
 
 				Calendar cal = Calendar.getInstance(Locale.getDefault());
 				cal.set(Calendar.DAY_OF_WEEK, a.getDow());
 				sb.append(new SimpleDateFormat("E", Locale.getDefault())
 						.format(cal.getTime()));
+
+			} else if (a.getYear() != null && a.getMonth() != null
+					&& a.getDay() != null) {
+
+				sb.append(DateFormat.getDateInstance(DateFormat.SHORT,
+						Locale.getDefault()).format(a.getCalendar().getTime()));
 			}
 
 			if (a.getClosed() != null && a.getClosed()) {
@@ -209,9 +212,11 @@ public class RestaurantActivity extends ActionBarActivity {
 			} else {
 
 				sb.append("</th><td class='from'>");
-				sb.append(a.getFrom());
+				if (a.getFrom() != null)
+					sb.append(a.getFrom());
 				sb.append("</td><td class='to'>");
-				sb.append(a.getTo());
+				if (a.getTo() != null)
+					sb.append(a.getTo());
 			}
 			sb.append("</td></tr>");
 

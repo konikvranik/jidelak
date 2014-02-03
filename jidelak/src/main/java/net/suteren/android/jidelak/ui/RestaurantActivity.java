@@ -5,12 +5,10 @@ package net.suteren.android.jidelak.ui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.SortedSet;
 
@@ -48,8 +46,6 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
-import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -376,68 +372,52 @@ public class RestaurantActivity extends ActionBarActivity {
 		case R.id.action_call:
 
 			uri = "tel:" + restaurant.getAddress().getPhone();
-			Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(uri));
 			log.debug("Opening dialer: " + uri);
-			startActivity(intent);
+
+			try {
+				startActivity(Intent.parseUri(uri, Intent.URI_INTENT_SCHEME));
+			} catch (URISyntaxException e) {
+				log.warn(e.getMessage(), e);
+				Toast.makeText(getApplicationContext(),
+						getResources().getString(R.string.malformed_url, uri),
+						Toast.LENGTH_SHORT).show();
+			} catch (ActivityNotFoundException e) {
+				Toast.makeText(
+						getApplicationContext(),
+						getResources().getString(R.string.activity_not_found,
+								uri), Toast.LENGTH_SHORT).show();
+			}
 
 			return true;
 
 		case R.id.action_locate:
-			Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+			addressToSearchString(restaurant.getAddress());
+
+			uri = "geo:"
+					+ (restaurant.getAddress().hasLongitude()
+							&& restaurant.getAddress().hasLatitude() ? restaurant
+							.getAddress().getLatitude()
+							+ ","
+							+ restaurant.getAddress().getLongitude() : "0,0")
+					+ "?q=" + addressToSearchString(restaurant.getAddress());
+
+			log.debug("Opening map: " + uri);
+
 			try {
-				try {
-					log.debug("Requesting position for "
-							+ restaurant.getAddress());
-					Address addr = new Address(restaurant.getAddress()
-							.getLocale());
-
-					Restaurant.cloneAddress(restaurant.getAddress(), addr);
-
-					addr.setFeatureName(restaurant.getName());
-
-					List<Address> addresses = geocoder.getFromLocationName(
-							addressToSearchString(addr), 1);
-
-					if (addresses.isEmpty()) {
-
-						addr.setCountryName(null);
-						addr.setPostalCode(null);
-						addr.setPhone(null);
-						addr.setExtras(null);
-						addr.setUrl(null);
-						addr.setLocality(addr.getLocality().replaceAll("\\d*",
-								""));
-
-						log.debug("Rerequesting position for "
-								+ restaurant.getAddress());
-						geocoder.getFromLocationName(
-								addressToSearchString(addr), 1);
-						if (addresses.isEmpty()) {
-							throw new JidelakException(
-									R.string.unable_to_get_location);
-						}
-					}
-
-					if (addresses.isEmpty()) {
-						Toast.makeText(this, R.string.unable_to_get_location,
-								Toast.LENGTH_SHORT).show();
-						return true;
-					}
-					Address address = addresses.get(0);
-					uri = "geo:" + address.getLatitude() + ","
-							+ address.getLongitude();
-					log.debug("Opening map: " + uri);
-					startActivity(new Intent(
-							android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
-
-				} catch (IOException e) {
-					throw new JidelakException(R.string.unable_to_get_location,
-							e);
-				}
-			} catch (JidelakException e1) {
-				Toast.makeText(this, R.string.unable_to_get_location,
+				startActivity(Intent.parseUri(uri, Intent.URI_INTENT_SCHEME));
+			} catch (URISyntaxException e) {
+				log.warn(e.getMessage(), e);
+				Toast.makeText(getApplicationContext(),
+						getResources().getString(R.string.malformed_url, uri),
 						Toast.LENGTH_SHORT).show();
+			} catch (ActivityNotFoundException e) {
+				Toast.makeText(
+						getApplicationContext(),
+						getResources().getString(R.string.activity_not_found,
+								uri), Toast.LENGTH_SHORT).show();
 			}
+
 			return true;
 
 		case R.id.action_delete:
@@ -483,34 +463,36 @@ public class RestaurantActivity extends ActionBarActivity {
 	}
 
 	private String addressToSearchString(Address a) {
+
 		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < a.getMaxAddressLineIndex() - 1; i++) {
+
+		for (int i = 0; i <= a.getMaxAddressLineIndex(); i++) {
 			sb.append(a.getAddressLine(i));
 			sb.append(",");
 		}
 
 		if (a.getFeatureName() != null) {
-			a.getFeatureName();
+			sb.append(a.getFeatureName());
 			sb.append(",");
 		}
 		if (a.getPremises() != null) {
-			a.getPremises();
+			sb.append(a.getPremises());
 			sb.append(",");
 		}
 		if (a.getSubThoroughfare() != null) {
-			a.getSubThoroughfare();
+			sb.append(a.getSubThoroughfare());
 			sb.append(",");
 		}
 		if (a.getThoroughfare() != null) {
-			a.getThoroughfare();
+			sb.append(a.getThoroughfare());
 			sb.append(",");
 		}
 		if (a.getSubLocality() != null) {
-			a.getSubLocality();
+			sb.append(a.getSubLocality());
 			sb.append(",");
 		}
 		if (a.getPostalCode() != null) {
-			a.getPostalCode();
+			sb.append(a.getPostalCode());
 			if (a.getLocality() != null)
 				sb.append(" ");
 			else
@@ -518,23 +500,23 @@ public class RestaurantActivity extends ActionBarActivity {
 
 		}
 		if (a.getLocality() != null) {
-			a.getLocality();
+			sb.append(a.getLocality());
 			sb.append(",");
 		}
 		if (a.getAdminArea() != null) {
-			a.getAdminArea();
+			sb.append(a.getAdminArea());
 			sb.append(",");
 		}
 		if (a.getSubAdminArea() != null) {
-			a.getSubAdminArea();
+			sb.append(a.getSubAdminArea());
 			sb.append(",");
 		}
 		if (a.getCountryName() != null) {
-			a.getCountryName();
+			sb.append(a.getCountryName());
 			sb.append(",");
 		}
 		if (a.getCountryCode() != null) {
-			a.getCountryCode();
+			sb.append(a.getCountryCode());
 		}
 		return sb.toString();
 	}

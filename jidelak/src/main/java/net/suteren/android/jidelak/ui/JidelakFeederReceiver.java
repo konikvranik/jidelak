@@ -10,7 +10,6 @@ import static net.suteren.android.jidelak.Constants.LAST_UPDATED_KEY;
 import static net.suteren.android.jidelak.Constants.UPDATE_INTERVAL_KEY;
 import static net.suteren.android.jidelak.Constants.WIFI_ONLY_KEY;
 import net.suteren.android.jidelak.NetworkUtils;
-import net.suteren.android.jidelak.Utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,8 @@ public class JidelakFeederReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().compareTo(Intent.ACTION_BOOT_COMPLETED) == 0) {
 			log.debug("DemoReceiver.onReceive(ACTION_BOOT_COMPLETED)");
-			context.startService(new Intent(context, JidelakFeederService.class));
+			context.startService(new Intent(context, JidelakFeederService.class)
+					.putExtra("register", true));
 		} else if (intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0) {
 			log.debug("DemoReceiver.onReceive(ACTION_TIME_TICK)");
 
@@ -45,9 +45,7 @@ public class JidelakFeederReceiver extends BroadcastReceiver {
 
 	private boolean decideIfStart(Context context) {
 
-		if (!NetworkUtils.isConnected(context)
-				|| Utils.isServiceRunning(context,
-						JidelakFeederService.class.getName()))
+		if (!NetworkUtils.isConnected(context))
 			return false;
 
 		SharedPreferences prefs = context.getSharedPreferences(

@@ -1,13 +1,11 @@
 package net.suteren.android.jidelak.model;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -67,23 +65,11 @@ public class Restaurant implements Identificable<Restaurant> {
 
 	private boolean testDay(Calendar day, Availability availability) {
 
-		log.debug("day: " + day);
-		log.debug("av: " + day);
-
 		if (day == null)
 			return true;
 
 		if (availability == null)
 			return false;
-
-		log.debug("cal: "
-				+ DateFormat.getDateInstance(DateFormat.LONG, Locale.ENGLISH));
-		log.debug("D: " + availability.getDay());
-		log.debug("M: " + availability.getMonth());
-		log.debug("Y: " + availability.getYear());
-		log.debug("W: " + availability.getDow());
-
-		log.debug("F: " + availability.getFrom() + " T:" + availability.getTo());
 
 		if (availability.getDay() != null
 				&& day.get(Calendar.DAY_OF_MONTH) != availability.getDay())

@@ -36,7 +36,15 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 
 	private final static DataSetObservable mDataSetObservable = new DataSetObservable();
 
-	public JidelakDbHelper(Context context) {
+	private static JidelakDbHelper singletonInstance;
+
+	public static JidelakDbHelper getInstance(Context context) {
+		if (singletonInstance == null)
+			singletonInstance = new JidelakDbHelper(context);
+		return singletonInstance;
+	}
+
+	private JidelakDbHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 

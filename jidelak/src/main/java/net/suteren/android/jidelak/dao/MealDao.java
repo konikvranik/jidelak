@@ -182,8 +182,6 @@ public class MealDao extends BaseDao<Meal> {
 	@Override
 	protected Meal parseRow(Cursor cursor) {
 
-		log.debug("Column names: " + Arrays.toString(cursor.getColumnNames()));
-
 		Meal meal = new Meal();
 		meal.setId(unpackColumnValue(cursor, ID, Long.class));
 		meal.setCategory(unpackColumnValue(cursor, CATEGORY, String.class));
@@ -254,7 +252,7 @@ public class MealDao extends BaseDao<Meal> {
 			db.delete(getTableName(), RESTAURANT + " = ?",
 					new String[] { Long.toString(r.getId()) });
 		} finally {
-			//db.close();
+			// db.close();
 		}
 
 	}

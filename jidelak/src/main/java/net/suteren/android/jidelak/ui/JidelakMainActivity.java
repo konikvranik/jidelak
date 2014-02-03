@@ -9,10 +9,9 @@ import java.util.Locale;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.R;
-import net.suteren.android.jidelak.Utils;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.model.Availability;
-import net.suteren.android.jidelak.ui.JidelakFeederService.LocalBinder;
+import net.suteren.android.jidelak.ui.JidelakFeederService.FeederServiceBinder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +58,99 @@ public class JidelakMainActivity extends ActionBarActivity implements
 	boolean mBound = false;
 
 	JidelakFeederService mService;
+
+	/**
+	 * Called when the activity is first created.
+	 * 
+	 * @param savedInstanceState
+	 *            If the activity is being re-initialized after previously being
+	 *            shut down then this Bundle contains the data it most recently
+	 *            supplied in onSaveInstanceState(Bundle). <b>Note: Otherwise it
+	 *            is null.</b>
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		getOverflowMenu();
+		setContentView(R.layout.activity_main);
+
+		dpa = new DayPagerAdapter(getSupportFragmentManager());
+
+		setupActionBar();
+
+		setupPagerView();
+
+		goToday();
+
+		getDbHelper().registerObserver(new DataSetObserver() {
+			@Override
+			public void onChanged() {
+				dpa.updateDates();
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						dpa.notifyDataSetChanged();
+						ab.removeAllTabs();
+						for (int i = 0; i < dpa.getCount(); i++) {
+							ab.addTab(ab.newTab().setText(dpa.getPageTitle(i))
+									.setTabListener(JidelakMainActivity.this));
+
+						}
+
+					}
+				});
+				super.onChanged();
+			}
+
+			@Override
+			public void onInvalidated() {
+				dpa.updateDates();
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						dpa.notifyDataSetChanged();
+						ab.removeAllTabs();
+						for (int i = 0; i < dpa.getCount(); i++) {
+							ab.addTab(ab.newTab().setText(dpa.getPageTitle(i))
+									.setTabListener(JidelakMainActivity.this));
+
+						}
+
+					}
+				});
+				super.onInvalidated();
+			}
+
+		});
+
+		log.debug("DemoReceiver.onReceive(ACTION_BOOT_COMPLETED)");
+		startService(new Intent(this, JidelakFeederService.class).putExtra(
+				"register", true));
+
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+
+		if (mBound && !hasFocus) {
+			unbindService(mConnection);
+			mBound = false;
+		} else if (!mBound && hasFocus) {
+			boolean res = bindService(new Intent(this,
+					JidelakFeederService.class), mConnection,
+					Context.BIND_NOT_FOREGROUND);
+			log.debug("Bind result: " + res);
+		}
+
+	}
 
 	public class DayPagerAdapter extends FragmentPagerAdapter implements
 			SpinnerAdapter {
@@ -220,7 +312,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 	public JidelakDbHelper getDbHelper() {
 		if (dbHelper == null)
-			dbHelper = new JidelakDbHelper(getApplicationContext());
+			dbHelper = JidelakDbHelper.getInstance(getApplicationContext());
 		return dbHelper;
 	}
 
@@ -228,80 +320,6 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
 		cal.setTimeInMillis(System.currentTimeMillis());
 		goToDay(dpa.getPositionByDate(cal));
-	}
-
-	/**
-	 * Called when the activity is first created.
-	 * 
-	 * @param savedInstanceState
-	 *            If the activity is being re-initialized after previously being
-	 *            shut down then this Bundle contains the data it most recently
-	 *            supplied in onSaveInstanceState(Bundle). <b>Note: Otherwise it
-	 *            is null.</b>
-	 */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		getOverflowMenu();
-		setContentView(R.layout.activity_main);
-
-		dpa = new DayPagerAdapter(getSupportFragmentManager());
-
-		setupActionBar();
-
-		setupPagerView();
-
-		goToday();
-
-		getDbHelper().registerObserver(new DataSetObserver() {
-			@Override
-			public void onChanged() {
-				dpa.updateDates();
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						dpa.notifyDataSetChanged();
-						ab.removeAllTabs();
-						for (int i = 0; i < dpa.getCount(); i++) {
-							ab.addTab(ab.newTab().setText(dpa.getPageTitle(i))
-									.setTabListener(JidelakMainActivity.this));
-
-						}
-
-					}
-				});
-				super.onChanged();
-			}
-
-			@Override
-			public void onInvalidated() {
-				dpa.updateDates();
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						dpa.notifyDataSetChanged();
-						ab.removeAllTabs();
-						for (int i = 0; i < dpa.getCount(); i++) {
-							ab.addTab(ab.newTab().setText(dpa.getPageTitle(i))
-									.setTabListener(JidelakMainActivity.this));
-
-						}
-
-					}
-				});
-				super.onInvalidated();
-			}
-
-		});
-
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		dpa.notifyDataSetChanged();
 	}
 
 	private void setupPagerView() {
@@ -408,8 +426,8 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		switch (item.getItemId()) {
 
 		case R.id.action_update:
-			if (Utils.isServiceRunning(getApplicationContext(),
-					JidelakFeederService.class.getName())) {
+
+			if (mBound && mService.isRunning()) {
 				Toast.makeText(getApplicationContext(),
 						R.string.update_already_running, Toast.LENGTH_SHORT)
 						.show();
@@ -417,9 +435,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 			}
 			Intent intent = new Intent(this, JidelakFeederService.class);
 			startService(intent);
-			boolean res = bindService(intent, mConnection,
-					Context.BIND_NOT_FOREGROUND);
-			log.debug("Bind result: " + res);
+
 			return true;
 
 		case R.id.action_reorder_restaurants:
@@ -461,16 +477,6 @@ public class JidelakMainActivity extends ActionBarActivity implements
 
 	}
 
-	@Override
-	protected void onStop() {
-		super.onStop();
-		// Unbind from the service
-		if (mBound) {
-			unbindService(mConnection);
-			mBound = false;
-		}
-	}
-
 	/** Defines callbacks for service binding, passed to bindService() */
 	private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -479,25 +485,54 @@ public class JidelakMainActivity extends ActionBarActivity implements
 			// We've bound to LocalService, cast the IBinder and get
 			// LocalService instance
 			log.debug("service connected");
-			LocalBinder binder = (LocalBinder) service;
+			FeederServiceBinder binder = (FeederServiceBinder) service;
 			mService = binder.getService();
 			mBound = true;
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-				startRefreshHc();
-			else
-				startRefreshFr();
 
+			mService.registerStartObserver(new DataSetObserver() {
+
+				@Override
+				public void onChanged() {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+								startRefreshHc();
+							else
+								startRefreshFr();
+						}
+					});
+
+				}
+			});
+
+			mService.registerStopObserver(new DataSetObserver() {
+
+				@Override
+				public void onChanged() {
+					log.debug("Notify update in activity");
+
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+								stopRefreshHc();
+							else
+								stopRefreshFr();
+						}
+					});
+
+				}
+			});
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName arg0) {
 			log.debug("service disconnected");
 			mBound = false;
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-				stopRefreshHc();
-			else
-				stopRefreshFr();
 
 		}
+
 	};
 }

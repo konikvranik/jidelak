@@ -1,6 +1,9 @@
 package net.suteren.android.jidelak.ui;
 
-import static net.suteren.android.jidelak.Constants.*;
+import static net.suteren.android.jidelak.Constants.DEFAULT_DELETE_DELAY;
+import static net.suteren.android.jidelak.Constants.DEFAULT_PREFERENCES;
+import static net.suteren.android.jidelak.Constants.DELETE_DELAY_KEY;
+import static net.suteren.android.jidelak.Constants.LAST_UPDATED_KEY;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +56,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.DataSetObservable;
+import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Handler;
@@ -61,54 +66,97 @@ import android.widget.Toast;
 
 public class JidelakFeederService extends Service {
 
+	private DataSetObservable startObservers = new DataSetObservable();
+	private DataSetObservable stopObservers = new DataSetObservable();
+
 	/**
 	 * Class used for the client Binder. Because we know this service always
 	 * runs in the same process as its clients, we don't need to deal with IPC.
 	 */
-	public class LocalBinder extends Binder {
-		JidelakFeederService getService() {
-			// Return this instance of LocalService so clients can call public
-			// methods
-			return JidelakFeederService.this;
+	public static class FeederServiceBinder extends Binder {
+		private JidelakFeederService ctx;
+
+		public FeederServiceBinder(JidelakFeederService ctx) {
+			this.ctx = ctx;
 		}
+
+		JidelakFeederService getService() {
+			return ctx;
+		}
+
+	}
+
+	public void notifyStart() {
+		log.debug("Notify start in binder.");
+		startObservers.notifyChanged();
+	}
+
+	public void notifyDone() {
+		log.debug("Notify done in binder.");
+		stopObservers.notifyChanged();
+	}
+
+	public void registerStopObserver(DataSetObserver refreshObserver) {
+		log.debug("registering stop observer");
+		stopObservers.registerObserver(refreshObserver);
+	}
+
+	public void unregisterStopObserver(DataSetObserver refreshObserver) {
+		log.debug("unregistering stop observer");
+		stopObservers.unregisterObserver(refreshObserver);
+	}
+
+	public void registerStartObserver(DataSetObserver refreshObserver) {
+		log.debug("registering start observer");
+		startObservers.registerObserver(refreshObserver);
+	}
+
+	public void unregisterStartObserver(DataSetObserver refreshObserver) {
+		log.debug("unregistering start observer");
+		startObservers.unregisterObserver(refreshObserver);
 	}
 
 	private static Logger log = LoggerFactory
 			.getLogger(JidelakFeederService.class);
 
-	private final IBinder mBinder = new LocalBinder();
+	private final FeederServiceBinder mBinder = new FeederServiceBinder(this);
 	static final String LOGGING_TAG = "JidelakFeederService";
 
 	private JidelakDbHelper dbHelper;
-	private Handler mHandler;
-
-	private Worker worker;
+	private Handler mHandler = new Handler();
 
 	private JidelakFeederReceiver timerReceiver;
 
+	private boolean updating;
+
 	@Override
 	public IBinder onBind(Intent intent) {
-		mHandler = new Handler();
-		log.trace("JidelakFeederService.onBind()");
-		setWorker(new Worker());
-		getWorker().execute(new Void[0]);
+		log.debug("JidelakFeederService.onBind()");
 		return mBinder;
 	}
 
-	private void setWorker(Worker worker) {
-		this.worker = worker;
+	@Override
+	public boolean onUnbind(Intent intent) {
+		// TODO Auto-generated method stub
+		return super.onUnbind(intent);
 	}
 
-	public Worker getWorker() {
-		return worker;
+	@Override
+	public void onRebind(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onRebind(intent);
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		mHandler = new Handler();
+		if (intent.getBooleanExtra("register", false))
+			return START_NOT_STICKY;
 		log.trace("JidelakFeederService.onStartCommand()");
 		// this.force = intent.getExtras().getBoolean("force", false);
-		new Worker().execute(new Void[0]);
+
+		if (!updating)
+			new Worker().execute(new Void[0]);
+
 		return START_REDELIVER_INTENT;
 	}
 
@@ -205,7 +253,7 @@ public class JidelakFeederService extends Service {
 
 	private JidelakDbHelper getDbHelper() {
 		if (dbHelper == null)
-			dbHelper = new JidelakDbHelper(getApplicationContext());
+			dbHelper = JidelakDbHelper.getInstance(getApplicationContext());
 		return dbHelper;
 	}
 
@@ -303,7 +351,10 @@ public class JidelakFeederService extends Service {
 
 		@Override
 		protected Void doInBackground(Void... params) {
+			updating = true;
+			notifyStart();
 			try {
+
 				updateData();
 			} catch (JidelakException e) {
 				log.error(e.getMessage(), e);
@@ -316,16 +367,25 @@ public class JidelakFeederService extends Service {
 				NotificationUtils.makeNotification(getApplicationContext(),
 						notifyID, e);
 
+			} finally {
+				updating = false;
+				notifyDone();
 			}
 			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			log.debug("finito1");
-			super.onPostExecute(result);
-			JidelakFeederService.this.stopSelf();
+		protected void onCancelled() {
+			super.onCancelled();
+			updating = false;
+			notifyDone();
+		}
 
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			updating = false;
+			notifyDone();
 		}
 
 	}
@@ -342,6 +402,11 @@ public class JidelakFeederService extends Service {
 			Toast.makeText(getApplicationContext(), mText, Toast.LENGTH_LONG)
 					.show();
 		}
+	}
+
+	public boolean isRunning() {
+		return updating;
+
 	}
 
 }

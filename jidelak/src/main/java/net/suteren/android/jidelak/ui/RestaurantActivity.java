@@ -224,7 +224,7 @@ public class RestaurantActivity extends ActionBarActivity {
 
 	private JidelakDbHelper getDbHelper() {
 		if (dbHelper == null)
-			dbHelper = new JidelakDbHelper(this);
+			dbHelper = JidelakDbHelper.getInstance(this);
 		return dbHelper;
 	}
 
@@ -471,8 +471,9 @@ public class RestaurantActivity extends ActionBarActivity {
 	protected Restaurant retrieveRestaurant(Restaurant restaurant)
 			throws JidelakException {
 
-		restaurant = new RestaurantDao(new JidelakDbHelper(
-				getApplicationContext())).findById(restaurant);
+		restaurant = new RestaurantDao(
+				JidelakDbHelper.getInstance(getApplicationContext()))
+				.findById(restaurant);
 
 		log.debug("restaurant name: " + restaurant.getName());
 		log.debug("restaurant template: " + restaurant.getTemplateName());

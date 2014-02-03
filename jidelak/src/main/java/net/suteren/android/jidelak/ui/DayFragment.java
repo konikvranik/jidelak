@@ -77,7 +77,7 @@ public class DayFragment extends Fragment {
 		public DailyMenuAdapter(Context ctx, Calendar day) {
 			this.day = day;
 			this.ctx = ctx;
-			dbHelper = new JidelakDbHelper(ctx);
+			dbHelper = JidelakDbHelper.getInstance(ctx);
 
 			updateRestaurants();
 		}
@@ -167,16 +167,12 @@ public class DayFragment extends Fragment {
 						color = getResources().getColor(R.color.steak_meal);
 					}
 
-					log.debug("Color for category " + cat + ": " + color);
-
 					if (color != null) {
 						if (background instanceof ShapeDrawable) {
 							((ShapeDrawable) background).getPaint().setColor(
 									color);
-							log.debug("Set color to ShapeDrawable");
 						} else if (background instanceof GradientDrawable) {
 							((GradientDrawable) background).setColor(color);
-							log.debug("Set color to GradientDrawable");
 						}
 						background.setAlpha(50);
 						menuView.setBackgroundDrawable(background);
@@ -268,27 +264,20 @@ public class DayFragment extends Fragment {
 		}
 
 		private void updateRestaurants() {
-			log.debug("Update restaurants start");
 			updateMenu();
 			// menuUpdater.doInBackground(new Void[] {});
 			notifyAdapter();
 		}
 
 		protected void updateMenu() {
-			long milis = System.currentTimeMillis();
-			log.debug("Update restaurants background start");
 
 			restaurants = new ArrayList<Restaurant>(
 					new RestaurantDao(dbHelper).findAll());
 
-			log.debug("Update restaurants got restaurants");
-
-			long partMilis = System.currentTimeMillis();
 			MealDao mdao = new MealDao(dbHelper);
 
 			AvailabilityDao adao = new AvailabilityDao(dbHelper);
 
-			log.debug("Update restaurants update start");
 			for (Restaurant restaurant : restaurants) {
 				restaurant
 						.setMenu(mdao.findByDayAndRestaurant(day, restaurant));
@@ -296,11 +285,6 @@ public class DayFragment extends Fragment {
 						.findByRestaurant(restaurant)));
 			}
 
-			log.debug("Update restaurants update end: "
-					+ (System.currentTimeMillis() - partMilis));
-
-			log.debug("Update restaurants background end: "
-					+ (System.currentTimeMillis() - milis));
 		}
 
 		private void notifyAdapter() {
@@ -431,10 +415,6 @@ public class DayFragment extends Fragment {
 			lastMenuInfo = info;
 		}
 
-		log.debug("Item: " + item);
-		log.debug("Info: " + info);
-		log.debug("Adapter: " + ad);
-
 		final Restaurant r = ad.getGroup(ExpandableListView
 				.getPackedPositionGroup(info.packedPosition));
 
@@ -445,7 +425,6 @@ public class DayFragment extends Fragment {
 
 			uri = "tel:" + r.getAddress().getPhone();
 			Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(uri));
-			log.debug("Opening dialer: " + uri);
 			startActivity(intent);
 
 			return true;
@@ -454,7 +433,6 @@ public class DayFragment extends Fragment {
 			Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
 			try {
 				try {
-					log.debug("Requesting position for " + r.getAddress());
 					Address addr = new Address(r.getAddress().getLocale());
 
 					Restaurant.cloneAddress(r.getAddress(), addr);
@@ -472,7 +450,6 @@ public class DayFragment extends Fragment {
 						addr.setLocality(addr.getLocality().replaceAll("\\d*",
 								""));
 
-						log.debug("Rerequesting position for " + r.getAddress());
 						geocoder.getFromLocationName(addr.toString(), 1);
 						if (addresses.isEmpty()) {
 							throw new JidelakException(
@@ -482,7 +459,6 @@ public class DayFragment extends Fragment {
 					Address address = addresses.get(0);
 					uri = "geo:" + address.getLatitude() + ","
 							+ address.getLongitude();
-					log.debug("Opening map: " + uri);
 					startActivity(new Intent(
 							android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
 

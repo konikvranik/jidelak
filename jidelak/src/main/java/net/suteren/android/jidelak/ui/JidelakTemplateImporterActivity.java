@@ -137,7 +137,8 @@ public class JidelakTemplateImporterActivity extends Activity {
 		mHandler.post(new ToastRunnable(getResources().getString(
 				R.string.importing_template, sourceUri.getLastPathSegment())));
 
-		JidelakDbHelper dbh = new JidelakDbHelper(getApplicationContext());
+		JidelakDbHelper dbh = JidelakDbHelper
+				.getInstance(getApplicationContext());
 		RestaurantDao restaurantDao = new RestaurantDao(dbh);
 
 		Restaurant restaurant = new Restaurant();

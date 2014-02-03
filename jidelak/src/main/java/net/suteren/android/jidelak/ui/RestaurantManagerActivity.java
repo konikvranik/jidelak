@@ -132,14 +132,14 @@ public class RestaurantManagerActivity extends ActionBarActivity {
 				R.id.restaurants);
 
 		final DragNDropRestaurantListAdapter ddsa = new DragNDropRestaurantListAdapter(
-				new RestaurantDao(new JidelakDbHelper(this)).findAll());
+				new RestaurantDao(JidelakDbHelper.getInstance(this)).findAll());
 		ddlv.setDragNDropAdapter(ddsa);
 
 		Button save = (Button) getWindow().findViewById(R.id.save);
 		save.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				JidelakDbHelper dbHelper = new JidelakDbHelper(getApplication());
+				JidelakDbHelper dbHelper = JidelakDbHelper.getInstance(getApplication());
 				new RestaurantDao(dbHelper).update(ddsa.getRestaurants());
 				dbHelper.notifyDataSetChanged();
 				finish();

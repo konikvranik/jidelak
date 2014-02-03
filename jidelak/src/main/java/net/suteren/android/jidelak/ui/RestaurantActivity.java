@@ -393,6 +393,8 @@ public class RestaurantActivity extends ActionBarActivity {
 
 					Restaurant.cloneAddress(restaurant.getAddress(), addr);
 
+					addr.setFeatureName(restaurant.getName());
+
 					List<Address> addresses = geocoder.getFromLocationName(
 							addressToSearchString(addr), 1);
 

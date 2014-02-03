@@ -1,6 +1,5 @@
 package net.suteren.android.jidelak;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
@@ -8,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.annotation.TargetApi;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
@@ -46,21 +43,6 @@ public class Utils {
 			position = plurals.length - 1;
 
 		return res.getStringArray(key)[position];
-	}
-
-	public static boolean isServiceRunning(Context ctx, String serviceClassName) {
-		final ActivityManager activityManager = (ActivityManager) ctx
-				.getSystemService(Context.ACTIVITY_SERVICE);
-		final List<RunningServiceInfo> services = activityManager
-				.getRunningServices(Integer.MAX_VALUE);
-
-		for (RunningServiceInfo runningServiceInfo : services) {
-			if (runningServiceInfo.service.getClassName().equals(
-					serviceClassName)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)

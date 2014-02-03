@@ -64,7 +64,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
 
-public class JidelakFeederService extends Service {
+public class FeederService extends Service {
 
 	private DataSetObservable startObservers = new DataSetObservable();
 	private DataSetObservable stopObservers = new DataSetObservable();
@@ -74,13 +74,13 @@ public class JidelakFeederService extends Service {
 	 * runs in the same process as its clients, we don't need to deal with IPC.
 	 */
 	public static class FeederServiceBinder extends Binder {
-		private JidelakFeederService ctx;
+		private FeederService ctx;
 
-		public FeederServiceBinder(JidelakFeederService ctx) {
+		public FeederServiceBinder(FeederService ctx) {
 			this.ctx = ctx;
 		}
 
-		JidelakFeederService getService() {
+		FeederService getService() {
 			return ctx;
 		}
 
@@ -117,7 +117,7 @@ public class JidelakFeederService extends Service {
 	}
 
 	private static Logger log = LoggerFactory
-			.getLogger(JidelakFeederService.class);
+			.getLogger(FeederService.class);
 
 	private final FeederServiceBinder mBinder = new FeederServiceBinder(this);
 	static final String LOGGING_TAG = "JidelakFeederService";
@@ -125,7 +125,7 @@ public class JidelakFeederService extends Service {
 	private JidelakDbHelper dbHelper;
 	private Handler mHandler = new Handler();
 
-	private JidelakFeederReceiver timerReceiver;
+	private FeederReceiver timerReceiver;
 
 	private boolean updating;
 
@@ -165,7 +165,7 @@ public class JidelakFeederService extends Service {
 		super.onCreate();
 		log.trace("JidelakFeederService.onCreate()");
 
-		registerReceiver(timerReceiver = new JidelakFeederReceiver(),
+		registerReceiver(timerReceiver = new FeederReceiver(),
 				new IntentFilter(Intent.ACTION_TIME_TICK));
 	}
 

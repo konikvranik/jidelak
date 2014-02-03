@@ -58,7 +58,7 @@ import android.widget.Toast;
  * @author Petr
  * 
  */
-public class JidelakTemplateImporterActivity extends Activity {
+public class TemplateImporterActivity extends Activity {
 
 	private class ToastRunnable implements Runnable {
 		String mText;
@@ -75,7 +75,7 @@ public class JidelakTemplateImporterActivity extends Activity {
 	}
 
 	private static Logger log = LoggerFactory
-			.getLogger(JidelakTemplateImporterActivity.class);
+			.getLogger(TemplateImporterActivity.class);
 
 	private Uri sourceUri;
 

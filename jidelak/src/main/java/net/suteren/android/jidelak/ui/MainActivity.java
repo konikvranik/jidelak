@@ -11,7 +11,7 @@ import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.model.Availability;
-import net.suteren.android.jidelak.ui.JidelakFeederService.FeederServiceBinder;
+import net.suteren.android.jidelak.ui.FeederService.FeederServiceBinder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,15 +49,15 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class JidelakMainActivity extends ActionBarActivity implements
+public class MainActivity extends ActionBarActivity implements
 		TabListener, OnNavigationListener {
 
 	private static Logger log = LoggerFactory
-			.getLogger(JidelakMainActivity.class);
+			.getLogger(MainActivity.class);
 
 	boolean mBound = false;
 
-	JidelakFeederService mService;
+	FeederService mService;
 
 	/**
 	 * Called when the activity is first created.
@@ -94,7 +94,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 						ab.removeAllTabs();
 						for (int i = 0; i < dpa.getCount(); i++) {
 							ab.addTab(ab.newTab().setText(dpa.getPageTitle(i))
-									.setTabListener(JidelakMainActivity.this));
+									.setTabListener(MainActivity.this));
 
 						}
 
@@ -114,7 +114,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 						ab.removeAllTabs();
 						for (int i = 0; i < dpa.getCount(); i++) {
 							ab.addTab(ab.newTab().setText(dpa.getPageTitle(i))
-									.setTabListener(JidelakMainActivity.this));
+									.setTabListener(MainActivity.this));
 
 						}
 
@@ -126,7 +126,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 		});
 
 		log.debug("DemoReceiver.onReceive(ACTION_BOOT_COMPLETED)");
-		startService(new Intent(this, JidelakFeederService.class).putExtra(
+		startService(new Intent(this, FeederService.class).putExtra(
 				"register", true));
 
 	}
@@ -145,7 +145,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 			mBound = false;
 		} else if (!mBound && hasFocus) {
 			boolean res = bindService(new Intent(this,
-					JidelakFeederService.class), mConnection,
+					FeederService.class), mConnection,
 					Context.BIND_NOT_FOREGROUND);
 			log.debug("Bind result: " + res);
 		}
@@ -433,7 +433,7 @@ public class JidelakMainActivity extends ActionBarActivity implements
 						.show();
 				return true;
 			}
-			Intent intent = new Intent(this, JidelakFeederService.class);
+			Intent intent = new Intent(this, FeederService.class);
 			startService(intent);
 
 			return true;

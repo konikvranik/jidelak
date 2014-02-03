@@ -371,7 +371,7 @@ public class DayFragment extends Fragment {
 			menuList.expandGroup(i);
 		}
 
-		final JidelakMainActivity act = (JidelakMainActivity) getActivity();
+		final MainActivity act = (MainActivity) getActivity();
 		act.getDbHelper().registerObserver(new DataSetObserver() {
 			@Override
 			public void onChanged() {

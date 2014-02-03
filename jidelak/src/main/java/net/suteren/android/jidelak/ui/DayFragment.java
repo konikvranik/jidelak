@@ -26,7 +26,6 @@ import net.suteren.android.jidelak.model.Restaurant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,8 +37,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -62,6 +59,7 @@ import android.widget.Toast;
 
 public class DayFragment extends Fragment {
 
+	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(DayFragment.class);
 
 	private JidelakDbHelper dbHelper;
@@ -72,7 +70,6 @@ public class DayFragment extends Fragment {
 		private Context ctx;
 		private final Calendar day;
 		private List<Restaurant> restaurants;
-		private MealUpdateWorker menuUpdater = new MealUpdateWorker();
 
 		public DailyMenuAdapter(Context ctx, Calendar day) {
 			this.day = day;
@@ -265,7 +262,6 @@ public class DayFragment extends Fragment {
 
 		private void updateRestaurants() {
 			updateMenu();
-			// menuUpdater.doInBackground(new Void[] {});
 			notifyAdapter();
 		}
 
@@ -297,35 +293,6 @@ public class DayFragment extends Fragment {
 			});
 		}
 
-		private class MealUpdateWorker extends AsyncTask<Void, Void, Void> {
-
-			@Override
-			protected Void doInBackground(Void... params) {
-
-				updateMenu();
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void result) {
-				super.onPostExecute(result);
-				notifyAdapter();
-			}
-
-			@Override
-			protected void onCancelled() {
-				super.onCancelled();
-				notifyAdapter();
-			}
-
-			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-			@Override
-			protected void onCancelled(Void result) {
-				super.onCancelled(result);
-				notifyAdapter();
-			}
-
-		}
 	}
 
 	public static final String ARG_DAY = "day";

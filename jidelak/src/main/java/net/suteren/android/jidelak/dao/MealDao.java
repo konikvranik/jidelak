@@ -1,7 +1,6 @@
 package net.suteren.android.jidelak.dao;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.SortedSet;
 import java.util.TreeSet;

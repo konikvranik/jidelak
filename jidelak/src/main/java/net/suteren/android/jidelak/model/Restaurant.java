@@ -21,6 +21,7 @@ import android.location.Address;
 
 public class Restaurant implements Identificable<Restaurant> {
 
+	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(Restaurant.class);
 	private String name;
 	private Address address;

@@ -394,7 +394,7 @@ public class RestaurantActivity extends ActionBarActivity {
 					Restaurant.cloneAddress(restaurant.getAddress(), addr);
 
 					List<Address> addresses = geocoder.getFromLocationName(
-							addr.toString(), 1);
+							addressToSearchString(addr), 1);
 
 					if (addresses.isEmpty()) {
 
@@ -408,11 +408,18 @@ public class RestaurantActivity extends ActionBarActivity {
 
 						log.debug("Rerequesting position for "
 								+ restaurant.getAddress());
-						geocoder.getFromLocationName(addr.toString(), 1);
+						geocoder.getFromLocationName(
+								addressToSearchString(addr), 1);
 						if (addresses.isEmpty()) {
 							throw new JidelakException(
 									R.string.unable_to_get_location);
 						}
+					}
+
+					if (addresses.isEmpty()) {
+						Toast.makeText(this, R.string.unable_to_get_location,
+								Toast.LENGTH_SHORT).show();
+						return true;
 					}
 					Address address = addresses.get(0);
 					uri = "geo:" + address.getLatitude() + ","
@@ -427,7 +434,7 @@ public class RestaurantActivity extends ActionBarActivity {
 				}
 			} catch (JidelakException e1) {
 				Toast.makeText(this, R.string.unable_to_get_location,
-						Toast.LENGTH_LONG).show();
+						Toast.LENGTH_SHORT).show();
 			}
 			return true;
 
@@ -471,6 +478,63 @@ public class RestaurantActivity extends ActionBarActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private String addressToSearchString(Address a) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < a.getMaxAddressLineIndex() - 1; i++) {
+			sb.append(a.getAddressLine(i));
+			sb.append(",");
+		}
+
+		if (a.getFeatureName() != null) {
+			a.getFeatureName();
+			sb.append(",");
+		}
+		if (a.getPremises() != null) {
+			a.getPremises();
+			sb.append(",");
+		}
+		if (a.getSubThoroughfare() != null) {
+			a.getSubThoroughfare();
+			sb.append(",");
+		}
+		if (a.getThoroughfare() != null) {
+			a.getThoroughfare();
+			sb.append(",");
+		}
+		if (a.getSubLocality() != null) {
+			a.getSubLocality();
+			sb.append(",");
+		}
+		if (a.getPostalCode() != null) {
+			a.getPostalCode();
+			if (a.getLocality() != null)
+				sb.append(" ");
+			else
+				sb.append(", ");
+
+		}
+		if (a.getLocality() != null) {
+			a.getLocality();
+			sb.append(",");
+		}
+		if (a.getAdminArea() != null) {
+			a.getAdminArea();
+			sb.append(",");
+		}
+		if (a.getSubAdminArea() != null) {
+			a.getSubAdminArea();
+			sb.append(",");
+		}
+		if (a.getCountryName() != null) {
+			a.getCountryName();
+			sb.append(",");
+		}
+		if (a.getCountryCode() != null) {
+			a.getCountryCode();
+		}
+		return sb.toString();
 	}
 
 	protected Restaurant retrieveRestaurant(Restaurant restaurant)

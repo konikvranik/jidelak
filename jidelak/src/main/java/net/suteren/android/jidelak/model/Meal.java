@@ -104,10 +104,12 @@ public class Meal implements Identificable<Meal> {
 			if (another.getDish() != null)
 				return -1;
 		} else {
-			if (getDish() == Dish.MENU && another.getDish() != Dish.MENU)
+			if (another.getDish() == null)
 				return 1;
-			if (getDish() != Dish.MENU && another.getDish() == Dish.MENU)
+			if (getDish() == Dish.MENU && another.getDish() != Dish.MENU)
 				return -1;
+			if (getDish() != Dish.MENU && another.getDish() == Dish.MENU)
+				return 1;
 			r = getDish().compareTo(another.getDish());
 		}
 		if (r != 0)

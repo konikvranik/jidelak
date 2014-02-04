@@ -81,7 +81,7 @@ public class DayFragment extends Fragment {
 
 		@Override
 		public Meal getChild(int paramInt1, int paramInt2) {
-			List<Meal> ml = getGroup(paramInt1).getMenuAsList();
+			List<Meal> ml = new ArrayList<Meal>(getGroup(paramInt1).getMenu());
 			if (ml == null || ml.isEmpty())
 				return null;
 			return ml.get(paramInt2);
@@ -265,11 +265,11 @@ public class DayFragment extends Fragment {
 		}
 
 		private void updateRestaurants() {
-			updateMenu();
+			updateMeals();
 			notifyAdapter();
 		}
 
-		protected void updateMenu() {
+		protected void updateMeals() {
 
 			restaurants = new ArrayList<Restaurant>(
 					new RestaurantDao(dbHelper).findAll());

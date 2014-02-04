@@ -1,11 +1,9 @@
 package net.suteren.android.jidelak.model;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -44,7 +42,6 @@ public class Restaurant implements Identificable<Restaurant> {
 
 	SortedSet<Availability> openingHours;
 	SortedSet<Meal> menu = new TreeSet<Meal>();
-	List<Meal> menuList;
 	private Long id;
 	private Set<Source> source;
 	private String version;
@@ -111,10 +108,6 @@ public class Restaurant implements Identificable<Restaurant> {
 
 	public void setMenu(SortedSet<Meal> menu) {
 		this.menu = menu;
-		if (menu == null)
-			menuList = null;
-		else
-			menuList = new ArrayList<Meal>(menu);
 	}
 
 	public SortedSet<Meal> getMenu() {
@@ -125,14 +118,12 @@ public class Restaurant implements Identificable<Restaurant> {
 		if (menu == null)
 			menu = new TreeSet<Meal>();
 		menu.add(meal);
-		menuList = new ArrayList<Meal>(menu);
 	}
 
 	public void addMenuAll(Collection<Meal> meal) {
 		if (menu == null)
 			menu = new TreeSet<Meal>();
 		menu.addAll(meal);
-		menuList = new ArrayList<Meal>(menu);
 	}
 
 	public SortedSet<Meal> getMenu(Calendar day) {
@@ -248,12 +239,6 @@ public class Restaurant implements Identificable<Restaurant> {
 
 	public String openingHoursToString(Context ctx, Calendar day) {
 		return openingHoursToString(ctx, getOpeningHours(day));
-	}
-
-	public List<Meal> getMenuAsList() {
-		if (menuList == null)
-			return new ArrayList<Meal>();
-		return menuList;
 	}
 
 	@Override

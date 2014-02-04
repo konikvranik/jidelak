@@ -25,17 +25,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="161.1539"
-     inkscape:cy="639.57301"
+     inkscape:zoom="11.313708"
+     inkscape:cx="105.75011"
+     inkscape:cy="657.0795"
      inkscape:document-units="px"
      inkscape:current-layer="g4033"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1858"
-     inkscape:window-height="1057"
-     inkscape:window-x="1654"
+     inkscape:window-width="1538"
+     inkscape:window-height="877"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
@@ -239,9 +239,9 @@
          id="g4085"
          transform="matrix(0.65793458,0,0,0.65793458,23.435437,138.36355)"
          style="stroke-width:1.51990795;stroke-miterlimit:73.19999695;stroke-dasharray:none"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher_new.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160">
+         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\src\main\graphics\ic_launcher_new.png"
+         inkscape:export-xdpi="1134.78"
+         inkscape:export-ydpi="1134.78">
         <g
            id="g4063"
            style="stroke-width:1.51990795;stroke-miterlimit:73.19999695;stroke-dasharray:none">
@@ -363,15 +363,15 @@
       <rect
          style="fill:none;stroke:none"
          id="rect4083"
-         width="43.521965"
-         height="43.521965"
-         x="64.431381"
-         y="371.37463"
-         rx="1.1191132"
-         ry="1.1312407"
-         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\res\drawable-mdpi\ic_launcher_new.png"
-         inkscape:export-xdpi="160"
-         inkscape:export-ydpi="160" />
+         width="40.516762"
+         height="40.516762"
+         x="65.933983"
+         y="372.87723"
+         rx="1.0418382"
+         ry="1.0531282"
+         inkscape:export-filename="C:\Users\Petr\git\jidelak\jidelak\src\main\graphics\ic_launcher_new.png"
+         inkscape:export-xdpi="1134.78"
+         inkscape:export-ydpi="1134.78" />
     </g>
   </g>
 </svg>

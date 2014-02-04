@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 
 /**
  * @author jd39426
@@ -46,4 +48,13 @@ public class PreferencesActivity extends PreferenceActivity implements
 		return false;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 }

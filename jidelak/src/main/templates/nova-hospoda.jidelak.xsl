@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.1">
+		<restaurant version="1.2">
 			<id>praha-nova-hospoda</id>
 			<name>Nová Hospoda</name>
 			<phone>(+420) 777826112, 608511616</phone>
@@ -67,14 +67,14 @@
 		<xsl:param name="pos" />
 		<meal>
 			<xsl:attribute name="dish"><xsl:choose>
-			<xsl:when test=".//*[normalize-space(starts-with(text()), 'Menu')]">menu</xsl:when>
-			<xsl:when test="./preceding-sibling::tr//*[starts-with(normalize-space(text()), 'Hlavní jídla')]">dinner</xsl:when>
-			<xsl:when test="./preceding-sibling::tr//*[starts-with(normalize-space(text()), 'Polévky')]">soup</xsl:when>
-			<xsl:otherwise></xsl:otherwise>
+			<xsl:when test=".//*[starts-with(normalize-space(.), 'Menu')]">menu</xsl:when>
+			<xsl:when test="./preceding-sibling::tr//*[starts-with(normalize-space(.), 'Hlavní jídla')]">dinner</xsl:when>
+			<xsl:when test="./preceding-sibling::tr//*[starts-with(normalize-space(.), 'Polévky')]">soup</xsl:when>
+			<xsl:otherwise>soup</xsl:otherwise>
 			</xsl:choose></xsl:attribute>
 			<xsl:attribute name="category"><xsl:choose>
-				<xsl:when test="./preceding-sibling::tr//*[starts-with(text(), 'Smažená jídla')] and not(starts-with(td[1], '1') or starts-with(td[1], '2') or starts-with(td[1], '3') or starts-with(td[1], '4') or starts-with(td[1], '5') or starts-with(td[1], '6') or starts-with(td[1], '7') or starts-with(td[1], '8') or starts-with(td[1], '9') or starts-with(td[1], '0'))">3-salad</xsl:when>
-				<xsl:when test="./preceding-sibling::tr//*[starts-with(text(), 'Smažená jídla')]">2-fried</xsl:when>
+				<xsl:when test="./preceding-sibling::tr//*[starts-with(., 'Smažená jídla')] and not(starts-with(td[1], '1') or starts-with(td[1], '2') or starts-with(td[1], '3') or starts-with(td[1], '4') or starts-with(td[1], '5') or starts-with(td[1], '6') or starts-with(td[1], '7') or starts-with(td[1], '8') or starts-with(td[1], '9') or starts-with(td[1], '0'))">3-salad</xsl:when>
+				<xsl:when test="./preceding-sibling::tr//*[starts-with(., 'Smažená jídla')]">2-fried</xsl:when>
 				<xsl:otherwise>1-normal</xsl:otherwise>
 			</xsl:choose></xsl:attribute>
 			<xsl:attribute name="order"><xsl:value-of select="position()" /></xsl:attribute>

@@ -8,5 +8,7 @@
     <color name="steak_meal">#FAA</color>
     <color name="cold_meal">#ABF</color>
     <color name="live_meal">#FAE</color>
+    <color name="half_meal">#EEF</color>
+    <color name="fried_meal">#FF0</color>
     
 </resources>

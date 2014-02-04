@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 /**
@@ -37,8 +36,6 @@ public class PreferencesActivity extends PreferenceActivity implements
 	private ActionBar setupActionBar() {
 		ActionBar ab = getActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
-		ab.setDisplayShowHomeEnabled(true);
-		ab.setDisplayShowTitleEnabled(false);
 		return ab;
 	}
 

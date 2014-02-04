@@ -12,19 +12,19 @@
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_reorder_restaurants"
-        android:icon="@android:drawable/ic_menu_sort_alphabetically"
+        android:icon="@drawable/ic_action_sort_by_size"
         android:orderInCategory="100"
         android:title="@string/action_reorder_restaurants"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_settings"
-        android:icon="@android:drawable/ic_menu_preferences"
+        android:icon="@drawable/ic_action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_about"
-        android:icon="@android:drawable/ic_menu_help"
+        android:icon="@drawable/ic_action_about"
         android:orderInCategory="100"
         android:title="@string/action_about"
         app:showAsAction="never"/>

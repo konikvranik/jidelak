@@ -135,6 +135,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 		setContentView(R.layout.activity_main);
 
 		dpa = new DayPagerAdapter(getSupportFragmentManager());
+		ab.setListNavigationCallbacks(dpa, this);
 
 		setupPagerView();
 
@@ -243,9 +244,9 @@ public class MainActivity extends AbstractJidelakActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-	
+
 		case R.id.action_update:
-	
+
 			if (mBound && mService.isRunning()) {
 				Toast.makeText(getApplicationContext(),
 						R.string.update_already_running, Toast.LENGTH_SHORT)
@@ -254,25 +255,25 @@ public class MainActivity extends AbstractJidelakActivity implements
 			}
 			Intent intent = new Intent(this, FeederService.class);
 			startService(intent);
-	
+
 			return true;
-	
+
 		case R.id.action_reorder_restaurants:
 			startActivity(new Intent(this, RestaurantManagerActivity.class));
 			return true;
-	
+
 		case R.id.action_settings:
 			startActivity(new Intent(this, PreferencesActivity.class));
 			return true;
-	
+
 		case R.id.action_about:
 			startActivity(new Intent(this, AboutActivity.class));
 			return true;
-	
+
 		case android.R.id.home:
 			goToToday();
 			return true;
-	
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -287,7 +288,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction arg1) {
 		goToDay(tab.getPosition());
-	
+
 	}
 
 	@Override
@@ -302,7 +303,6 @@ public class MainActivity extends AbstractJidelakActivity implements
 	protected ActionBar setupActionBar() {
 		ab = super.setupActionBar();
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		ab.setListNavigationCallbacks(dpa, this);
 		return ab;
 	}
 

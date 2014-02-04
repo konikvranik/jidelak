@@ -74,6 +74,7 @@
     <string name="android_version">Verze systému</string>
     <string name="android_code">Kód systému</string>
     <string name="date_time">%1$s v %2$s</string>
+    <string name="menu">Menu</string>
     
     <string-array name="weeks">
         <item>týdnů</item>

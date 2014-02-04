@@ -74,6 +74,7 @@
     <string name="android_version">System version</string>
     <string name="android_code">System code</string>
     <string name="date_time">%1$s in %2$s</string>
+    <string name="menu">Menu</string>
 
     <string-array name="weeks">
         <item>weeks</item>

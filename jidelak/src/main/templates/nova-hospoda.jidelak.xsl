@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.0">
+		<restaurant version="1.1">
 			<id>praha-nova-hospoda</id>
 			<name>Nová Hospoda</name>
 			<phone>(+420) 777826112, 608511616</phone>
@@ -55,7 +55,7 @@
 	</xsl:template>
 
 	<xsl:template match="h4">
-		<xsl:apply-templates select="(./following-sibling::div)[1]//table//tr[td]">
+		<xsl:apply-templates select="(./following-sibling::div)[1]//table//tr[td[@class='edtbl_price']/text()]">
 			<xsl:with-param name="date"
 				select="concat(//*[@id='tab_denni_menu']/div[1]/div[2]/h3/span[1], //*[@id='tab_denni_menu']/div[1]/div[2]/h3/text()[3])" />
 			<xsl:with-param name="pos" select="position()" />
@@ -67,20 +67,39 @@
 		<xsl:param name="pos" />
 		<meal>
 			<xsl:attribute name="dish"><xsl:choose>
-		<xsl:when test="count(./preceding-sibling::tr[th]) = 1">soup</xsl:when>
-		<xsl:otherwise>dinner</xsl:otherwise>
-		</xsl:choose></xsl:attribute>
+			<xsl:when test=".//*[normalize-space(starts-with(text()), 'Menu')]">menu</xsl:when>
+			<xsl:when test="./preceding-sibling::tr//*[starts-with(normalize-space(text()), 'Hlavní jídla')]">dinner</xsl:when>
+			<xsl:when test="./preceding-sibling::tr//*[starts-with(normalize-space(text()), 'Polévky')]">soup</xsl:when>
+			<xsl:otherwise></xsl:otherwise>
+			</xsl:choose></xsl:attribute>
+			<xsl:attribute name="category"><xsl:choose>
+				<xsl:when test="./preceding-sibling::tr//*[starts-with(text(), 'Smažená jídla')] and not(starts-with(td[1], '1') or starts-with(td[1], '2') or starts-with(td[1], '3') or starts-with(td[1], '4') or starts-with(td[1], '5') or starts-with(td[1], '6') or starts-with(td[1], '7') or starts-with(td[1], '8') or starts-with(td[1], '9') or starts-with(td[1], '0'))">3-salad</xsl:when>
+				<xsl:when test="./preceding-sibling::tr//*[starts-with(text(), 'Smažená jídla')]">2-fried</xsl:when>
+				<xsl:otherwise>1-normal</xsl:otherwise>
+			</xsl:choose></xsl:attribute>
 			<xsl:attribute name="order"><xsl:value-of select="position()" /></xsl:attribute>
 			<xsl:attribute name="time"><xsl:value-of select="$pos" /></xsl:attribute>
 			<xsl:attribute name="ref-time"><xsl:value-of select="$date" /></xsl:attribute>
 			<title>
-				<xsl:value-of select="td[1]" />
+				<xsl:apply-templates select="td[1]" />
+				<xsl:apply-templates select="following-sibling::tr[1]" mode="multiline" />
 			</title>
 			<price>
 				<xsl:value-of select="td[@class='edtbl_price']" />
 			</price>
 		</meal>
 
+	</xsl:template>
+	
+	<xsl:template match="span[@class='show-today']">
+	</xsl:template>
+
+	<xsl:template match="tr" mode="multiline">
+		<xsl:if test="not(starts-with(td, 'Smažená jídla') or starts-with(td, 'Hlavní jídla') or starts-with(td, 'Polévky') or (td[@class='edtbl_price']/text()))">
+			<xsl:text>&#10;</xsl:text>
+			<xsl:apply-templates select="td[1]" />
+			<xsl:apply-templates select="following-sibling::tr[1]" mode="multiline" />
+		</xsl:if>
 	</xsl:template>
 
 </xsl:stylesheet>

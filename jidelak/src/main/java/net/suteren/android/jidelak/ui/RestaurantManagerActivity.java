@@ -9,8 +9,6 @@ import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -28,7 +26,7 @@ import com.terlici.dragndroplist.DragNDropListView;
  * @author Petr
  * 
  */
-public class RestaurantManagerActivity extends ActionBarActivity {
+public class RestaurantManagerActivity extends AbstractJidelakActivity {
 
 	private class DragNDropRestaurantListAdapter extends BaseAdapter implements
 			DragNDropAdapter {
@@ -107,8 +105,6 @@ public class RestaurantManagerActivity extends ActionBarActivity {
 
 	}
 
-	private ActionBar ab;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -139,20 +135,13 @@ public class RestaurantManagerActivity extends ActionBarActivity {
 		save.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				JidelakDbHelper dbHelper = JidelakDbHelper.getInstance(getApplication());
+				JidelakDbHelper dbHelper = JidelakDbHelper
+						.getInstance(getApplication());
 				new RestaurantDao(dbHelper).update(ddsa.getRestaurants());
 				dbHelper.notifyDataSetChanged();
 				finish();
 			}
 		});
-		setupActionBar();
-	}
-
-	private void setupActionBar() {
-		ab = getSupportActionBar();
-		ab.setDisplayHomeAsUpEnabled(true);
-		ab.setDisplayShowHomeEnabled(true);
-		ab.setDisplayShowTitleEnabled(false);
 	}
 
 }

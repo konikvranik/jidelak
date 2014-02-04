@@ -22,8 +22,6 @@ import org.slf4j.LoggerFactory;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.webkit.WebView;
 
@@ -31,9 +29,8 @@ import android.webkit.WebView;
  * @author jd39426
  * 
  */
-public class ErrorViewActivity extends ActionBarActivity {
+public class ErrorViewActivity extends AbstractJidelakActivity {
 
-	private ActionBar ab;
 	private String text;
 	private JidelakException exception;
 
@@ -47,7 +44,6 @@ public class ErrorViewActivity extends ActionBarActivity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.errorview);
-		setupActionBar();
 
 		Bundle params = getIntent().getExtras();
 		JidelakException e = (JidelakException) params
@@ -143,12 +139,5 @@ public class ErrorViewActivity extends ActionBarActivity {
 
 	public void sendError(View v) throws JidelakException {
 		throw getException();
-	}
-
-	private void setupActionBar() {
-		ab = getSupportActionBar();
-		ab.setDisplayHomeAsUpEnabled(true);
-		ab.setDisplayShowHomeEnabled(true);
-		ab.setDisplayShowTitleEnabled(false);
 	}
 }

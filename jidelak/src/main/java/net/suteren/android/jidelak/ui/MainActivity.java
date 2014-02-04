@@ -1,13 +1,11 @@
 package net.suteren.android.jidelak.ui;
 
-import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.model.Availability;
@@ -34,13 +32,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBar.TabListener;
-import android.support.v7.app.ActionBarActivity;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -49,15 +45,79 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends ActionBarActivity implements
+public class MainActivity extends AbstractJidelakActivity implements
 		TabListener, OnNavigationListener {
 
-	private static Logger log = LoggerFactory
-			.getLogger(MainActivity.class);
+	private static Logger log = LoggerFactory.getLogger(MainActivity.class);
 
-	boolean mBound = false;
+	private ViewPager pagerView;
 
-	FeederService mService;
+	private Menu mainMenu;
+
+	private DayPagerAdapter dpa;
+
+	private boolean mBound = false;
+
+	private FeederService mService;
+
+	/** Defines callbacks for service binding, passed to bindService() */
+	private ServiceConnection mConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			// We've bound to LocalService, cast the IBinder and get
+			// LocalService instance
+			log.debug("service connected");
+			FeederServiceBinder binder = (FeederServiceBinder) service;
+			mService = binder.getService();
+			mBound = true;
+
+			mService.registerStartObserver(new DataSetObserver() {
+
+				@Override
+				public void onChanged() {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+								startRefreshHc();
+							else
+								startRefreshFr();
+						}
+					});
+
+				}
+			});
+
+			mService.registerStopObserver(new DataSetObserver() {
+
+				@Override
+				public void onChanged() {
+					log.debug("Notify update in activity");
+
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+								stopRefreshHc();
+							else
+								stopRefreshFr();
+						}
+					});
+
+				}
+			});
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+			log.debug("service disconnected");
+			mBound = false;
+
+		}
+
+	};
 
 	/**
 	 * Called when the activity is first created.
@@ -71,16 +131,14 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getOverflowMenu();
+
 		setContentView(R.layout.activity_main);
 
 		dpa = new DayPagerAdapter(getSupportFragmentManager());
 
-		setupActionBar();
-
 		setupPagerView();
 
-		goToday();
+		goToToday();
 
 		getDbHelper().registerObserver(new DataSetObserver() {
 			@Override
@@ -126,14 +184,9 @@ public class MainActivity extends ActionBarActivity implements
 		});
 
 		log.debug("DemoReceiver.onReceive(ACTION_BOOT_COMPLETED)");
-		startService(new Intent(this, FeederService.class).putExtra(
-				"register", true));
+		startService(new Intent(this, FeederService.class).putExtra("register",
+				true));
 
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
 	}
 
 	@Override
@@ -144,11 +197,153 @@ public class MainActivity extends ActionBarActivity implements
 			unbindService(mConnection);
 			mBound = false;
 		} else if (!mBound && hasFocus) {
-			boolean res = bindService(new Intent(this,
-					FeederService.class), mConnection,
-					Context.BIND_NOT_FOREGROUND);
+			boolean res = bindService(new Intent(this, FeederService.class),
+					mConnection, Context.BIND_NOT_FOREGROUND);
 			log.debug("Bind result: " + res);
 		}
+
+	}
+
+	protected void goToToday() {
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		cal.setTimeInMillis(System.currentTimeMillis());
+		goToDay(dpa.getPositionByDate(cal));
+	}
+
+	protected void goToDay(int arg0) {
+		pagerView.setCurrentItem(arg0);
+
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		cal.setTimeInMillis(System.currentTimeMillis());
+
+		ab.setDisplayHomeAsUpEnabled(!(arg0 == dpa.getPositionByDate(cal)));
+	}
+
+	private void setupPagerView() {
+		pagerView = (ViewPager) findViewById(R.id.pager);
+		pagerView.setAdapter(dpa);
+		pagerView
+				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+					@Override
+					public void onPageSelected(int position) {
+						ab.setSelectedNavigationItem(position);
+					}
+
+				});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		mainMenu = menu;
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.jidelak, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+	
+		case R.id.action_update:
+	
+			if (mBound && mService.isRunning()) {
+				Toast.makeText(getApplicationContext(),
+						R.string.update_already_running, Toast.LENGTH_SHORT)
+						.show();
+				return true;
+			}
+			Intent intent = new Intent(this, FeederService.class);
+			startService(intent);
+	
+			return true;
+	
+		case R.id.action_reorder_restaurants:
+			startActivity(new Intent(this, RestaurantManagerActivity.class));
+			return true;
+	
+		case R.id.action_settings:
+			startActivity(new Intent(this, PreferencesActivity.class));
+			return true;
+	
+		case R.id.action_about:
+			startActivity(new Intent(this, AboutActivity.class));
+			return true;
+	
+		case android.R.id.home:
+			goToToday();
+			return true;
+	
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(int arg0, long arg1) {
+		goToDay(arg0);
+		return true;
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction arg1) {
+		goToDay(tab.getPosition());
+	
+	}
+
+	@Override
+	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+	}
+
+	@Override
+	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
+	}
+
+	@Override
+	protected ActionBar setupActionBar() {
+		ab = super.setupActionBar();
+		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		ab.setListNavigationCallbacks(dpa, this);
+		return ab;
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	void startRefreshHc() {
+		log.debug("Start refresh");
+		Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotate);
+		rotation.setRepeatCount(Animation.INFINITE);
+
+		MenuItem refreshItem = mainMenu.findItem(R.id.action_update);
+
+		ImageView iv = (ImageView) refreshItem.getActionView();
+		if (iv == null) {
+			LayoutInflater inflater = (LayoutInflater) this
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			iv = (ImageView) inflater.inflate(R.layout.refresh_action_view,
+					null);
+			refreshItem.setActionView(iv);
+		}
+		iv.startAnimation(rotation);
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	void stopRefreshHc() {
+		log.debug("Stop refresh");
+		MenuItem refreshItem = mainMenu.findItem(R.id.action_update);
+
+		ImageView iv = (ImageView) refreshItem.getActionView();
+		if (iv != null) {
+			iv.setAnimation(null);
+		}
+		refreshItem.setActionView(null);
+	}
+
+	void startRefreshFr() {
+		log.debug("Start refresh old");
+
+	}
+
+	void stopRefreshFr() {
+		log.debug("Stop refresh old");
 
 	}
 
@@ -299,240 +494,4 @@ public class MainActivity extends ActionBarActivity implements
 		}
 
 	}
-
-	private ActionBar ab;
-
-	private JidelakDbHelper dbHelper;
-
-	DayPagerAdapter dpa;
-
-	private ViewPager pagerView;
-
-	private Menu mainMenu;
-
-	public JidelakDbHelper getDbHelper() {
-		if (dbHelper == null)
-			dbHelper = JidelakDbHelper.getInstance(getApplicationContext());
-		return dbHelper;
-	}
-
-	private void goToday() {
-		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		cal.setTimeInMillis(System.currentTimeMillis());
-		goToDay(dpa.getPositionByDate(cal));
-	}
-
-	private void setupPagerView() {
-		pagerView = (ViewPager) findViewById(R.id.pager);
-		pagerView.setAdapter(dpa);
-		pagerView
-				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						ab.setSelectedNavigationItem(position);
-					}
-
-				});
-	}
-
-	private void setupActionBar() {
-		ab = getSupportActionBar();
-		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		ab.setDisplayShowHomeEnabled(true);
-		ab.setDisplayShowTitleEnabled(false);
-		ab.setListNavigationCallbacks(dpa, this);
-	}
-
-	private void getOverflowMenu() {
-		try {
-			ViewConfiguration config = ViewConfiguration.get(this);
-			Field menuKeyField = ViewConfiguration.class
-					.getDeclaredField("sHasPermanentMenuKey");
-			if (menuKeyField != null) {
-				menuKeyField.setAccessible(true);
-				menuKeyField.setBoolean(config, false);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		mainMenu = menu;
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.jidelak, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onNavigationItemSelected(int arg0, long arg1) {
-		goToDay(arg0);
-		return true;
-	}
-
-	protected void goToDay(int arg0) {
-		pagerView.setCurrentItem(arg0);
-
-		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		cal.setTimeInMillis(System.currentTimeMillis());
-
-		ab.setDisplayHomeAsUpEnabled(!(arg0 == dpa.getPositionByDate(cal)));
-	}
-
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	void startRefreshHc() {
-		log.debug("Start refresh");
-		Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotate);
-		rotation.setRepeatCount(Animation.INFINITE);
-
-		MenuItem refreshItem = mainMenu.findItem(R.id.action_update);
-
-		ImageView iv = (ImageView) refreshItem.getActionView();
-		if (iv == null) {
-			LayoutInflater inflater = (LayoutInflater) this
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			iv = (ImageView) inflater.inflate(R.layout.refresh_action_view,
-					null);
-			refreshItem.setActionView(iv);
-		}
-		iv.startAnimation(rotation);
-	}
-
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	void stopRefreshHc() {
-		log.debug("Stop refresh");
-		MenuItem refreshItem = mainMenu.findItem(R.id.action_update);
-
-		ImageView iv = (ImageView) refreshItem.getActionView();
-		if (iv != null) {
-			iv.setAnimation(null);
-		}
-		refreshItem.setActionView(null);
-	}
-
-	void startRefreshFr() {
-		log.debug("Start refresh old");
-
-	}
-
-	void stopRefreshFr() {
-		log.debug("Stop refresh old");
-
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-
-		case R.id.action_update:
-
-			if (mBound && mService.isRunning()) {
-				Toast.makeText(getApplicationContext(),
-						R.string.update_already_running, Toast.LENGTH_SHORT)
-						.show();
-				return true;
-			}
-			Intent intent = new Intent(this, FeederService.class);
-			startService(intent);
-
-			return true;
-
-		case R.id.action_reorder_restaurants:
-			startActivity(new Intent(this, RestaurantManagerActivity.class));
-			return true;
-
-		case R.id.action_settings:
-			startActivity(new Intent(this, PreferencesActivity.class));
-			return true;
-
-		case R.id.action_about:
-			startActivity(new Intent(this, AboutActivity.class));
-			return true;
-
-		case android.R.id.home:
-			goToday();
-			return true;
-
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
-	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onTabSelected(Tab tab, FragmentTransaction arg1) {
-		goToDay(tab.getPosition());
-
-	}
-
-	@Override
-	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/** Defines callbacks for service binding, passed to bindService() */
-	private ServiceConnection mConnection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName className, IBinder service) {
-			// We've bound to LocalService, cast the IBinder and get
-			// LocalService instance
-			log.debug("service connected");
-			FeederServiceBinder binder = (FeederServiceBinder) service;
-			mService = binder.getService();
-			mBound = true;
-
-			mService.registerStartObserver(new DataSetObserver() {
-
-				@Override
-				public void onChanged() {
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-
-							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-								startRefreshHc();
-							else
-								startRefreshFr();
-						}
-					});
-
-				}
-			});
-
-			mService.registerStopObserver(new DataSetObserver() {
-
-				@Override
-				public void onChanged() {
-					log.debug("Notify update in activity");
-
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-								stopRefreshHc();
-							else
-								stopRefreshFr();
-						}
-					});
-
-				}
-			});
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName arg0) {
-			log.debug("service disconnected");
-			mBound = false;
-
-		}
-
-	};
 }

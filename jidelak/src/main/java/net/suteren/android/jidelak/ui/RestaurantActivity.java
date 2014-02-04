@@ -48,8 +48,6 @@ import android.content.Intent;
 import android.location.Address;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
@@ -61,14 +59,10 @@ import android.widget.Toast;
  * @author Petr
  * 
  */
-public class RestaurantActivity extends ActionBarActivity {
+public class RestaurantActivity extends AbstractJidelakActivity {
 
 	private static Logger log = LoggerFactory
 			.getLogger(RestaurantActivity.class);
-
-	private ActionBar ab;
-
-	private JidelakDbHelper dbHelper;
 
 	private ExpandableListContextMenuInfo lastMenuInfo;
 
@@ -223,12 +217,6 @@ public class RestaurantActivity extends ActionBarActivity {
 
 	}
 
-	private JidelakDbHelper getDbHelper() {
-		if (dbHelper == null)
-			dbHelper = JidelakDbHelper.getInstance(this);
-		return dbHelper;
-	}
-
 	protected void buildMetaInfo(StringBuffer sb, Restaurant restaurant) {
 
 		sb.append("<div class='meta'>");
@@ -272,7 +260,6 @@ public class RestaurantActivity extends ActionBarActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.restaurant_view);
-		setupActionBar();
 
 		restaurant = new Restaurant(getIntent().getLongExtra("restaurant", 0));
 
@@ -565,13 +552,6 @@ public class RestaurantActivity extends ActionBarActivity {
 			// TODO Auto-generated catch block
 		}
 		return restaurant;
-	}
-
-	private void setupActionBar() {
-		ab = getSupportActionBar();
-		ab.setDisplayHomeAsUpEnabled(true);
-		ab.setDisplayShowHomeEnabled(true);
-		ab.setDisplayShowTitleEnabled(false);
 	}
 
 }

@@ -40,6 +40,18 @@
         <item name="android:textSize">9sp</item>
     </style>
 
+    <style name="JidelakOrangeText" parent="RestaurantText">
+        <item name="android:textColor">@color/JidelakOrange</item>
+    </style>
+
+    <style name="JidelakOrangeTextSmall" parent="RestaurantTextSmall">
+        <item name="android:textColor">@color/JidelakOrange</item>
+    </style>
+
+    <style name="JidelakOrangeTextLarge" parent="RestaurantTextLarge">
+        <item name="android:textColor">@color/JidelakOrange</item>
+    </style>
+
     <style name="RestaurantTheme" parent="AppTheme">
         <item name="android:background">@color/RestaurantBackground</item>
         <item name="android:childDivider">@android:color/transparent</item>
@@ -56,6 +68,11 @@
     <style name="RestaurantHeaderTheme" parent="RestaurantTheme">
         <item name="android:padding">5dp</item>
         <item name="android:background">@color/RestaurantHeaderBackground</item>
+    </style>
+
+    <style name="RestaurantOrangeTheme" parent="RestaurantHeaderTheme">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@color/JidelakOrange</item>
     </style>
 
 </resources>

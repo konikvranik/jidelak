@@ -2,13 +2,14 @@
 
     <color name="shadow">#A000</color>
     <color name="RestaurantHeaderBackground">#EFA</color>
+    <color name="JidelakOrange">#ff9741</color>
     <color name="RestaurantBackground">@android:color/background_light</color>
     <color name="vegeterian_meal">#AFB</color>
     <color name="pasta_meal">#FEA</color>
     <color name="steak_meal">#FAA</color>
-    <color name="cold_meal">#ABF</color>
+    <color name="cold_meal">#AFE</color>
     <color name="live_meal">#FAE</color>
     <color name="half_meal">#EEF</color>
-    <color name="fried_meal">#FF0</color>
+    <color name="fried_meal">#680</color>
     
 </resources>

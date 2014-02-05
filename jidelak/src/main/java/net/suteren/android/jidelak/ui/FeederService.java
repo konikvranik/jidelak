@@ -66,8 +66,7 @@ import android.widget.Toast;
 
 public class FeederService extends Service {
 
-	private DataSetObservable startObservers = new DataSetObservable();
-	private DataSetObservable stopObservers = new DataSetObservable();
+	private DataSetObservable changeObservers = new DataSetObservable();
 
 	/**
 	 * Class used for the client Binder. Because we know this service always
@@ -86,38 +85,22 @@ public class FeederService extends Service {
 
 	}
 
-	public void notifyStart() {
+	public void notifyChanged() {
 		log.debug("Notify start in binder.");
-		startObservers.notifyChanged();
-	}
-
-	public void notifyDone() {
-		log.debug("Notify done in binder.");
-		stopObservers.notifyChanged();
-	}
-
-	public void registerStopObserver(DataSetObserver refreshObserver) {
-		log.debug("registering stop observer");
-		stopObservers.registerObserver(refreshObserver);
-	}
-
-	public void unregisterStopObserver(DataSetObserver refreshObserver) {
-		log.debug("unregistering stop observer");
-		stopObservers.unregisterObserver(refreshObserver);
+		changeObservers.notifyChanged();
 	}
 
 	public void registerStartObserver(DataSetObserver refreshObserver) {
 		log.debug("registering start observer");
-		startObservers.registerObserver(refreshObserver);
+		changeObservers.registerObserver(refreshObserver);
 	}
 
 	public void unregisterStartObserver(DataSetObserver refreshObserver) {
 		log.debug("unregistering start observer");
-		startObservers.unregisterObserver(refreshObserver);
+		changeObservers.unregisterObserver(refreshObserver);
 	}
 
-	private static Logger log = LoggerFactory
-			.getLogger(FeederService.class);
+	private static Logger log = LoggerFactory.getLogger(FeederService.class);
 
 	private final FeederServiceBinder mBinder = new FeederServiceBinder(this);
 	static final String LOGGING_TAG = "JidelakFeederService";
@@ -149,7 +132,7 @@ public class FeederService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent.getBooleanExtra("register", false))
+		if (isRunning() || intent.getBooleanExtra("register", false))
 			return START_NOT_STICKY;
 		log.trace("JidelakFeederService.onStartCommand()");
 		// this.force = intent.getExtras().getBoolean("force", false);
@@ -352,7 +335,7 @@ public class FeederService extends Service {
 		@Override
 		protected Void doInBackground(Void... params) {
 			updating = true;
-			notifyStart();
+			notifyChanged();
 			try {
 
 				updateData();
@@ -369,7 +352,7 @@ public class FeederService extends Service {
 
 			} finally {
 				updating = false;
-				notifyDone();
+				notifyChanged();
 			}
 			return null;
 		}
@@ -378,14 +361,14 @@ public class FeederService extends Service {
 		protected void onCancelled() {
 			super.onCancelled();
 			updating = false;
-			notifyDone();
+			notifyChanged();
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 			updating = false;
-			notifyDone();
+			notifyChanged();
 		}
 
 	}

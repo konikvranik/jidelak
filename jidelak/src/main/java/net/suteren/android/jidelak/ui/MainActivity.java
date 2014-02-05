@@ -76,45 +76,20 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 				@Override
 				public void onChanged() {
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-
-							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-								startRefreshHc();
-							else
-								startRefreshFr();
-						}
-					});
+					updateRefreshButton();
 
 				}
+
 			});
+			updateRefreshButton();
 
-			mService.registerStopObserver(new DataSetObserver() {
-
-				@Override
-				public void onChanged() {
-					log.debug("Notify update in activity");
-
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-								stopRefreshHc();
-							else
-								stopRefreshFr();
-						}
-					});
-
-				}
-			});
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName arg0) {
 			log.debug("service disconnected");
 			mBound = false;
-
+			updateRefreshButton();
 		}
 
 	};
@@ -145,40 +120,12 @@ public class MainActivity extends AbstractJidelakActivity implements
 			@Override
 			public void onChanged() {
 				dpa.updateDates();
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						dpa.notifyDataSetChanged();
-						ab.removeAllTabs();
-						for (int i = 0; i < dpa.getCount(); i++) {
-							ab.addTab(ab.newTab().setText(dpa.getPageTitle(i))
-									.setTabListener(MainActivity.this));
-
-						}
-
-					}
-				});
 				super.onChanged();
 			}
 
 			@Override
 			public void onInvalidated() {
 				dpa.updateDates();
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						dpa.notifyDataSetChanged();
-						ab.removeAllTabs();
-						for (int i = 0; i < dpa.getCount(); i++) {
-							ab.addTab(ab.newTab().setText(dpa.getPageTitle(i))
-									.setTabListener(MainActivity.this));
-
-						}
-
-					}
-				});
 				super.onInvalidated();
 			}
 
@@ -231,6 +178,27 @@ public class MainActivity extends AbstractJidelakActivity implements
 					}
 
 				});
+	}
+
+	private void updateRefreshButton() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+
+				if (mBound && mService != null && mService.isRunning()) {
+
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+						startRefreshHc();
+					else
+						startRefreshFr();
+				} else {
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+						stopRefreshHc();
+					else
+						stopRefreshFr();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -490,6 +458,20 @@ public class MainActivity extends AbstractJidelakActivity implements
 			log.debug("Update dates start");
 			AvailabilityDao ad = new AvailabilityDao(getDbHelper());
 			dates = new ArrayList<Availability>(ad.findAllDays());
+			runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					notifyDataSetChanged();
+					ab.removeAllTabs();
+					for (int i = 0; i < getCount(); i++) {
+						ab.addTab(ab.newTab().setText(getPageTitle(i))
+								.setTabListener(MainActivity.this));
+
+					}
+
+				}
+			});
 			log.debug("Update dates end");
 		}
 

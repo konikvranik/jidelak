@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.0">
+		<restaurant version="1.2">
 			<id>praha-u-majeru</id>
 			<name>Svět Zábavy</name>
 			<phone>(+420) 606746380</phone>
@@ -56,7 +56,7 @@
 	</xsl:template>
 
 	<xsl:template match="h4">
-		<xsl:apply-templates select="(./following-sibling::div)[1]//table//tr[td]">
+		<xsl:apply-templates select="(./following-sibling::div)[1]//table//tr[*[@class='edtbl_price']/text() or *//text()[starts-with(normalize-space(.),'Polévka')]]">
 			<xsl:with-param name="date"
 				select="concat(//*[@id='tab_denni_menu']/div[1]/div[2]/h3/span[1], //*[@id='tab_denni_menu']/div[1]/div[2]/h3/text()[3])" />
 			<xsl:with-param name="pos" select="position()" />
@@ -68,14 +68,15 @@
 		<xsl:param name="pos" />
 		<meal>
 			<xsl:attribute name="dish"><xsl:choose>
-		<xsl:when test="count(./preceding-sibling::tr[th]) = 1">soup</xsl:when>
+		<xsl:when test="*//text()[starts-with(normalize-space(.),'Polévka')]">soup</xsl:when>
 		<xsl:otherwise>dinner</xsl:otherwise>
 		</xsl:choose></xsl:attribute>
 			<xsl:attribute name="order"><xsl:value-of select="position()" /></xsl:attribute>
 			<xsl:attribute name="time"><xsl:value-of select="$pos" /></xsl:attribute>
 			<xsl:attribute name="ref-time"><xsl:value-of select="$date" /></xsl:attribute>
 			<title>
-				<xsl:value-of select="td[1]" />
+				<xsl:apply-templates select="td[1]" />
+				<xsl:apply-templates select="following-sibling::tr[1]" mode="multiline" />
 			</title>
 			<price>
 				<xsl:value-of select="td[@class='edtbl_price']" />
@@ -83,5 +84,36 @@
 		</meal>
 
 	</xsl:template>
+	
+	<xsl:template match="text()">
+		<xsl:choose>
+			<xsl:when test="starts-with(normalize-space(.),'1') or starts-with(normalize-space(.),'2') or starts-with(normalize-space(.),'3') or starts-with(normalize-space(.),'4') or starts-with(normalize-space(.),'5') or starts-with(normalize-space(.),'6') or starts-with(normalize-space(.),'7') or starts-with(normalize-space(.),'8') or starts-with(normalize-space(.),'9')">
+				<xsl:value-of select="substring-after(normalize-space(.),'.')" />
+			</xsl:when>
+			<xsl:when test="starts-with(normalize-space(.),'Polévka–')">
+				<xsl:value-of select="substring-after(normalize-space(.),'Polévka–')" />
+			</xsl:when>
+			<xsl:when test="starts-with(normalize-space(.),'Polévka –')">
+				<xsl:value-of select="substring-after(normalize-space(.),'Polévka –')" />
+			</xsl:when>
+			<xsl:when test="starts-with(normalize-space(.),'Polévka')">
+				<xsl:value-of select="substring-after(normalize-space(.),'Polévka')" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="normalize-space(.)" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
+	<xsl:template match="span[@class='show-today']">
+	</xsl:template>
+
+	<xsl:template match="tr" mode="multiline">
+		<xsl:if test="not(*[@class='edtbl_price']/text())">
+			<xsl:text>&#10;</xsl:text>
+			<xsl:apply-templates select="td[1]" />
+			<xsl:apply-templates select="following-sibling::tr[1]" mode="multiline" />
+		</xsl:if>
+	</xsl:template>
+	
 </xsl:stylesheet>

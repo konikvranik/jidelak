@@ -60,12 +60,24 @@
 
 	<xsl:template match="*[@id='mainContainer']/div/div[starts-with(@class,'menuItem')]">
 		<meal>
-			<xsl:apply-templates select="div[starts-with(@class, 'menuSubsection')]" />
-							<xsl:attribute name="dish"><xsl:choose>
+			<xsl:apply-templates select="div[starts-with(@class, 'menuSubsection')]" mode="dish"/>
+			<title>
+				<xsl:apply-templates select="div[starts-with(@class, 'menuSubsection')]"/>
+			</title>
+			<description>
+				<xsl:apply-templates select="div[starts-with(@class, 'menuName')]"/>
+			</description>
+			<price>
+				<xsl:apply-templates select="div[starts-with(@class, 'menuPrice')]"/>
+			</price>
+							
 		</meal>
 	</xsl:template>
 
-	<xsl:template match="div[starts-with(@class, 'menuSubsection')]">
+	<xsl:template match="div[starts-with(@class, 'menuSubsection')]" mode="dish">
 		<xsl:attribute name="dish"><xsl:choose>
+		<xsl:when test="starts-with(.,'POLÉVKA')">soup</xsl:when>
+		<xsl:when test="starts-with(.,'HLAVNÍ JÍDLO')">dinner</xsl:when>
+		</xsl:choose>dinner</xsl:attribute>
 	</xsl:template>
 </xsl:stylesheet>

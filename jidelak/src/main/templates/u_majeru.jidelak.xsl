@@ -77,7 +77,8 @@
 		</meal>
 
 	</xsl:template>
-		<xsl:template match="span[@class='show-today']">
+	
+	<xsl:template match="span[@class='show-today']">
 	</xsl:template>
 
 	<xsl:template match="tr" mode="dish">

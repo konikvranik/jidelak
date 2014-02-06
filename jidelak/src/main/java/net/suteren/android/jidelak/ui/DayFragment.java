@@ -165,8 +165,9 @@ public class DayFragment extends Fragment {
 					} else if (cat.matches(".*fish.*")) {
 						color = getResources().getColor(R.color.fish_meal);
 					} else if (cat.matches(".*(caffee|tee).*")) {
-						color = getResources().getColor(R.color.red_wine_meal);
-					} else if (cat.matches(".*cocteil.*")) {
+						color = getResources()
+								.getColor(R.color.warm_drink_meal);
+					} else if (cat.matches(".*coctail.*")) {
 						color = getResources().getColor(R.color.coctail_meal);
 					} else if (cat.matches(".*juice.*")) {
 						color = getResources().getColor(R.color.juice_meal);
@@ -314,6 +315,19 @@ public class DayFragment extends Fragment {
 			});
 		}
 
+		public int countAbsolutePosition(int paramInt) {
+			if (paramInt > getGroupCount() - 1)
+				paramInt = getGroupCount() - 2;
+			int count = 0;
+			for (int i = 0; i < paramInt; i++)
+				count += getChildrenCount(i) + 1;
+			return count;
+		}
+
+	}
+
+	public DailyMenuAdapter getAdapter() {
+		return ad;
 	}
 
 	public static final String ARG_DAY = "day";
@@ -335,8 +349,9 @@ public class DayFragment extends Fragment {
 		ad = new DailyMenuAdapter(getActivity().getApplicationContext(),
 				prepareDay(args));
 
+		menuList = (ExpandableListView) rootView.findViewById(R.id.menu_list);
 		if (ad.isEmpty()) {
-			rootView.findViewById(R.id.menu_list).setVisibility(View.GONE);
+			menuList.setVisibility(View.GONE);
 			rootView.findViewById(R.id.empty).setVisibility(View.VISIBLE);
 			WebView disclaimerView = (WebView) rootView
 					.findViewById(R.id.empty_text);
@@ -347,11 +362,10 @@ public class DayFragment extends Fragment {
 			disclaimerView
 					.loadUrl("file:///android_res/raw/no_restaurants_disclaimer.html");
 		} else {
-			rootView.findViewById(R.id.menu_list).setVisibility(View.VISIBLE);
+			menuList.setVisibility(View.VISIBLE);
 			rootView.findViewById(R.id.empty).setVisibility(View.GONE);
 
 		}
-		menuList = (ExpandableListView) rootView.findViewById(R.id.menu_list);
 		registerForContextMenu(menuList);
 		menuList.setAdapter(ad);
 
@@ -375,6 +389,10 @@ public class DayFragment extends Fragment {
 		});
 
 		return rootView;
+	}
+
+	public ExpandableListView getMenuList() {
+		return menuList;
 	}
 
 	@Override

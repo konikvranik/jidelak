@@ -18,4 +18,6 @@
     <color name="juice_meal">#ffe800</color>
     <color name="coctail_meal">#47f687</color>
     <color name="beer_meal">#f5cb2b</color>
+    <color name="warm_drink_meal">#ff7140</color>
+
 </resources>

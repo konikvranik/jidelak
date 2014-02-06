@@ -10,12 +10,14 @@
         android:orderInCategory="10"
         android:title="@string/action_update"
         app:showAsAction="ifRoom"/>
-    <item
+    <!--
+          item
         android:id="@+id/action_reorder_restaurants"
         android:icon="@drawable/ic_action_sort_by_size"
         android:orderInCategory="100"
         android:title="@string/action_reorder_restaurants"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom"/
+    -->
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_action_settings"

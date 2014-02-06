@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- style="@style/RestaurantOrangeTheme"  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/RestaurantOrangeTheme"
+    style="@style/Theme.AppCompat"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -26,7 +28,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginBottom="8dp"
             android:text="Restaurace"
-            android:textAppearance="@style/JidelakOrangeTextLarge" />
+            android:textAppearance="?android:attr/textAppearance" />
 
         <TextView
             android:id="@+id/textView2"
@@ -35,7 +37,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/name"
             android:text="@string/open"
-            android:textAppearance="@style/JidelakOrangeTextSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/open"
@@ -46,7 +48,7 @@
             android:paddingLeft="1dp"
             android:singleLine="false"
             android:text="16:00 - 19:00"
-            android:textAppearance="@style/JidelakOrangeText" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
 
 </LinearLayout>

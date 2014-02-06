@@ -3,12 +3,16 @@ package net.suteren.android.jidelak.ui;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
+import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.model.Availability;
+import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.ui.FeederService.FeederServiceBinder;
 
 import org.slf4j.Logger;
@@ -23,16 +27,19 @@ import android.database.DataSetObserver;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBar.TabListener;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,10 +47,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.BaseAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.terlici.dragndroplist.DragNDropAdapter;
+import com.terlici.dragndroplist.DragNDropListView;
 
 public class MainActivity extends AbstractJidelakActivity implements
 		TabListener, OnNavigationListener {
@@ -94,6 +107,10 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 	};
 
+	private DrawerLayout drawer;
+
+	private ActionBarDrawerToggle drawerToggle;
+
 	/**
 	 * Called when the activity is first created.
 	 * 
@@ -113,6 +130,13 @@ public class MainActivity extends AbstractJidelakActivity implements
 		ab.setListNavigationCallbacks(dpa, this);
 
 		setupPagerView();
+
+		setupDrawer();
+
+		drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawerToggle = new ActionBarDrawerToggle(this, drawer,
+				R.drawable.ic_drawer, R.string.open, android.R.string.cancel);
+		drawer.setDrawerListener(drawerToggle);
 
 		goToToday();
 
@@ -135,7 +159,47 @@ public class MainActivity extends AbstractJidelakActivity implements
 		startService(new Intent(this, FeederService.class).putExtra("register",
 				true));
 
+		setupHomeButton(true);
+
 	}
+
+	private void setupDrawer() {
+		// TODO Auto-generated method stub
+		DragNDropListView ddlv = (DragNDropListView) getWindow().findViewById(
+				R.id.restaurants);
+
+		final DragNDropRestaurantListAdapter ddsa = new DragNDropRestaurantListAdapter(
+				new RestaurantDao(JidelakDbHelper.getInstance(this)).findAll());
+		ddlv.setDragNDropAdapter(ddsa);
+
+		ImageButton cancel = (ImageButton) getWindow().findViewById(R.id.cancel);
+		cancel.setOnClickListener(new ImageButton.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				findViewById(R.id.buttons).setVisibility(View.GONE);
+				ddsa.setRestaurants(new RestaurantDao(JidelakDbHelper
+						.getInstance(getApplicationContext())).findAll());
+				ddsa.notifyDataSetChanged();
+				drawer.closeDrawer(Gravity.LEFT);
+			}
+		});
+
+		ImageButton save = (ImageButton) getWindow().findViewById(R.id.save);
+		save.setOnClickListener(new ImageButton.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				JidelakDbHelper dbHelper = JidelakDbHelper
+						.getInstance(getApplication());
+				new RestaurantDao(dbHelper).update(ddsa.getRestaurants());
+				dbHelper.notifyDataSetChanged();
+				dpa.updateDates();
+				findViewById(R.id.buttons).setVisibility(View.GONE);
+				drawer.closeDrawer(Gravity.LEFT);
+			}
+		});
+	}
+
+	private boolean todaySelected;
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
@@ -160,11 +224,20 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 	protected void goToDay(int arg0) {
 		pagerView.setCurrentItem(arg0);
+		setupHomeButton(isTodaySelected(arg0));
+	}
 
+	protected boolean isTodaySelected(int arg0) {
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
 		cal.setTimeInMillis(System.currentTimeMillis());
 
-		ab.setDisplayHomeAsUpEnabled(!(arg0 == dpa.getPositionByDate(cal)));
+		return todaySelected = (arg0 == dpa.getPositionByDate(cal));
+	}
+
+	protected void setupHomeButton(boolean today) {
+		// ab.setDisplayHomeAsUpEnabled(back);
+		drawerToggle.setDrawerIndicatorEnabled(today);
+		drawerToggle.syncState();
 	}
 
 	private void setupPagerView() {
@@ -226,9 +299,9 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 			return true;
 
-		case R.id.action_reorder_restaurants:
-			startActivity(new Intent(this, RestaurantManagerActivity.class));
-			return true;
+			// case R.id.action_reorder_restaurants:
+			// startActivity(new Intent(this, RestaurantManagerActivity.class));
+			// return true;
 
 		case R.id.action_settings:
 			startActivity(new Intent(this, PreferencesActivity.class));
@@ -239,6 +312,12 @@ public class MainActivity extends AbstractJidelakActivity implements
 			return true;
 
 		case android.R.id.home:
+			if (todaySelected) {
+				if (drawerToggle.onOptionsItemSelected(item)) {
+					return true;
+				}
+				return super.onOptionsItemSelected(item);
+			}
 			goToToday();
 			return true;
 
@@ -256,7 +335,6 @@ public class MainActivity extends AbstractJidelakActivity implements
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction arg1) {
 		goToDay(tab.getPosition());
-
 	}
 
 	@Override
@@ -473,6 +551,127 @@ public class MainActivity extends AbstractJidelakActivity implements
 				}
 			});
 			log.debug("Update dates end");
+		}
+
+	}
+
+	protected String buildFragmentTag(ViewPager view, long id) {
+		return "android:switcher:" + view.getId() + ":" + id;
+	}
+
+	private class DragNDropRestaurantListAdapter extends BaseAdapter implements
+			DragNDropAdapter {
+
+		private List<Restaurant> restaurants;
+
+		private boolean changed = false;
+
+		public DragNDropRestaurantListAdapter(Collection<Restaurant> restaurants) {
+			super();
+			this.restaurants = new ArrayList<Restaurant>(restaurants);
+		}
+
+		@Override
+		public int getCount() {
+			return restaurants.size();
+		}
+
+		@Override
+		public Restaurant getItem(int paramInt) {
+			return restaurants.get(paramInt);
+		}
+
+		@Override
+		public long getItemId(int paramInt) {
+			return getItem(paramInt).getId();
+		}
+
+		@Override
+		public View getView(final int paramInt, View paramView,
+				ViewGroup paramViewGroup) {
+
+			if (paramView == null) {
+				paramView = View.inflate(getApplicationContext(),
+						R.layout.draggable_restaurant, null);
+			}
+
+			paramView.findViewById(R.id.header).setOnClickListener(
+					new View.OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							if (changed)
+								return;
+							DayFragment page = (DayFragment) getSupportFragmentManager()
+									.findFragmentByTag(
+											buildFragmentTag(pagerView, dpa
+													.getItemId(pagerView
+															.getCurrentItem())));
+							if (page == null)
+								return;
+							ExpandableListView menuListView = (ExpandableListView) page
+									.getMenuList();
+							if (menuListView == null)
+								return;
+							menuListView.setSelection(page.getAdapter()
+									.countAbsolutePosition(paramInt));
+
+						}
+
+					});
+
+			Restaurant restaurant = getItem(paramInt);
+
+			TextView nameView = (TextView) paramView.findViewById(R.id.name);
+			nameView.setText(restaurant.getName());
+
+			TextView openingView = (TextView) paramView.findViewById(R.id.open);
+			openingView.setText(restaurant
+					.openingHoursToString(getApplicationContext()));
+
+			return paramView;
+		}
+
+		@Override
+		public void onItemDrag(DragNDropListView parent, View view,
+				int position, long id) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onItemDrop(DragNDropListView parent, View view,
+				int startPosition, int endPosition, long id) {
+			Restaurant restaurant = restaurants.remove(startPosition);
+			restaurants.add(endPosition, restaurant);
+
+			for (int i = 0; i < restaurants.size(); i++)
+				restaurants.get(i).setPosition(i);
+
+			notifyDataSetChanged();
+
+			changed = true;
+			findViewById(R.id.buttons).setVisibility(View.VISIBLE);
+
+		}
+
+		@Override
+		public int getDragHandler() {
+			return R.id.handler;
+		}
+
+		public List<Restaurant> getRestaurants() {
+			return restaurants;
+		}
+
+		public void setRestaurants(Collection<Restaurant> sortedSet) {
+			this.restaurants = new ArrayList<Restaurant>(sortedSet);
+			resetChanged();
+			notifyDataSetChanged();
+		}
+
+		public void resetChanged() {
+			changed = false;
 		}
 
 	}

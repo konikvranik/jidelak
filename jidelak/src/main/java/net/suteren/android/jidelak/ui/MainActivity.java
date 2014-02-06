@@ -135,7 +135,21 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 		drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerToggle = new ActionBarDrawerToggle(this, drawer,
-				R.drawable.ic_drawer, R.string.open, android.R.string.cancel);
+				R.drawable.ic_drawer, R.string.open, android.R.string.cancel) {
+			/** Called when a drawer has settled in a completely closed state. */
+			@Override
+			public void onDrawerClosed(View view) {
+				super.onDrawerClosed(view);
+				setupHomeButton(isTodaySelected(pagerView.getCurrentItem()));
+			}
+
+			/** Called when a drawer has settled in a completely open state. */
+			@Override
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				setupHomeButton(isTodaySelected(pagerView.getCurrentItem()));
+			}
+		};
 		drawer.setDrawerListener(drawerToggle);
 
 		goToToday();
@@ -172,7 +186,8 @@ public class MainActivity extends AbstractJidelakActivity implements
 				new RestaurantDao(JidelakDbHelper.getInstance(this)).findAll());
 		ddlv.setDragNDropAdapter(ddsa);
 
-		ImageButton cancel = (ImageButton) getWindow().findViewById(R.id.cancel);
+		ImageButton cancel = (ImageButton) getWindow()
+				.findViewById(R.id.cancel);
 		cancel.setOnClickListener(new ImageButton.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -236,7 +251,8 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 	protected void setupHomeButton(boolean today) {
 		// ab.setDisplayHomeAsUpEnabled(back);
-		drawerToggle.setDrawerIndicatorEnabled(today);
+		drawerToggle.setDrawerIndicatorEnabled(today
+				|| drawer.isDrawerOpen(Gravity.LEFT));
 		drawerToggle.syncState();
 	}
 
@@ -312,7 +328,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 			return true;
 
 		case android.R.id.home:
-			if (todaySelected) {
+			if (todaySelected || drawer.isDrawerOpen(Gravity.LEFT)) {
 				if (drawerToggle.onOptionsItemSelected(item)) {
 					return true;
 				}
@@ -615,7 +631,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 								return;
 							menuListView.setSelection(page.getAdapter()
 									.countAbsolutePosition(paramInt));
-
+							drawer.closeDrawer(Gravity.LEFT);
 						}
 
 					});

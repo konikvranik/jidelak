@@ -209,6 +209,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 				dbHelper.notifyDataSetChanged();
 				dpa.updateDates();
 				findViewById(R.id.buttons).setVisibility(View.GONE);
+				ddsa.resetChanged();
 				drawer.closeDrawer(Gravity.LEFT);
 			}
 		});

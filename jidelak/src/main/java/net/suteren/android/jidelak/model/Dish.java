@@ -7,7 +7,8 @@ public enum Dish {
 	BREAKFAST(R.string.breakfast), SNACK(R.string.snack), STARTER(
 			R.string.starter), SOUP(R.string.soup), DINNER(R.string.dinner), TRIMMINGS(
 			R.string.trimmings), DESSERT(R.string.desert), LUNCH(R.string.lunch), SUPPER(
-			R.string.supper), MENU(R.string.menu);
+			R.string.supper), MENU(R.string.menu), DRINK(R.string.drink), WINE(
+			R.string.wine);
 
 	private int resource;
 

@@ -47,6 +47,8 @@
     <string name="desert">Zákusky</string>
     <string name="lunch">Svačiny</string>
     <string name="supper">Večeře</string>
+    <string name="drink">Nápoje</string>
+    <string name="wine">Víno</string>
     <string name="refresh_period_description">Čas po kterém budou data obnovena.</string>
     <string name="refresh_period_title">Interval aktualizace</string>
     <string name="category_background_title">Obarvit menu podle kategorií</string>

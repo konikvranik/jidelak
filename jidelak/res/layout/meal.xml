@@ -42,6 +42,7 @@
             android:layout_below="@+id/name"
             android:layout_toLeftOf="@+id/price"
             android:text="Popis"
+            android:singleLine="false"
             android:textAppearance="@style/RestaurantTextSmall" />
 
         <TextView

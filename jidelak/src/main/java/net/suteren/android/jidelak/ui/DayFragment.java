@@ -162,6 +162,23 @@ public class DayFragment extends Fragment {
 						color = getResources().getColor(R.color.live_meal);
 					} else if (cat.matches(".*fried.*")) {
 						color = getResources().getColor(R.color.fried_meal);
+					} else if (cat.matches(".*fish.*")) {
+						color = getResources().getColor(R.color.fish_meal);
+					} else if (cat.matches(".*(caffee|tee).*")) {
+						color = getResources().getColor(R.color.red_wine_meal);
+					} else if (cat.matches(".*cocteil.*")) {
+						color = getResources().getColor(R.color.coctail_meal);
+					} else if (cat.matches(".*juice.*")) {
+						color = getResources().getColor(R.color.juice_meal);
+					} else if (cat.matches(".*red-wine.*")) {
+						color = getResources().getColor(R.color.red_wine_meal);
+					} else if (cat.matches(".*beer.*")) {
+						color = getResources().getColor(R.color.beer_meal);
+					} else if (cat.matches(".*white-wine.*")) {
+						color = getResources()
+								.getColor(R.color.white_wine_meal);
+					} else if (cat.matches(".*rose-wine.*")) {
+						color = getResources().getColor(R.color.rose_wine_meal);
 					} else if (cat.matches(".*(ladies|child|half).*")) {
 						color = getResources().getColor(R.color.half_meal);
 					} else if (cat.matches(".*(steak|superior).*")) {

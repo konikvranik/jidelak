@@ -154,11 +154,9 @@ public class MainActivity extends AbstractJidelakActivity implements
 		startService(new Intent(this, FeederService.class).putExtra("register",
 				true));
 
-		setupHomeButton(true);
+		setupHomeButton();
 
 	}
-
-	private boolean todaySelected;
 
 	private View emptyView;
 
@@ -201,22 +199,28 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 	protected void goToDay(int arg0) {
 		getDayPagerView().setCurrentItem(arg0);
-		setupHomeButton(isTodaySelected(arg0));
+		setupHomeButton();
 	}
 
 	protected boolean isTodaySelected(int arg0) {
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
 		cal.setTimeInMillis(System.currentTimeMillis());
-
-		return todaySelected = (arg0 == getDayPagerAdapter().getPositionByDate(
-				cal));
+		return arg0 == getDayPagerAdapter().getPositionByDate(cal);
 	}
 
-	protected void setupHomeButton(boolean today) {
+	protected void setupHomeButton() {
 		// ab.setDisplayHomeAsUpEnabled(back);
-		getDrawerToggle().setDrawerIndicatorEnabled(
-				today || getDrawer().isDrawerOpen(Gravity.LEFT));
+		getDrawerToggle().setDrawerIndicatorEnabled(isDrawerIconEnabled());
 		getDrawerToggle().syncState();
+	}
+
+	private boolean isDrawerIconEnabled() {
+		return isTodaySelected() || getDrawer().isDrawerOpen(Gravity.LEFT)
+				|| getDayPagerAdapter().isEmpty();
+	}
+
+	private boolean isTodaySelected() {
+		return isTodaySelected(getDayPagerView().getCurrentItem());
 	}
 
 	private DrawerLayout getDrawer() {
@@ -283,16 +287,14 @@ public class MainActivity extends AbstractJidelakActivity implements
 			@Override
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
-				setupHomeButton(isTodaySelected(getDayPagerView()
-						.getCurrentItem()));
+				setupHomeButton();
 			}
 
 			/** Called when a drawer has settled in a completely open state. */
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-				setupHomeButton(isTodaySelected(getDayPagerView()
-						.getCurrentItem()));
+				setupHomeButton();
 			}
 		};
 		drawer.setDrawerListener(drawerToggle);
@@ -366,7 +368,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 			return true;
 
 		case android.R.id.home:
-			if (todaySelected || getDrawer().isDrawerOpen(Gravity.LEFT)) {
+			if (isDrawerIconEnabled()) {
 				if (getDrawerToggle().onOptionsItemSelected(item)) {
 					return true;
 				}
@@ -631,6 +633,12 @@ public class MainActivity extends AbstractJidelakActivity implements
 							getEmptyView().setVisibility(View.VISIBLE);
 							log.debug("empty view displayed");
 						}
+
+						getDrawer().findViewById(R.id.empty_restaurants)
+								.setVisibility(View.VISIBLE);
+						getDrawer().findViewById(R.id.restaurants_content)
+								.setVisibility(View.GONE);
+
 					} else {
 						log.debug("Hiding empty view and showing frame");
 						if (getEmptyView() != null) {
@@ -641,6 +649,10 @@ public class MainActivity extends AbstractJidelakActivity implements
 							pagerFrame.setVisibility(View.VISIBLE);
 							log.debug("daypager displayed");
 						}
+						getDrawer().findViewById(R.id.empty_restaurants)
+								.setVisibility(View.GONE);
+						getDrawer().findViewById(R.id.restaurants_content)
+								.setVisibility(View.VISIBLE);
 					}
 				}
 
@@ -753,8 +765,6 @@ public class MainActivity extends AbstractJidelakActivity implements
 					findViewById(R.id.buttons).setVisibility(View.VISIBLE);
 				}
 			});
-			
-
 
 		}
 

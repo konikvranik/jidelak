@@ -1,5 +1,8 @@
 package net.suteren.android.jidelak.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
@@ -11,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public class Availability implements Identificable<Availability> {
 
+	private static final long serialVersionUID = -1830245975723142985L;
 	private Integer day;
 	private Integer month;
 	private Integer year;
@@ -227,5 +231,19 @@ public class Availability implements Identificable<Availability> {
 		return Arrays.toString(new Object[] { getId(), getYear(), getMonth(),
 				getDay(), getDow(), getClosed(), getFrom(), getTo(),
 				getRestaurant() });
+	}
+
+	private void readObject(ObjectInputStream aInputStream)
+			throws ClassNotFoundException, IOException {
+		aInputStream.defaultReadObject();
+	}
+
+	private void writeObject(ObjectOutputStream aOutputStream)
+			throws IOException {
+		// perform the default serialization for all non-transient, non-static
+		// fields
+		aOutputStream.defaultWriteObject();
+		// aOutputStream.writeObject(resource);
+		// aOutputStream.writeObject(args);
 	}
 }

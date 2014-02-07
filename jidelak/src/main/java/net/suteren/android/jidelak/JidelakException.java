@@ -16,6 +16,7 @@ public class JidelakException extends Exception {
 
 	private int resource;
 	private String[] args;
+
 	private Meal meal;
 	private Restaurant restaurant;
 	private Source source;
@@ -51,28 +52,24 @@ public class JidelakException extends Exception {
 		return resource;
 	}
 
-	public void setArgs(String[] args) {
+	public JidelakException setArgs(String[] args) {
 		this.args = args;
+		return this;
 	}
 
 	public String[] getArgs() {
 
 		ArrayList<String> args = new ArrayList<String>();
 
-		if (getRestaurant() != null)
-			args.add(getRestaurant().getName());
+		args.add(getRestaurant() == null ? null : getRestaurant().getName());
+		args.add(getSource() == null || getSource().getUrl() == null ? null
+				: getSource().getUrl().toString());
+		args.add(getMeal() == null ? null : getMeal().getTitle());
+		args.add(getAvailability() == null ? null : getAvailability()
+				.toString());
 
-		if (getSource() != null) {
-			args.add(getSource().getUrl().toString());
-		}
-		if (getMeal() != null) {
-			args.add(getMeal().getTitle());
-		}
-		if (getAvailability() != null) {
-			args.add(getAvailability().toString());
-		}
-
-		args.addAll(Arrays.asList(this.args));
+		if (this.args != null)
+			args.addAll(Arrays.asList(this.args));
 
 		return args.toArray(new String[0]);
 	}

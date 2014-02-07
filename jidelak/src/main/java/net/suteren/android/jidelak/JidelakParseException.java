@@ -42,10 +42,8 @@ public class JidelakParseException extends JidelakException {
 
 	public String toString(Context ctx) {
 		return ctx.getResources().getString(getResource(), getFormat(),
-				getDate())
-				+ getCause().getLocalizedMessage()
-				+ " @"
-				+ getCause().getErrorOffset();
+				getDate(),
+				getRestaurant() == null ? "" : getRestaurant().getName());
 	}
 
 }

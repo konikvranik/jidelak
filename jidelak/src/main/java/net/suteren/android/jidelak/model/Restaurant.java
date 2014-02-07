@@ -1,5 +1,8 @@
 package net.suteren.android.jidelak.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
@@ -19,6 +22,7 @@ import android.location.Address;
 
 public class Restaurant implements Identificable<Restaurant> {
 
+	private static final long serialVersionUID = -7093047343111371686L;
 	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(Restaurant.class);
 	private String name;
@@ -301,4 +305,17 @@ public class Restaurant implements Identificable<Restaurant> {
 		return version;
 	}
 
+	private void readObject(ObjectInputStream aInputStream)
+			throws ClassNotFoundException, IOException {
+		aInputStream.defaultReadObject();
+	}
+
+	private void writeObject(ObjectOutputStream aOutputStream)
+			throws IOException {
+		// perform the default serialization for all non-transient, non-static
+		// fields
+		aOutputStream.defaultWriteObject();
+		// aOutputStream.writeObject(resource);
+		// aOutputStream.writeObject(args);
+	}
 }

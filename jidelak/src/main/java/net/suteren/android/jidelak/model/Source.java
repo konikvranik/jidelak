@@ -1,5 +1,8 @@
 package net.suteren.android.jidelak.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -13,6 +16,8 @@ import java.util.Locale;
 import net.suteren.android.jidelak.Utils;
 
 public class Source implements Identificable<Source> {
+
+	private static final long serialVersionUID = -4261642590268604447L;
 	TimeType timeType;
 	TimeOffsetType offsetBase;
 	Integer firstdayofweek;
@@ -189,5 +194,19 @@ public class Source implements Identificable<Source> {
 			return r;
 
 		return 0;
+	}
+
+	private void readObject(ObjectInputStream aInputStream)
+			throws ClassNotFoundException, IOException {
+		aInputStream.defaultReadObject();
+	}
+
+	private void writeObject(ObjectOutputStream aOutputStream)
+			throws IOException {
+		// perform the default serialization for all non-transient, non-static
+		// fields
+		aOutputStream.defaultWriteObject();
+		// aOutputStream.writeObject(resource);
+		// aOutputStream.writeObject(args);
 	}
 }

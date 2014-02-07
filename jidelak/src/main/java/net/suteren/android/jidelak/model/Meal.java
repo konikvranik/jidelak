@@ -1,7 +1,12 @@
 package net.suteren.android.jidelak.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 public class Meal implements Identificable<Meal> {
 
+	private static final long serialVersionUID = -5185501120218440148L;
 	private String title;
 	private String description;
 	private String category;
@@ -166,5 +171,19 @@ public class Meal implements Identificable<Meal> {
 			return r;
 
 		return 0;
+	}
+
+	private void readObject(ObjectInputStream aInputStream)
+			throws ClassNotFoundException, IOException {
+		aInputStream.defaultReadObject();
+	}
+
+	private void writeObject(ObjectOutputStream aOutputStream)
+			throws IOException {
+		// perform the default serialization for all non-transient, non-static
+		// fields
+		aOutputStream.defaultWriteObject();
+		// aOutputStream.writeObject(resource);
+		// aOutputStream.writeObject(args);
 	}
 }

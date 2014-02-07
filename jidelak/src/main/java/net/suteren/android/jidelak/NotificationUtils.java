@@ -10,7 +10,6 @@ import net.suteren.android.jidelak.ui.ErrorViewActivity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -39,10 +38,13 @@ public class NotificationUtils {
 			Integer icon, JidelakException e) {
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
-		Intent intent = new Intent(ctx, clz);
-		Bundle b = new Bundle();
-		b.putSerializable(EXCEPTION, e);
-		intent.putExtras(b);
+		Intent intent = null;
+		if (!e.isHandled()) {
+			intent = new Intent(ctx, clz);
+			Bundle b = new Bundle();
+			b.putSerializable(EXCEPTION, e);
+			intent.putExtras(b);
+		}
 		makeNotification(ctx, clz, getNotificationId(e), icon,
 				R.string.app_name, e.toString(ctx), intent);
 	}
@@ -70,24 +72,25 @@ public class NotificationUtils {
 			icon = R.drawable.ic_action_warning;
 
 		Builder builder = new NotificationCompat.Builder(ctx)
+				.setTicker(ctx.getResources().getString(R.string.app_name))
 				.setSmallIcon(icon)
+				.setStyle(
+						new NotificationCompat.BigTextStyle()
+								.bigText(description))
 				.setContentTitle(ctx.getResources().getString(title))
-				.setContentText(description);
+				.setContentText(description).setAutoCancel(true);
 		if (clz != null) {
 			TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
 			stackBuilder.addParentStack(clz);
 			stackBuilder.addNextIntent(intent);
 			builder.setContentIntent(stackBuilder.getPendingIntent(0,
 					PendingIntent.FLAG_UPDATE_CURRENT));
+			builder.setAutoCancel(false);
 		}
-
-		Notification notification = builder.build();
-		if (clz == null)
-			notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
 		((NotificationManager) ctx
 				.getSystemService(Context.NOTIFICATION_SERVICE)).notify(
-				notifyID, notification);
+				notifyID, builder.build());
 
 	}
 }

@@ -78,7 +78,7 @@
     <string name="date_time">%1$s in %2$s</string>
     <string name="menu">Menu</string>
     <string name="no_restaurants">No restaurants available</string>
-    <string name="invalid_dish">Dish %5$s is not known for restaurant %1$s, %3$s</string>
+    <string name="invalid_dish">%1$s: dish %5$s is not known (%3$s)</string>
 
     <string-array name="weeks">
         <item>weeks</item>

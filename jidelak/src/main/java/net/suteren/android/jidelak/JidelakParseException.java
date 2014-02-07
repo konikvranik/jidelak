@@ -41,9 +41,14 @@ public class JidelakParseException extends JidelakException {
 	}
 
 	public String toString(Context ctx) {
-		return ctx.getResources().getString(getResource(), getFormat(),
-				getDate(),
-				getRestaurant() == null ? "" : getRestaurant().getName());
+		return ctx.getResources().getString(
+				getResource(),
+				getFormat() == null ? "" : getFormat(),
+				getDate() == null ? "" : getDate(),
+				getRestaurant() == null ? ""
+						: getRestaurant().getName() == null ? String.format(
+								"restaurant id: %d", getRestaurant().getId())
+								: getRestaurant().getName());
 	}
 
 }

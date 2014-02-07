@@ -61,12 +61,14 @@ public class JidelakException extends Exception {
 
 		ArrayList<String> args = new ArrayList<String>();
 
-		args.add(getRestaurant() == null ? null : getRestaurant().getName());
-		args.add(getSource() == null || getSource().getUrl() == null ? null
+		args.add(getRestaurant() == null ? ""
+				: getRestaurant().getName() == null ? String.format(
+						"restaurant id: %d", getRestaurant().getId())
+						: getRestaurant().getName());
+		args.add(getSource() == null || getSource().getUrl() == null ? ""
 				: getSource().getUrl().toString());
-		args.add(getMeal() == null ? null : getMeal().getTitle());
-		args.add(getAvailability() == null ? null : getAvailability()
-				.toString());
+		args.add(getMeal() == null ? "" : getMeal().getTitle());
+		args.add(getAvailability() == null ? "" : getAvailability().toString());
 
 		if (this.args != null)
 			args.addAll(Arrays.asList(this.args));

@@ -37,8 +37,11 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 
 			log.debug("Dish set to: " + meal.getDish().name());
 		} catch (IllegalArgumentException e) {
-			throw new JidelakException(R.string.invalid_dish, e).setMeal(meal)
-					.setRestaurant(meal.getRestaurant())
+			throw new JidelakException(R.string.invalid_dish, e)
+					.setMeal(meal)
+					.setRestaurant(
+							meal.getSource() == null ? meal.getSource()
+									.getRestaurant() : meal.getRestaurant())
 					.setSource(meal.getSource())
 					.setArgs(new String[] { dishString }).setHandled(true);
 		}
@@ -82,8 +85,11 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 
 		} catch (ParseException e) {
 			throw new JidelakParseException(R.string.meal_invalid_date_format,
-					getSource().getDateFormatString(), x, e).setMeal(meal)
-					.setRestaurant(meal.getRestaurant())
+					getSource().getDateFormatString(), x, e)
+					.setMeal(meal)
+					.setRestaurant(
+							meal.getSource() == null ? meal.getRestaurant()
+									: meal.getSource().getRestaurant())
 					.setSource(meal.getSource()).setHandled(true);
 		}
 

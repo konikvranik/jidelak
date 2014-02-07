@@ -169,64 +169,78 @@ public class FeederService extends Service {
 		RestaurantMarshaller rm = new RestaurantMarshaller();
 
 		for (Source source : sdao.findAll()) {
-
 			try {
-				InputStream template = openFileInput(source.getRestaurant()
-						.getTemplateName());
 
-				Node result = retrieve(source, template);
+				try {
+					InputStream template = openFileInput(source.getRestaurant()
+							.getTemplateName());
 
-				Restaurant restaurant = source.getRestaurant();
+					Node result = retrieve(source, template);
 
-				rm.unmarshall("#document.jidelak.config", result, restaurant);
+					Restaurant restaurant = source.getRestaurant();
 
-				Set<Availability> avs = new HashSet<Availability>();
-				for (Meal meal : restaurant.getMenu()) {
-					avs.add(meal.getAvailability());
+					rm.unmarshall("#document.jidelak.config", result,
+							restaurant);
+
+					Set<Availability> avs = new HashSet<Availability>();
+					for (Meal meal : restaurant.getMenu()) {
+						avs.add(meal.getAvailability());
+					}
+
+					for (Availability av : avs) {
+						SortedSet<Meal> atd = mdao.findByDayAndRestaurant(
+								av.getCalendar(), restaurant);
+						mdao.delete(atd);
+					}
+
+					for (Meal meal : restaurant.getMenu()) {
+						adao.insert(meal.getAvailability());
+						mdao.insert(meal);
+					}
+
+					if (!(restaurant.getOpeningHours() == null || restaurant
+							.getOpeningHours().isEmpty())) {
+						Restaurant savedRestaurant = rdao.findById(restaurant);
+						if (savedRestaurant != null
+								&& savedRestaurant.getOpeningHours() != null)
+							adao.delete(savedRestaurant.getOpeningHours());
+						adao.insert(restaurant.getOpeningHours());
+					}
+					rdao.update(restaurant, false);
+
+				} catch (IOException e) {
+					throw new JidelakException(R.string.feeder_io_exception, e)
+							.setSource(source)
+							.setRestaurant(
+									rdao.findById(source.getRestaurant()))
+							.setHandled(true).setErrorType(ErrorType.NETWORK);
+				} catch (TransformerException e) {
+					throw new JidelakTransformerException(
+							R.string.transformer_exception, rdao.findById(
+									source.getRestaurant()).getTemplateName(),
+							source.getUrl().toString(), e)
+							.setSource(source)
+							.setRestaurant(
+									rdao.findById(source.getRestaurant()))
+							.setHandled(true).setErrorType(ErrorType.PARSING);
+				} catch (ParserConfigurationException e) {
+					throw new JidelakException(
+							R.string.parser_configuration_exception, e)
+							.setSource(source)
+							.setRestaurant(
+									rdao.findById(source.getRestaurant()))
+							.setHandled(true).setErrorType(ErrorType.PARSING);
+				} catch (JidelakException e) {
+					throw e.setSource(source).setRestaurant(
+							rdao.findById(source.getRestaurant()));
 				}
 
-				for (Availability av : avs) {
-					SortedSet<Meal> atd = mdao.findByDayAndRestaurant(
-							av.getCalendar(), restaurant);
-					mdao.delete(atd);
-				}
-
-				for (Meal meal : restaurant.getMenu()) {
-					adao.insert(meal.getAvailability());
-					mdao.insert(meal);
-				}
-
-				if (!(restaurant.getOpeningHours() == null || restaurant
-						.getOpeningHours().isEmpty())) {
-					Restaurant savedRestaurant = rdao.findById(restaurant);
-					if (savedRestaurant != null
-							&& savedRestaurant.getOpeningHours() != null)
-						adao.delete(savedRestaurant.getOpeningHours());
-					adao.insert(restaurant.getOpeningHours());
-				}
-				rdao.update(restaurant, false);
-
-			} catch (IOException e) {
-				throw new JidelakException(R.string.feeder_io_exception, e)
-						.setSource(source)
-						.setRestaurant(rdao.findById(source.getRestaurant()))
-						.setHandled(true).setErrorType(ErrorType.NETWORK);
-			} catch (TransformerException e) {
-				throw new JidelakTransformerException(
-						R.string.transformer_exception, rdao.findById(
-								source.getRestaurant()).getTemplateName(),
-						source.getUrl().toString(), e).setSource(source)
-						.setRestaurant(rdao.findById(source.getRestaurant()))
-						.setHandled(true).setErrorType(ErrorType.PARSING);
-			} catch (ParserConfigurationException e) {
-				throw new JidelakException(
-						R.string.parser_configuration_exception, e)
-						.setSource(source)
-						.setRestaurant(rdao.findById(source.getRestaurant()))
-						.setHandled(true).setErrorType(ErrorType.PARSING);
 			} catch (JidelakException e) {
-				throw e.setSource(source).setRestaurant(
-						rdao.findById(source.getRestaurant()));
+				log.error(e.getMessage(), e);
+				mHandler.post(new ToastRunnable(getResources().getString(
+						R.string.import_failed)
+						+ e.getMessage()));
+				NotificationUtils.makeNotification(getApplicationContext(), e);
 			}
 		}
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences(

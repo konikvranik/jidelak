@@ -20,7 +20,7 @@
     <string name="transformer_configuration_exception">Transformer configuration is damaged. See error log</string>
     <string name="transformer_factory_configuration_exception">Transformer factory configuration is damaged. See error log</string>
     <string name="transformer_exception">Error ocured when parsing source. See error log</string>
-    <string name="feeder_io_exception">Unable to load data</string>
+    <string name="feeder_io_exception">Unable to load data. Check your internet connection.</string>
     <string name="importing_template">Importing template %s&#8230;</string>
     <string name="import_template_question">Are you sure to import template %s?</string>
     <string name="http_error_response">Server returned code %1$s: %2$s</string>

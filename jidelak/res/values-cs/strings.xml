@@ -20,7 +20,7 @@
     <string name="transformer_configuration_exception">Je poškozená konfigurace transformeru -  koukněte do error logu</string>
     <string name="transformer_factory_configuration_exception">Je poškozená konfigurace transformer factory - koukněte do error logu</string>
     <string name="transformer_exception">Při parsování &lt;source&gt; se vyskytla chyba - koukněte do error logu</string>
-    <string name="feeder_io_exception">Nelze načíst data</string>
+    <string name="feeder_io_exception">Nelze načíst data. Zkontrolujte internetové připojení.</string>
     <string name="importing_template">Načítam šablonu %s&#8230;</string>
     <string name="import_template_question">Chcete naimportovat šabonu %s?</string>
     <string name="http_error_response">Server vrátil kód %1$s: %1$s</string>

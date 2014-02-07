@@ -18,7 +18,7 @@
 
 	<xsl:template name="restaurant">
 		<restaurant version="1.2">
-			<id>praha-u-majeru</id>
+			<id>praha-svet-zabavy-nove-butovice</id>
 			<name>Svět Zábavy</name>
 			<phone>(+420) 606746380</phone>
 			<e-mail>info@kunick.cz</e-mail>

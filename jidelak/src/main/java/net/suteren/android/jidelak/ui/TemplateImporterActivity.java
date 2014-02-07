@@ -24,9 +24,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import net.suteren.android.jidelak.ErrorType;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.NetworkUtils;
@@ -185,20 +185,6 @@ public class TemplateImporterActivity extends Activity {
 					.newDocumentBuilder().newDocument());
 			tr.transform(new DOMSource(d), res);
 
-			try {
-				FileOutputStream os = openFileOutput("debug.xsl",
-						MODE_WORLD_READABLE);
-				StreamResult deb = new StreamResult(os);
-				tr = TransformerFactory.newInstance().newTransformer();
-				tr.transform(new DOMSource(res.getNode()), deb);
-				os.close();
-			} catch (Throwable e) {
-				if (e instanceof JidelakException)
-					throw (JidelakException) e;
-				else
-					throw new JidelakException(R.string.unexpected_exception, e);
-			}
-
 			RestaurantMarshaller rm = new RestaurantMarshaller();
 			// rm.setSource(source);
 
@@ -208,20 +194,32 @@ public class TemplateImporterActivity extends Activity {
 
 		} catch (ParserConfigurationException e) {
 			throw new JidelakException(R.string.parser_configuration_exception,
-					e);
+					e).setRestaurant(restaurant)
+					.setErrorType(ErrorType.PARSING).setHandled(true);
 		} catch (TransformerConfigurationException e) {
 			throw new JidelakException(
-					R.string.transformer_configuration_exception, e);
+					R.string.transformer_configuration_exception, e)
+					.setRestaurant(restaurant).setErrorType(ErrorType.PARSING)
+					.setHandled(true);
 		} catch (TransformerFactoryConfigurationError e) {
 			throw new JidelakException(
-					R.string.transformer_factory_configuration_exception, e);
+					R.string.transformer_factory_configuration_exception, e)
+					.setRestaurant(restaurant).setErrorType(ErrorType.PARSING)
+					.setHandled(true);
 		} catch (TransformerException e) {
-			throw new JidelakException(R.string.transformer_exception, e);
-		} finally {
+			throw new JidelakException(R.string.transformer_exception, e)
+					.setRestaurant(restaurant).setErrorType(ErrorType.PARSING)
+					.setHandled(true);
+		} catch (JidelakException e) {
+			throw e.setRestaurant(restaurant);
+		}
+
+		finally {
 			try {
 				fileStream.close();
 			} catch (IOException e) {
-				throw new JidelakException(R.string.unexpected_exception, e);
+				throw new JidelakException(R.string.unexpected_exception, e)
+						.setRestaurant(restaurant);
 			}
 		}
 	}
@@ -268,10 +266,7 @@ public class TemplateImporterActivity extends Activity {
 			} catch (JidelakException e) {
 				log.error(e.getMessage(), e);
 
-				int notifyID = 1;
-
-				NotificationUtils.makeNotification(getApplicationContext(),
-						notifyID, e);
+				NotificationUtils.makeNotification(getApplicationContext(), e);
 			}
 			return null;
 		}

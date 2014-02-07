@@ -26,7 +26,6 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 	@Override
 	protected void unmarshallHelper(String prefix, Map<String, String> data,
 			Restaurant restaurant) {
-
 		if (log.isDebugEnabled()) {
 			StringBuffer sb = new StringBuffer();
 			for (String key : data.keySet()) {
@@ -96,38 +95,42 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 	protected boolean processElementHook(Element n, Restaurant restaurant)
 			throws JidelakException {
 
-		if ("source".equals(n.getNodeName())) {
-			source = new Source();
-			source.setRestaurant(restaurant);
-			restaurant.addSource(source);
+		try {
+			if ("source".equals(n.getNodeName())) {
+				source = new Source();
+				source.setRestaurant(restaurant);
+				restaurant.addSource(source);
 
-			new SourceMarshaller().unmarshall(n, source);
-			return false;
-		} else if ("meal".equals(n.getNodeName())) {
+				new SourceMarshaller().unmarshall(n, source);
+				return false;
+			} else if ("meal".equals(n.getNodeName())) {
 
-			Meal meal = new Meal();
-			meal.setRestaurant(restaurant);
-			meal.setSource(source);
-			restaurant.addMenu(meal);
+				Meal meal = new Meal();
+				meal.setRestaurant(restaurant);
+				meal.setSource(source);
+				restaurant.addMenu(meal);
 
-			MealMarshaller mm = new MealMarshaller();
-			mm.setSource(source);
-			mm.unmarshall(n, meal);
-			return false;
-		} else if (updateOh && "term".equals(n.getNodeName())
-				&& "open".equals(n.getParentNode().getNodeName())) {
-			Availability avail = new Availability();
-			avail.setRestaurant(restaurant);
+				MealMarshaller mm = new MealMarshaller();
+				mm.setSource(source);
+				mm.unmarshall(n, meal);
+				return false;
+			} else if (updateOh && "term".equals(n.getNodeName())
+					&& "open".equals(n.getParentNode().getNodeName())) {
+				Availability avail = new Availability();
+				avail.setRestaurant(restaurant);
 
-			AvailabilityMarshaller am = new AvailabilityMarshaller();
-			am.setSource(source);
-			am.unmarshall(n, avail);
+				AvailabilityMarshaller am = new AvailabilityMarshaller();
+				am.setSource(source);
+				am.unmarshall(n, avail);
 
-			restaurant.addOpeningHours(avail);
+				restaurant.addOpeningHours(avail);
 
-			return false;
+				return false;
+			}
+			return true;
+		} catch (JidelakException e) {
+			throw e.setRestaurant(restaurant);
 		}
-		return true;
 	}
 
 	public void setSource(Source source) {

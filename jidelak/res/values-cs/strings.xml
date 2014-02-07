@@ -78,6 +78,7 @@
     <string name="date_time">%1$s v %2$s</string>
     <string name="menu">Menu</string>
     <string name="no_restaurants">Žádné restaurace k dispozici</string>
+    <string name="invalid_dish">Chod %3$s není znám pro restauraci %1$s.</string>
 
     <string-array name="weeks">
         <item>týdnů</item>

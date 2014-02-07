@@ -28,6 +28,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import net.suteren.android.jidelak.ErrorType;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.JidelakTransformerException;
@@ -206,16 +207,23 @@ public class FeederService extends Service {
 				rdao.update(restaurant, false);
 
 			} catch (IOException e) {
-				throw new JidelakException(R.string.feeder_io_exception, e);
+				throw new JidelakException(R.string.feeder_io_exception, e)
+						.setSource(source)
+						.setRestaurant(source.getRestaurant()).setHandled(true)
+						.setErrorType(ErrorType.NETWORK);
 			} catch (TransformerException e) {
 				throw new JidelakTransformerException(
 						R.string.transformer_exception, source.getRestaurant()
 								.getTemplateName(), source.getUrl().toString(),
-						e);
+						e).setSource(source)
+						.setRestaurant(source.getRestaurant()).setHandled(true)
+						.setErrorType(ErrorType.PARSING);
 			} catch (ParserConfigurationException e) {
 				throw new JidelakException(
-						R.string.parser_configuration_exception, e);
-			} finally {
+						R.string.parser_configuration_exception, e)
+						.setSource(source)
+						.setRestaurant(source.getRestaurant()).setHandled(true)
+						.setErrorType(ErrorType.PARSING);
 			}
 		}
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences(
@@ -251,7 +259,9 @@ public class FeederService extends Service {
 			throw new JidelakException(R.string.http_error_response,
 					new String[] {
 							Integer.valueOf(con.getResponseCode()).toString(),
-							con.getResponseMessage() });
+							con.getResponseMessage() }).setSource(source)
+					.setRestaurant(source.getRestaurant()).setHandled(true)
+					.setErrorType(ErrorType.NETWORK);
 		}
 
 		InputStream is = con.getInputStream();
@@ -345,10 +355,7 @@ public class FeederService extends Service {
 						R.string.import_failed)
 						+ e.getMessage()));
 
-				int notifyID = 2;
-
-				NotificationUtils.makeNotification(getApplicationContext(),
-						notifyID, e);
+				NotificationUtils.makeNotification(getApplicationContext(), e);
 
 			} finally {
 				updating = false;

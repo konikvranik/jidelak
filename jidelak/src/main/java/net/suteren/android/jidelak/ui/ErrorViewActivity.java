@@ -14,6 +14,7 @@ import net.suteren.android.jidelak.JidelakMalformedURLException;
 import net.suteren.android.jidelak.JidelakParseException;
 import net.suteren.android.jidelak.JidelakTransformerException;
 import net.suteren.android.jidelak.R;
+import net.suteren.android.jidelak.Utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -50,44 +52,28 @@ public class ErrorViewActivity extends AbstractJidelakActivity {
 				.getSerializable(EXCEPTION);
 
 		setException(e);
-
 		WebView errorView = (WebView) getWindow().findViewById(R.id.error);
-
-		text = e.getLocalizedMessage();
-		if (text == null || "".equals(text))
-			text = e.getMessage();
-
 		setText(getKnownCause(getException()));
 
-		errorView.loadDataWithBaseURL("", getText(), "text/html", "UTF-8", "");
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			Utils.transparencyHack(getApplicationContext(), errorView);
+		else
+			errorView.setBackgroundColor(getResources().getColor(
+					android.R.color.black));
+
+		errorView.loadDataWithBaseURL("", getHtmlText(), "text/html", "UTF-8",
+				"");
 
 	}
 
-	private void setText(Throwable cause) {
-		if (cause instanceof JidelakTransformerException) {
-			setText(((JidelakTransformerException) cause)
-					.toString(getApplicationContext()));
+	private String getHtmlText() {
 
-		} else if (cause instanceof JidelakParseException) {
-			setText(((JidelakParseException) cause)
-					.toString(getApplicationContext()));
-
-		} else if (cause instanceof JidelakMalformedURLException) {
-			setText(((JidelakMalformedURLException) cause)
-					.toString(getApplicationContext()));
-
-		} else if (cause instanceof JidelakException) {
-
-			setText(((JidelakException) cause)
-					.toString(getApplicationContext()));
-			
-			renderStacktrace(getException());
-
-		} else {
-			renderStacktrace(getException());
-
-		}
-
+		StringBuffer sb = new StringBuffer("<html><head>");
+		sb.append("<link rel='stylesheet' href='restaurant.css' type='text/css' />");
+		sb.append("</head><body>");
+		sb.append(getText());
+		sb.append("</body></html>");
+		return sb.toString();
 	}
 
 	private void renderStacktrace(Throwable t) {
@@ -111,7 +97,7 @@ public class ErrorViewActivity extends AbstractJidelakActivity {
 		return e;
 	}
 
-	private void setException(JidelakException e) {
+	public void setException(JidelakException e) {
 		this.exception = e;
 	}
 
@@ -119,12 +105,39 @@ public class ErrorViewActivity extends AbstractJidelakActivity {
 		return exception;
 	}
 
-	private void setText(String sb) {
-		this.text = sb;
-	}
-
 	public String getText() {
 		return text;
+	}
+
+	public void setText(Throwable cause) {
+		if (cause instanceof JidelakTransformerException) {
+			setText(((JidelakTransformerException) cause)
+					.toString(getApplicationContext()));
+
+		} else if (cause instanceof JidelakParseException) {
+			setText(((JidelakParseException) cause)
+					.toString(getApplicationContext()));
+
+		} else if (cause instanceof JidelakMalformedURLException) {
+			setText(((JidelakMalformedURLException) cause)
+					.toString(getApplicationContext()));
+
+		} else if (cause instanceof JidelakException) {
+
+			setText(((JidelakException) cause)
+					.toString(getApplicationContext()));
+
+			renderStacktrace(getException());
+
+		} else {
+			renderStacktrace(getException());
+
+		}
+
+	}
+
+	public void setText(String sb) {
+		this.text = sb;
 	}
 
 	public void sendTo(View v) {

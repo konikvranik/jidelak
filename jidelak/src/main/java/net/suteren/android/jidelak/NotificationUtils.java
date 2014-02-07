@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.TaskStackBuilder;
 
 public class NotificationUtils {
@@ -28,22 +29,31 @@ public class NotificationUtils {
 	public NotificationUtils() {
 	}
 
-	public static void makeNotification(Context ctx, int notifyID,
-			JidelakException e) {
-		makeNotification(ctx, ErrorViewActivity.class, notifyID,
-				R.drawable.ic_action_warning, e);
+	public static void makeNotification(Context ctx, JidelakException e) {
+		makeNotification(ctx, e.isHandled() ? null : ErrorViewActivity.class,
+				e.isHandled() ? R.drawable.ic_action_warning
+						: R.drawable.ic_action_error, e);
 	}
 
 	public static void makeNotification(Context ctx, Class<?> clz,
-			int notifyID, Integer icon, JidelakException e) {
+			Integer icon, JidelakException e) {
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
 		Intent intent = new Intent(ctx, clz);
 		Bundle b = new Bundle();
 		b.putSerializable(EXCEPTION, e);
 		intent.putExtras(b);
-		makeNotification(ctx, clz, notifyID, icon, R.string.app_name,
-				e.toString(ctx), intent);
+		makeNotification(ctx, clz, getNotificationId(e), icon,
+				R.string.app_name, e.toString(ctx), intent);
+	}
+
+	private static int getNotificationId(JidelakException e) {
+		int id = e.getErrorType() == null ? 0 : e.getErrorType().ordinal();
+		if (e.getRestaurant() != null && e.getRestaurant().getId() != null)
+			id += e.getRestaurant().getId() * 10000000;
+		else if (e.getSource() != null && e.getSource().getId() != null)
+			id += e.getSource().getId() * 100;
+		return id;
 	}
 
 	public static void makeNotification(Context ctx, Integer icon,
@@ -56,24 +66,28 @@ public class NotificationUtils {
 			int notifyID, Integer icon, int title, String description,
 			Intent intent) {
 
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
-		stackBuilder.addParentStack(clz);
-		stackBuilder.addNextIntent(intent);
-
 		if (icon == null)
 			icon = R.drawable.ic_action_warning;
-		Notification notification = new NotificationCompat.Builder(ctx)
+
+		Builder builder = new NotificationCompat.Builder(ctx)
 				.setSmallIcon(icon)
 				.setContentTitle(ctx.getResources().getString(title))
-				.setContentText(description)
-				.setContentIntent(
-						stackBuilder.getPendingIntent(0,
-								PendingIntent.FLAG_UPDATE_CURRENT)).build();
+				.setContentText(description);
+		if (clz != null) {
+			TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
+			stackBuilder.addParentStack(clz);
+			stackBuilder.addNextIntent(intent);
+			builder.setContentIntent(stackBuilder.getPendingIntent(0,
+					PendingIntent.FLAG_UPDATE_CURRENT));
+		}
+
+		Notification notification = builder.build();
+		if (clz == null)
+			notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
 		((NotificationManager) ctx
 				.getSystemService(Context.NOTIFICATION_SERVICE)).notify(
 				notifyID, notification);
 
 	}
-
 }

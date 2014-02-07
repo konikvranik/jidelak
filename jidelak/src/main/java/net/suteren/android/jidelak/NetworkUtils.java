@@ -41,12 +41,14 @@ public class NetworkUtils {
 							new String[] {
 									Integer.valueOf(con.getResponseCode())
 											.toString(),
-									con.getResponseMessage() });
+									con.getResponseMessage() }).setErrorType(
+							ErrorType.NETWORK).setHandled(true);
 				}
 				return con.getInputStream();
 
 			} else {
-				throw new JidelakException(R.string.unsupported_protocol);
+				throw new JidelakException(R.string.unsupported_protocol)
+						.setErrorType(ErrorType.NETWORK).setHandled(true);
 			}
 		} catch (IOException e) {
 			throw new JidelakException(R.string.unexpected_exception, e);
@@ -58,7 +60,8 @@ public class NetworkUtils {
 			return streamFromUrl(new URL(uri.toString()));
 		} catch (MalformedURLException e) {
 			throw new JidelakException(R.string.malformed_url, e,
-					uri.toString());
+					uri.toString()).setErrorType(ErrorType.NETWORK).setHandled(
+					true);
 		}
 	}
 

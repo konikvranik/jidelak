@@ -8,11 +8,13 @@ import java.util.Stack;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import net.suteren.android.jidelak.ErrorType;
 import net.suteren.android.jidelak.JidelakException;
+import net.suteren.android.jidelak.JidelakTransformerException;
+import net.suteren.android.jidelak.R;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,10 +56,10 @@ public abstract class BaseMarshaller<T> {
 				StringWriter sw = new StringWriter();
 				tr.transform(new DOMSource(n), new StreamResult(sw));
 				log.debug("Unmarshalling:\n" + sw);
-			} catch (TransformerFactoryConfigurationError e) {
-				// TODO Auto-generated catch block
 			} catch (TransformerException e) {
-				// TODO Auto-generated catch block
+				throw new JidelakTransformerException(
+						R.string.transformer_exception, null, null, e)
+						.setHandled(true).setErrorType(ErrorType.PARSING);
 			}
 		}
 

@@ -29,12 +29,17 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 		meal.setDescription(data.get(prefix + "meal.description"));
 		meal.setPrice(data.get(prefix + "meal.price"));
 		meal.setCategory(data.get(prefix + "meal@category"));
-		String dishString = data.get(prefix + "meal@dish");
-		if (dishString != null && !"".equals(dishString.trim()))
-			meal.setDish(Dish.valueOf(dishString.toUpperCase(Locale.ENGLISH)));
+		try {
+			String dishString = data.get(prefix + "meal@dish");
+			if (dishString != null && !"".equals(dishString.trim()))
+				meal.setDish(Dish.valueOf(dishString
+						.toUpperCase(Locale.ENGLISH)));
 
-		log.debug("Dish set to: " + meal.getDish().name());
-
+			log.debug("Dish set to: " + meal.getDish().name());
+		} catch (IllegalArgumentException e) {
+			throw new JidelakException(R.string.invalid_dish, e).setMeal(meal)
+					.setHandled(true);
+		}
 		String o = data.get(prefix + "meal@order");
 		if (o != null)
 			meal.setPosition(Integer.parseInt(o));
@@ -75,7 +80,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 
 		} catch (ParseException e) {
 			throw new JidelakParseException(R.string.meal_invalid_date_format,
-					getSource().getDateFormatString(), x, e);
+					getSource().getDateFormatString(), x, e).setMeal(meal);
 		}
 
 	}

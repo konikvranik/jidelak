@@ -209,21 +209,24 @@ public class FeederService extends Service {
 			} catch (IOException e) {
 				throw new JidelakException(R.string.feeder_io_exception, e)
 						.setSource(source)
-						.setRestaurant(source.getRestaurant()).setHandled(true)
-						.setErrorType(ErrorType.NETWORK);
+						.setRestaurant(rdao.findById(source.getRestaurant()))
+						.setHandled(true).setErrorType(ErrorType.NETWORK);
 			} catch (TransformerException e) {
 				throw new JidelakTransformerException(
-						R.string.transformer_exception, source.getRestaurant()
-								.getTemplateName(), source.getUrl().toString(),
-						e).setSource(source)
-						.setRestaurant(source.getRestaurant()).setHandled(true)
-						.setErrorType(ErrorType.PARSING);
+						R.string.transformer_exception, rdao.findById(
+								source.getRestaurant()).getTemplateName(),
+						source.getUrl().toString(), e).setSource(source)
+						.setRestaurant(rdao.findById(source.getRestaurant()))
+						.setHandled(true).setErrorType(ErrorType.PARSING);
 			} catch (ParserConfigurationException e) {
 				throw new JidelakException(
 						R.string.parser_configuration_exception, e)
 						.setSource(source)
-						.setRestaurant(source.getRestaurant()).setHandled(true)
-						.setErrorType(ErrorType.PARSING);
+						.setRestaurant(rdao.findById(source.getRestaurant()))
+						.setHandled(true).setErrorType(ErrorType.PARSING);
+			} catch (JidelakException e) {
+				throw e.setSource(source).setRestaurant(
+						rdao.findById(source.getRestaurant()));
 			}
 		}
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences(

@@ -15,7 +15,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.ViewConfiguration;
 
 public class AbstractJidelakActivity extends ActionBarActivity {
-	protected ActionBar ab;
+	protected ActionBar actionBar;
 	protected static Logger log = LoggerFactory
 			.getLogger(AbstractJidelakActivity.class);
 
@@ -29,11 +29,11 @@ public class AbstractJidelakActivity extends ActionBarActivity {
 	}
 
 	protected ActionBar setupActionBar() {
-		ab = getSupportActionBar();
-		ab.setDisplayHomeAsUpEnabled(true);
-		ab.setDisplayShowHomeEnabled(true);
-		ab.setDisplayShowTitleEnabled(false);
-		return ab;
+		actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		return actionBar;
 	}
 
 	protected void forceThreeDots() {

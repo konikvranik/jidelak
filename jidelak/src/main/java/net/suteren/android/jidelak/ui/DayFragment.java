@@ -255,10 +255,7 @@ public class DayFragment extends Fragment {
 				paramView.findViewById(R.id.bottom_shadow).setVisibility(
 						View.GONE);
 
-			if (getChildrenCount(paramInt) > 0)
-				paramView.findViewById(R.id.empty).setVisibility(View.GONE);
-			else
-				paramView.findViewById(R.id.empty).setVisibility(View.VISIBLE);
+			showEmpty(!(getChildrenCount(paramInt) > 0), paramView);
 
 			Restaurant restaurant = getGroup(paramInt);
 
@@ -309,8 +306,8 @@ public class DayFragment extends Fragment {
 			act.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					if (ad != null)
-						ad.notifyDataSetChanged();
+					if (dailyMenuAdapter != null)
+						dailyMenuAdapter.notifyDataSetChanged();
 				}
 			});
 		}
@@ -326,13 +323,25 @@ public class DayFragment extends Fragment {
 
 	}
 
+	private void showEmpty(boolean showEmpty, View paramView) {
+		if (paramView == null)
+			return;
+		View emptyView = paramView.findViewById(R.id.empty);
+		if (emptyView == null)
+			return;
+		if (showEmpty)
+			emptyView.setVisibility(View.VISIBLE);
+		else
+			emptyView.setVisibility(View.GONE);
+	}
+
 	public DailyMenuAdapter getAdapter() {
-		return ad;
+		return dailyMenuAdapter;
 	}
 
 	public static final String ARG_DAY = "day";
-	private DailyMenuAdapter ad;
-	private ExpandableListView menuList;
+	private DailyMenuAdapter dailyMenuAdapter;
+	private ExpandableListView dailyMenuList;
 	private FragmentActivity act;
 
 	private ExpandableListContextMenuInfo lastMenuInfo;
@@ -346,31 +355,25 @@ public class DayFragment extends Fragment {
 		act = getActivity();
 		View rootView = inflater.inflate(R.layout.day, container, false);
 
-		ad = new DailyMenuAdapter(getActivity().getApplicationContext(),
-				prepareDay(args));
+		dailyMenuAdapter = new DailyMenuAdapter(getActivity()
+				.getApplicationContext(), prepareDay(args));
 
-		menuList = (ExpandableListView) rootView.findViewById(R.id.menu_list);
-		if (ad.isEmpty()) {
-			menuList.setVisibility(View.GONE);
-			rootView.findViewById(R.id.empty).setVisibility(View.VISIBLE);
-			WebView disclaimerView = (WebView) rootView
-					.findViewById(R.id.empty_text);
-			WebSettings settings = disclaimerView.getSettings();
-			settings.setStandardFontFamily("serif");
-			disclaimerView.setBackgroundColor(getResources().getColor(
-					android.R.color.background_dark));
-			disclaimerView
-					.loadUrl("file:///android_res/raw/no_restaurants_disclaimer.html");
+		dailyMenuList = (ExpandableListView) rootView
+				.findViewById(R.id.menu_list);
+		if (dailyMenuAdapter.isEmpty()) {
+			dailyMenuList.setVisibility(View.GONE);
+			showEmpty(true, rootView);
+			setupEmpty(rootView);
 		} else {
-			menuList.setVisibility(View.VISIBLE);
+			dailyMenuList.setVisibility(View.VISIBLE);
 			rootView.findViewById(R.id.empty).setVisibility(View.GONE);
 
 		}
-		registerForContextMenu(menuList);
-		menuList.setAdapter(ad);
+		registerForContextMenu(dailyMenuList);
+		dailyMenuList.setAdapter(dailyMenuAdapter);
 
-		for (int i = 0; i < ad.getGroupCount(); i++) {
-			menuList.expandGroup(i);
+		for (int i = 0; i < dailyMenuAdapter.getGroupCount(); i++) {
+			dailyMenuList.expandGroup(i);
 		}
 
 		final MainActivity act = (MainActivity) getActivity();
@@ -378,27 +381,38 @@ public class DayFragment extends Fragment {
 			@Override
 			public void onChanged() {
 				super.onChanged();
-				ad.updateRestaurants();
+				dailyMenuAdapter.updateRestaurants();
 			}
 
 			@Override
 			public void onInvalidated() {
 				super.onInvalidated();
-				ad.updateRestaurants();
+				dailyMenuAdapter.updateRestaurants();
 			}
 		});
 
 		return rootView;
 	}
 
+	private void setupEmpty(View rootView) {
+		WebView disclaimerView = (WebView) rootView
+				.findViewById(R.id.empty_text);
+		WebSettings settings = disclaimerView.getSettings();
+		settings.setStandardFontFamily("serif");
+		disclaimerView.setBackgroundColor(getResources().getColor(
+				android.R.color.background_dark));
+		disclaimerView
+				.loadUrl("file:///android_res/raw/no_restaurants_disclaimer.html");
+	}
+
 	public ExpandableListView getMenuList() {
-		return menuList;
+		return dailyMenuList;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		ad.notifyDataSetChanged();
+		dailyMenuAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -421,7 +435,7 @@ public class DayFragment extends Fragment {
 			lastMenuInfo = info;
 		}
 
-		final Restaurant r = ad.getGroup(ExpandableListView
+		final Restaurant r = dailyMenuAdapter.getGroup(ExpandableListView
 				.getPackedPositionGroup(info.packedPosition));
 
 		String uri;
@@ -529,4 +543,13 @@ public class DayFragment extends Fragment {
 		return day;
 	}
 
+	public void notifyDataSetChanged() {
+		if (dailyMenuAdapter != null)
+			dailyMenuAdapter.notifyAdapter();
+	}
+
+	public void notifyDataSetInvalidated() {
+		if (dailyMenuAdapter != null)
+			dailyMenuAdapter.notifyAdapter();
+	}
 }

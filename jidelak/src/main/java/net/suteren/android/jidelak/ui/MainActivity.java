@@ -47,8 +47,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
@@ -63,11 +66,11 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 	private static Logger log = LoggerFactory.getLogger(MainActivity.class);
 
-	private ViewPager pagerView;
+	private ViewPager dayPagerView;
 
 	private Menu mainMenu;
 
-	private DayPagerAdapter dpa;
+	private DayPagerAdapter dayPagerAdapter;
 
 	private boolean mBound = false;
 
@@ -111,6 +114,10 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 	private ActionBarDrawerToggle drawerToggle;
 
+	private DragNDropListView drawerRestaurantListView;
+
+	private DragNDropRestaurantListAdapter drawerRestaurantAdapter;
+
 	/**
 	 * Called when the activity is first created.
 	 * 
@@ -126,44 +133,18 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 		setContentView(R.layout.activity_main);
 
-		dpa = new DayPagerAdapter(getSupportFragmentManager());
-		ab.setListNavigationCallbacks(dpa, this);
-
-		setupPagerView();
-
-		setupDrawer();
-
-		drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawerToggle = new ActionBarDrawerToggle(this, drawer,
-				R.drawable.ic_drawer, R.string.open, android.R.string.cancel) {
-			/** Called when a drawer has settled in a completely closed state. */
-			@Override
-			public void onDrawerClosed(View view) {
-				super.onDrawerClosed(view);
-				setupHomeButton(isTodaySelected(pagerView.getCurrentItem()));
-			}
-
-			/** Called when a drawer has settled in a completely open state. */
-			@Override
-			public void onDrawerOpened(View drawerView) {
-				super.onDrawerOpened(drawerView);
-				setupHomeButton(isTodaySelected(pagerView.getCurrentItem()));
-			}
-		};
-		drawer.setDrawerListener(drawerToggle);
-
 		goToToday();
 
 		getDbHelper().registerObserver(new DataSetObserver() {
 			@Override
 			public void onChanged() {
-				dpa.updateDates();
+				updateData();
 				super.onChanged();
 			}
 
 			@Override
 			public void onInvalidated() {
-				dpa.updateDates();
+				updateData();
 				super.onInvalidated();
 			}
 
@@ -177,49 +158,17 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 	}
 
-	private void setupDrawer() {
-		// TODO Auto-generated method stub
-		DragNDropListView ddlv = (DragNDropListView) getWindow().findViewById(
-				R.id.restaurants);
-
-		final DragNDropRestaurantListAdapter ddsa = new DragNDropRestaurantListAdapter(
-				new RestaurantDao(JidelakDbHelper.getInstance(this)).findAll());
-		ddlv.setDragNDropAdapter(ddsa);
-
-		ImageButton cancel = (ImageButton) getWindow()
-				.findViewById(R.id.cancel);
-		cancel.setOnClickListener(new ImageButton.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				findViewById(R.id.buttons).setVisibility(View.GONE);
-				ddsa.setRestaurants(new RestaurantDao(JidelakDbHelper
-						.getInstance(getApplicationContext())).findAll());
-				ddsa.notifyDataSetChanged();
-				drawer.closeDrawer(Gravity.LEFT);
-			}
-		});
-
-		ImageButton save = (ImageButton) getWindow().findViewById(R.id.save);
-		save.setOnClickListener(new ImageButton.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				JidelakDbHelper dbHelper = JidelakDbHelper
-						.getInstance(getApplication());
-				new RestaurantDao(dbHelper).update(ddsa.getRestaurants());
-				dbHelper.notifyDataSetChanged();
-				dpa.updateDates();
-				findViewById(R.id.buttons).setVisibility(View.GONE);
-				ddsa.resetChanged();
-				drawer.closeDrawer(Gravity.LEFT);
-			}
-		});
-	}
-
 	private boolean todaySelected;
+
+	private View emptyView;
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
+
+		if (hasFocus) {
+			updateData();
+		}
 
 		if (mBound && !hasFocus) {
 			unbindService(mConnection);
@@ -232,14 +181,26 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 	}
 
+	private void updateDailyMenu() {
+		DayFragment page = getActiveDayFragment();
+		if (page != null)
+			page.notifyDataSetChanged();
+	}
+
+	private void updateData() {
+		getDayPagerAdapter().updateDates();
+		updateDailyMenu();
+		drawerRestaurantAdapter.updateRestaurants();
+	}
+
 	protected void goToToday() {
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
 		cal.setTimeInMillis(System.currentTimeMillis());
-		goToDay(dpa.getPositionByDate(cal));
+		goToDay(getDayPagerAdapter().getPositionByDate(cal));
 	}
 
 	protected void goToDay(int arg0) {
-		pagerView.setCurrentItem(arg0);
+		getDayPagerView().setCurrentItem(arg0);
 		setupHomeButton(isTodaySelected(arg0));
 	}
 
@@ -247,27 +208,103 @@ public class MainActivity extends AbstractJidelakActivity implements
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
 		cal.setTimeInMillis(System.currentTimeMillis());
 
-		return todaySelected = (arg0 == dpa.getPositionByDate(cal));
+		return todaySelected = (arg0 == getDayPagerAdapter().getPositionByDate(
+				cal));
 	}
 
 	protected void setupHomeButton(boolean today) {
 		// ab.setDisplayHomeAsUpEnabled(back);
-		drawerToggle.setDrawerIndicatorEnabled(today
-				|| drawer.isDrawerOpen(Gravity.LEFT));
-		drawerToggle.syncState();
+		getDrawerToggle().setDrawerIndicatorEnabled(
+				today || getDrawer().isDrawerOpen(Gravity.LEFT));
+		getDrawerToggle().syncState();
 	}
 
-	private void setupPagerView() {
-		pagerView = (ViewPager) findViewById(R.id.pager);
-		pagerView.setAdapter(dpa);
-		pagerView
-				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						ab.setSelectedNavigationItem(position);
-					}
+	private DrawerLayout getDrawer() {
+		if (drawer == null)
+			setupDrawer();
+		return drawer;
+	}
 
-				});
+	private ActionBarDrawerToggle getDrawerToggle() {
+		if (drawerToggle == null)
+			setupDrawer();
+		return drawerToggle;
+	}
+
+	private DragNDropRestaurantListAdapter getDrawerRestaurantAdapter() {
+		if (drawerRestaurantAdapter == null)
+			setupDrawer();
+		return drawerRestaurantAdapter;
+	}
+
+	private void setupDrawer() {
+
+		drawerRestaurantListView = (DragNDropListView) getWindow()
+				.findViewById(R.id.restaurants);
+
+		if (drawerRestaurantListView == null)
+			return;
+
+		drawerRestaurantAdapter = new DragNDropRestaurantListAdapter(
+				new RestaurantDao(JidelakDbHelper.getInstance(this)).findAll());
+		drawerRestaurantListView.setDragNDropAdapter(drawerRestaurantAdapter);
+
+		ImageButton cancel = (ImageButton) getWindow()
+				.findViewById(R.id.cancel);
+		cancel.setOnClickListener(new ImageButton.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				findViewById(R.id.buttons).setVisibility(View.GONE);
+				getDrawerRestaurantAdapter().updateRestaurants();
+				getDrawerRestaurantAdapter().notifyDataSetChanged();
+				drawer.closeDrawer(Gravity.LEFT);
+			}
+		});
+
+		ImageButton save = (ImageButton) getWindow().findViewById(R.id.save);
+		save.setOnClickListener(new ImageButton.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				JidelakDbHelper dbHelper = JidelakDbHelper
+						.getInstance(getApplication());
+				new RestaurantDao(dbHelper).update(getDrawerRestaurantAdapter()
+						.getRestaurants());
+				dbHelper.notifyDataSetChanged();
+				updateData();
+				findViewById(R.id.buttons).setVisibility(View.GONE);
+				getDrawerRestaurantAdapter().resetChanged();
+				drawer.closeDrawer(Gravity.LEFT);
+			}
+		});
+		drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawerToggle = new ActionBarDrawerToggle(this, drawer,
+				R.drawable.ic_drawer, R.string.open, android.R.string.cancel) {
+			/** Called when a drawer has settled in a completely closed state. */
+			@Override
+			public void onDrawerClosed(View view) {
+				super.onDrawerClosed(view);
+				setupHomeButton(isTodaySelected(getDayPagerView()
+						.getCurrentItem()));
+			}
+
+			/** Called when a drawer has settled in a completely open state. */
+			@Override
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				setupHomeButton(isTodaySelected(getDayPagerView()
+						.getCurrentItem()));
+			}
+		};
+		drawer.setDrawerListener(drawerToggle);
+	}
+
+	private DayPagerAdapter getDayPagerAdapter() {
+		if (dayPagerAdapter == null) {
+			dayPagerAdapter = new DayPagerAdapter(getSupportFragmentManager());
+			actionBar.setListNavigationCallbacks(dayPagerAdapter, this);
+			dayPagerAdapter.updateDates();
+		}
+		return dayPagerAdapter;
 	}
 
 	private void updateRefreshButton() {
@@ -329,8 +366,8 @@ public class MainActivity extends AbstractJidelakActivity implements
 			return true;
 
 		case android.R.id.home:
-			if (todaySelected || drawer.isDrawerOpen(Gravity.LEFT)) {
-				if (drawerToggle.onOptionsItemSelected(item)) {
+			if (todaySelected || getDrawer().isDrawerOpen(Gravity.LEFT)) {
+				if (getDrawerToggle().onOptionsItemSelected(item)) {
 					return true;
 				}
 				return super.onOptionsItemSelected(item);
@@ -364,9 +401,18 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 	@Override
 	protected ActionBar setupActionBar() {
-		ab = super.setupActionBar();
-		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		return ab;
+		actionBar = super.setupActionBar();
+
+		if (getDayPagerAdapter().isEmpty()) {
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			// actionBar.setDisplayShowCustomEnabled(false);
+			actionBar.setDisplayShowTitleEnabled(true);
+		} else {
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+			// actionBar.setDisplayShowCustomEnabled(false);
+			actionBar.setDisplayShowTitleEnabled(false);
+		}
+		return actionBar;
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -417,7 +463,6 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 		public DayPagerAdapter(FragmentManager fm) {
 			super(fm);
-			updateDates();
 		}
 
 		@Override
@@ -491,9 +536,10 @@ public class MainActivity extends AbstractJidelakActivity implements
 		public CharSequence getPageTitle(int position) {
 			Availability d;
 			if (dates == null || dates.isEmpty()) {
-				Calendar cal = Calendar.getInstance(Locale.getDefault());
-				cal.setTimeInMillis(System.currentTimeMillis());
-				d = new Availability(cal);
+				return null;
+				// Calendar cal = Calendar.getInstance(Locale.getDefault());
+				// cal.setTimeInMillis(System.currentTimeMillis());
+				// d = new Availability(cal);
 			} else {
 				d = dates.get(position);
 			}
@@ -551,21 +597,53 @@ public class MainActivity extends AbstractJidelakActivity implements
 		private void updateDates() {
 
 			log.debug("Update dates start");
-			AvailabilityDao ad = new AvailabilityDao(getDbHelper());
-			dates = new ArrayList<Availability>(ad.findAllDays());
+			AvailabilityDao adao = new AvailabilityDao(getDbHelper());
+			dates = new ArrayList<Availability>(adao.findAllDays());
 			runOnUiThread(new Runnable() {
 
 				@Override
 				public void run() {
 					notifyDataSetChanged();
-					ab.removeAllTabs();
-					for (int i = 0; i < getCount(); i++) {
-						ab.addTab(ab.newTab().setText(getPageTitle(i))
-								.setTabListener(MainActivity.this));
+					actionBar.removeAllTabs();
+					if (!isEmpty())
+						for (int i = 0; i < getCount(); i++) {
+							actionBar.addTab(actionBar.newTab()
+									.setText(getPageTitle(i))
+									.setTabListener(MainActivity.this));
+						}
 
-					}
+					if (getDrawerRestaurantAdapter() != null)
+						chooseMainView(getDrawerRestaurantAdapter().isEmpty());
 
+					setupActionBar();
 				}
+
+				private void chooseMainView(boolean empty) {
+					FrameLayout pagerFrame = (FrameLayout) getWindow()
+							.findViewById(R.id.pager_frame);
+					if (empty) {
+						log.debug("Showing empty view and hiding frame");
+						if (pagerFrame != null) {
+							pagerFrame.setVisibility(View.GONE);
+							log.debug("daypager hidden");
+						}
+						if (getEmptyView() != null) {
+							getEmptyView().setVisibility(View.VISIBLE);
+							log.debug("empty view displayed");
+						}
+					} else {
+						log.debug("Hiding empty view and showing frame");
+						if (getEmptyView() != null) {
+							getEmptyView().setVisibility(View.GONE);
+							log.debug("empty view hidden");
+						}
+						if (pagerFrame != null) {
+							pagerFrame.setVisibility(View.VISIBLE);
+							log.debug("daypager displayed");
+						}
+					}
+				}
+
 			});
 			log.debug("Update dates end");
 		}
@@ -586,6 +664,12 @@ public class MainActivity extends AbstractJidelakActivity implements
 		public DragNDropRestaurantListAdapter(Collection<Restaurant> restaurants) {
 			super();
 			this.restaurants = new ArrayList<Restaurant>(restaurants);
+		}
+
+		public void updateRestaurants() {
+			setRestaurants(new RestaurantDao(
+					JidelakDbHelper.getInstance(getApplicationContext()))
+					.findAll());
 		}
 
 		@Override
@@ -619,11 +703,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 						public void onClick(View v) {
 							if (changed)
 								return;
-							DayFragment page = (DayFragment) getSupportFragmentManager()
-									.findFragmentByTag(
-											buildFragmentTag(pagerView, dpa
-													.getItemId(pagerView
-															.getCurrentItem())));
+							DayFragment page = getActiveDayFragment();
 							if (page == null)
 								return;
 							ExpandableListView menuListView = (ExpandableListView) page
@@ -632,7 +712,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 								return;
 							menuListView.setSelection(page.getAdapter()
 									.countAbsolutePosition(paramInt));
-							drawer.closeDrawer(Gravity.LEFT);
+							getDrawer().closeDrawer(Gravity.LEFT);
 						}
 
 					});
@@ -665,10 +745,16 @@ public class MainActivity extends AbstractJidelakActivity implements
 			for (int i = 0; i < restaurants.size(); i++)
 				restaurants.get(i).setPosition(i);
 
-			notifyDataSetChanged();
-
 			changed = true;
-			findViewById(R.id.buttons).setVisibility(View.VISIBLE);
+
+			runOnUiThread(new Runnable() {
+				public void run() {
+					notifyDataSetChanged();
+					findViewById(R.id.buttons).setVisibility(View.VISIBLE);
+				}
+			});
+			
+
 
 		}
 
@@ -681,10 +767,14 @@ public class MainActivity extends AbstractJidelakActivity implements
 			return restaurants;
 		}
 
-		public void setRestaurants(Collection<Restaurant> sortedSet) {
-			this.restaurants = new ArrayList<Restaurant>(sortedSet);
+		public void setRestaurants(Collection<Restaurant> restaurants) {
+			this.restaurants = new ArrayList<Restaurant>(restaurants);
 			resetChanged();
-			notifyDataSetChanged();
+			runOnUiThread(new Runnable() {
+				public void run() {
+					notifyDataSetChanged();
+				}
+			});
 		}
 
 		public void resetChanged() {
@@ -692,4 +782,65 @@ public class MainActivity extends AbstractJidelakActivity implements
 		}
 
 	}
+
+	private ViewPager getDayPagerView() {
+		if (dayPagerView == null) {
+			dayPagerView = (ViewPager) findViewById(R.id.pager);
+			if (dayPagerView == null)
+				return null;
+			dayPagerView.setAdapter(getDayPagerAdapter());
+			dayPagerView
+					.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+						@Override
+						public void onPageSelected(int position) {
+							actionBar.setSelectedNavigationItem(position);
+						}
+
+					});
+		}
+		return dayPagerView;
+	}
+
+	private View getEmptyView() {
+		log.debug("Getting empty view");
+		if (emptyView == null) {
+			FrameLayout frameLayout = (FrameLayout) getWindow().findViewById(
+					R.id.content_frame);
+			if (frameLayout == null)
+				return null;
+			emptyView = frameLayout.findViewById(R.id.empty);
+			setupEmptyView(emptyView);
+		}
+		log.debug("Empty view retrieved");
+		return emptyView;
+	}
+
+	private void setupEmptyView(View emptyviView) {
+		WebView disclaimerView = (WebView) emptyviView
+				.findViewById(R.id.empty_text);
+		WebSettings settings = disclaimerView.getSettings();
+		settings.setStandardFontFamily("serif");
+		disclaimerView.setBackgroundColor(getResources().getColor(
+				android.R.color.background_dark));
+		log.debug("Setting up webview");
+		disclaimerView
+				.loadUrl("file:///android_res/raw/no_restaurants_disclaimer.html");
+	}
+
+	private DayFragment getActiveDayFragment() {
+		if (getDayPagerView() == null || getDayPagerAdapter() == null)
+			return null;
+		return (DayFragment) getSupportFragmentManager().findFragmentByTag(
+				buildFragmentTag(getDayPagerView(), getDayPagerAdapter()
+						.getItemId(getDayPagerView().getCurrentItem())));
+	}
+
+	public void notifyDataSetChanged() {
+		updateData();
+	}
+
+	public void notifyDataSetInvalidated() {
+		updateData();
+	}
+
 }

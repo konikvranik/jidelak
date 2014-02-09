@@ -158,7 +158,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 		startService(new Intent(this, FeederService.class).putExtra("register",
 				true));
 
-		updateDrawerIcon();
+		updateHomeIcon();
 
 	}
 
@@ -203,7 +203,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 	protected void goToDay(int arg0) {
 		getDayPagerView().setCurrentItem(arg0);
-		updateDrawerIcon();
+		updateHomeIcon();
 	}
 
 	protected boolean isTodaySelected(int arg0) {
@@ -212,12 +212,15 @@ public class MainActivity extends AbstractJidelakActivity implements
 		return arg0 == getDayPagerAdapter().getPositionByDate(cal);
 	}
 
-	protected void updateDrawerIcon() {
-		if (drawerToggle == null)
-			return;
-		// ab.setDisplayHomeAsUpEnabled(back);
-		drawerToggle.setDrawerIndicatorEnabled(isDrawerIconEnabled());
-		drawerToggle.syncState();
+	protected void updateHomeIcon() {
+		if (drawerToggle == null) {
+			actionBar
+					.setDisplayHomeAsUpEnabled(!(isTodaySelected() || getDayPagerAdapter()
+							.isEmpty()));
+		} else {
+			drawerToggle.setDrawerIndicatorEnabled(isDrawerIconEnabled());
+			drawerToggle.syncState();
+		}
 	}
 
 	private boolean isDrawerIconEnabled() {
@@ -242,14 +245,14 @@ public class MainActivity extends AbstractJidelakActivity implements
 			@Override
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
-				updateDrawerIcon();
+				updateHomeIcon();
 			}
 
 			/** Called when a drawer has settled in a completely open state. */
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-				updateDrawerIcon();
+				updateHomeIcon();
 			}
 		};
 		drawer.setDrawerListener(drawerToggle);

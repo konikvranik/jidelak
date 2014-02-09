@@ -50,48 +50,73 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 			meal.setPosition(Integer.parseInt(o));
 
 		String x = data.get(prefix + "meal@time");
-		try {
-			Calendar cal = Calendar.getInstance(getSource().getLocale());
-			cal.setTimeInMillis(System.currentTimeMillis());
-			switch (getSource().getTimeType()) {
-			case RELATIVE:
+		Calendar cal = Calendar.getInstance(getSource().getLocale());
+		cal.setTimeInMillis(System.currentTimeMillis());
+		switch (getSource().getTimeType()) {
+		case RELATIVE:
 
-				if (x != null) {
+			if (x != null) {
 
-					String y = data.get(prefix + "meal@ref-time");
+				String y = data.get(prefix + "meal@ref-time");
+				try {
 
 					cal.setTime(getSource().getDateFormat().parse(y));
 					cal.add(getSource().getOffsetBase().getType(), getSource()
 							.getOffset());
-
-					cal.add(Calendar.DAY_OF_MONTH, Integer.parseInt(x));
-
+				} catch (ParseException e) {
+					log.warn(e.getMessage(), e);
+					throw new JidelakParseException(
+							R.string.meal_invalid_date_format, getSource()
+									.getDateFormatString(), x, e)
+							.setMeal(meal)
+							.setRestaurant(
+									meal.getSource() == null ? meal
+											.getRestaurant() : meal.getSource()
+											.getRestaurant())
+							.setSource(meal.getSource()).setHandled(true);
 				}
-				break;
+				try {
+					cal.add(Calendar.DAY_OF_MONTH, Integer.parseInt(x.trim()));
 
-			case ABSOLUTE:
+				} catch (NumberFormatException e) {
+					log.warn(e.getMessage(), e);
+					throw new JidelakException(
+							R.string.meal_invalid_integer_format, e, x)
+							.setMeal(meal)
+							.setRestaurant(
+									meal.getSource() == null ? meal
+											.getRestaurant() : meal.getSource()
+											.getRestaurant())
+							.setSource(meal.getSource()).setHandled(true);
+				}
+			}
+			break;
+
+		case ABSOLUTE:
+			try {
 
 				log.debug("Parsing " + x + " by "
 						+ getSource().getDateFormatString());
 				if (x != null)
-					cal.setTime(getSource().getDateFormat().parse(x));
-				break;
-
-			default:
-				break;
+					cal.setTime(getSource().getDateFormat().parse(x.trim()));
+			} catch (ParseException e) {
+				log.warn(e.getMessage(), e);
+				throw new JidelakParseException(
+						R.string.meal_invalid_date_format, getSource()
+								.getDateFormatString(), x, e)
+						.setMeal(meal)
+						.setRestaurant(
+								meal.getSource() == null ? meal.getRestaurant()
+										: meal.getSource().getRestaurant())
+						.setSource(meal.getSource()).setHandled(true);
 			}
+			break;
 
-			meal.setAvailability(new Availability(cal));
-
-		} catch (ParseException e) {
-			throw new JidelakParseException(R.string.meal_invalid_date_format,
-					getSource().getDateFormatString(), x, e)
-					.setMeal(meal)
-					.setRestaurant(
-							meal.getSource() == null ? meal.getRestaurant()
-									: meal.getSource().getRestaurant())
-					.setSource(meal.getSource()).setHandled(true);
+		default:
+			break;
 		}
+
+		meal.setAvailability(new Availability(cal));
 
 	}
 

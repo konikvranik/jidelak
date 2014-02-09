@@ -13,6 +13,7 @@
     <string name="source_malformed_url">Neplatná URL "%s" v source</string>
     <string name="first_day_of_week_malformed">%3$s: První den v týdnu "%2$s" neodpovídá formátu "%1$s":</string>
     <string name="meal_invalid_date_format">%3$s: Datum v &lt;meal&gt; "%2$s" neodpovídá formátu "%1$s".</string>
+    <string name="meal_invalid_integer_format">%1$s: Pořadí dne v &lt;meal&gt; "%5$s" není celé číslo.</string>
     <string name="opening_hours_invalid_date">%3$s: Datum otevíracích hodin "%2$s" neodpovídá formátu "%1$s".</string>
     <string name="opening_hours_invalid_day_of_week">%3$s: Den v týdnu otevíracích hodin "%2$s" neodpovídá formátu "%1$s":</string>
     <string name="unexpected_exception">Vyskytla se neočekávaná chyba - koukněte do error logu</string>

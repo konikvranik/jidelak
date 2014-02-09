@@ -13,6 +13,7 @@
     <string name="source_malformed_url">URL "%s" in source is invalid</string>
     <string name="first_day_of_week_malformed">%3$s: First day of week in source does not match format %1$s.</string>
     <string name="meal_invalid_date_format">%3$s: Date "%2$s" in meal does not match format %1$s.</string>
+    <string name="meal_invalid_integer_format">%1$s: Day in &lt;meal&gt; "%5$s" not integer.</string>
     <string name="opening_hours_invalid_date">%3$s: Date "%2$s" in opening hours does not match format %1$s.</string>
     <string name="opening_hours_invalid_day_of_week">%3$s: Day of week "%2$s" in opening hours does not match format %1$s.</string>
     <string name="unexpected_exception">Unexpected exception ocured - see error log</string>

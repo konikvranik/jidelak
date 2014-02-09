@@ -475,7 +475,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 		}
 
 		Calendar getDateByPosition(int position) {
-			if (dates == null || dates.isEmpty())
+			if (dates == null || dates.isEmpty() || position >= getCount())
 				return null;
 
 			return dates.get(position).getCalendar();

@@ -95,18 +95,18 @@
 					mode="dish" />
 			</xsl:when>
 			<xsl:when test="*//text()[starts-with(normalize-space(.), 'Menu')]">
-				menu
+				<xsl:text>menu</xsl:text>
 			</xsl:when>
 			<xsl:when
 				test="preceding-sibling::tr//text()[starts-with(normalize-space(.), 'Hotová jídla')]">
-				dinner
+				<xsl:text>dinner</xsl:text>
 			</xsl:when>
 			<xsl:when
 				test="preceding-sibling::tr//text()[starts-with(normalize-space(.), 'Polévka')]">
-				soup
+				<xsl:text>soup</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
-				dinner
+				<xsl:text>dinner</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

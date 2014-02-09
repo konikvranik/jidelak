@@ -56,7 +56,7 @@
 	<xsl:template match="td" mode="days">
 		<xsl:variable name="pos" select="position()" />
 		<xsl:variable name="ref-time"
-			select="substring-before(/html/body/div[@class='okno-tisk']/center/div[@class='vnitrek-tisk']/p[@class='centrovani velka']/b/text(), ' ') " />
+			select="substring-before(/html/body/div[1]/div/div/div/div[2]/div[3]/div/div/p[1]/b/text()|/html/body/div[@class='okno-tisk']/center/div[@class='vnitrek-tisk']/p[@class='centrovani velka']/b/text(), ' ') " />
 
 		<xsl:apply-templates
 			select="../../tr[2]/td[$pos]/p[normalize-space(translate(.,'&#160;', ' ')) != '']">

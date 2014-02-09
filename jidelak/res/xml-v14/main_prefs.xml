@@ -26,6 +26,7 @@
             android:title="@string/update_automatically_title" />
         <SwitchPreference
             android:defaultValue="true"
+            android:dependency="automatic_updates"
             android:key="only_wifi"
             android:summary="@string/only_wifi_description"
             android:title="@string/only_wifi_title" />

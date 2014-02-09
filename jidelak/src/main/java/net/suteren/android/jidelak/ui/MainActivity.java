@@ -139,6 +139,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 		goToToday();
 
+		getDbHelper().cleanup();
 		getDbHelper().registerObserver(new DataSetObserver() {
 			@Override
 			public void onChanged() {

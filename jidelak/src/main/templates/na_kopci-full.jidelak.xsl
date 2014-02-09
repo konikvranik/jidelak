@@ -33,23 +33,23 @@
 			<open>
 				<term day-of-week="Po" from="11:30" to="14:30" />
 				<term day-of-week="Po" from="17:30" to="23:00" />
-				
+
 				<term day-of-week="Út" from="11:30" to="14:30" />
 				<term day-of-week="Út" from="17:30" to="23:00" />
-				
+
 				<term day-of-week="St" from="11:30" to="14:30" />
 				<term day-of-week="St" from="17:30" to="23:00" />
-				
+
 				<term day-of-week="Čt" from="11:30" to="14:30" />
 				<term day-of-week="Čt" from="17:30" to="23:00" />
-				
+
 				<term day-of-week="Pá" from="11:30" to="14:30" />
 				<term day-of-week="Pá" from="17:30" to="23:00" />
-				
+
 				<term day-of-week="So" from="11:30" to="23:00" />
 				<term day-of-week="Ne" from="11:30" to="23:00" />
-				
-				<term to="15:00" description="polední menu"/>
+
+				<term to="15:00" description="polední menu" />
 			</open>
 
 			<!-- <xsl:apply-templates select="//div[@id='levy']/div[@class='poledni_menu']" 

@@ -224,4 +224,8 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 		db.execSQL("delete from availability where restaurant is null and id not in (select a2.id from availability a2, meal m where m.availability = a2.id)");
 	}
 
+	public void cleanup() {
+		cleanup(getWritableDatabase());
+	}
+
 }

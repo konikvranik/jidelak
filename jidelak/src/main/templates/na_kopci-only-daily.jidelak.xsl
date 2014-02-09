@@ -43,7 +43,7 @@
 				<term day-of-week="Pá" from="17:30" to="23:00" />
 				<term day-of-week="So" from="11:30" to="23:00" />
 				<term day-of-week="Ne" from="11:30" to="23:00" />
-				<term to="15:00" />
+				<term to="15:00" description="polední menu" />
 			</open>
 
 			<!-- <xsl:apply-templates select="//div[@id='levy']/div[@class='poledni_menu']" 
@@ -80,8 +80,7 @@
 	</xsl:template>
 
 	<xsl:template match="div[starts-with(@class,'menuItem')]">
-		<xsl:if
-			test="preceding-sibling::h2[starts-with(text(), 'Denní menu')]">
+		<xsl:if test="preceding-sibling::h2[starts-with(text(), 'Denní menu')]">
 			<meal>
 				<xsl:apply-templates select="." mode="dish" />
 				<xsl:apply-templates select="div[starts-with(@class, 'menuName')]" />

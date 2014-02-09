@@ -39,17 +39,10 @@
 				url="http://fgkavcihory.cateringmelodie.cz/cz/samoobsluzna-restaurace/denni-menu-pristi-tyden.php" />
 
 			<open>
-				<term day-of-week="Po" from="8:00" to="18:00" />
-				<term day-of-week="Út" from="8:00" to="18:00" />
-				<term day-of-week="St" from="8:00" to="18:00" />
-				<term day-of-week="Čt" from="8:00" to="18:00" />
-				<term day-of-week="Pá" from="8:00" to="18:00" />
-
-				<term day-of-week="Po" from="11:00" to="15:00" />
-				<term day-of-week="Út" from="11:00" to="15:00" />
-				<term day-of-week="St" from="11:00" to="15:00" />
-				<term day-of-week="Čt" from="11:00" to="15:00" />
-				<term day-of-week="Pá" from="11:00" to="15:00" />
+				<term from="8:00" to="18:00" />
+				<term from="11:00" to="15:00" description="polední menu" />
+				<term day-of-week="So" closed="true" />
+				<term day-of-week="Ne" closed="true" />
 			</open>
 
 			<menu>

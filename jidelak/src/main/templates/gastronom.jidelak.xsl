@@ -40,7 +40,7 @@
 				<term day-of-week="Pá" from="11:00" to="01:00" />
 				<term day-of-week="So" from="12:00" to="01:00" />
 				<term day-of-week="Ne" from="12:00" to="23:00" />
-				<term to="15:00" />
+				<term to="15:00" description="polední menu"/>
 			</open>
 
 			<!-- <xsl:apply-templates select="//div[@id='levy']/div[@class='poledni_menu']" 

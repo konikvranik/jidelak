@@ -3,12 +3,32 @@
     android:title="@string/app_name" >
 
     <SwitchPreference
-        android:defaultValue="false"
-        android:key="automatic_updates"
-        android:summary="@string/update_automatically_description"
-        android:title="@string/update_automatically_title" />
+        android:defaultValue="true"
+        android:key="category_background"
+        android:summary="@string/category_background_description"
+        android:title="@string/category_background_title" />
 
-    <PreferenceCategory android:icon="@drawable/ic_action_time" >
+    <net.suteren.android.jidelak.ui.IntervalPreference
+        android:defaultValue="604800000"
+        android:dialogLayout="@layout/slider_preference"
+        android:key="delete_delay"
+        android:summary="@string/delete_delay_description"
+        android:title="@string/delete_delay_title"
+        suteren:values="@array/delete_delays" />
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_action_time"
+        android:title="@string/update_title" >
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="automatic_updates"
+            android:summary="@string/update_automatically_description"
+            android:title="@string/update_automatically_title" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="only_wifi"
+            android:summary="@string/only_wifi_description"
+            android:title="@string/only_wifi_title" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="particular_time"
@@ -30,37 +50,5 @@
             android:title="@string/refresh_period_title"
             suteren:values="@array/update_times" />
     </PreferenceCategory>
-
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="category_background"
-        android:summary="@string/category_background_description"
-        android:title="@string/category_background_title" />
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="only_wifi"
-        android:summary="@string/only_wifi_description"
-        android:title="@string/only_wifi_title" />
-
-    <net.suteren.android.jidelak.ui.IntervalPreference
-        android:defaultValue="604800000"
-        android:dialogLayout="@layout/slider_preference"
-        android:key="delete_delay"
-        android:summary="@string/delete_delay_description"
-        android:title="@string/delete_delay_title"
-        suteren:values="@array/delete_delays" >
-    </net.suteren.android.jidelak.ui.IntervalPreference>
-
-    <!--
-    PreferenceCategory
-        android:key="colors"
-        android:title="Barvy jídel" >
-        <Preference
-            android:key="soup"
-            android:summary="Nastavit barvu pro polévku"
-            android:title="@string/soup" >
-        </Preference>
-    </PreferenceCategory
-    -->
 
 </PreferenceScreen>

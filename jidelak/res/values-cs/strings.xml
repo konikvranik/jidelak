@@ -86,9 +86,10 @@
     <string name="invalid_dish">%1$s: chod %5$s není znám (%3$s)</string>
     <string name="update_on_particular_time_title">Aktualizovat v konkrétní čas</string>
     <string name="update_on_particular_time_description">Pokud je aktivováno, data budou stahována ve vybraný čas. Jinak budou aktualizace probíhat po uplynutí zvolené doby.</string>
-    <string name="update_automatically_description">Automatické aktualizace na pozadí</string>
-    <string name="update_automatically_title">Pokud je aktivní, data se budou stahovat automaticky na pozadí podle níže zvoleného plánu.</string>
-
+    <string name="update_automatically_title">Automatické aktualizace na pozadí</string>
+    <string name="update_automatically_description">Pokud je aktivní, data se budou stahovat automaticky na pozadí podle níže zvoleného plánu.</string>
+    <string name="update_title">Aktualizace dat.</string>
+    
     <string-array name="weeks">
         <item>týdnů</item>
         <item>týden</item>

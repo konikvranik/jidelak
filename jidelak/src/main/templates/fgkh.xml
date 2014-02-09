@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jidelak>
+  <config>
+    <restaurant version="1.2">
+      <id>praha-food-garden-kavci-hory</id>
+      <name>FOOD GARDEN KAVČÍ HORY</name>
+      <phone>+420 739 505 818</phone>
+      <e-mail>kavci.hory@foodgarden.cz</e-mail>
+      <web>http://fgkavcihory.cateringmelodie.cz</web>
+      <city>Praha 4</city>
+      <country>Česká republika</country>
+      <address>Kavčí Hory Office Park Na Hřebenech II 1718/10 </address>
+      <zip>140 21</zip>
+      <source time="relative" base="day" firstDayOfWeek="Po" timeOffset="-1" encoding="cp1250" dateFormat="d.M.y" locale="cs_CZ"
+      url="http://fgkavcihory.cateringmelodie.cz/cz/samoobsluzna-restaurace/denni-menu-tisk.php"/>
+      <source time="relative" base="day" firstDayOfWeek="Po" timeOffset="-1" encoding="cp1250" dateFormat="d.M.y" locale="cs_CZ"
+      url="http://fgkavcihory.cateringmelodie.cz/cz/samoobsluzna-restaurace/denni-menu-pristi-tyden.php"/>
+      <open>
+        <term from="8:00" to="18:00"/>
+        <term from="11:00" to="15:00" description="polední menu"/>
+        <term day-of-week="So" closed="true"/>
+        <term day-of-week="Ne" closed="true"/>
+      </open>
+      <menu>
+        <meal order="1" category="1-normal" dish="soup" time="1" ref-time="3.2.2014">
+          <title>Slepičí polévka se zeleninou a rýží</title>
+          <description/>
+          <price>18 Kč</price>
+        </meal>
+        <meal order="2" category="1-normal" dish="soup" time="1" ref-time="3.2.2014">
+          <title>Zeleninový krém s pažitkou </title>
+          <description/>
+          <price>18 Kč</price>
+        </meal>
+        <meal order="1" category="1-normal" dish="dinner" time="1" ref-time="3.2.2014">
+          <title>Přírodní sekaný řízek pečený na
+grilu, pórkové brambory </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="2" category="1-normal" dish="dinner" time="1" ref-time="3.2.2014">
+          <title>Pomalu pečené kuřecí kousky na černém
+pivu, bramborové noky </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="3" category="1-normal" dish="dinner" time="1" ref-time="3.2.2014">
+          <title>Mexický hovězí guláš s hráškovou rýží
+a sýrem </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="2-vegetarian" dish="dinner" time="1" ref-time="3.2.2014">
+          <title>Zeleninový nákyp s vejci a kapiemi,
+jogurtový dip </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="3-salad" dish="dinner" time="1" ref-time="3.2.2014">
+          <title>Pestrý salát s kuřetem </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="4-superior" dish="dinner" time="1" ref-time="3.2.2014">
+          <title>Vepřový steak, řecké brambory </title>
+          <description/>
+          <price>90 Kč</price>
+        </meal>
+        <meal order="1" category="5-live" dish="dinner" time="1" ref-time="3.2.2014">
+          <title>Grilované hovězí medailonky na pepři
+a tymiánu, dušená rýže </title>
+          <description/>
+          <price>110 Kč</price>
+        </meal>
+        <meal order="1" category="6-pasta" dish="dinner" time="1" ref-time="3.2.2014">
+          <title>WENDELLI  s krůtím masem,
+pórkem a smetanou </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="2" category="6-pasta" dish="dinner" time="1" ref-time="3.2.2014">
+          <title>TORTIGLLIONI s hovězími
+nudličkami, česnekem a olivovým olejem </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="3" category="6-pasta" dish="dinner" time="1" ref-time="3.2.2014">
+          <title>ŠPAGETY s rajčatovým
+sugem a mletým masem </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="4" category="6-pasta" dish="dinner" time="1" ref-time="3.2.2014">
+          <title>Zeleninové NUDLE s
+cuketou, karotkou a bazalkou </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="1" category="1-normal" dish="soup" time="2" ref-time="3.2.2014">
+          <title>Drůbková polévka s řapíkatým celerem</title>
+          <description/>
+          <price>18 Kč</price>
+        </meal>
+        <meal order="2" category="1-normal" dish="soup" time="2" ref-time="3.2.2014">
+          <title>Gulášová polévka </title>
+          <description/>
+          <price>18 Kč</price>
+        </meal>
+        <meal order="1" category="1-normal" dish="dinner" time="2" ref-time="3.2.2014">
+          <title>Pečená vepřová plec, červené zelí,
+bramborové knedlíky</title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="2" category="1-normal" dish="dinner" time="2" ref-time="3.2.2014">
+          <title>Špagety s hovězím masem, chilli,
+houbami a cibulí </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="3" category="1-normal" dish="dinner" time="2" ref-time="3.2.2014">
+          <title>Pečené kuře po srbsku, dušená
+rýže </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="2-vegetarian" dish="dinner" time="2" ref-time="3.2.2014">
+          <title>Bramborové šišky s mákem a cukrem
+maštěné máslem </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="3-salad" dish="dinner" time="2" ref-time="3.2.2014">
+          <title>Zeleninový salát s bylinkovým
+dresinkem </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="4-superior" dish="dinner" time="2" ref-time="3.2.2014">
+          <title>Na grilu připravené filátko hnědé
+tresky, šťouchané brambory </title>
+          <description/>
+          <price>90 Kč</price>
+        </meal>
+        <meal order="1" category="5-live" dish="dinner" time="2" ref-time="3.2.2014">
+          <title>Thajské drůbeží nudle se zázvorem a
+chilli, kari rýže </title>
+          <description/>
+          <price>110 Kč</price>
+        </meal>
+        <meal order="1" category="6-pasta" dish="dinner" time="2" ref-time="3.2.2014">
+          <title>WENDELLI  s krůtím masem,
+pórkem a smetanou </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="2" category="6-pasta" dish="dinner" time="2" ref-time="3.2.2014">
+          <title>TORTIGLLIONI s hovězími
+nudličkami, česnekem a olivovým olejem </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="3" category="6-pasta" dish="dinner" time="2" ref-time="3.2.2014">
+          <title>ŠPAGETY s rajčatovým
+sugem a mletým masem </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="4" category="6-pasta" dish="dinner" time="2" ref-time="3.2.2014">
+          <title>Zeleninové NUDLE s
+cuketou, karotkou a bazalkou </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="1" category="1-normal" dish="soup" time="3" ref-time="3.2.2014">
+          <title>Hovězí vývar s vaječným svítkem</title>
+          <description/>
+          <price>18 Kč</price>
+        </meal>
+        <meal order="2" category="1-normal" dish="soup" time="3" ref-time="3.2.2014">
+          <title>Kapustová polévka s bramborami </title>
+          <description/>
+          <price>18 Kč</price>
+        </meal>
+        <meal order="1" category="1-normal" dish="dinner" time="3" ref-time="3.2.2014">
+          <title>Sekaná svíčková pečeně na smetaně,
+houskové knedlíky </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="2" category="1-normal" dish="dinner" time="3" ref-time="3.2.2014">
+          <title>Pečená kuřecí prsa  na šalvěji,
+dušená rýže </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="3" category="1-normal" dish="dinner" time="3" ref-time="3.2.2014">
+          <title>Hrachová kaše s uzeným masem a
+smaženou cibulkou</title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="2-vegetarian" dish="dinner" time="3" ref-time="3.2.2014">
+          <title>Wrap se zeleninou a zakysanou
+smetanou </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="3-salad" dish="dinner" time="3" ref-time="3.2.2014">
+          <title>Listový salát s citrusy, sladkokyselá
+zálivka </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="4-superior" dish="dinner" time="3" ref-time="3.2.2014">
+          <title>Drůbeží ragú s žampiony, bramborové
+placky </title>
+          <description/>
+          <price>90 Kč</price>
+        </meal>
+        <meal order="1" category="5-live" dish="dinner" time="3" ref-time="3.2.2014">
+          <title>Lasagne s lososem a brokolicí sypané
+parmezánem </title>
+          <description/>
+          <price>110 Kč</price>
+        </meal>
+        <meal order="1" category="6-pasta" dish="dinner" time="3" ref-time="3.2.2014">
+          <title>WENDELLI  s krůtím masem,
+pórkem a smetanou </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="2" category="6-pasta" dish="dinner" time="3" ref-time="3.2.2014">
+          <title>TORTIGLLIONI s hovězími
+nudličkami, česnekem a olivovým olejem </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="3" category="6-pasta" dish="dinner" time="3" ref-time="3.2.2014">
+          <title>ŠPAGETY s rajčatovým
+sugem a mletým masem </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="4" category="6-pasta" dish="dinner" time="3" ref-time="3.2.2014">
+          <title>Zeleninové NUDLE s
+cuketou, karotkou a bazalkou </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="1" category="1-normal" dish="soup" time="4" ref-time="3.2.2014">
+          <title>Zeleninová polévka s kapáním</title>
+          <description/>
+          <price>18 Kč</price>
+        </meal>
+        <meal order="2" category="1-normal" dish="soup" time="4" ref-time="3.2.2014">
+          <title>Zelná polévka s klobáskou </title>
+          <description/>
+          <price>18 Kč</price>
+        </meal>
+        <meal order="1" category="1-normal" dish="dinner" time="4" ref-time="3.2.2014">
+          <title>Kuřecí závitek plněný uzenou kýtou a
+špenátem, vařené brambory </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="2" category="1-normal" dish="dinner" time="4" ref-time="3.2.2014">
+          <title>Vepřové na paprice, houskové
+knedlíky </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="3" category="1-normal" dish="dinner" time="4" ref-time="3.2.2014">
+          <title>Hovězí plátky na sardelkách, dušená
+rýže </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="2-vegetarian" dish="dinner" time="4" ref-time="3.2.2014">
+          <title>Houbové špecle se smetanou a
+hráškem </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="3-salad" dish="dinner" time="4" ref-time="3.2.2014">
+          <title>Salát  Caesar</title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="4-superior" dish="dinner" time="4" ref-time="3.2.2014">
+          <title>Špíz z vepřové kýty, slaniny a
+cibule, omáčka barbecue, bramborové krokety </title>
+          <description/>
+          <price>90 Kč</price>
+        </meal>
+        <meal order="1" category="5-live" dish="dinner" time="4" ref-time="3.2.2014">
+          <title>Pstruh na bylinkovém másle s
+citronem, vařené brambory </title>
+          <description/>
+          <price>110 Kč</price>
+        </meal>
+        <meal order="1" category="6-pasta" dish="dinner" time="4" ref-time="3.2.2014">
+          <title>WENDELLI  s krůtím masem,
+pórkem a smetanou </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="2" category="6-pasta" dish="dinner" time="4" ref-time="3.2.2014">
+          <title>TORTIGLLIONI s hovězími
+nudličkami, česnekem a olivovým olejem </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="3" category="6-pasta" dish="dinner" time="4" ref-time="3.2.2014">
+          <title>ŠPAGETY s rajčatovým
+sugem a mletým masem </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="4" category="6-pasta" dish="dinner" time="4" ref-time="3.2.2014">
+          <title>Zeleninové NUDLE s
+cuketou, karotkou a bazalkou </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="1" category="1-normal" dish="soup" time="5" ref-time="3.2.2014">
+          <title>Polévka z hovězí oháňky s těstovinami</title>
+          <description/>
+          <price>18 Kč</price>
+        </meal>
+        <meal order="2" category="1-normal" dish="soup" time="5" ref-time="3.2.2014">
+          <title>Smetanová polévka s fazolovými lusky </title>
+          <description/>
+          <price>18 Kč</price>
+        </meal>
+        <meal order="1" category="1-normal" dish="dinner" time="5" ref-time="3.2.2014">
+          <title>Vepřový řízek v bramborákovém těstě,
+zelný salát </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="2" category="1-normal" dish="dinner" time="5" ref-time="3.2.2014">
+          <title>Zeleninový kuskus s drůbežím masem a
+oreganem</title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="3" category="1-normal" dish="dinner" time="5" ref-time="3.2.2014">
+          <title>Hovězí maso vařené, omáčka smetanový
+křen, houskové knedlíky </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="2-vegetarian" dish="dinner" time="5" ref-time="3.2.2014">
+          <title>Zeleninová rýže s pečenými žampiony a
+pórkem sypaná parmezánem </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="3-salad" dish="dinner" time="5" ref-time="3.2.2014">
+          <title>Míchaný salát s cherry rajčaty a
+olivami </title>
+          <description/>
+          <price>74 Kč</price>
+        </meal>
+        <meal order="1" category="4-superior" dish="dinner" time="5" ref-time="3.2.2014">
+          <title>Mleté masové noky v sýrové omáčce,
+dušená rýže </title>
+          <description/>
+          <price>90 Kč</price>
+        </meal>
+        <meal order="1" category="5-live" dish="dinner" time="5" ref-time="3.2.2014">
+          <title>Hovězí roštěná se šunkou a vejcem,
+bramborové hranolky </title>
+          <description/>
+          <price>110 Kč</price>
+        </meal>
+        <meal order="1" category="6-pasta" dish="dinner" time="5" ref-time="3.2.2014">
+          <title>WENDELLI  s krůtím masem,
+pórkem a smetanou </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="2" category="6-pasta" dish="dinner" time="5" ref-time="3.2.2014">
+          <title>TORTIGLLIONI s hovězími
+nudličkami, česnekem a olivovým olejem </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="3" category="6-pasta" dish="dinner" time="5" ref-time="3.2.2014">
+          <title>ŠPAGETY s rajčatovým
+sugem a mletým masem </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+        <meal order="4" category="6-pasta" dish="dinner" time="5" ref-time="3.2.2014">
+          <title>Zeleninové NUDLE s
+cuketou, karotkou a bazalkou </title>
+          <description/>
+          <price>84 Kč</price>
+        </meal>
+      </menu>
+    </restaurant>
+  </config>
+</jidelak>

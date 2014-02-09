@@ -86,8 +86,8 @@
     <string name="invalid_dish">%1$s: dish %5$s is not known (%3$s)</string>
     <string name="update_on_particular_time_title">Update on particular time</string>
     <string name="update_on_particular_time_description">If enabled, updates will be performed on selected time. Otherwise data will be updated on selected interval.</string>
-    <string name="update_automatically_description">Automatic updates on backgroud</string>
-    <string name="update_automatically_title">If active, data will be updated automatically on the background based on your update plan.</string>
+    <string name="update_automatically_title">Automatic updates on backgroud</string>
+    <string name="update_automatically_description">If active, data will be updated automatically on the background based on your update plan.</string>
 
     <string-array name="weeks">
         <item>weeks</item>

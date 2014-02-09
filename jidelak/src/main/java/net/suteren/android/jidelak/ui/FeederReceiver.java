@@ -92,13 +92,13 @@ public class FeederReceiver extends BroadcastReceiver {
 		planDefault.set(Calendar.MILLISECOND, 0);
 
 		Long plan = prefs.getLong(UPDATE_TIME_KEY, 0);
-		plan = startOfDay(last, planDefault.getTimeInMillis());
+		plan = nextUpdateTime(last, planDefault.getTimeInMillis());
 
 		return (time > plan);
 
 	}
 
-	protected Long startOfDay(Long last, Long plan) {
+	protected Long nextUpdateTime(Long last, Long plan) {
 
 		Calendar lastCal = Calendar.getInstance(Locale.getDefault());
 		lastCal.setTimeInMillis(last);

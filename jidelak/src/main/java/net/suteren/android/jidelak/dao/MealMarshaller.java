@@ -32,8 +32,8 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 		String dishString = data.get(prefix + "meal@dish");
 		try {
 			if (dishString != null && !"".equals(dishString.trim()))
-				meal.setDish(Dish.valueOf(dishString
-						.toUpperCase(Locale.ENGLISH)));
+				meal.setDish(Dish.valueOf(dishString.trim().toUpperCase(
+						Locale.ENGLISH)));
 
 			log.debug("Dish set to: " + meal.getDish().name());
 		} catch (IllegalArgumentException e) {

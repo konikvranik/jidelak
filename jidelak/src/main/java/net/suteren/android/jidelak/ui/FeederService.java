@@ -167,17 +167,17 @@ public class FeederService extends Service {
 		AvailabilityDao adao = new AvailabilityDao(getDbHelper());
 
 		RestaurantMarshaller rm = new RestaurantMarshaller();
-
+		Restaurant restaurant = new Restaurant();
 		for (Source source : sdao.findAll()) {
 			try {
 
 				try {
-					InputStream template = openFileInput(source.getRestaurant()
+					restaurant = source.getRestaurant();
+
+					InputStream template = openFileInput(restaurant
 							.getTemplateName());
 
 					Node result = retrieve(source, template);
-
-					Restaurant restaurant = source.getRestaurant();
 
 					rm.unmarshall("#document.jidelak.config", result,
 							restaurant);
@@ -211,28 +211,24 @@ public class FeederService extends Service {
 				} catch (IOException e) {
 					throw new JidelakException(R.string.feeder_io_exception, e)
 							.setSource(source)
-							.setRestaurant(
-									rdao.findById(source.getRestaurant()))
+							.setRestaurant(rdao.findById(restaurant))
 							.setHandled(true).setErrorType(ErrorType.NETWORK);
 				} catch (TransformerException e) {
 					throw new JidelakTransformerException(
 							R.string.transformer_exception, rdao.findById(
-									source.getRestaurant()).getTemplateName(),
-							source.getUrl().toString(), e)
-							.setSource(source)
-							.setRestaurant(
-									rdao.findById(source.getRestaurant()))
+									restaurant).getTemplateName(), source
+									.getUrl().toString(), e).setSource(source)
+							.setRestaurant(rdao.findById(restaurant))
 							.setHandled(true).setErrorType(ErrorType.PARSING);
 				} catch (ParserConfigurationException e) {
 					throw new JidelakException(
 							R.string.parser_configuration_exception, e)
 							.setSource(source)
-							.setRestaurant(
-									rdao.findById(source.getRestaurant()))
+							.setRestaurant(rdao.findById(restaurant))
 							.setHandled(true).setErrorType(ErrorType.PARSING);
 				} catch (JidelakException e) {
 					throw e.setSource(source).setRestaurant(
-							rdao.findById(source.getRestaurant()));
+							rdao.findById(restaurant));
 				}
 
 			} catch (JidelakException e) {

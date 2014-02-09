@@ -6,7 +6,7 @@ apply plugin: 'android'
 //apply plugin: 'eclipse'
 
 version = '1.4'
-android.defaultConfig.versionCode = 72
+android.defaultConfig.versionCode = 73
 
 group = "net.suteren.android.jidelak"
 

@@ -73,7 +73,7 @@
     <string name="to">Do</string>
     <string name="avail_from">od</string>
     <string name="avail_to">do</string>
-    <string name="closed">Zavřeno</string>
+    <string name="closed">zavřeno</string>
     <string name="opening_hours">Otvírací doba</string>
     <string name="contact">Kontakt</string>
     <string name="activity_not_found">Neexistuje aplikace, která by zpracovávala URL "%s"</string>

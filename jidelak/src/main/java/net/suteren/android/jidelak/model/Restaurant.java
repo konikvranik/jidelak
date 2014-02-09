@@ -59,8 +59,14 @@ public class Restaurant implements Identificable<Restaurant> {
 		Set<Availability> av = new TreeSet<Availability>();
 
 		for (Availability availability : openingHours) {
-			if (testDay(day, availability))
+			if (testDay(day, availability)) {
+				if (availability.isClosed()) {
+					av = new TreeSet<Availability>();
+					av.add(availability);
+					return av;
+				}
 				av.add(availability);
+			}
 		}
 		return av;
 	}
@@ -155,6 +161,9 @@ public class Restaurant implements Identificable<Restaurant> {
 	public static String openingHoursToString(Context ctx,
 			Collection<Availability> openingHours) {
 
+		if (openingHours == null || openingHours.isEmpty())
+			return ctx.getResources().getString(R.string.closed);
+
 		TreeSet<Availability> tm = new TreeSet<Availability>(
 				new Comparator<Availability>() {
 
@@ -185,26 +194,34 @@ public class Restaurant implements Identificable<Restaurant> {
 		StringBuffer sb = new StringBuffer();
 		for (Availability availability : tm) {
 
-			if (availability.getDescription() != null) {
-				sb.append(availability.getDescription());
-				sb.append(" ");
-			}
+			if (availability.isClosed()) {
+				sb.append(ctx.getResources().getString(R.string.closed));
+			} else {
 
-			if (availability.getFrom() != null && availability.getTo() == null) {
-				sb.append(ctx.getResources().getString(R.string.avail_from));
-				sb.append(" ");
-			}
-			if (availability.getTo() != null && availability.getFrom() == null) {
-				sb.append(ctx.getResources().getString(R.string.avail_to));
-				sb.append(" ");
-			}
+				if (availability.getDescription() != null) {
+					sb.append(availability.getDescription());
+					sb.append(" ");
+				}
 
-			if (availability.getFrom() != null)
-				sb.append(availability.getFrom());
-			if (availability.getFrom() != null && availability.getTo() != null)
-				sb.append(" – ");
-			if (availability.getTo() != null)
-				sb.append(availability.getTo());
+				if (availability.getFrom() != null
+						&& availability.getTo() == null) {
+					sb.append(ctx.getResources().getString(R.string.avail_from));
+					sb.append(" ");
+				}
+				if (availability.getTo() != null
+						&& availability.getFrom() == null) {
+					sb.append(ctx.getResources().getString(R.string.avail_to));
+					sb.append(" ");
+				}
+
+				if (availability.getFrom() != null)
+					sb.append(availability.getFrom());
+				if (availability.getFrom() != null
+						&& availability.getTo() != null)
+					sb.append(" – ");
+				if (availability.getTo() != null)
+					sb.append(availability.getTo());
+			}
 			if (availability.getFrom() != null || availability.getTo() != null)
 				sb.append(", ");
 		}
@@ -213,6 +230,10 @@ public class Restaurant implements Identificable<Restaurant> {
 			sb.delete(sb.length() - 2, sb.length());
 
 		return sb.toString();
+	}
+
+	public String openingHoursToString(Context ctx, Calendar day) {
+		return openingHoursToString(ctx, getOpeningHours(day));
 	}
 
 	public Set<Source> getSource() {
@@ -239,10 +260,6 @@ public class Restaurant implements Identificable<Restaurant> {
 
 	public String getTemplateName() {
 		return "restaurant-" + getId() + ".template.xsl";
-	}
-
-	public String openingHoursToString(Context ctx, Calendar day) {
-		return openingHoursToString(ctx, getOpeningHours(day));
 	}
 
 	@Override

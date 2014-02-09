@@ -73,7 +73,7 @@
     <string name="to">To</string>
     <string name="avail_from">from</string>
     <string name="avail_to">to</string>
-    <string name="closed">Closed</string>
+    <string name="closed">closed</string>
     <string name="opening_hours">Opening hours</string>
     <string name="contact">Contact</string>
     <string name="activity_not_found">Activity not found for URL "%s"</string>

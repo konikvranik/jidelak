@@ -144,6 +144,10 @@ public class Availability implements Identificable<Availability> {
 		this.closed = closed;
 	}
 
+	public boolean isClosed() {
+		return closed != null && closed;
+	}
+
 	public Boolean getClosed() {
 		return closed;
 	}

@@ -49,6 +49,7 @@ public class AvailabilityMarshaller extends BaseMarshaller<Availability> {
 
 		avail.setFrom(data.get(prefix + "term@from"));
 		avail.setTo(data.get(prefix + "term@to"));
+		avail.setDescription(data.get(prefix + "term@description"));
 
 		avail.setClosed(Boolean.parseBoolean(data.get(prefix + "term@closed")));
 	}

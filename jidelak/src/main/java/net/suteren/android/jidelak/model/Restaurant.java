@@ -191,12 +191,12 @@ public class Restaurant implements Identificable<Restaurant> {
 			}
 
 			if (availability.getFrom() != null && availability.getTo() == null) {
-				sb.append(ctx.getResources().getString(R.string.from));
-				sb.append(": ");
+				sb.append(ctx.getResources().getString(R.string.avail_from));
+				sb.append(" ");
 			}
 			if (availability.getTo() != null && availability.getFrom() == null) {
-				sb.append(ctx.getResources().getString(R.string.to));
-				sb.append(": ");
+				sb.append(ctx.getResources().getString(R.string.avail_to));
+				sb.append(" ");
 			}
 
 			if (availability.getFrom() != null)

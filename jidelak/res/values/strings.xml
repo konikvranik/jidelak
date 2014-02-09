@@ -71,6 +71,8 @@
     <string name="other">Other</string>
     <string name="from">From</string>
     <string name="to">To</string>
+    <string name="avail_from">from</string>
+    <string name="avail_to">to</string>
     <string name="closed">Closed</string>
     <string name="opening_hours">Opening hours</string>
     <string name="contact">Contact</string>

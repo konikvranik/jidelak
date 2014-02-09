@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.4">
+		<restaurant version="1.5">
 			<id>praha-nova-hospoda</id>
 			<name>Nová Hospoda</name>
 			<phone>(+420) 777826112, 608511616</phone>

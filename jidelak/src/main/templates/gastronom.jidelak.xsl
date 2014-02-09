@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.0">
+		<restaurant version="1.1">
 			<id>praha-gastronom</id>
 			<name>Gastronom restaurant &amp; bar</name>
 			<phone>(+420) 602 141 629, 251 550 534</phone>

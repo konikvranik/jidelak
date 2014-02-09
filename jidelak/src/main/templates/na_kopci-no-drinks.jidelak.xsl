@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.0">
+		<restaurant version="1.1">
 			<id>praha-na_kopci</id>
 			<name>RESTAURACE &amp; TERASA NA KOPCI</name>
 			<phone>+420 251 553 102 </phone>

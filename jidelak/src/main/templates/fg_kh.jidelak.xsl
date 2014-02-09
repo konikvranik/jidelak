@@ -18,7 +18,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.1">
+		<restaurant version="1.2">
 			<id>praha-food-garden-kavci-hory</id>
 			<name>FOOD GARDEN KAVČÍ HORY</name>
 			<phone>+420 739 505 818</phone>

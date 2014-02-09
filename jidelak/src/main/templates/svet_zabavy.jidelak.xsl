@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.2">
+		<restaurant version="1.3">
 			<id>praha-svet-zabavy-nove-butovice</id>
 			<name>Svět Zábavy</name>
 			<phone>(+420) 606746380</phone>

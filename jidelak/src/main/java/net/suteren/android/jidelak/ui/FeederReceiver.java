@@ -3,12 +3,20 @@
  */
 package net.suteren.android.jidelak.ui;
 
+import static net.suteren.android.jidelak.Constants.AUTOMATIC_UPDATES_KEY;
 import static net.suteren.android.jidelak.Constants.DEFAULT_PREFERENCES;
 import static net.suteren.android.jidelak.Constants.DEFAULT_UPDATE_INTERVAL;
 import static net.suteren.android.jidelak.Constants.DEFAULT_WIFI_ONLY;
 import static net.suteren.android.jidelak.Constants.LAST_UPDATED_KEY;
+import static net.suteren.android.jidelak.Constants.PARTICULAR_TIME_KEY;
 import static net.suteren.android.jidelak.Constants.UPDATE_INTERVAL_KEY;
+import static net.suteren.android.jidelak.Constants.UPDATE_TIME_KEY;
+import static net.suteren.android.jidelak.Constants.WEEK_IN_MILLIS;
 import static net.suteren.android.jidelak.Constants.WIFI_ONLY_KEY;
+
+import java.util.Calendar;
+import java.util.Locale;
+
 import net.suteren.android.jidelak.NetworkUtils;
 
 import org.slf4j.Logger;
@@ -54,7 +62,6 @@ public class FeederReceiver extends BroadcastReceiver {
 
 		SharedPreferences prefs = context.getSharedPreferences(
 				DEFAULT_PREFERENCES, Context.MODE_PRIVATE);
-		long schedule = prefs.getLong(LAST_UPDATED_KEY, -1);
 		long time = System.currentTimeMillis();
 
 		if (prefs.getBoolean(WIFI_ONLY_KEY, DEFAULT_WIFI_ONLY)
@@ -62,6 +69,54 @@ public class FeederReceiver extends BroadcastReceiver {
 			return false;
 
 		log.debug("deciding if start: wifi ok");
+
+		if (!prefs.getBoolean(AUTOMATIC_UPDATES_KEY, false))
+			return false;
+
+		if (prefs.getBoolean(PARTICULAR_TIME_KEY, true))
+			return decideOnTime(prefs, time);
+		else
+			return decideOnInterval(prefs, time);
+	}
+
+	private boolean decideOnTime(SharedPreferences prefs, long time) {
+		Calendar now = Calendar.getInstance();
+		now.setTimeInMillis(time);
+
+		Long last = prefs.getLong(LAST_UPDATED_KEY, time - WEEK_IN_MILLIS);
+
+		Calendar planDefault = Calendar.getInstance(Locale.getDefault());
+		planDefault.set(Calendar.HOUR, 10);
+		planDefault.set(Calendar.MINUTE, 30);
+		planDefault.set(Calendar.SECOND, 0);
+		planDefault.set(Calendar.MILLISECOND, 0);
+
+		Long plan = prefs.getLong(UPDATE_TIME_KEY, 0);
+		plan = startOfDay(last, planDefault.getTimeInMillis());
+
+		return (time > plan);
+
+	}
+
+	protected Long startOfDay(Long last, Long plan) {
+
+		Calendar lastCal = Calendar.getInstance(Locale.getDefault());
+		lastCal.setTimeInMillis(last);
+
+		Calendar planCal = Calendar.getInstance(Locale.getDefault());
+		planCal.setTimeInMillis(last);
+
+		lastCal.add(Calendar.DAY_OF_MONTH, 1);
+
+		lastCal.set(Calendar.HOUR, planCal.get(Calendar.HOUR));
+		lastCal.set(Calendar.MINUTE, planCal.get(Calendar.MINUTE));
+		lastCal.set(Calendar.SECOND, planCal.get(Calendar.SECOND));
+		lastCal.set(Calendar.MILLISECOND, planCal.get(Calendar.MILLISECOND));
+		return lastCal.getTimeInMillis();
+	}
+
+	protected boolean decideOnInterval(SharedPreferences prefs, long time) {
+		long schedule = prefs.getLong(LAST_UPDATED_KEY, -1);
 
 		try {
 			if (schedule != -1)

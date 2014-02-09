@@ -10,6 +10,9 @@ public class Constants {
 
 	public static final String CATEGORY_BACKGROUND_KEY = "category_background";
 	public static final String UPDATE_INTERVAL_KEY = "update_interval";
+	public static final String UPDATE_TIME_KEY = "update_time";
+	public static final String PARTICULAR_TIME_KEY = "particular_time";
+	public static final String AUTOMATIC_UPDATES_KEY = "automatic_updates";
 
 	public static final long SECOND_IN_MILLIS = 1000;
 	public static final long MINUTE_IN_MILLIS = SECOND_IN_MILLIS * 60;
@@ -17,7 +20,7 @@ public class Constants {
 	public static final long DAY_IN_MILLIS = HOUR_IN_MILLIS * 24;
 	public static final long WEEK_IN_MILLIS = DAY_IN_MILLIS * 7;
 
-	public static final long DEFAULT_UPDATE_INTERVAL = HOUR_IN_MILLIS;
+	public static final long DEFAULT_UPDATE_INTERVAL = 4 * HOUR_IN_MILLIS;
 
 	public static final long DEFAULT_DELETE_DELAY = WEEK_IN_MILLIS;
 

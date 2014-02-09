@@ -3,14 +3,25 @@
  */
 package net.suteren.android.jidelak.ui;
 
-import static net.suteren.android.jidelak.Constants.DEFAULT_PREFERENCES;
+import static net.suteren.android.jidelak.Constants.*;
+import static net.suteren.android.jidelak.Constants.PARTICULAR_TIME_KEY;
+import static net.suteren.android.jidelak.Constants.UPDATE_INTERVAL_KEY;
+import static net.suteren.android.jidelak.Constants.UPDATE_TIME_KEY;
+
+import java.util.Map;
+
 import net.suteren.android.jidelak.R;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
@@ -19,7 +30,11 @@ import android.view.MenuItem;
  * 
  */
 public class PreferencesActivity extends PreferenceActivity implements
-		OnPreferenceClickListener {
+		OnPreferenceChangeListener {
+
+	@SuppressWarnings("unused")
+	private static Logger log = LoggerFactory
+			.getLogger(PreferencesActivity.class);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +45,18 @@ public class PreferencesActivity extends PreferenceActivity implements
 		getPreferenceManager().setSharedPreferencesName(DEFAULT_PREFERENCES);
 		addPreferencesFromResource(R.xml.main_prefs);
 
+		SharedPreferences sp = getPreferenceManager().getSharedPreferences();
+		setHandler(sp.getAll(), new String[] { PARTICULAR_TIME_KEY,
+				AUTOMATIC_UPDATES_KEY });
+
+	}
+
+	protected void setHandler(Map<String, ?> prefs, String... keys) {
+		for (String key : keys) {
+			Preference preference = (Preference) findPreference(key);
+			preference.setOnPreferenceChangeListener(this);
+			onPreferenceChange(preference, prefs.get(key));
+		}
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -40,9 +67,28 @@ public class PreferencesActivity extends PreferenceActivity implements
 	}
 
 	@Override
-	public boolean onPreferenceClick(Preference preference) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean onPreferenceChange(Preference preference, Object newValue) {
+		boolean state = false;
+		boolean enabled = false;
+
+		if (PARTICULAR_TIME_KEY.equals(preference.getKey())) {
+			state = (Boolean) newValue;
+			enabled = getPreferenceManager().getSharedPreferences().getBoolean(
+					AUTOMATIC_UPDATES_KEY, false);
+		}
+		if (AUTOMATIC_UPDATES_KEY.equals(preference.getKey())) {
+			enabled = (Boolean) newValue;
+			state = getPreferenceManager().getSharedPreferences().getBoolean(
+					PARTICULAR_TIME_KEY, true);
+		}
+		if (PARTICULAR_TIME_KEY.equals(preference.getKey())
+				|| AUTOMATIC_UPDATES_KEY.equals(preference.getKey())) {
+			findPreference(PARTICULAR_TIME_KEY).setEnabled(enabled);
+			findPreference(UPDATE_TIME_KEY).setEnabled(state && enabled);
+			findPreference(UPDATE_INTERVAL_KEY).setEnabled(!state && enabled);
+		}
+
+		return true;
 	}
 
 	@Override

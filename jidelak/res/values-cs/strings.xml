@@ -51,6 +51,8 @@
     <string name="wine">Víno</string>
     <string name="refresh_period_description">Čas po kterém budou data obnovena.</string>
     <string name="refresh_period_title">Interval aktualizace</string>
+    <string name="update_time_description">Hodina, kdy budou data obnovena.</string>
+    <string name="update_time_title">Čas aktualizace</string>
     <string name="category_background_title">Obarvit menu podle kategorií</string>
     <string name="category_background_description">Pokud je zapnuto, jídla ve známých kategoriích budou barevně zvýrazněna.</string>
     <string name="send_to">Sdílet</string>
@@ -79,6 +81,10 @@
     <string name="menu">Menu</string>
     <string name="no_restaurants">Žádné restaurace k dispozici</string>
     <string name="invalid_dish">%1$s: chod %5$s není znám (%3$s)</string>
+    <string name="update_on_particular_time_title">Aktualizovat v konkrétní čas</string>
+    <string name="update_on_particular_time_description">Pokud je aktivováno, data budou stahována ve vybraný čas. Jinak budou aktualizace probíhat po uplynutí zvolené doby.</string>
+    <string name="update_automatically_description">Automatické aktualizace na pozadí</string>
+    <string name="update_automatically_title">Pokud je aktivní, data se budou stahovat automaticky na pozadí podle níže zvoleného plánu.</string>
 
     <string-array name="weeks">
         <item>týdnů</item>

@@ -98,6 +98,8 @@ public class IntervalPreference extends DialogPreference {
 	protected void onSetInitialValue(boolean restorePersistedValue,
 			Object defaultValue) {
 		defVal = (Long) defaultValue;
+		if (defVal == null)
+			defVal = (long) -1;
 		super.onSetInitialValue(restorePersistedValue, getPersistedLong(defVal));
 	}
 

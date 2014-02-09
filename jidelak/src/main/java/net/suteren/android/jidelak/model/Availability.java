@@ -220,6 +220,9 @@ public class Availability implements Identificable<Availability> {
 		if ((c = Utils.compare(getTo(), another.getTo())) != 0)
 			return c;
 
+		if ((c = Utils.compare(getDescription(), another.getDescription())) != 0)
+			return c;
+
 		if ((c = Utils.compare(getId(), another.getId())) != 0)
 			return c;
 

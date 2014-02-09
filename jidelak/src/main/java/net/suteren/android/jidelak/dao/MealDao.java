@@ -1,6 +1,7 @@
 package net.suteren.android.jidelak.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -132,11 +133,11 @@ public class MealDao extends BaseDao<Meal> {
 						+ AvailabilityDao.getTable().getName() + " a where m."
 						+ AVAILABILITY + " = a." + AvailabilityDao.ID
 						+ " and (" + "a." + AvailabilityDao.YEAR + " < ? "
-						+ " or " + "a." + AvailabilityDao.YEAR + " = ? "
-						+ " and a." + AvailabilityDao.MONTH + " < ? " + " or "
+						+ " or (" + "a." + AvailabilityDao.YEAR + " = ? "
+						+ " and a." + AvailabilityDao.MONTH + " < ?" + ") or ("
 						+ "a." + AvailabilityDao.YEAR + " = ? " + " and a."
 						+ AvailabilityDao.MONTH + " = ? " + " and a."
-						+ AvailabilityDao.DAY + " = ?" + ") ",
+						+ AvailabilityDao.DAY + " < ?" + ")) ",
 				new String[] { String.valueOf(day.get(Calendar.YEAR)),
 						String.valueOf(day.get(Calendar.YEAR)),
 						String.valueOf(day.get(Calendar.MONTH)),
@@ -263,7 +264,15 @@ public class MealDao extends BaseDao<Meal> {
 		for (Meal m : meals)
 			avails.add(m.getAvailability());
 
+		log.debug("Deleting " + meals.size() + " meals: "
+				+ Arrays.toString(new ArrayList<Meal>(meals).toArray()));
+
 		delete(meals);
+
+		log.debug("Deleting "
+				+ avails.size()
+				+ " avails: "
+				+ Arrays.toString(new ArrayList<Availability>(avails).toArray()));
 		new AvailabilityDao(getDbHelper()).delete(avails);
 
 	}

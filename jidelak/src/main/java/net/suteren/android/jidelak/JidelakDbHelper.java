@@ -21,7 +21,7 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 
 	private static Logger log = LoggerFactory.getLogger(JidelakDbHelper.class);
 
-	public static final int DATABASE_VERSION = 6;
+	public static final int DATABASE_VERSION = 7;
 	public static final String DATABASE_NAME = "Jidelak.db";
 
 	private static final String SQL_CREATE_RESTAURANT = RestaurantDao
@@ -125,6 +125,14 @@ public class JidelakDbHelper extends SQLiteOpenHelper {
 			cleanup(db);
 
 			if (newVersion <= 6)
+				break;
+
+		case 6:
+
+			addColumn(db, AvailabilityDao.getTable(),
+					AvailabilityDao.DESCRIPTION);
+
+			if (newVersion <= 7)
 				break;
 
 		default:

@@ -43,6 +43,7 @@
         android:title="@string/only_wifi_title" />
 
     <net.suteren.android.jidelak.ui.IntervalPreference
+        android:defaultValue="604800000"
         android:dialogLayout="@layout/slider_preference"
         android:key="delete_delay"
         android:summary="@string/delete_delay_description"

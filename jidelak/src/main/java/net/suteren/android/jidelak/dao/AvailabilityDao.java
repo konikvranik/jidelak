@@ -28,6 +28,8 @@ public class AvailabilityDao extends BaseDao<Availability> {
 	public static final Column FROM = new Column("from_time",
 			SQLiteDataTypes.TEXT);
 	public static final Column TO = new Column("to_time", SQLiteDataTypes.TEXT);
+	public static final Column DESCRIPTION = new Column("description",
+			SQLiteDataTypes.TEXT);
 	public static final Column CLOSED = new Column("closed",
 			SQLiteDataTypes.INTEGER);
 
@@ -42,6 +44,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
 		getTable().addColumn(DOW);
 		getTable().addColumn(FROM);
 		getTable().addColumn(TO);
+		getTable().addColumn(DESCRIPTION);
 		getTable().addColumn(CLOSED);
 		getTable().addColumn(RESTAURANT);
 
@@ -68,6 +71,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
 		av.setId(unpackColumnValue(cursor, ID, Long.class));
 		av.setFrom(unpackColumnValue(cursor, FROM, String.class));
 		av.setTo(unpackColumnValue(cursor, TO, String.class));
+		av.setDescription(unpackColumnValue(cursor, DESCRIPTION, String.class));
 		av.setRestaurant(unpackColumnValue(cursor, RESTAURANT, Restaurant.class));
 		return av;
 	}
@@ -107,6 +111,8 @@ public class AvailabilityDao extends BaseDao<Availability> {
 			values.put(MONTH.getName(), obj.getMonth());
 		if (obj.getTo() != null || updateNull)
 			values.put(TO.getName(), obj.getTo());
+		if (obj.getDescription() != null || updateNull)
+			values.put(DESCRIPTION.getName(), obj.getDescription());
 		if (obj.getYear() != null || updateNull)
 			values.put(YEAR.getName(), obj.getYear());
 		if (obj.getRestaurant() != null || updateNull)
@@ -125,7 +131,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
 			db.delete(getTableName(), RESTAURANT + " = ?",
 					new String[] { Long.toString(r.getId()) });
 		} finally {
-			//db.close();
+			// db.close();
 		}
 
 	}

@@ -91,28 +91,26 @@ public class FeederReceiver extends BroadcastReceiver {
 		planDefault.set(Calendar.SECOND, 0);
 		planDefault.set(Calendar.MILLISECOND, 0);
 
-		Long plan = prefs.getLong(UPDATE_TIME_KEY, 0);
-		plan = nextUpdateTime(last, planDefault.getTimeInMillis());
-
-		return (time > plan);
+		return (time > nextUpdateTime(last,
+				prefs.getLong(UPDATE_TIME_KEY, planDefault.getTimeInMillis()),
+				now));
 
 	}
 
-	protected Long nextUpdateTime(Long last, Long plan) {
-
-		Calendar lastCal = Calendar.getInstance(Locale.getDefault());
-		lastCal.setTimeInMillis(last);
+	protected Long nextUpdateTime(Long last, Long plan, Calendar now) {
 
 		Calendar planCal = Calendar.getInstance(Locale.getDefault());
-		planCal.setTimeInMillis(last);
+		planCal.setTimeInMillis(plan);
 
-		lastCal.add(Calendar.DAY_OF_MONTH, 1);
+		now.set(Calendar.HOUR, planCal.get(Calendar.HOUR));
+		now.set(Calendar.MINUTE, planCal.get(Calendar.MINUTE));
+		now.set(Calendar.SECOND, planCal.get(Calendar.SECOND));
+		now.set(Calendar.MILLISECOND, planCal.get(Calendar.MILLISECOND));
 
-		lastCal.set(Calendar.HOUR, planCal.get(Calendar.HOUR));
-		lastCal.set(Calendar.MINUTE, planCal.get(Calendar.MINUTE));
-		lastCal.set(Calendar.SECOND, planCal.get(Calendar.SECOND));
-		lastCal.set(Calendar.MILLISECOND, planCal.get(Calendar.MILLISECOND));
-		return lastCal.getTimeInMillis();
+		if (last > now.getTimeInMillis())
+			now.add(Calendar.DAY_OF_MONTH, 1);
+
+		return now.getTimeInMillis();
 	}
 
 	protected boolean decideOnInterval(SharedPreferences prefs, long time) {

@@ -72,12 +72,14 @@ public class PreferencesActivity extends PreferenceActivity implements
 		boolean enabled = false;
 
 		if (PARTICULAR_TIME_KEY.equals(preference.getKey())) {
-			state = (Boolean) newValue;
+			if (newValue != null)
+				state = (Boolean) newValue;
 			enabled = getPreferenceManager().getSharedPreferences().getBoolean(
 					AUTOMATIC_UPDATES_KEY, false);
 		}
 		if (AUTOMATIC_UPDATES_KEY.equals(preference.getKey())) {
-			enabled = (Boolean) newValue;
+			if (newValue != null)
+				enabled = (Boolean) newValue;
 			state = getPreferenceManager().getSharedPreferences().getBoolean(
 					PARTICULAR_TIME_KEY, true);
 		}

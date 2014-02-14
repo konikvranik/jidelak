@@ -110,6 +110,7 @@ android {
 dependencies {
 	compile 'com.android.support:support-v4:19.0.0'
 	compile 'com.android.support:appcompat-v7:19.0.0'
+    compile 'com.google.android.gms:play-services:4.0.30'
 	compile 'net.sf.jtidy:jtidy:r938'
 	compile 'org.slf4j:slf4j-android:1.6.1-RC1'
 	compile 'org.apache.commons:commons-lang3:3.2.1'

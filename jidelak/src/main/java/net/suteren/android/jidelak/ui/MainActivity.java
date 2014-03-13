@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
+import net.suteren.android.jidelak.MapActivity;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
@@ -361,6 +362,10 @@ public class MainActivity extends AbstractJidelakActivity implements
 
 		case R.id.action_settings:
 			startActivity(new Intent(this, PreferencesActivity.class));
+			return true;
+
+		case R.id.action_find_on_map:
+			startActivity(new Intent(this, MapActivity.class));
 			return true;
 
 		case R.id.action_about:

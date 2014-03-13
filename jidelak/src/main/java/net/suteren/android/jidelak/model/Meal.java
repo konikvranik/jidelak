@@ -133,8 +133,9 @@ public class Meal implements Identificable<Meal> {
 		if (getPosition() == null) {
 			if (another.getPosition() != null)
 				return -1;
-		} else
-			r = getPosition().compareTo(another.getPosition());
+		} else if (another.getPosition() == null)
+			return 1;
+		r = getPosition().compareTo(another.getPosition());
 		if (r != 0)
 			return r;
 

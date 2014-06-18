@@ -364,9 +364,9 @@ public class MainActivity extends AbstractJidelakActivity implements
 			startActivity(new Intent(this, PreferencesActivity.class));
 			return true;
 
-		case R.id.action_find_on_map:
-			startActivity(new Intent(this, MapActivity.class));
-			return true;
+//		case R.id.action_find_on_map:
+//			startActivity(new Intent(this, MapActivity.class));
+//			return true;
 
 		case R.id.action_about:
 			startActivity(new Intent(this, AboutActivity.class));

@@ -10,8 +10,6 @@ public class MapActivity extends AbstractJidelakActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_layout);
 
-		GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(
-				R.id.map)).getMap();
 	}
 
 }

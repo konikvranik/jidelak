@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -48,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.tidy.Configuration;
 import org.w3c.tidy.Tidy;
 
 import android.annotation.SuppressLint;
@@ -282,6 +284,7 @@ public class FeederService extends Service {
 		if (enc == null)
 			enc = con.getContentEncoding();
 		Document d = getTidy(enc).parseDOM(is, null);
+
 		is.close();
 		con.disconnect();
 
@@ -319,6 +322,14 @@ public class FeederService extends Service {
 		t.setQuiet(true);
 		// t.setSmartIndent(true);
 		// t.setQuoteNbsp(true);
+
+		Properties props = new Properties();
+
+		// suppport of several HTML5 tags due to lunchtime.
+		props.put("new-blocklevel-tags", "header,nav,section,article,aside");
+
+		Configuration conf = t.getConfiguration();
+		conf.addProps(props);
 
 		return t;
 	}

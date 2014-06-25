@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.7">
+		<restaurant version="1.8">
 			<id>praha-nova-hospoda</id>
 			<name>Nová Hospoda</name>
 			<phone>(+420) 777826112, 608511616</phone>
@@ -63,7 +63,7 @@
 				<xsl:when test="starts-with(normalize-space(span[@class='name']), 'Polévky')"></xsl:when>
 				<xsl:when test="starts-with(normalize-space(span[@class='name']), 'Hlavní jídla')"></xsl:when>
 				<xsl:when test="starts-with(normalize-space(span[@class='name']), 'Smažená jídla')"></xsl:when>
-				<xsl:when test="starts-with(normalize-space(span[@class='name']), 'Saláty')"></xsl:when>
+				<xsl:when test="starts-with(normalize-space(span[@class='name']), 'Salát')"></xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select=".">
 						<xsl:with-param name="date" select="$date" />
@@ -105,7 +105,7 @@
 		
 	<xsl:template name="category">
 		<xsl:choose>
-			<xsl:when test="./preceding-sibling::li[starts-with(normalize-space(span[@class='name']), 'Saláty')]">3-salad</xsl:when>
+			<xsl:when test="(./preceding-sibling::li|.)[starts-with(normalize-space(span[@class='name']), 'Salát')]">3-salad</xsl:when>
 			<xsl:when test="./preceding-sibling::li[starts-with(normalize-space(span[@class='name']), 'Smažená jídla')]">2-fried</xsl:when>
 			<xsl:otherwise>1-normal</xsl:otherwise>
 		</xsl:choose>

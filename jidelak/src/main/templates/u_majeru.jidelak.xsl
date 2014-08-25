@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.7">
+		<restaurant version="1.10">
 			<id>praha-u-majeru</id>
 			<name>Restaurace U Majerů</name>
 			<phone>(+420) 251 612 775</phone>
@@ -27,8 +27,8 @@
 			<address>U Jinonického rybníčka 3a/602</address>
 			<zip>158 00</zip>
 
-			<source time="relative" firstDayOfWeek="Po" encoding="utf8"
-				timeOffset="-1" base="day" dateFormat="d.M. y" locale="cs_CZ"
+			<source time="absolute" firstDayOfWeek="Po" encoding="utf8"
+				dateFormat="E d.M.y" locale="cs_CZ"
 				url="http://www.lunchtime.cz/podnik/9142-u-majeru/denni-menu" />
 
 			<open>
@@ -95,9 +95,9 @@
 	
 	<xsl:template name="dish">
 		<xsl:choose>
-			<xsl:when test="./preceding-sibling::li[starts-with(normalize-space(span[@class='name']), 'Hlavní jídla')]">dinner</xsl:when>
-			<xsl:when test="./preceding-sibling::li[starts-with(normalize-space(span[@class='name']), 'Polévky')]">soup</xsl:when>
-			<xsl:when test="./preceding-sibling::li[starts-with(normalize-space(span[@class='name']), 'Menu')]">menu</xsl:when>
+			<xsl:when test="../preceding-sibling::header[starts-with(normalize-space(h3), 'Hotová jídla')]">dinner</xsl:when>
+			<xsl:when test="../preceding-sibling::header[starts-with(normalize-space(h3), 'Polévka')]">soup</xsl:when>
+			<xsl:when test="../preceding-sibling::header[starts-with(normalize-space(h3), 'Menu')]">menu</xsl:when>
 			<xsl:otherwise>soup</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

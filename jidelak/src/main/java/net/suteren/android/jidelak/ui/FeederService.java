@@ -328,7 +328,7 @@ public class FeederService extends Service {
 		Properties props = new Properties();
 
 		// suppport of several HTML5 tags due to lunchtime.
-		props.put("new-blocklevel-tags", "header,nav,section,article,aside");
+		props.put("new-blocklevel-tags", "header,nav,section,article,aside,footer");
 
 		Configuration conf = t.getConfiguration();
 		conf.addProps(props);

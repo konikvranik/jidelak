@@ -33,7 +33,6 @@ import net.suteren.android.jidelak.ErrorType;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.JidelakTransformerException;
-import net.suteren.android.jidelak.NotificationUtils;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
@@ -58,7 +57,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
 import android.os.AsyncTask;
@@ -170,6 +168,7 @@ public class FeederService extends Service {
 
 		RestaurantMarshaller rm = new RestaurantMarshaller();
 		Restaurant restaurant = new Restaurant();
+		boolean notFullyUpdated = false;
 		for (Source source : sdao.findAll()) {
 			try {
 
@@ -238,14 +237,17 @@ public class FeederService extends Service {
 				mHandler.post(new ToastRunnable(getResources().getString(
 						R.string.import_failed)
 						+ e.getMessage()));
-				NotificationUtils.makeNotification(getApplicationContext(), e);
+				notFullyUpdated = true;
+				// NotificationUtils.makeNotification(getApplicationContext(),
+				// e);
 			}
 		}
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences(
 				DEFAULT_PREFERENCES, Context.MODE_PRIVATE);
-		Editor editor = prefs.edit();
-		editor.putLong(LAST_UPDATED_KEY, System.currentTimeMillis());
-		editor.commit();
+		if (notFullyUpdated) {
+			prefs.edit().putLong(LAST_UPDATED_KEY, System.currentTimeMillis())
+					.commit();
+		}
 
 		long delay = prefs.getLong(DELETE_DELAY_KEY, DEFAULT_DELETE_DELAY);
 		if (delay >= 0) {
@@ -379,7 +381,8 @@ public class FeederService extends Service {
 						R.string.import_failed)
 						+ e.getMessage()));
 
-				NotificationUtils.makeNotification(getApplicationContext(), e);
+				// NotificationUtils.makeNotification(getApplicationContext(),
+				// e);
 
 			} finally {
 				updating = false;

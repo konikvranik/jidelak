@@ -5,8 +5,10 @@
 /lint.xml
 hs_err_pid*.log
 .gradle
+/.gradle
 /.classpath
 /project.properties
 /.settings/
 /eclipseLibs/
 /libs/
+/bucek.html

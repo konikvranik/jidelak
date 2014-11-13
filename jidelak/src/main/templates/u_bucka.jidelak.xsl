@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.6">
+		<restaurant version="1.7">
 			<id>praha-u-bucka</id>
 			<name>Restaurace U Bůčka</name>
 			<phone>(+420) 737 780 745</phone>
@@ -30,7 +30,7 @@
 
 			<source time="absolute" firstDayOfWeek="Po" encoding="utf8"
 				locale="cs_CZ"
-				url="http://www.restauraceubucka.cz/restauraceubucka/3-Denni-nabidka" />
+				url="http://www.lunchtime.cz/podnik/1988-restaurace-u-bucka/denni-menu?format=iframe" />
 
 			<open>
 				<term day-of-week="Po" from="10:30" to="23:00" />

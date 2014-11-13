@@ -47,6 +47,7 @@
 			<xsl:apply-templates select="//article[@class='facility-daily-menu']" />
 		</restaurant>
 	</xsl:template>
+	
 	<xsl:template match="article[@class='facility-daily-menu']">
 		<menu>
 			<xsl:apply-templates select=".//section[@class='daily-menu-for-day']" />

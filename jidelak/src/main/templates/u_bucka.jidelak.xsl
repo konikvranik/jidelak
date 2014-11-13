@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.7">
+		<restaurant version="1.8">
 			<id>praha-u-bucka</id>
 			<name>Restaurace U Bůčka</name>
 			<phone>(+420) 737 780 745</phone>
@@ -29,7 +29,7 @@
 			<zip>158 00</zip>
 
 			<source time="absolute" firstDayOfWeek="Po" encoding="utf8"
-				locale="cs_CZ"
+				dateFormat="E d.M.y" locale="cs_CZ"
 				url="http://www.lunchtime.cz/podnik/1988-restaurace-u-bucka/denni-menu?format=iframe" />
 
 			<open>

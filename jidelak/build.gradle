@@ -1,5 +1,4 @@
 import java.security.KeyStore.Builder;
-import java.util.logging.Logger;
 import org.gradle.plugins.ide.eclipse.model.SourceFolder
 
 apply plugin: 'android'
@@ -12,19 +11,19 @@ group = "net.suteren.android.jidelak"
 
 sourceCompatibility = 1.6
 
-repositories { mavenCentral() }
+repositories {
+	mavenCentral()
+}
 
 dependencies {
+
 	compile 'com.android.support:support-v4:19.0.0'
-	compile 'com.android.support:appcompat-v7:19.0.0@aar'
-	compile 'com.google.android.gms:play-services:5.0.+@aar'
+	compile 'com.android.support:appcompat-v7:19.0.0'
+    compile 'com.google.android.gms:play-services:3.2.+'
 	compile 'net.sf.jtidy:jtidy:r938'
 	compile 'org.slf4j:slf4j-android:1.6.1-RC1'
 	compile 'org.apache.commons:commons-lang3:3.2.1'
 	// compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.6.1'
-
-	androidTestCompile 'org.slf4j:slf4j-log4j12:1.6.1'
-	androidTestCompile 'log4j:log4j:1.2.17'
 
 }
 
@@ -32,39 +31,41 @@ configurations { provided }
 
 eclipse {
 
-	classpath {
-
-		//you can tweak the classpath of the Eclipse project by adding extra configurations:
-		plusConfigurations += configurations.provided
-
-		//if you don't want some classpath entries 'exported' in Eclipse
-		noExportConfigurations += configurations.provided
-
-		containers (
-				"com.android.ide.eclipse.adt.ANDROID_FRAMEWORK",
-				"com.android.ide.eclipse.adt.DEPENDENCIES",
-				"com.android.ide.eclipse.adt.LIBRARIES"
-				)
-
-
-		//customizing the classes output directory:
-		//defaultOutputDir = file('bin')
-
-		//default settings for downloading sources and Javadoc:
-		downloadSources = true
-		downloadJavadoc = false
+	classpath.plusConfigurations += configurations.compile
+	classpath.noExportConfigurations += configurations.compile
+	eclipse.classpath.file {
+	    beforeMerged {
+	    	classpath -> classpath.entries.removeAll() {
+	    		c -> c.kind == 'src'
+	    	}
+		}
+	
+		withXml {
+		    def node = it.asNode()
+		
+		    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"')
+		    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES" exported="true"')
+		    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES" exported="true"')
+		
+		    node.children().removeAll() { c ->
+		        def path = c.attribute('path')
+		        path != null && (
+		                path.contains('/com.android.support/support-v4')
+		                )
+		    }
+		}
 	}
-
+	
 	project {
 		natures 'com.android.ide.eclipse.adt.AndroidNature',
 				'org.springsource.ide.eclipse.gradle.core.nature',
 				'org.eclipse.jdt.core.javanature',
 				'org.eclipse.jdt.groovy.core.groovyNature'
-
-		buildCommand 'com.android.ide.eclipse.adt.ResourceManagerBuilder'
-		buildCommand 'com.android.ide.eclipse.adt.PreCompilerBuilder'
-		buildCommand 'org.eclipse.jdt.core.javabuilder'
-		buildCommand 'com.android.ide.eclipse.adt.ApkBuilder'
+				
+		 buildCommand 'com.android.ide.eclipse.adt.ResourceManagerBuilder'
+		 buildCommand 'com.android.ide.eclipse.adt.PreCompilerBuilder'
+		 buildCommand 'org.eclipse.jdt.core.javabuilder'
+		 buildCommand 'com.android.ide.eclipse.adt.ApkBuilder'
 
 		name 'jidelak'
 	}
@@ -73,15 +74,18 @@ eclipse {
 
 buildscript {
 	repositories { mavenCentral() }
-	dependencies { classpath 'com.android.tools.build:gradle:0.11+' }
+	dependencies { classpath 'com.android.tools.build:gradle:0.11.+' }
 }
 
 
 sourceSets {
 	main {
+		java { srcDir 'src/main/java' }
 		java { srcDir 'gen' }
+		resources { srcDir 'src/main/resources' }
 	}
 }
+
 
 
 android {
@@ -133,5 +137,18 @@ android {
 	buildTypes {
 		release { signingConfig signingConfigs.release }
 	}
+	
+	android {
+		packagingOptions {
+			exclude 'META-INF/LICENSE.txt'
+		}
+		
+		lintOptions {
+        	abortOnError false
+    	}
+	}
+	
 }
+
+
 

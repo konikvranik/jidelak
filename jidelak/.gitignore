@@ -5,3 +5,8 @@
 /lint.xml
 hs_err_pid*.log
 .gradle
+/.classpath
+/project.properties
+/.settings/
+/eclipseLibs/
+/libs/

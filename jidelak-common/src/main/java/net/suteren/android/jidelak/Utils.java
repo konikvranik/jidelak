@@ -106,7 +106,7 @@ public class Utils {
 				.openConnection();
 		con.connect();
 		if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-			throw new JidelakException("http_error_response", new String[] {
+			throw new JidelakException("http_error_response (%5$s): %6$s", new String[] {
 					Integer.valueOf(con.getResponseCode()).toString(),
 					con.getResponseMessage() }).setSource(source)
 					.setRestaurant(source.getRestaurant()).setHandled(true)

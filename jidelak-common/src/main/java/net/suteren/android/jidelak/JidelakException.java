@@ -92,7 +92,6 @@ public class JidelakException extends Exception {
 	}
 
 	public String toString() {
-		getResource();
 		return String.format(getResource(), (Object[]) getArgs());
 	}
 

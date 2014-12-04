@@ -7,33 +7,21 @@ import static net.suteren.android.jidelak.Constants.LAST_UPDATED_KEY;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import net.suteren.android.jidelak.ErrorType;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.JidelakTransformerException;
 import net.suteren.android.jidelak.R;
+import net.suteren.android.jidelak.Utils;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
@@ -46,12 +34,8 @@ import net.suteren.android.jidelak.model.Source;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.tidy.Configuration;
-import org.w3c.tidy.Tidy;
 
-import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -178,7 +162,7 @@ public class FeederService extends Service {
 					InputStream template = openFileInput(restaurant
 							.getTemplateName());
 
-					Node result = retrieve(source, template);
+					Node result = Utils.retrieve(source, template);
 
 					rm.unmarshall("#document.jidelak.config", result,
 							restaurant);
@@ -263,108 +247,6 @@ public class FeederService extends Service {
 		if (dbHelper == null)
 			dbHelper = JidelakDbHelper.getInstance(getApplicationContext());
 		return dbHelper;
-	}
-
-	Node retrieve(Source source, InputStream inXsl) throws IOException,
-			TransformerException, ParserConfigurationException,
-			JidelakException {
-
-		HttpURLConnection con = (HttpURLConnection) source.getUrl()
-				.openConnection();
-		con.connect();
-		if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-			throw new JidelakException(getResources().getString(
-					R.string.http_error_response), new String[] {
-					Integer.valueOf(con.getResponseCode()).toString(),
-					con.getResponseMessage() }).setSource(source)
-					.setRestaurant(source.getRestaurant()).setHandled(true)
-					.setErrorType(ErrorType.NETWORK);
-		}
-
-		InputStream is = con.getInputStream();
-		String enc = source.getEncoding();
-		if (enc == null)
-			enc = con.getContentEncoding();
-		Document d = getTidy(enc).parseDOM(is, null);
-
-		is.close();
-		con.disconnect();
-
-		DOMResult res = transform(d, inXsl);
-
-		if (log.isDebugEnabled()) {
-			StringWriter sw = new StringWriter();
-			Transformer tr = TransformerFactory.newInstance().newTransformer();
-			tr.setOutputProperty(OutputKeys.INDENT, "yes");
-			tr.transform(new DOMSource(res.getNode()), new StreamResult(sw));
-			log.debug(sw.toString());
-		}
-
-		return res.getNode();
-	}
-
-	private Tidy getTidy(String enc) {
-
-		log.debug("Enc: " + enc);
-
-		Tidy t = new Tidy();
-
-		t.setInputEncoding(enc == null ? "UTF-8" : enc);
-		// t.setNumEntities(false);
-		// t.setQuoteMarks(false);
-		// t.setQuoteAmpersand(false);
-		// t.setRawOut(true);
-		// t.setHideEndTags(true);
-		// t.setXmlTags(false);
-		t.setXmlOut(true);
-		// t.setXHTML(true);
-		t.setOutputEncoding("utf8");
-		t.setShowWarnings(false);
-		// t.setTrimEmptyElements(true);
-		t.setQuiet(true);
-		// t.setSmartIndent(true);
-		// t.setQuoteNbsp(true);
-
-		Properties props = new Properties();
-
-		// suppport of several HTML5 tags due to lunchtime.
-		props.put("new-blocklevel-tags",
-				"header,nav,section,article,aside,footer");
-
-		Configuration conf = t.getConfiguration();
-		conf.addProps(props);
-
-		return t;
-	}
-
-	@SuppressLint("WorldReadableFiles")
-	private DOMResult transform(Document d, InputStream inXsl)
-			throws IOException, TransformerConfigurationException,
-			TransformerFactoryConfigurationError, ParserConfigurationException,
-			TransformerException {
-
-		TransformerFactory trf = TransformerFactory.newInstance();
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		dbf.setNamespaceAware(false);
-
-		Transformer tr = trf.newTransformer();
-
-		tr.setOutputProperty(OutputKeys.INDENT, "yes");
-		tr.transform(
-				new DOMSource(d),
-				new StreamResult(openFileOutput("debug.source",
-						MODE_WORLD_READABLE)));
-
-		tr = trf.newTransformer(new StreamSource(inXsl));
-		DOMResult res = new DOMResult(dbf.newDocumentBuilder().newDocument());
-		tr.transform(new DOMSource(d), res);
-
-		tr = trf.newTransformer();
-		tr.setOutputProperty(OutputKeys.INDENT, "yes");
-		tr.transform(new DOMSource(res.getNode()), new StreamResult(
-				openFileOutput("debug.result", MODE_WORLD_READABLE)));
-
-		return res;
 	}
 
 	private class Worker extends AsyncTask<Void, Void, Void> {

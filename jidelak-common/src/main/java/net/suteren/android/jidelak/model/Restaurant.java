@@ -227,4 +227,49 @@ public class Restaurant implements Identificable<Restaurant> {
 		// aOutputStream.writeObject(resource);
 		// aOutputStream.writeObject(args);
 	}
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer("\n== BEGIN Restaurant ==\n");
+		appendKey(sb, "name", getName());
+		if (getId() != null)
+			appendKey(sb, "id", String.valueOf(getId()));
+		appendKey(sb, "code", getCode());
+		appendKey(sb, "position", String.valueOf(getPosition()));
+		appendKey(sb, "version", getVersion());
+		appendKey(sb, "template name", getTemplateName());
+
+		sb.append("\n -- SOURCE:\n");
+		for (Source s : getSource())
+			sb.append(s.toString());
+
+		sb.append("\n -- ADDRESS:\n");
+		sb.append(getAddress().toString());
+
+		sb.append("\n -- OPENING HOURS:\n");
+		for (Availability s : getOpeningHours()) {
+			sb.append(s.toString());
+			sb.append("\n");
+		}
+
+		sb.append("\n -- MENU:\n");
+		for (Meal s : getMenu()) {
+			sb.append(s.toString());
+			sb.append("\n");
+		}
+
+		sb.append("== END Restaurant ==");
+
+		return sb.toString();
+	}
+
+	private void appendKey(StringBuffer sb, String key, String value) {
+		if (value == null)
+			return;
+		sb.append(key);
+		sb.append(": ");
+		sb.append(value);
+		sb.append("\n");
+
+	}
 }

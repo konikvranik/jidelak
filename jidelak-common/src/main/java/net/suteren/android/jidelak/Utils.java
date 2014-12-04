@@ -1,5 +1,6 @@
 package net.suteren.android.jidelak;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -36,7 +37,7 @@ import org.w3c.tidy.Tidy;
 public class Utils {
 
 	private static Logger log = LoggerFactory.getLogger(Utils.class);
-
+	
 	public Utils() {
 	}
 
@@ -118,10 +119,20 @@ public class Utils {
 		String enc = source.getEncoding();
 		if (enc == null)
 			enc = con.getContentEncoding();
-		Document d = getTidy(enc).parseDOM(is, null);
+
+		ByteArrayOutputStream debugos = null;
+		if (log.isDebugEnabled()) {
+			debugos = new ByteArrayOutputStream();
+		}
+		Document d = getTidy(enc).parseDOM(is, debugos);
+		if (log.isDebugEnabled()) {
+			log.debug("== Tidy output =================================================================");
+			log.debug(debugos.toString());
+			log.debug("================================================================================");
+		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("================================================================================");
+			log.debug("== Tidy transformed output =====================================================");
 			StringWriter sw = new StringWriter();
 			Transformer tr = TransformerFactory.newInstance().newTransformer();
 			tr.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -136,7 +147,7 @@ public class Utils {
 		DOMResult res = transform(d, inXsl);
 
 		if (log.isDebugEnabled()) {
-			log.debug("================================================================================");
+			log.debug("== REstaurant transformed output ===============================================");
 			StringWriter sw = new StringWriter();
 			Transformer tr = TransformerFactory.newInstance().newTransformer();
 			tr.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -155,19 +166,21 @@ public class Utils {
 		Tidy t = new Tidy();
 
 		t.setInputEncoding(enc == null ? "UTF-8" : enc);
-		// t.setNumEntities(false);
+		t.setOutputEncoding("UTF-8");
+//		t.setPrintBodyOnly(true); // only print the content
+		t.setXmlOut(true); // to XML
+		t.setSmartIndent(true);
+
+		t.setNumEntities(false);
 		// t.setQuoteMarks(false);
 		// t.setQuoteAmpersand(false);
-		// t.setRawOut(true);
+		t.setRawOut(true);
 		// t.setHideEndTags(true);
 		// t.setXmlTags(false);
-		t.setXmlOut(true);
 		// t.setXHTML(true);
-		t.setOutputEncoding("utf8");
-		t.setShowWarnings(false);
+		t.setShowWarnings(log.isDebugEnabled());
 		// t.setTrimEmptyElements(true);
-		t.setQuiet(true);
-		// t.setSmartIndent(true);
+		t.setQuiet(!log.isDebugEnabled());
 		// t.setQuoteNbsp(true);
 
 		Properties props = new Properties();

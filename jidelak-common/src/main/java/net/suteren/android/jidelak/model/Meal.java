@@ -188,4 +188,41 @@ public class Meal implements Identificable<Meal> {
 		// aOutputStream.writeObject(resource);
 		// aOutputStream.writeObject(args);
 	}
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		if (getPosition() != null) {
+			sb.append(String.valueOf(getPosition()));
+			sb.append(") ");
+		}
+		if (getAvailability() != null) {
+			sb.append(getAvailability().toString());
+			sb.append(": ");
+		}
+		if (getDish() != null) {
+			sb.append(getDish().name());
+			sb.append(" ");
+		}
+		sb.append(getTitle());
+		if (getDescription() != null) {
+			sb.append(" (");
+			sb.append(getDescription());
+			sb.append(") ");
+		}
+		if (getPrice() != null) {
+			sb.append(" /");
+			sb.append(getPrice());
+			sb.append("/");
+		}
+		if (getCategory() != null) {
+			sb.append(" - ");
+			sb.append(getCategory());
+		}
+		if (getId() != null) {
+			sb.append(" - ");
+			sb.append(getId());
+		}
+		return sb.toString();
+	}
 }

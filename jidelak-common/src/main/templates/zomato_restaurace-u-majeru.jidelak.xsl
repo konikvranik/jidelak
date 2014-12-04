@@ -28,7 +28,7 @@
 			<zip>158 00</zip>
 
 			<source time="absolute" firstDayOfWeek="Po" encoding="utf8"
-				dateFormat="E, d M" locale="cs_CZ"
+				dateFormat="E, d MMM" locale="cs_CZ"
 				url="https://www.zomato.com/cs/praha/u-majer%C5%AF-stod%C5%AFlky-praha-5/menu" />
 
 			<open>

@@ -29,7 +29,7 @@
 			<zip>158 00</zip>
 
 			<source time="absolute" firstDayOfWeek="Po" encoding="utf8"
-				dateFormat="E, d M" locale="cs_CZ"
+				dateFormat="E, d MMM" locale="cs_CZ"
 				url="https://www.zomato.com/cs/praha/restaurace-u-b%C5%AF%C4%8Dka-jinonice-praha-5/menu" />
 
 			<open>
@@ -55,8 +55,9 @@
 	</xsl:template>
 
 	<xsl:template match="div" mode="menuitem">
-		<xsl:if
-			test="not(contains(@class,'bold')) or count(div/div/div[contains(text(), 'polévka')]) > 0">
+		<xsl:text>class: </xsl:text>
+		<xsl:value-of select="@class" />
+		<xsl:if test="contains(@class,'bold')">
 			<meal dish="" category="">
 				<xsl:call-template name="dish" />
 				<xsl:call-template name="category" />

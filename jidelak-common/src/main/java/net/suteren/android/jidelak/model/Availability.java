@@ -3,7 +3,7 @@ package net.suteren.android.jidelak.model;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -133,7 +133,8 @@ public class Availability implements Identificable<Availability> {
 		if (getDay() != null)
 			cal.set(Calendar.DAY_OF_MONTH, getDay());
 		if (getDow() != null)
-			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.DAY_OF_WEEK, getDow());
+		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.HOUR, 0);
 		cal.set(Calendar.MILLISECOND, 0);
@@ -235,9 +236,63 @@ public class Availability implements Identificable<Availability> {
 
 	@Override
 	public String toString() {
-		return Arrays.toString(new Object[] { getId(), getYear(), getMonth(),
-				getDay(), getDow(), getClosed(), getFrom(), getTo(),
-				getRestaurant() });
+
+		StringBuffer sb = new StringBuffer();
+
+		Integer year2 = getYear();
+		if (year2 != null && year2 < 1980)
+			year2 = null;
+
+		if (getMonth() == null || getDay() == null) {
+			sb.append("every ");
+		}
+
+		if (getDay() == null) {
+
+			if (getDow() == null)
+				sb.append("day");
+			else
+				sb.append(new SimpleDateFormat("EEEE").format(getCalendar()
+						.getTime()));
+		} else {
+			sb.append(getDay());
+			sb.append(".");
+		}
+
+		if (getMonth() == null && year2 != null) {
+			sb.append(" whole year");
+		}
+
+		if (getMonth() != null) {
+			sb.append(" ");
+			sb.append(new SimpleDateFormat("MMMM").format(getCalendar()
+					.getTime()));
+			if (year2 != null)
+				sb.append(" in year");
+		}
+
+		if (year2 != null) {
+			sb.append(" ");
+			sb.append(year2);
+		}
+
+		if (getClosed() != null && getClosed())
+			sb.append(" is closed");
+		else if (getDescription() != null) {
+			sb.append(" ");
+			sb.append(getDescription());
+		}
+		if (getFrom() != null) {
+			sb.append(" from ");
+			sb.append(getFrom());
+		}
+
+		if (getTo() != null) {
+			sb.append(" to ");
+			sb.append(getTo());
+		}
+
+		return sb.toString();
 	}
 
 	private void readObject(ObjectInputStream aInputStream)

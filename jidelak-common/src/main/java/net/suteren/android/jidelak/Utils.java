@@ -105,13 +105,14 @@ public class Utils {
 				.openConnection();
 		con.connect();
 		if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-			throw new JidelakException("string.http_error_response",
-					new String[] {
-							Integer.valueOf(con.getResponseCode()).toString(),
-							con.getResponseMessage() }).setSource(source)
+			throw new JidelakException("http_error_response", new String[] {
+					Integer.valueOf(con.getResponseCode()).toString(),
+					con.getResponseMessage() }).setSource(source)
 					.setRestaurant(source.getRestaurant()).setHandled(true)
 					.setErrorType(ErrorType.NETWORK);
 		}
+
+		log.debug("Response code: " + con.getResponseCode());
 
 		InputStream is = con.getInputStream();
 		String enc = source.getEncoding();
@@ -119,17 +120,29 @@ public class Utils {
 			enc = con.getContentEncoding();
 		Document d = getTidy(enc).parseDOM(is, null);
 
+		if (log.isDebugEnabled()) {
+			log.debug("================================================================================");
+			StringWriter sw = new StringWriter();
+			Transformer tr = TransformerFactory.newInstance().newTransformer();
+			tr.setOutputProperty(OutputKeys.INDENT, "yes");
+			tr.transform(new DOMSource(d), new StreamResult(sw));
+			log.debug(sw.toString());
+			log.debug("================================================================================");
+		}
+
 		is.close();
 		con.disconnect();
 
 		DOMResult res = transform(d, inXsl);
 
 		if (log.isDebugEnabled()) {
+			log.debug("================================================================================");
 			StringWriter sw = new StringWriter();
 			Transformer tr = TransformerFactory.newInstance().newTransformer();
 			tr.setOutputProperty(OutputKeys.INDENT, "yes");
 			tr.transform(new DOMSource(res.getNode()), new StreamResult(sw));
 			log.debug(sw.toString());
+			log.debug("================================================================================");
 		}
 
 		return res.getNode();

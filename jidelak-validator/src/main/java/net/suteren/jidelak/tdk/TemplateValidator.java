@@ -3,7 +3,6 @@ package net.suteren.jidelak.tdk;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,9 +36,7 @@ public class TemplateValidator {
 	}
 
 	public static void main(String[] args) throws Exception {
-		File template = null;
-		TemplateValidator tv = new TemplateValidator(template);
-		tv.validateImport();
+		new TemplateValidator(new File(args[0])).validateImport();
 	}
 
 	private void validateImport() throws Exception {
@@ -48,14 +45,26 @@ public class TemplateValidator {
 		Transformer tr = trf.newTransformer();
 		tr.setOutputProperty(OutputKeys.INDENT, "yes");
 
-		InputStream template = openFileInput(this.template);
-
-		restaurant = new Restaurant();
-		Utils.parseConfig(template, restaurant);
-		Set<Source> sources = restaurant.getSource();
 		RestaurantMarshaller rm = new RestaurantMarshaller();
+		restaurant = new Restaurant();
+
+		log.info(String.format("Parsing template %s", this.template));
+		FileInputStream template = openFileInput(this.template);
+		Utils.parseConfig(template, restaurant);
+		log.info(String.format("Template %s parsed", this.template));
+
+		log.info("Processing sources...");
+		Set<Source> sources = restaurant.getSource();
 		for (Source source : sources) {
+
+			log.info(String.format("Processing source %s", source.getUrl()));
+
+			template = openFileInput(this.template);
+			
+			log.info(String.format("Retrieving %s", source.getUrl()));
 			Node result = Utils.retrieve(source, template);
+			log.info(String.format("Retrieved %s", source.getUrl()));
+			
 			StringWriter sw = new StringWriter();
 			tr.transform(new DOMSource(result), new StreamResult(sw));
 
@@ -63,8 +72,9 @@ public class TemplateValidator {
 			log.info(sw.toString());
 			log.info("===================================================================================");
 
+			log.info(String.format("Unmarshalling %s", source.getUrl()));
 			rm.unmarshall("#document.jidelak.config", result, restaurant);
-			Set<Availability> avs = new HashSet<Availability>();
+			log.info(String.format("Unmarshalled %s", source.getUrl()));
 
 			log.info(restaurant.toString());
 			for (Meal meal : restaurant.getMenu()) {
@@ -72,11 +82,13 @@ public class TemplateValidator {
 				log.info("-----------------------------------------------------------------------------------");
 			}
 			log.info("===================================================================================");
+			
+			log.info(String.format("Source %s processed", source.getUrl()));
 		}
 
 	}
 
-	private InputStream openFileInput(File templateName)
+	private FileInputStream openFileInput(File templateName)
 			throws FileNotFoundException {
 		return new FileInputStream(templateName);
 	}

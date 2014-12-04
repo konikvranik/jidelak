@@ -7,8 +7,8 @@ import static net.suteren.android.jidelak.Constants.WEEK_IN_MILLIS;
 
 import java.util.Locale;
 
+import net.suteren.android.jidelak.AndroidUtils;
 import net.suteren.android.jidelak.R;
-import net.suteren.android.jidelak.Utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,21 +116,21 @@ public class IntervalPreference extends DialogPreference {
 			valueString = getContext().getResources().getString(R.string.never);
 		else if (value >= WEEK_IN_MILLIS && (value % WEEK_IN_MILLIS) == 0) {
 			valueString = String.format(Locale.getDefault(), "%d %s", value
-					/ WEEK_IN_MILLIS, Utils.getPlural(getContext()
+					/ WEEK_IN_MILLIS, AndroidUtils.getPlural(getContext()
 					.getResources(), R.array.weeks, value / WEEK_IN_MILLIS));
 
 		} else if (value >= DAY_IN_MILLIS && (value % DAY_IN_MILLIS) == 0) {
 			valueString = String.format(Locale.getDefault(), "%d %s", value
-					/ DAY_IN_MILLIS, Utils.getPlural(getContext()
+					/ DAY_IN_MILLIS, AndroidUtils.getPlural(getContext()
 					.getResources(), R.array.days, value / DAY_IN_MILLIS));
 		} else if (value >= HOUR_IN_MILLIS && (value % HOUR_IN_MILLIS) == 0) {
 			valueString = String.format(Locale.getDefault(), "%d %s", value
-					/ HOUR_IN_MILLIS, Utils.getPlural(getContext()
+					/ HOUR_IN_MILLIS, AndroidUtils.getPlural(getContext()
 					.getResources(), R.array.hours, value / HOUR_IN_MILLIS));
 		} else if (value >= MINUTE_IN_MILLIS && (value % MINUTE_IN_MILLIS) == 0) {
 			valueString = String
 					.format(Locale.getDefault(), "%d %s", value
-							/ MINUTE_IN_MILLIS, Utils.getPlural(getContext()
+							/ MINUTE_IN_MILLIS, AndroidUtils.getPlural(getContext()
 							.getResources(), R.array.minutes, value
 							/ MINUTE_IN_MILLIS));
 		}

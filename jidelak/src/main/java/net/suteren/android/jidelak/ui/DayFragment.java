@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
 
+import net.suteren.android.jidelak.AndroidUtils;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.R;
@@ -18,6 +19,7 @@ import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.SourceDao;
+import net.suteren.android.jidelak.model.Address;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Meal;
@@ -34,7 +36,6 @@ import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
-import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -263,8 +264,8 @@ public class DayFragment extends Fragment {
 			nameView.setText(restaurant.getName());
 
 			TextView openingView = (TextView) paramView.findViewById(R.id.open);
-			openingView.setText(restaurant.openingHoursToString(getActivity(),
-					day));
+			openingView.setText(AndroidUtils.openingHoursToString(getActivity(),
+					day, restaurant));
 
 			return paramView;
 		}
@@ -455,9 +456,9 @@ public class DayFragment extends Fragment {
 				try {
 					Address addr = new Address(r.getAddress().getLocale());
 
-					Restaurant.cloneAddress(r.getAddress(), addr);
+					AndroidUtils.cloneAddress(r.getAddress(), addr);
 
-					List<Address> addresses = geocoder.getFromLocationName(
+					List<android.location.Address> addresses = geocoder.getFromLocationName(
 							addr.toString(), 1);
 
 					if (addresses.isEmpty()) {
@@ -476,7 +477,7 @@ public class DayFragment extends Fragment {
 									R.string.unable_to_get_location);
 						}
 					}
-					Address address = addresses.get(0);
+					android.location.Address address = addresses.get(0);
 					uri = "geo:" + address.getLatitude() + ","
 							+ address.getLongitude();
 					startActivity(new Intent(

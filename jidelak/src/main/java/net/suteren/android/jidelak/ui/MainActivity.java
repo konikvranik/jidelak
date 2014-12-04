@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import net.suteren.android.jidelak.AndroidUtils;
 import net.suteren.android.jidelak.JidelakDbHelper;
-import net.suteren.android.jidelak.MapActivity;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
@@ -364,9 +364,9 @@ public class MainActivity extends AbstractJidelakActivity implements
 			startActivity(new Intent(this, PreferencesActivity.class));
 			return true;
 
-//		case R.id.action_find_on_map:
-//			startActivity(new Intent(this, MapActivity.class));
-//			return true;
+			// case R.id.action_find_on_map:
+			// startActivity(new Intent(this, MapActivity.class));
+			// return true;
 
 		case R.id.action_about:
 			startActivity(new Intent(this, AboutActivity.class));
@@ -740,8 +740,8 @@ public class MainActivity extends AbstractJidelakActivity implements
 			nameView.setText(restaurant.getName());
 
 			TextView openingView = (TextView) paramView.findViewById(R.id.open);
-			openingView.setText(restaurant
-					.openingHoursToString(getApplicationContext()));
+			openingView.setText(AndroidUtils.openingHoursToString(
+					getApplicationContext(), restaurant));
 
 			return paramView;
 		}

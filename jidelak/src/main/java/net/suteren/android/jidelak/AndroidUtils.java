@@ -1,10 +1,13 @@
 package net.suteren.android.jidelak;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.TreeSet;
 
+import net.suteren.android.jidelak.model.Address;
 import net.suteren.android.jidelak.model.Availability;
+import net.suteren.android.jidelak.model.Restaurant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +43,10 @@ public class AndroidUtils {
 		usage.setBackgroundColor(ctx.getResources().getColor(
 				android.R.color.transparent));
 		usage.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+	}
+
+	public static String openingHoursToString(Context ctx, Restaurant r) {
+		return openingHoursToString(ctx, r.getOpeningHours());
 	}
 
 	public static String openingHoursToString(Context ctx,
@@ -114,6 +121,30 @@ public class AndroidUtils {
 			sb.delete(sb.length() - 2, sb.length());
 
 		return sb.toString();
+	}
+
+	public static String openingHoursToString(Context ctx, Calendar day,
+			Restaurant r) {
+		return openingHoursToString(ctx, r.getOpeningHours(day));
+	}
+
+	public static void cloneAddress(Address source, Address addr) {
+		for (int i = 0; i < source.getMaxAddressLineIndex(); i++)
+			addr.setAddressLine(i, source.getAddressLine(i));
+		addr.setAdminArea(source.getAdminArea());
+		addr.setCountryCode(source.getCountryCode());
+		addr.setCountryName(source.getCountryName());
+		addr.setExtras(source.getExtras());
+		addr.setFeatureName(source.getFeatureName());
+		addr.setLocality(source.getLocality());
+		addr.setPhone(source.getPhone());
+		addr.setPostalCode(source.getPostalCode());
+		addr.setPremises(source.getPremises());
+		addr.setAdminArea(source.getAdminArea());
+		addr.setSubLocality(source.getSubLocality());
+		addr.setSubThoroughfare(source.getSubThoroughfare());
+		addr.setThoroughfare(source.getThoroughfare());
+		addr.setUrl(source.getUrl());
 	}
 
 }

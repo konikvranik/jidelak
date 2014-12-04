@@ -24,15 +24,16 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
+import net.suteren.android.jidelak.AndroidUtils;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.R;
-import net.suteren.android.jidelak.Utils;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.dao.SourceDao;
+import net.suteren.android.jidelak.model.Address;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 
@@ -45,7 +46,6 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Address;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -90,7 +90,7 @@ public class RestaurantActivity extends AbstractJidelakActivity {
 					makeLink(
 							"mailto:",
 							address.getExtras() == null ? null : address
-									.getExtras().getString(
+									.getExtras().get(
 											RestaurantDao.E_MAIL.getName())));
 			buildParagraph(sb, "web", makeLink(null, address.getUrl()));
 			sb.append("</address>");
@@ -293,7 +293,8 @@ public class RestaurantActivity extends AbstractJidelakActivity {
 		WebView restaurantView = (WebView) getWindow().findViewById(
 				R.id.restaurant);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			Utils.transparencyHack(getApplicationContext(), restaurantView);
+			AndroidUtils.transparencyHack(getApplicationContext(),
+					restaurantView);
 		else
 			restaurantView.setBackgroundColor(getResources().getColor(
 					android.R.color.black));

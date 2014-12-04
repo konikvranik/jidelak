@@ -1,15 +1,16 @@
 package net.suteren.android.jidelak.dao;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TreeSet;
 
 import net.suteren.android.jidelak.JidelakDbHelper;
+import net.suteren.android.jidelak.model.Address;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.location.Address;
-import android.os.Bundle;
 
 public class RestaurantDao extends BaseDao<Restaurant> {
 
@@ -89,9 +90,8 @@ public class RestaurantDao extends BaseDao<Restaurant> {
 			address.setPostalCode(Integer.toString(zip));
 		address.setUrl(unpackColumnValue(cursor, WEB, String.class));
 		address.setPhone(unpackColumnValue(cursor, PHONE, String.class));
-		Bundle b = new Bundle();
-		b.putString(E_MAIL.getName(),
-				unpackColumnValue(cursor, E_MAIL, String.class));
+		Map<String, String> b = new HashMap<String, String>();
+		b.put(E_MAIL.getName(), unpackColumnValue(cursor, E_MAIL, String.class));
 		address.setExtras(b);
 		restaurant.setAddress(address);
 		return restaurant;
@@ -141,10 +141,10 @@ public class RestaurantDao extends BaseDao<Restaurant> {
 			if (addr.getUrl() != null || updateNull)
 				values.put(WEB.getName(), addr.getUrl());
 			if (addr.getExtras() != null)
-				if (addr.getExtras().getString(E_MAIL.getName()) != null
+				if (addr.getExtras().get(E_MAIL.getName()) != null
 						|| updateNull)
 					values.put(E_MAIL.getName(),
-							addr.getExtras().getString(E_MAIL.getName()));
+							addr.getExtras().get(E_MAIL.getName()));
 			if (addr.hasLatitude() || updateNull)
 				values.put(LATITUDE.getName(),
 						addr.hasLatitude() ? addr.getLatitude() : null);

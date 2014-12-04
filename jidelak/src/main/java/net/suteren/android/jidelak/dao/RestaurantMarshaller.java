@@ -1,9 +1,11 @@
 package net.suteren.android.jidelak.dao;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import net.suteren.android.jidelak.JidelakException;
+import net.suteren.android.jidelak.model.Address;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
@@ -12,9 +14,6 @@ import net.suteren.android.jidelak.model.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
-
-import android.location.Address;
-import android.os.Bundle;
 
 public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 
@@ -82,8 +81,8 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 		addr.setUrl(data.get(key));
 
 		key = prefix + "restaurant.e-mail";
-		Bundle e = new Bundle();
-		e.putString(RestaurantDao.E_MAIL.getName(), data.get(key));
+		Map<String, String> e = new HashMap<String, String>();
+		e.put(RestaurantDao.E_MAIL.getName(), data.get(key));
 		addr.setExtras(e);
 
 		log.debug("addr: " + addr.toString());

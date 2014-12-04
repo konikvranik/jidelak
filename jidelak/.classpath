@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="C:/Users/jd39426/.gradle/caches/modules-2/files-2.1/net.sf.jtidy/jtidy/r938/ab08d87a225a715a69107732b67f21e1da930349/jtidy-r938.jar" sourcepath="C:/Users/jd39426/.gradle/caches/modules-2/files-2.1/net.sf.jtidy/jtidy/r938/9860fbae188ae07a1160468af2793000176e85d3/jtidy-r938-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/jd39426/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-android/1.6.1-RC1/fe76e182946faad493a50968f3344e848b467b42/slf4j-android-1.6.1-RC1.jar" sourcepath="C:/Users/jd39426/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-android/1.6.1-RC1/6e2b4b7e142b73009cd88c2abdcb8c2fd5a2d044/slf4j-android-1.6.1-RC1-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/jd39426/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.2.1/66f13681add50ca9e4546ffabafaaac7645db3cf/commons-lang3-3.2.1.jar" sourcepath="C:/Users/jd39426/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.2.1/77e5da73ecc389bda26f9953fd91e9b53b571a6f/commons-lang3-3.2.1-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jidelak-common"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

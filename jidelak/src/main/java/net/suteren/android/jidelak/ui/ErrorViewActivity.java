@@ -9,12 +9,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URLEncoder;
 
+import net.suteren.android.jidelak.AndroidUtils;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.JidelakMalformedURLException;
 import net.suteren.android.jidelak.JidelakParseException;
 import net.suteren.android.jidelak.JidelakTransformerException;
 import net.suteren.android.jidelak.R;
-import net.suteren.android.jidelak.Utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -56,7 +56,7 @@ public class ErrorViewActivity extends AbstractJidelakActivity {
 		setText(getKnownCause(getException()));
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			Utils.transparencyHack(getApplicationContext(), errorView);
+			AndroidUtils.transparencyHack(getApplicationContext(), errorView);
 		else
 			errorView.setBackgroundColor(getResources().getColor(
 					android.R.color.black));

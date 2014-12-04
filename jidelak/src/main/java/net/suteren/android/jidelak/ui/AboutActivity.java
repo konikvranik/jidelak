@@ -9,8 +9,8 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import net.suteren.android.jidelak.AndroidUtils;
 import net.suteren.android.jidelak.R;
-import net.suteren.android.jidelak.Utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +70,7 @@ public class AboutActivity extends AbstractJidelakActivity {
 
 		WebView usage = (WebView) getWindow().findViewById(R.id.usage);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			Utils.transparencyHack(getApplicationContext(), usage);
+			AndroidUtils.transparencyHack(getApplicationContext(), usage);
 		else
 			usage.setBackgroundColor(getResources().getColor(
 					android.R.color.black));

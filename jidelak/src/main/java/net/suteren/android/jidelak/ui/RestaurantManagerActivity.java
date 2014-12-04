@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import net.suteren.android.jidelak.AndroidUtils;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.RestaurantDao;
@@ -68,8 +69,8 @@ public class RestaurantManagerActivity extends AbstractJidelakActivity {
 			nameView.setText(restaurant.getName());
 
 			TextView openingView = (TextView) paramView.findViewById(R.id.open);
-			openingView.setText(restaurant
-					.openingHoursToString(getApplicationContext()));
+			openingView.setText(AndroidUtils.openingHoursToString(
+					getApplicationContext(), restaurant));
 
 			return paramView;
 		}

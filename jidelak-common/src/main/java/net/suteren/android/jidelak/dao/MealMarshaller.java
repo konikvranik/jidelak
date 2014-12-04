@@ -98,6 +98,9 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 						+ getSource().getDateFormatString());
 				if (x != null)
 					cal.setTime(getSource().getDateFormat().parse(x.trim()));
+				if (cal.get(Calendar.YEAR) == 1970)
+					cal.set(Calendar.YEAR,
+							Calendar.getInstance().get(Calendar.YEAR));
 			} catch (ParseException e) {
 				log.warn(e.getMessage() + " at " + e.getErrorOffset(), e);
 				throw new JidelakParseException(

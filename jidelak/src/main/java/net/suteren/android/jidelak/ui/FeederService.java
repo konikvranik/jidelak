@@ -210,20 +210,20 @@ public class FeederService extends Service {
 					rdao.update(restaurant, false);
 
 				} catch (IOException e) {
-					throw new JidelakException(R.string.feeder_io_exception, e)
-							.setSource(source)
+					throw new JidelakException(getResources().getString(
+							R.string.feeder_io_exception), e).setSource(source)
 							.setRestaurant(rdao.findById(restaurant))
 							.setHandled(true).setErrorType(ErrorType.NETWORK);
 				} catch (TransformerException e) {
-					throw new JidelakTransformerException(
-							R.string.transformer_exception, rdao.findById(
-									restaurant).getTemplateName(), source
-									.getUrl().toString(), e).setSource(source)
+					throw new JidelakTransformerException(getResources()
+							.getString(R.string.transformer_exception), rdao
+							.findById(restaurant).getTemplateName(), source
+							.getUrl().toString(), e).setSource(source)
 							.setRestaurant(rdao.findById(restaurant))
 							.setHandled(true).setErrorType(ErrorType.PARSING);
 				} catch (ParserConfigurationException e) {
-					throw new JidelakException(
-							R.string.parser_configuration_exception, e)
+					throw new JidelakException(getResources().getString(
+							R.string.parser_configuration_exception), e)
 							.setSource(source)
 							.setRestaurant(rdao.findById(restaurant))
 							.setHandled(true).setErrorType(ErrorType.PARSING);
@@ -273,10 +273,10 @@ public class FeederService extends Service {
 				.openConnection();
 		con.connect();
 		if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-			throw new JidelakException(R.string.http_error_response,
-					new String[] {
-							Integer.valueOf(con.getResponseCode()).toString(),
-							con.getResponseMessage() }).setSource(source)
+			throw new JidelakException(getResources().getString(
+					R.string.http_error_response), new String[] {
+					Integer.valueOf(con.getResponseCode()).toString(),
+					con.getResponseMessage() }).setSource(source)
 					.setRestaurant(source.getRestaurant()).setHandled(true)
 					.setErrorType(ErrorType.NETWORK);
 		}
@@ -328,7 +328,8 @@ public class FeederService extends Service {
 		Properties props = new Properties();
 
 		// suppport of several HTML5 tags due to lunchtime.
-		props.put("new-blocklevel-tags", "header,nav,section,article,aside,footer");
+		props.put("new-blocklevel-tags",
+				"header,nav,section,article,aside,footer");
 
 		Configuration conf = t.getConfiguration();
 		conf.addProps(props);

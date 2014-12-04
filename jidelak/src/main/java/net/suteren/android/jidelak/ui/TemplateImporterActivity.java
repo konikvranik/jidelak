@@ -162,7 +162,8 @@ public class TemplateImporterActivity extends Activity {
 			if (e instanceof JidelakException)
 				throw (JidelakException) e;
 			else
-				throw new JidelakException(R.string.unexpected_exception, e);
+				throw new JidelakException(getResources().getString(
+						R.string.unexpected_exception), e);
 		} finally {
 			dbh.notifyDataSetChanged();
 		}
@@ -193,21 +194,23 @@ public class TemplateImporterActivity extends Activity {
 			rm.unmarshall("#document.jidelak.config", res.getNode(), restaurant);
 
 		} catch (ParserConfigurationException e) {
-			throw new JidelakException(R.string.parser_configuration_exception,
-					e).setRestaurant(restaurant)
-					.setErrorType(ErrorType.PARSING).setHandled(true);
+			throw new JidelakException(getResources().getString(
+					R.string.parser_configuration_exception), e)
+					.setRestaurant(restaurant).setErrorType(ErrorType.PARSING)
+					.setHandled(true);
 		} catch (TransformerConfigurationException e) {
-			throw new JidelakException(
-					R.string.transformer_configuration_exception, e)
+			throw new JidelakException(getResources().getString(
+					R.string.transformer_configuration_exception), e)
 					.setRestaurant(restaurant).setErrorType(ErrorType.PARSING)
 					.setHandled(true);
 		} catch (TransformerFactoryConfigurationError e) {
-			throw new JidelakException(
-					R.string.transformer_factory_configuration_exception, e)
+			throw new JidelakException(getResources().getString(
+					R.string.transformer_factory_configuration_exception), e)
 					.setRestaurant(restaurant).setErrorType(ErrorType.PARSING)
 					.setHandled(true);
 		} catch (TransformerException e) {
-			throw new JidelakException(R.string.transformer_exception, e)
+			throw new JidelakException(getResources().getString(
+					R.string.transformer_exception), e)
 					.setRestaurant(restaurant).setErrorType(ErrorType.PARSING)
 					.setHandled(true);
 		} catch (JidelakException e) {
@@ -218,7 +221,8 @@ public class TemplateImporterActivity extends Activity {
 			try {
 				fileStream.close();
 			} catch (IOException e) {
-				throw new JidelakException(R.string.unexpected_exception, e)
+				throw new JidelakException(getResources().getString(
+						R.string.unexpected_exception), e)
 						.setRestaurant(restaurant);
 			}
 		}
@@ -231,7 +235,8 @@ public class TemplateImporterActivity extends Activity {
 
 		log.debug("URI: " + uri);
 
-		InputStream sourceStream = NetworkUtils.streamFromUrl(uri);
+		InputStream sourceStream = NetworkUtils.streamFromUrl(
+				getApplicationContext(), uri);
 
 		log.debug("Available: " + sourceStream.available());
 

@@ -10,11 +10,10 @@ import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
-import android.content.Context;
 
 public class JidelakException extends Exception {
 
-	private int resource;
+	private String resource;
 	private String[] args;
 
 	private Meal meal;
@@ -24,31 +23,31 @@ public class JidelakException extends Exception {
 	private ErrorType errorType;
 	private boolean handled = false;
 
-	public JidelakException(int messageToUser, Throwable e) {
+	public JidelakException(String messageToUser, Throwable e) {
 		super(e);
 		setResource(messageToUser);
 	}
 
-	public JidelakException(int messageToUser) {
+	public JidelakException(String messageToUser) {
 		super();
 		setResource(messageToUser);
 	}
 
-	public JidelakException(int messageToUser, String... strings) {
+	public JidelakException(String messageToUser, String... strings) {
 		this(messageToUser);
 		args = strings;
 	}
 
-	public JidelakException(int malformedUrl, Exception e, String... strings) {
+	public JidelakException(String malformedUrl, Exception e, String... strings) {
 		this(malformedUrl, e);
 		args = strings;
 	}
 
-	public void setResource(int messageToUser) {
+	public void setResource(String messageToUser) {
 		resource = messageToUser;
 	}
 
-	public int getResource() {
+	public String getResource() {
 		return resource;
 	}
 
@@ -92,9 +91,9 @@ public class JidelakException extends Exception {
 		// aOutputStream.writeObject(args);
 	}
 
-	public String toString(Context ctx) {
-		return ctx.getResources()
-				.getString(getResource(), (Object[]) getArgs());
+	public String toString() {
+		getResource();
+		return String.format(getResource(), (Object[]) getArgs());
 	}
 
 	public Meal getMeal() {

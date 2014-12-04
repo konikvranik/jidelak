@@ -2,15 +2,13 @@ package net.suteren.android.jidelak;
 
 import java.text.ParseException;
 
-import android.content.Context;
-
 public class JidelakParseException extends JidelakException {
 
 	private static final long serialVersionUID = -8213065110502170934L;
 	private String date;
 	private String format;
 
-	public JidelakParseException(int messageResource, String format,
+	public JidelakParseException(String messageResource, String format,
 			String date, ParseException e) {
 		super(messageResource, e);
 
@@ -40,8 +38,8 @@ public class JidelakParseException extends JidelakException {
 		return (ParseException) super.getCause();
 	}
 
-	public String toString(Context ctx) {
-		return ctx.getResources().getString(
+	public String toString() {
+		return String.format(
 				getResource(),
 				getFormat() == null ? "" : getFormat(),
 				getDate() == null ? "" : getDate(),

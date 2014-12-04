@@ -7,7 +7,6 @@ import java.util.Map;
 
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.JidelakParseException;
-import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Meal;
@@ -37,7 +36,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 
 			log.debug("Dish set to: " + meal.getDish().name());
 		} catch (IllegalArgumentException e) {
-			throw new JidelakException(R.string.invalid_dish, e)
+			throw new JidelakException("string.invalid_dish", e)
 					.setMeal(meal)
 					.setRestaurant(
 							meal.getSource() == null ? meal.getSource()
@@ -66,7 +65,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 				} catch (ParseException e) {
 					log.warn(e.getMessage(), e);
 					throw new JidelakParseException(
-							R.string.meal_invalid_date_format, getSource()
+							"string.meal_invalid_date_format", getSource()
 									.getDateFormatString(), x, e)
 							.setMeal(meal)
 							.setRestaurant(
@@ -81,7 +80,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 				} catch (NumberFormatException e) {
 					log.warn(e.getMessage(), e);
 					throw new JidelakException(
-							R.string.meal_invalid_integer_format, e, x)
+							"string.meal_invalid_integer_format", e, x)
 							.setMeal(meal)
 							.setRestaurant(
 									meal.getSource() == null ? meal
@@ -102,7 +101,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 			} catch (ParseException e) {
 				log.warn(e.getMessage(), e);
 				throw new JidelakParseException(
-						R.string.meal_invalid_date_format, getSource()
+						"string.meal_invalid_date_format", getSource()
 								.getDateFormatString(), x, e)
 						.setMeal(meal)
 						.setRestaurant(

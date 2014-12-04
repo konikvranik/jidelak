@@ -46,7 +46,7 @@ public class NotificationUtils {
 			intent.putExtras(b);
 		}
 		makeNotification(ctx, clz, getNotificationId(e), icon,
-				R.string.app_name, e.toString(ctx), intent);
+				R.string.app_name, e.toString(), intent);
 	}
 
 	private static int getNotificationId(JidelakException e) {

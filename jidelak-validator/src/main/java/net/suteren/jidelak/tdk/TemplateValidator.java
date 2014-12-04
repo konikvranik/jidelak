@@ -20,7 +20,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import net.suteren.android.jidelak.JidelakException;
-import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.model.Restaurant;
 
@@ -82,7 +81,7 @@ public class TemplateValidator {
 				if (e instanceof JidelakException)
 					throw (JidelakException) e;
 				else
-					throw new JidelakException(R.string.unexpected_exception, e);
+					throw new JidelakException("string.unexpected_exception", e);
 			}
 
 			RestaurantMarshaller rm = new RestaurantMarshaller();
@@ -90,24 +89,24 @@ public class TemplateValidator {
 			rm.unmarshall("#document.jidelak.config", res.getNode(), restaurant);
 
 		} catch (ParserConfigurationException e) {
-			throw new JidelakException(R.string.parser_configuration_exception,
+			throw new JidelakException("string.parser_configuration_exception",
 					e);
 		} catch (TransformerConfigurationException e) {
 			throw new JidelakException(
-					R.string.transformer_configuration_exception, e);
+					"string.transformer_configuration_exception", e);
 		} catch (TransformerFactoryConfigurationError e) {
 			throw new JidelakException(
-					R.string.transformer_factory_configuration_exception, e);
+					"string.transformer_factory_configuration_exception", e);
 		} catch (TransformerException e) {
-			throw new JidelakException(R.string.transformer_exception, e);
+			throw new JidelakException("string.transformer_exception", e);
 		} catch (FileNotFoundException e) {
-			throw new JidelakException(R.string.transformer_exception, e);
+			throw new JidelakException("string.transformer_exception", e);
 		} finally {
 			try {
 				if (fileStream != null)
 					fileStream.close();
 			} catch (IOException e) {
-				throw new JidelakException(R.string.unexpected_exception, e);
+				throw new JidelakException("string.unexpected_exception", e);
 			}
 		}
 		// TODO Auto-generated method stub

@@ -2,13 +2,11 @@ package net.suteren.android.jidelak;
 
 import java.net.MalformedURLException;
 
-import android.content.Context;
-
 public class JidelakMalformedURLException extends JidelakException {
 
 	private String url;
 
-	public JidelakMalformedURLException(int messageToUser, String url,
+	public JidelakMalformedURLException(String messageToUser, String url,
 			MalformedURLException e) {
 		super(messageToUser, e);
 		setUrl(url);
@@ -27,8 +25,8 @@ public class JidelakMalformedURLException extends JidelakException {
 		return (MalformedURLException) super.getCause();
 	}
 
-	public String toString(Context ctx) {
-		return ctx.getResources().getString(getResource(), getUrl());
+	public String toString() {
+		return String.format(getResource(), getUrl());
 	}
 
 	private static final long serialVersionUID = 2640785284710666283L;

@@ -264,8 +264,8 @@ public class DayFragment extends Fragment {
 			nameView.setText(restaurant.getName());
 
 			TextView openingView = (TextView) paramView.findViewById(R.id.open);
-			openingView.setText(AndroidUtils.openingHoursToString(getActivity(),
-					day, restaurant));
+			openingView.setText(AndroidUtils.openingHoursToString(
+					getActivity(), day, restaurant));
 
 			return paramView;
 		}
@@ -458,8 +458,8 @@ public class DayFragment extends Fragment {
 
 					AndroidUtils.cloneAddress(r.getAddress(), addr);
 
-					List<android.location.Address> addresses = geocoder.getFromLocationName(
-							addr.toString(), 1);
+					List<android.location.Address> addresses = geocoder
+							.getFromLocationName(addr.toString(), 1);
 
 					if (addresses.isEmpty()) {
 
@@ -473,8 +473,8 @@ public class DayFragment extends Fragment {
 
 						geocoder.getFromLocationName(addr.toString(), 1);
 						if (addresses.isEmpty()) {
-							throw new JidelakException(
-									R.string.unable_to_get_location);
+							throw new JidelakException(getResources()
+									.getString(R.string.unable_to_get_location));
 						}
 					}
 					android.location.Address address = addresses.get(0);
@@ -484,8 +484,8 @@ public class DayFragment extends Fragment {
 							android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
 
 				} catch (IOException e) {
-					throw new JidelakException(R.string.unable_to_get_location,
-							e);
+					throw new JidelakException(getResources().getString(
+							R.string.unable_to_get_location), e);
 				}
 			} catch (JidelakException e1) {
 				Toast.makeText(getActivity(), R.string.unable_to_get_location,

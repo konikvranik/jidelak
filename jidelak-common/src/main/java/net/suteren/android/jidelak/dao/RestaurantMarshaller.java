@@ -82,7 +82,9 @@ public class RestaurantMarshaller extends BaseMarshaller<Restaurant> {
 
 		key = prefix + "restaurant.e-mail";
 		Map<String, String> e = new HashMap<String, String>();
-		e.put(RestaurantDao.E_MAIL.getName(), data.get(key));
+		
+		//TODO WTF?
+		e.put("email", data.get(key));
 		addr.setExtras(e);
 
 		log.debug("addr: " + addr.toString());

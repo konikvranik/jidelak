@@ -111,21 +111,17 @@ public class ErrorViewActivity extends AbstractJidelakActivity {
 
 	public void setText(Throwable cause) {
 		if (cause instanceof JidelakTransformerException) {
-			setText(((JidelakTransformerException) cause)
-					.toString(getApplicationContext()));
+			setText(((JidelakTransformerException) cause).toString());
 
 		} else if (cause instanceof JidelakParseException) {
-			setText(((JidelakParseException) cause)
-					.toString(getApplicationContext()));
+			setText(((JidelakParseException) cause).toString());
 
 		} else if (cause instanceof JidelakMalformedURLException) {
-			setText(((JidelakMalformedURLException) cause)
-					.toString(getApplicationContext()));
+			setText(((JidelakMalformedURLException) cause).toString());
 
 		} else if (cause instanceof JidelakException) {
 
-			setText(((JidelakException) cause)
-					.toString(getApplicationContext()));
+			setText(((JidelakException) cause).toString());
 
 			renderStacktrace(getException());
 

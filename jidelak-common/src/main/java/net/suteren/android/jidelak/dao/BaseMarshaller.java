@@ -14,7 +14,6 @@ import javax.xml.transform.stream.StreamResult;
 import net.suteren.android.jidelak.ErrorType;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.JidelakTransformerException;
-import net.suteren.android.jidelak.R;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +57,7 @@ public abstract class BaseMarshaller<T> {
 				log.debug("Unmarshalling:\n" + sw);
 			} catch (TransformerException e) {
 				throw new JidelakTransformerException(
-						R.string.transformer_exception, null, null, e)
+						"string.transformer_exception", null, null, e)
 						.setHandled(true).setErrorType(ErrorType.PARSING);
 			}
 		}

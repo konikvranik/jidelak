@@ -22,7 +22,8 @@ public class NetworkUtils {
 	public NetworkUtils() {
 	}
 
-	public static InputStream streamFromUrl(URL url) throws JidelakException {
+	public static InputStream streamFromUrl(Context ctx, URL url)
+			throws JidelakException {
 
 		try {
 			if (url.getProtocol().startsWith("file")) {
@@ -37,31 +38,33 @@ public class NetworkUtils {
 				if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
 					log.warn(String.format("Error %d: %s",
 							con.getResponseCode(), con.getResponseMessage()));
-					throw new JidelakException(R.string.http_error_response,
-							new String[] {
-									Integer.valueOf(con.getResponseCode())
-											.toString(),
-									con.getResponseMessage() }).setErrorType(
+					throw new JidelakException(ctx.getResources().getString(
+							R.string.http_error_response), new String[] {
+							Integer.valueOf(con.getResponseCode()).toString(),
+							con.getResponseMessage() }).setErrorType(
 							ErrorType.NETWORK).setHandled(true);
 				}
 				return con.getInputStream();
 
 			} else {
-				throw new JidelakException(R.string.unsupported_protocol)
-						.setErrorType(ErrorType.NETWORK).setHandled(true);
+				throw new JidelakException(ctx.getResources().getString(
+						R.string.unsupported_protocol)).setErrorType(
+						ErrorType.NETWORK).setHandled(true);
 			}
 		} catch (IOException e) {
-			throw new JidelakException(R.string.unexpected_exception, e);
+			throw new JidelakException(ctx.getResources().getString(
+					R.string.unexpected_exception), e);
 		}
 	}
 
-	public static InputStream streamFromUrl(Uri uri) throws JidelakException {
+	public static InputStream streamFromUrl(Context ctx, Uri uri)
+			throws JidelakException {
 		try {
-			return streamFromUrl(new URL(uri.toString()));
+			return streamFromUrl(ctx, new URL(uri.toString()));
 		} catch (MalformedURLException e) {
-			throw new JidelakException(R.string.malformed_url, e,
-					uri.toString()).setErrorType(ErrorType.NETWORK).setHandled(
-					true);
+			throw new JidelakException(ctx.getResources().getString(
+					R.string.malformed_url), e, uri.toString()).setErrorType(
+					ErrorType.NETWORK).setHandled(true);
 		}
 	}
 

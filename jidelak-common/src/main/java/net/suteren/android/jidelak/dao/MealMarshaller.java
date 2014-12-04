@@ -99,7 +99,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 				if (x != null)
 					cal.setTime(getSource().getDateFormat().parse(x.trim()));
 			} catch (ParseException e) {
-				log.warn(e.getMessage(), e);
+				log.warn(e.getMessage() + " at " + e.getErrorOffset(), e);
 				throw new JidelakParseException(
 						"string.meal_invalid_date_format", getSource()
 								.getDateFormatString(), x, e)

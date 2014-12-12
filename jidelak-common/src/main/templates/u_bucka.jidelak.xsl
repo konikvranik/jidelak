@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="1.9">
+		<restaurant version="2.1">
 			<id>praha-u-bucka</id>
 			<name>Restaurace U Bůčka</name>
 			<phone>(+420) 737 780 745</phone>
@@ -28,9 +28,9 @@
 			<address>Na Vidouli 1</address>
 			<zip>158 00</zip>
 
-			<source time="absolute" firstDayOfWeek="Po" encoding="utf8"
-				dateFormat="d.M.y" locale="cs_CZ"
-				url="http://www.restauraceubucka.cz/restauraceubucka/3-Denni-nabidka" />
+			<source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="d.M.y" 
+				locale="cs_CZ" url="http://www.restauraceubucka.cz/restauraceubucka/3-Denni-nabidka" 
+				/>
 
 			<open>
 				<term day-of-week="Po" from="10:30" to="23:00" />
@@ -70,9 +70,22 @@
 				<xsl:attribute name="order"><xsl:value-of select="position()" /></xsl:attribute>
 				<xsl:attribute name="time"><xsl:value-of select="$date" /></xsl:attribute>
 				<xsl:attribute name="ref-time"><xsl:value-of select="$date" /></xsl:attribute>
-				<title>
-					<xsl:apply-templates select="td[1]/span//text()" />
-				</title>
+				<xsl:choose>
+					<xsl:when test="contains(td[1]/span//text(), '(')">
+						<title>
+							<xsl:value-of select="substring-before(td[1]/span,'(')" />
+						</title>
+						<description>
+							<xsl:value-of
+								select="substring-before(substring-after(td[1]/span,'('),')')" />
+						</description>
+					</xsl:when>
+					<xsl:otherwise>
+						<title>
+							<xsl:value-of select="td[1]/span" />
+						</title>
+					</xsl:otherwise>
+				</xsl:choose>
 				<price>
 					<xsl:apply-templates select="td[2]/span//text()" />
 				</price>
@@ -87,7 +100,23 @@
 				<xsl:text>dinner</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'POLÉVKY ')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'TEPLÉ PŘEDKRMY')]">
+				<xsl:text>starter</xsl:text>
+			</xsl:when>
+			<xsl:when
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'TEPLÝ PŘEDKRM')]">
+				<xsl:text>starter</xsl:text>
+			</xsl:when>
+			<xsl:when
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'STUDENÉ PŘEDKRMY')]">
+				<xsl:text>starter</xsl:text>
+			</xsl:when>
+			<xsl:when
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'STUDENÝ PŘEDKRM')]">
+				<xsl:text>starter</xsl:text>
+			</xsl:when>
+			<xsl:when
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'POLÉVKY')]">
 				<xsl:text>soup</xsl:text>
 			</xsl:when>
 			<xsl:when
@@ -102,6 +131,7 @@
 
 	<xsl:template name="category">
 		<xsl:choose>
+
 			<xsl:when
 				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'SLADKÉ')]">
 				<xsl:text>2-sweet</xsl:text>
@@ -115,12 +145,32 @@
 				<xsl:text>3-salad</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'VEGETARIÁNSKÉ ')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'VEGETARIÁNSKÉ')]">
 				<xsl:text>1-vegetarian</xsl:text>
 			</xsl:when>
 			<xsl:when
 				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'SPECIALITA DNE')]">
 				<xsl:text>1-live</xsl:text>
+			</xsl:when>
+			<xsl:when
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'HLAVNÍ JÍDLA')]">
+				<xsl:text>1-normal</xsl:text>
+			</xsl:when>
+			<xsl:when
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'TEPLÉ PŘEDKRMY')]">
+				<xsl:text>2-warm</xsl:text>
+			</xsl:when>
+			<xsl:when
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'TEPLÝ PŘEDKRM')]">
+				<xsl:text>2-warm</xsl:text>
+			</xsl:when>
+			<xsl:when
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'STUDENÉ PŘEDKRMY')]">
+				<xsl:text>3-cold</xsl:text>
+			</xsl:when>
+			<xsl:when
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'STUDENÝ PŘEDKRM')]">
+				<xsl:text>3-cold</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:text>1-normal</xsl:text>

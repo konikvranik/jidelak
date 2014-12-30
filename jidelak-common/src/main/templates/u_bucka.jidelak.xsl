@@ -28,8 +28,7 @@
 			<address>Na Vidouli 1</address>
 			<zip>158 00</zip>
 
-			<!-- source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="d.M.y" locale="cs_CZ" url="http://www.restauraceubucka.cz/restauraceubucka/3-Denni-nabidka" / -->
-			<source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="d.M.y" locale="cs_CZ" url="file:///c:/users/jd39426/git/jidelak/jidelak-common/src/main/templates/u_bucka.html" />
+			<source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="d.M.y" locale="cs_CZ" url="http://www.restauraceubucka.cz/restauraceubucka/3-Denni-nabidka" />
 
 			<open>
 				<term day-of-week="Po" from="10:30" to="23:00" />

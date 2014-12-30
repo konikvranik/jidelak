@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="2.3">
+		<restaurant version="2.5">
 			<id>praha-u-bucka</id>
 			<name>Restaurace U Bůčka</name>
 			<phone>(+420) 737 780 745</phone>
@@ -42,7 +42,8 @@
 
 			<!-- <xsl:apply-templates select="//div[@id='levy']/div[@class='poledni_menu']" 
 				/> -->
-			<xsl:apply-templates select="//*[@id='incenterpage2']/table/tbody/tr[3]/td[1]/table" />
+			<xsl:apply-templates
+				select="//*[@id='incenterpage2']/table/tbody/tr[3]/td[1]/table" />
 		</restaurant>
 	</xsl:template>
 
@@ -57,8 +58,9 @@
 
 
 	<xsl:template match="tr">
-		<xsl:if test="(td[2]|td[3]|td[4]|td[5])//text()">
-			<xsl:variable name="date" select="//*[@id='incenterpage2']/table/tbody/tr[1]/td[1]/." />
+		<xsl:if test="count(td[1]/following-sibling::td//text()) > 0">
+			<xsl:variable name="date"
+				select="//*[@id='incenterpage2']/table/tbody/tr[1]/td[1]/." />
 
 			<meal>
 				<xsl:attribute name="dish"><xsl:call-template
@@ -85,7 +87,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 				<price>
-					<xsl:apply-templates select="td[4]/." />
+					<xsl:apply-templates select="td[position() = last()]/." />
 				</price>
 			</meal>
 		</xsl:if>

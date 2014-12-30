@@ -17,7 +17,7 @@
 	</xsl:template>
 
 	<xsl:template name="restaurant">
-		<restaurant version="2.2">
+		<restaurant version="2.3">
 			<id>praha-u-bucka</id>
 			<name>Restaurace U Bůčka</name>
 			<phone>(+420) 737 780 745</phone>
@@ -28,9 +28,8 @@
 			<address>Na Vidouli 1</address>
 			<zip>158 00</zip>
 
-			<source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="d.M.y" 
-				locale="cs_CZ" url="http://www.restauraceubucka.cz/restauraceubucka/3-Denni-nabidka" 
-				/>
+			<!-- source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="d.M.y" locale="cs_CZ" url="http://www.restauraceubucka.cz/restauraceubucka/3-Denni-nabidka" / -->
+			<source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="d.M.y" locale="cs_CZ" url="file:///c:/users/jd39426/git/jidelak/jidelak-common/src/main/templates/u_bucka.html" />
 
 			<open>
 				<term day-of-week="Po" from="10:30" to="23:00" />
@@ -44,7 +43,7 @@
 
 			<!-- <xsl:apply-templates select="//div[@id='levy']/div[@class='poledni_menu']" 
 				/> -->
-			<xsl:apply-templates select="//*[@id='incenterpage2']/table" />
+			<xsl:apply-templates select="//*[@id='incenterpage2']/table/tbody/tr[3]/td[1]/table" />
 		</restaurant>
 	</xsl:template>
 
@@ -59,8 +58,8 @@
 
 
 	<xsl:template match="tr">
-		<xsl:if test="td[2]//text()">
-			<xsl:variable name="date" select="preceding-sibling::tr/td/." />
+		<xsl:if test="(td[2]|td[3]|td[4]|td[5])//text()">
+			<xsl:variable name="date" select="//*[@id='incenterpage2']/table/tbody/tr[1]/td[1]/." />
 
 			<meal>
 				<xsl:attribute name="dish"><xsl:call-template
@@ -82,12 +81,12 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<title>
-							<xsl:value-of select="td[1]/span" />
+							<xsl:value-of select="td[1]/." />
 						</title>
 					</xsl:otherwise>
 				</xsl:choose>
 				<price>
-					<xsl:apply-templates select="td[2]/span//text()" />
+					<xsl:apply-templates select="td[4]/." />
 				</price>
 			</meal>
 		</xsl:if>
@@ -96,31 +95,31 @@
 	<xsl:template name="dish">
 		<xsl:choose>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'HLAVNÍ JÍDLA')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'HLAVNÍ JÍDLA')]">
 				<xsl:text>dinner</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'TEPLÉ PŘEDKRMY')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'TEPLÉ PŘEDKRMY')]">
 				<xsl:text>starter</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'TEPLÝ PŘEDKRM')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'TEPLÝ PŘEDKRM')]">
 				<xsl:text>starter</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'STUDENÉ PŘEDKRMY')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'STUDENÉ PŘEDKRMY')]">
 				<xsl:text>starter</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'STUDENÝ PŘEDKRM')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'STUDENÝ PŘEDKRM')]">
 				<xsl:text>starter</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'POLÉVKY')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'POLÉVKY')]">
 				<xsl:text>soup</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'Menu')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'Menu')]">
 				<xsl:text>menu</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
@@ -133,43 +132,43 @@
 		<xsl:choose>
 
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'SLADKÉ')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'SLADKÉ')]">
 				<xsl:text>2-sweet</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'TĚSTOVINY')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'TĚSTOVINY')]">
 				<xsl:text>4-pasta</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'SALÁTY')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'SALÁTY')]">
 				<xsl:text>3-salad</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'VEGETARIÁNSKÉ')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'VEGETARIÁNSKÉ')]">
 				<xsl:text>1-vegetarian</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'SPECIALITA DNE')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'SPECIALITA DNE')]">
 				<xsl:text>1-live</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'HLAVNÍ JÍDLA')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'HLAVNÍ JÍDLA')]">
 				<xsl:text>1-normal</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'TEPLÉ PŘEDKRMY')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'TEPLÉ PŘEDKRMY')]">
 				<xsl:text>2-warm</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'TEPLÝ PŘEDKRM')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'TEPLÝ PŘEDKRM')]">
 				<xsl:text>2-warm</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'STUDENÉ PŘEDKRMY')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'STUDENÉ PŘEDKRMY')]">
 				<xsl:text>3-cold</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="./preceding-sibling::tr[starts-with(normalize-space(td//strong), 'STUDENÝ PŘEDKRM')]">
+				test="./preceding-sibling::tr[starts-with(normalize-space(td//.), 'STUDENÝ PŘEDKRM')]">
 				<xsl:text>3-cold</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>

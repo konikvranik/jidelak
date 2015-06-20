@@ -4,3 +4,7 @@ target
 .settings
 .gradle
 .idea
+gradle-wrapper.jar
+gradlew
+gradlew.bat
+*.iml

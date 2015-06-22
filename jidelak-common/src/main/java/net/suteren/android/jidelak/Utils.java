@@ -90,6 +90,9 @@ public class Utils {
             throws IOException, TransformerException,
             ParserConfigurationException, JidelakException {
 
+	System.setProperty("http.agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.81 Chrome/43.0.2357.81 Safari/537.36");
+	
+
         HttpURLConnection con = (HttpURLConnection) source.getUrl()
                 .openConnection();
         con.connect();

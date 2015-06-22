@@ -21,7 +21,7 @@
 			<id>praha-babcak</id>
 			<name>Jídelna Babčák</name>
 			<phone>+420 266782055</phone>
-			<web>http://www.restauraceumajeru.cz/</web>
+			<!-- web></web -->
 			<city>Praha 7</city>
 			<country>Česká republika</country>
 			<address>Jankovcova 2</address>

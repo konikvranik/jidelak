@@ -7,18 +7,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.tidy.Configuration;
 import org.w3c.tidy.Tidy;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.util.Locale;
 import java.util.Properties;
@@ -90,11 +99,11 @@ public class Utils {
             throws IOException, TransformerException,
             ParserConfigurationException, JidelakException {
 
-	System.setProperty("http.agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.81 Chrome/43.0.2357.81 Safari/537.36");
-	
+        System.setProperty("http.agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+                "Ubuntu Chromium/43.0.2357.81 Chrome/43.0.2357.81 Safari/537.36");
 
-        HttpURLConnection con = (HttpURLConnection) source.getUrl()
-                .openConnection();
+
+        HttpURLConnection con = (HttpURLConnection) source.getUrl().openConnection();
         con.connect();
         if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
             throw new JidelakException("http_error_response (%5$s): %6$s", new String[]{
@@ -116,6 +125,7 @@ public class Utils {
             }
             dis.close();
             fw.close();
+            con = (HttpURLConnection) source.getUrl().openConnection();
             con.connect();
         }
 
@@ -190,7 +200,7 @@ public class Utils {
         // t.setTrimEmptyElements(true);
         t.setQuiet(!log.isDebugEnabled());
         // t.setQuoteNbsp(true);
-;
+        ;
         Properties props = new Properties();
 
         // suppport of several HTML5 tags due to lunchtime.

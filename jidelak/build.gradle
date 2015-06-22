@@ -16,6 +16,11 @@ sourceCompatibility = 1.6
 
 repositories {
 	def androidHome = System.getenv("ANDROID_HOME")
+	if (androidHome == null) {
+		Properties properties = new Properties()
+		properties.load(project.rootProject.file('local.properties').newDataInputStream())
+		androidHome = properties.getProperty('sdk.dir')
+	}
         maven {
             url "$androidHome/extras/android/m2repository/"
         }
@@ -117,6 +122,11 @@ eclipse {
 
 buildscript {
 	def androidHome = System.getenv("ANDROID_HOME")
+	if (androidHome == null) {
+		Properties properties = new Properties()
+		properties.load(project.rootProject.file('local.properties').newDataInputStream())
+		androidHome = properties.getProperty('sdk.dir')
+	}
 	repositories {
         	maven {
 	            url "$androidHome/extras/android/m2repository/"

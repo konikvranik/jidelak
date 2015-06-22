@@ -27,8 +27,7 @@
 			<address>Jankovcova 2</address>
 			<zip>170 00</zip>
 
-			<source time="absolute" firstDayOfWeek="Po" encoding="utf8"
-				dateFormat="E, d MMM" locale="cs_CZ"
+			<source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="E, d MMM" locale="cs_CZ"
 				url="https://www.zomato.com/cs/praha/j%C3%ADdelna-bab%C4%8D%C3%A1k-hole%C5%A1ovice-praha-7/menu#daily" />
 
 			<open>
@@ -47,7 +46,7 @@
 	<xsl:template match="*[@id='daily-menu-container']">
 		<menu>
 			<xsl:apply-templates
-				select=".//div[@class='tmi-groups']/div[1]/div[starts-with(@class,'tmi ')]"
+				select=".//div[@class='tmi-groups']/div[@class='tmi-group']/div[starts-with(@class,'tmi ')]"
 				mode="menuitem" />
 		</menu>
 	</xsl:template>
@@ -136,27 +135,118 @@
 	<xsl:template name="order">
 		<xsl:attribute name="order"><xsl:value-of select="position()" /></xsl:attribute>
 	</xsl:template>
+
 	<xsl:template name="time">
-		<xsl:variable name="time">
-			<xsl:value-of select="preceding-sibling::div[@class='tmi-group-name']" />
-		</xsl:variable>
-		<xsl:attribute name="time"><xsl:choose>
-		<xsl:when test="contains($time,'(')"><xsl:value-of
-			select="normalize-space(substring-before($time,'('))" /></xsl:when>
-		<xsl:otherwise><xsl:value-of select="normalize-space($time)" /></xsl:otherwise>
-		</xsl:choose></xsl:attribute>
+		<xsl:attribute name="time"><xsl:call-template name="time-format"/></xsl:attribute>
 	</xsl:template>
 
 	<xsl:template name="ref-time">
+		<xsl:attribute name="ref-time"><xsl:call-template name="time-format"/></xsl:attribute>
+	</xsl:template>
+
+	<xsl:template name="time-format">
 		<xsl:variable name="time">
 			<xsl:value-of select="preceding-sibling::div[@class='tmi-group-name']" />
 		</xsl:variable>
-		<xsl:attribute name="ref-time"><xsl:choose>
-		<xsl:when test="contains($time,'(')"><xsl:value-of
-			select="normalize-space(substring-before($time,'('))" /></xsl:when>
-		<xsl:otherwise><xsl:value-of select="normalize-space($time)" /></xsl:otherwise>
-		</xsl:choose></xsl:attribute>
+		<xsl:variable name="fixed-time">
+			<xsl:choose>
+				<xsl:when test="contains($time,'(')"><xsl:value-of
+						select="normalize-space(substring-before($time,'('))" /></xsl:when>
+				<xsl:otherwise><xsl:value-of select="normalize-space($time)" /></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:call-template name="string-replace">
+			<xsl:with-param name="string">
+				<xsl:call-template name="string-replace">
+					<xsl:with-param name="string">
+						<xsl:call-template name="string-replace">
+							<xsl:with-param name="string">
+								<xsl:call-template name="string-replace">
+									<xsl:with-param name="string">
+										<xsl:call-template name="string-replace">
+											<xsl:with-param name="string">
+												<xsl:call-template name="string-replace">
+													<xsl:with-param name="string">
+														<xsl:call-template name="string-replace">
+															<xsl:with-param name="string">
+																<xsl:call-template name="string-replace">
+																	<xsl:with-param name="string">
+																		<xsl:call-template name="string-replace">
+																			<xsl:with-param name="string">
+																				<xsl:call-template name="string-replace">
+																					<xsl:with-param name="string">
+																						<xsl:call-template name="string-replace">
+																							<xsl:with-param name="string">
+																								<xsl:call-template name="string-replace">
+																									<xsl:with-param name="string" select="$fixed-time"/>
+																									<xsl:with-param name="replace" select="'leden'" />
+																									<xsl:with-param name="with" select="'ledna'" />
+																								</xsl:call-template>
+																							</xsl:with-param>
+																							<xsl:with-param name="replace" select="'únor'" />
+																							<xsl:with-param name="with" select="'února'" />
+																						</xsl:call-template>
+																					</xsl:with-param>
+																					<xsl:with-param name="replace" select="'březen'" />
+																					<xsl:with-param name="with" select="'března'" />
+																				</xsl:call-template>
+																			</xsl:with-param>
+																			<xsl:with-param name="replace" select="'duben'" />
+																			<xsl:with-param name="with" select="'dubna'" />
+																		</xsl:call-template>
+																	</xsl:with-param>
+																	<xsl:with-param name="replace" select="'květen'" />
+																	<xsl:with-param name="with" select="'května'" />
+																</xsl:call-template>
+															</xsl:with-param>
+															<xsl:with-param name="replace" select="'červen'" />
+															<xsl:with-param name="with" select="'června'" />
+														</xsl:call-template>
+													</xsl:with-param>
+													<xsl:with-param name="replace" select="'červenec'" />
+													<xsl:with-param name="with" select="'července'" />
+												</xsl:call-template>
+											</xsl:with-param>
+											<xsl:with-param name="replace" select="'srpen'" />
+											<xsl:with-param name="with" select="'srpna'" />
+										</xsl:call-template>
+									</xsl:with-param>
+									<xsl:with-param name="replace" select="'září'" />
+									<xsl:with-param name="with" select="'září'" />
+								</xsl:call-template>
+							</xsl:with-param>
+							<xsl:with-param name="replace" select="'říjen'" />
+							<xsl:with-param name="with" select="'října'" />
+						</xsl:call-template>
+					</xsl:with-param>
+					<xsl:with-param name="replace" select="'listopad'" />
+					<xsl:with-param name="with" select="'listopadu'" />
+				</xsl:call-template>
+			</xsl:with-param>
+			<xsl:with-param name="replace" select="'prosinec'" />
+			<xsl:with-param name="with" select="'prosince'" />
+		</xsl:call-template>
 	</xsl:template>
 
+	<xsl:template name="string-replace">
+		<xsl:param name="string" />
+		<xsl:param name="replace" />
+		<xsl:param name="with" />
+
+		<xsl:choose>
+			<xsl:when test="contains($string, $replace)">
+				<xsl:value-of select="substring-before($string, $replace)" />
+				<xsl:value-of select="$with" />
+				<xsl:call-template name="string-replace">
+					<xsl:with-param name="string" select="substring-after($string,$replace)" />
+					<xsl:with-param name="replace" select="$replace" />
+					<xsl:with-param name="with" select="$with" />
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$string" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
 </xsl:stylesheet>

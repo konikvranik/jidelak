@@ -18,17 +18,17 @@
 
     <xsl:template name="restaurant">
         <restaurant version="1.0">
-            <id>praha-avion58</id>
-            <name>Avion58</name>
-            <phone>+420 601 575 222</phone>
-            <web>http://www.avion58.cz/</web>
+            <id>praha-holesovicka-kozlovna</id>
+            <name>Holešovická Kozlovna</name>
+            <phone>+420 220 875 900</phone>
+            <web>http://www.holesovickakozlovna.cz/</web>
             <city>Praha 7</city>
             <country>Česká republika</country>
-            <address>Komunardů 42</address>
+            <address>Dělnická 28</address>
             <zip>170 00</zip>
 
-            <source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="d.M.yyyy" locale="cs_CZ"
-                    url="http://www.avion58.cz/"/>
+            <source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="E d.M.yyyy" locale="cs_CZ"
+                    url="http://www.holesovickakozlovna.cz/poledni-nabidka-cely-tyden/"/>
 
             <open>
                 <term from="11:00" to="15:00" description="denní menu"/>
@@ -41,18 +41,17 @@
                 <term day-of-week="Ne" from="11:00" to="23:00"/>
             </open>
 
-            <xsl:apply-templates select="//*[@id='col-left']"/>
+            <xsl:apply-templates select="//*[@id='week-menu']"/>
         </restaurant>
     </xsl:template>
 
-    <xsl:template match="*[@id='col-left']">
+    <xsl:template match="*[@id='week-menu']">
         <menu>
-            <xsl:apply-templates select="./h2[@class='denni-nabidka']/following-sibling::div[contains(@class, 'jidlo')]"
-                                 mode="menuitem"/>
+            <xsl:apply-templates select=".//tr" mode="menuitem"/>
         </menu>
     </xsl:template>
 
-    <xsl:template match="div" mode="menuitem">
+    <xsl:template match="tr" mode="menuitem">
         <meal dish="" category="">
             <xsl:call-template name="dish"/>
             <xsl:call-template name="category"/>
@@ -69,10 +68,10 @@
     <xsl:template name="dish">
         <xsl:attribute name="dish">
             <xsl:choose>
-                <xsl:when test="count(preceding-sibling::h3[contains(.,'Dezert')]) &gt; 0">dessert</xsl:when>
-                <xsl:when test="count(preceding-sibling::h3[contains(.,'Salát')]) &gt; 0">dinner</xsl:when>
-                <xsl:when test="count(preceding-sibling::h3[contains(.,'Hlavní jídlo')]) &gt; 0">dinner</xsl:when>
-                <xsl:when test="count(preceding-sibling::h3[contains(.,'Polévka')]) &gt; 0">soup</xsl:when>
+                <xsl:when test="preceding-sibling::h3[contains(span/.,'Dezert')]">dessert</xsl:when>
+                <xsl:when test="preceding-sibling::h3[contains(span/.,'Salát')]">dinner</xsl:when>
+                <xsl:when test="preceding-sibling::h3[contains(span/.,'Hlavní jídlo')]">dinner</xsl:when>
+                <xsl:when test="preceding-sibling::h3[contains(span/.,'Polévka')]">soup</xsl:when>
                 <xsl:otherwise>dinner</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
@@ -90,31 +89,16 @@
 
     <xsl:template name="title">
         <title>
-            <xsl:choose>
-                <xsl:when test="string-length(./strong[1]/self::strong[not(contains(@class, 'price'))]/text()) &gt; 0">
-                    <xsl:value-of select="./strong[1]/."/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="./text()"/>
-                </xsl:otherwise>
-            </xsl:choose>
+            <xsl:value-of select="td[contains(@class, 'td-popis')]"/>
         </title>
     </xsl:template>
 
     <xsl:template name="description">
-        <xsl:choose>
-            <xsl:when test="string-length(strong[1]/self::strong[not(contains(@class, 'price'))]/text()) &gt; 0">
-                <description>
-                    <xsl:value-of select="text()"/>
-                </description>
-            </xsl:when>
-            <xsl:otherwise></xsl:otherwise>
-        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="price">
         <price>
-            <xsl:value-of select="./strong[contains(@class, 'price')]"/>
+            <xsl:value-of select="td[contains(@class, 'td-cena')]"/>
         </price>
 
     </xsl:template>
@@ -139,13 +123,13 @@
 
     <xsl:template name="time-format">
         <xsl:variable name="time">
-            <xsl:value-of select="preceding-sibling::div[@class='datum']"/>
+            <xsl:value-of select="preceding::div[@class='dm-day']"/>
         </xsl:variable>
         <xsl:variable name="fixed-time">
             <xsl:choose>
-                <xsl:when test="contains($time,'(')">
+                <xsl:when test="contains($time,'Polední nabídka')">
                     <xsl:value-of
-                            select="normalize-space(substring-before($time,'('))"/>
+                            select="normalize-space(substring-after($time,'Polední nabídka'))"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:value-of select="normalize-space($time)"/>

@@ -18,8 +18,8 @@
 
     <xsl:template name="restaurant">
         <restaurant version="1.0">
-            <id>praha-avion58</id>
-            <name>Avion58</name>
+            <id>praha-avion</id>
+            <name>Avion 58</name>
             <phone>+420 601 575 222</phone>
             <web>http://www.avion58.cz/</web>
             <city>Praha 7</city>
@@ -103,7 +103,7 @@
 
     <xsl:template name="description">
         <xsl:choose>
-            <xsl:when test="string-length(strong[1]/self::strong[not(contains(@class, 'price'))]/text()) &gt; 0">
+            <xsl:when test="string-length(strong[1]/self::strong[not(contains(@class, 'price'))]/text()) &gt; 0 and string-length(normalize-space(text())) &gt; 0">
                 <description>
                     <xsl:value-of select="text()"/>
                 </description>

@@ -7,7 +7,7 @@ apply plugin: 'idea'
 
 
 version = '1.6'
-android.defaultConfig.versionCode = 94
+android.defaultConfig.versionCode = 95
 
 group = "net.suteren.android.jidelak"
 

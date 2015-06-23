@@ -46,7 +46,9 @@
 
     <xsl:template match="*[@id='week-menu']">
         <menu>
-            <xsl:apply-templates select=".//tr" mode="menuitem"/>
+            <xsl:apply-templates
+                    select="table//tr[count(preceding-sibling::tr[contains(.,'Polévka')]) &gt; 0 and count(td[contains(@class, 'td-popis')]) &gt; 0 and count(td[contains(.,'Na stravenky vracíme do 5Kč.')]) &lt; 1]"
+                    mode="menuitem"/>
         </menu>
     </xsl:template>
 
@@ -67,10 +69,10 @@
     <xsl:template name="dish">
         <xsl:attribute name="dish">
             <xsl:choose>
-                <xsl:when test="preceding-sibling::h3[contains(span/.,'Dezert')]">dessert</xsl:when>
-                <xsl:when test="preceding-sibling::h3[contains(span/.,'Salát')]">dinner</xsl:when>
-                <xsl:when test="preceding-sibling::h3[contains(span/.,'Hlavní jídlo')]">dinner</xsl:when>
-                <xsl:when test="preceding-sibling::h3[contains(span/.,'Polévka')]">soup</xsl:when>
+                <xsl:when test="preceding-sibling::tr[contains(.,'Dezert')]">dessert</xsl:when>
+                <xsl:when test="preceding-sibling::tr[contains(.,'Salát')]">dinner</xsl:when>
+                <xsl:when test="preceding-sibling::tr[contains(.,'Hlavní jídla')]">dinner</xsl:when>
+                <xsl:when test="preceding-sibling::tr[contains(.,'Polévka')]">soup</xsl:when>
                 <xsl:otherwise>dinner</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>

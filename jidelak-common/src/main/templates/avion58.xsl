@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
     <xsl:output indent="yes" method="xml" encoding="UTF-8"/>
 
@@ -47,7 +46,7 @@
 
     <xsl:template match="*[@id='col-left']">
         <menu>
-            <xsl:apply-templates select="./h2[@class='denni-nabidka']/following-sibling::div[contains(@class, 'jidlo')]"
+            <xsl:apply-templates select="./h2[@class='denni-nabidka']/following-sibling::div[contains(@class, 'jidlo') and text() != '---' ]"
                                  mode="menuitem"/>
         </menu>
     </xsl:template>
@@ -103,7 +102,8 @@
 
     <xsl:template name="description">
         <xsl:choose>
-            <xsl:when test="string-length(strong[1]/self::strong[not(contains(@class, 'price'))]/text()) &gt; 0 and string-length(normalize-space(text())) &gt; 0">
+            <xsl:when
+                    test="string-length(strong[1]/self::strong[not(contains(@class, 'price'))]/text()) &gt; 0 and string-length(normalize-space(text())) &gt; 0">
                 <description>
                     <xsl:value-of select="text()"/>
                 </description>

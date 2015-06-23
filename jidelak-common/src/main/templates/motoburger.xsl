@@ -17,38 +17,36 @@
 
     <xsl:template name="restaurant">
         <restaurant version="1.0">
-            <id>praha-holesovicka-kozlovna</id>
-            <name>Holešovická Kozlovna</name>
-            <phone>+420 220 875 900</phone>
-            <web>http://www.holesovickakozlovna.cz/</web>
+            <id>praha-motoburger</id>
+            <name>Motoburger</name>
+            <phone>+420 222 986 095</phone>
+            <web>http://www.motoburger.cz/</web>
             <city>Praha 7</city>
             <country>Česká republika</country>
-            <address>Dělnická 28</address>
+            <address>Komunardů 1001/30</address>
             <zip>170 00</zip>
 
             <source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="E d.M.yyyy" locale="cs_CZ"
-                    url="http://www.holesovickakozlovna.cz/poledni-nabidka-cely-tyden/"/>
+                    url="http://www.motoburger.cz/index.html"/>
 
             <open>
                 <term from="11:00" to="15:00" description="denní menu"/>
-                <term day-of-week="Po" from="11:00" to="23:00"/>
-                <term day-of-week="Út" from="11:00" to="23:00"/>
-                <term day-of-week="St" from="11:00" to="23:00"/>
-                <term day-of-week="Čt" from="11:00" to="23:00"/>
-                <term day-of-week="Pá" from="11:00" to="23:00"/>
-                <term day-of-week="So" from="11:30" to="23:00"/>
-                <term day-of-week="Ne" from="11:30" to="23:00"/>
+                <term day-of-week="Po" from="11:00" to="22:30"/>
+                <term day-of-week="Út" from="11:00" to="22:30"/>
+                <term day-of-week="St" from="11:00" to="22:30"/>
+                <term day-of-week="Čt" from="11:00" to="22:30"/>
+                <term day-of-week="Pá" from="11:00" to="22:30"/>
+                <term day-of-week="So" from="12:00" to="22:30"/>
+                <term day-of-week="Ne" from="12:00" to="22:30"/>
             </open>
 
-            <xsl:apply-templates select="//*[@id='week-menu']"/>
+            <xsl:apply-templates select="//*[@id='dailymenu']/table"/>
         </restaurant>
     </xsl:template>
 
-    <xsl:template match="*[@id='week-menu']">
+    <xsl:template match="*[@id='dailymenu']/table">
         <menu>
-            <xsl:apply-templates
-                    select="table//tr[count(preceding-sibling::tr[contains(.,'Polévka')]) &gt; 0 and count(td[contains(@class, 'td-popis')]) &gt; 0 and count(td[contains(.,'Na stravenky vracíme do 5Kč.')]) &lt; 1]"
-                    mode="menuitem"/>
+            <xsl:apply-templates select=".//tr[position() &gt; 1 and not(contains(.,'ROZVOZ PO HOLEŠOVICÍCH ZDARMA'))]" mode="menuitem"/>
         </menu>
     </xsl:template>
 
@@ -69,10 +67,7 @@
     <xsl:template name="dish">
         <xsl:attribute name="dish">
             <xsl:choose>
-                <xsl:when test="preceding-sibling::tr[contains(.,'Dezert')]">dessert</xsl:when>
-                <xsl:when test="preceding-sibling::tr[contains(.,'Salát')]">dinner</xsl:when>
-                <xsl:when test="preceding-sibling::tr[contains(.,'Hlavní jídla')]">dinner</xsl:when>
-                <xsl:when test="preceding-sibling::tr[contains(.,'Polévka')]">soup</xsl:when>
+                <xsl:when test="position() &lt; 2">soup</xsl:when>
                 <xsl:otherwise>dinner</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
@@ -90,7 +85,7 @@
 
     <xsl:template name="title">
         <title>
-            <xsl:value-of select="td[contains(@class, 'td-popis')]"/>
+            <xsl:value-of select="td[1]"/>
         </title>
     </xsl:template>
 
@@ -99,7 +94,7 @@
 
     <xsl:template name="price">
         <price>
-            <xsl:value-of select="td[contains(@class, 'td-cena')]"/>
+            <xsl:value-of select="td[2]"/>
         </price>
 
     </xsl:template>
@@ -124,7 +119,7 @@
 
     <xsl:template name="time-format">
         <xsl:variable name="time">
-            <xsl:value-of select="preceding::div[@class='dm-day']"/>
+            <xsl:value-of select="parent::table/tr[1]/td[1]"/>
         </xsl:variable>
         <xsl:variable name="fixed-time">
             <xsl:choose>

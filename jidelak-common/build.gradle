@@ -7,20 +7,22 @@ apply plugin: 'idea'
 
 version = '0.1'
 
-group = "net.suteren.jidelak" 
+group = "net.suteren.jidelak"
 
 sourceCompatibility = 1.6
 
 repositories { mavenCentral() }
 
 dependencies {
-	compile 'net.sf.jtidy:jtidy:r938'
-	compile 'org.slf4j:slf4j-api:1.6.1'
-	compile('com.squareup.retrofit:converter-simplexml:1.6.1'){
-		exclude module: 'stax'
-		exclude module: 'stax-api'
-		exclude module: 'xpp3'
-	}
+    compile 'net.sf.jtidy:jtidy:r938'
+    compile 'org.slf4j:slf4j-api:1.6.1'
+    compile 'org.apache.tika:tika-core:1.2'
+    compile 'org.apache.tika:tika:1.8'
+    compile('com.squareup.retrofit:converter-simplexml:1.6.1') {
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
 }
 
 configurations { provided }
@@ -29,37 +31,41 @@ eclipse.classpath.plusConfigurations += configurations.compile
 
 eclipse {
 
-	classpath {
-		file {
-			beforeMerged { classpath ->
-				classpath.entries.clear()
-			}
-			whenMerged {  cp ->
-				cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith("src/main/") }*.output = "build/classes/main"
-				cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith("src/test/") }*.output = "build/classes/test"
-				cp.entries.findAll { it instanceof Container && it.path.endsWith("JRE_CONTAINER") }*.exported = false
-				cp.entries.findAll { it.kind == "lib" && it.path.contains("slf4j-api") }*.exported = false
-				// cp.entries.removeAll { it.kind == "output" }
-			}
-		}
-		defaultOutputDir = file('build/classes/main')
-	}
+    classpath {
+        file {
+            beforeMerged { classpath ->
+                classpath.entries.clear()
+            }
+            whenMerged { cp ->
+                cp.entries.findAll {
+                    it instanceof SourceFolder && it.path.startsWith("src/main/")
+                }*.output = "build/classes/main"
+                cp.entries.findAll {
+                    it instanceof SourceFolder && it.path.startsWith("src/test/")
+                }*.output = "build/classes/test"
+                cp.entries.findAll { it instanceof Container && it.path.endsWith("JRE_CONTAINER") }*.exported = false
+                cp.entries.findAll { it.kind == "lib" && it.path.contains("slf4j-api") }*.exported = false
+                // cp.entries.removeAll { it.kind == "output" }
+            }
+        }
+        defaultOutputDir = file('build/classes/main')
+    }
 
-	project {
-		natures 'org.springsource.ide.eclipse.gradle.core.nature',
-				'org.eclipse.jdt.core.javanature',
-				'org.eclipse.jdt.groovy.core.groovyNature'
+    project {
+        natures 'org.springsource.ide.eclipse.gradle.core.nature',
+                'org.eclipse.jdt.core.javanature',
+                'org.eclipse.jdt.groovy.core.groovyNature'
 
-		buildCommand 'org.eclipse.jdt.core.javabuilder'
-		name 'jidelak-common'
-	}
+        buildCommand 'org.eclipse.jdt.core.javabuilder'
+        name 'jidelak-common'
+    }
 }
 
 jar {
-	manifest.
-			attributes ( provider: 'gradle',
-			'Implementation-Vendor-Id': 'hPa',
-			'Implementation-Vendor': 'Petr Vraník',
-			'Implementation-Version': 1.0
-			)
+    manifest.
+            attributes(provider: 'gradle',
+                    'Implementation-Vendor-Id': 'hPa',
+                    'Implementation-Vendor': 'Petr Vraník',
+                    'Implementation-Version': 1.0
+            )
 }

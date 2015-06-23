@@ -17,41 +17,42 @@
 
     <xsl:template name="restaurant">
         <restaurant version="1.0">
-            <id>praha-avion</id>
-            <name>Avion 58</name>
-            <phone>+420 601 575 222</phone>
-            <web>http://www.avion58.cz/</web>
+            <id>praha-lighthouse-bufet</id>
+            <name>Lighthouse bufet</name>
+            <phone>+420 220 875 900</phone>
+            <web>http://www.holesovickakozlovna.cz/</web>
             <city>Praha 7</city>
             <country>Česká republika</country>
-            <address>Komunardů 42</address>
+            <address>Dělnická 28</address>
             <zip>170 00</zip>
 
-            <source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="d.M.yyyy" locale="cs_CZ"
-                    url="http://www.avion58.cz/"/>
+            <source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="E d.M.yyyy" locale="cs_CZ"
+                    url="http://www.lighthousecoffee.cz/files/file/jidelni_listek_restaurant.pdf"/>
 
             <open>
                 <term from="11:00" to="15:00" description="denní menu"/>
-                <term day-of-week="Po" from="08:00" to="00:00"/>
-                <term day-of-week="Út" from="08:00" to="00:00"/>
-                <term day-of-week="St" from="08:00" to="00:00"/>
-                <term day-of-week="Čt" from="08:00" to="00:00"/>
-                <term day-of-week="Pá" from="08:00" to="01:00"/>
-                <term day-of-week="So" from="10:00" to="01:00"/>
-                <term day-of-week="Ne" from="11:00" to="23:00"/>
+                <term day-of-week="Po" from="11:00" to="23:00"/>
+                <term day-of-week="Út" from="11:00" to="23:00"/>
+                <term day-of-week="St" from="11:00" to="23:00"/>
+                <term day-of-week="Čt" from="11:00" to="23:00"/>
+                <term day-of-week="Pá" from="11:00" to="23:00"/>
+                <term day-of-week="So" from="11:30" to="23:00"/>
+                <term day-of-week="Ne" from="11:30" to="23:00"/>
             </open>
 
-            <xsl:apply-templates select="//*[@id='col-left']"/>
+            <xsl:apply-templates select="//*[@id='week-menu']"/>
         </restaurant>
     </xsl:template>
 
-    <xsl:template match="*[@id='col-left']">
+    <xsl:template match="*[@id='week-menu']">
         <menu>
-            <xsl:apply-templates select="./h2[@class='denni-nabidka']/following-sibling::div[contains(@class, 'jidlo') and text() != '---' ]"
-                                 mode="menuitem"/>
+            <xsl:apply-templates
+                    select="table//tr[count(preceding-sibling::tr[contains(.,'Polévka')]) &gt; 0 and count(td[contains(@class, 'td-popis')]) &gt; 0 and count(td[contains(.,'Na stravenky vracíme do 5Kč.')]) &lt; 1]"
+                    mode="menuitem"/>
         </menu>
     </xsl:template>
 
-    <xsl:template match="div" mode="menuitem">
+    <xsl:template match="tr" mode="menuitem">
         <meal dish="" category="">
             <xsl:call-template name="dish"/>
             <xsl:call-template name="category"/>
@@ -68,10 +69,10 @@
     <xsl:template name="dish">
         <xsl:attribute name="dish">
             <xsl:choose>
-                <xsl:when test="count(preceding-sibling::h3[contains(.,'Dezert')]) &gt; 0">dessert</xsl:when>
-                <xsl:when test="count(preceding-sibling::h3[contains(.,'Salát')]) &gt; 0">dinner</xsl:when>
-                <xsl:when test="count(preceding-sibling::h3[contains(.,'Hlavní jídlo')]) &gt; 0">dinner</xsl:when>
-                <xsl:when test="count(preceding-sibling::h3[contains(.,'Polévka')]) &gt; 0">soup</xsl:when>
+                <xsl:when test="preceding-sibling::tr[contains(.,'Dezert')]">dessert</xsl:when>
+                <xsl:when test="preceding-sibling::tr[contains(.,'Salát')]">dinner</xsl:when>
+                <xsl:when test="preceding-sibling::tr[contains(.,'Hlavní jídla')]">dinner</xsl:when>
+                <xsl:when test="preceding-sibling::tr[contains(.,'Polévka')]">soup</xsl:when>
                 <xsl:otherwise>dinner</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
@@ -89,32 +90,16 @@
 
     <xsl:template name="title">
         <title>
-            <xsl:choose>
-                <xsl:when test="string-length(./strong[1]/self::strong[not(contains(@class, 'price'))]/text()) &gt; 0">
-                    <xsl:value-of select="./strong[1]/."/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="./text()"/>
-                </xsl:otherwise>
-            </xsl:choose>
+            <xsl:value-of select="td[contains(@class, 'td-popis')]"/>
         </title>
     </xsl:template>
 
     <xsl:template name="description">
-        <xsl:choose>
-            <xsl:when
-                    test="string-length(strong[1]/self::strong[not(contains(@class, 'price'))]/text()) &gt; 0 and string-length(normalize-space(text())) &gt; 0">
-                <description>
-                    <xsl:value-of select="text()"/>
-                </description>
-            </xsl:when>
-            <xsl:otherwise></xsl:otherwise>
-        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="price">
         <price>
-            <xsl:value-of select="./strong[contains(@class, 'price')]"/>
+            <xsl:value-of select="td[contains(@class, 'td-cena')]"/>
         </price>
 
     </xsl:template>
@@ -139,13 +124,13 @@
 
     <xsl:template name="time-format">
         <xsl:variable name="time">
-            <xsl:value-of select="preceding-sibling::div[@class='datum']"/>
+            <xsl:value-of select="preceding::div[@class='dm-day']"/>
         </xsl:variable>
         <xsl:variable name="fixed-time">
             <xsl:choose>
-                <xsl:when test="contains($time,'(')">
+                <xsl:when test="contains($time,'Polední nabídka')">
                     <xsl:value-of
-                            select="normalize-space(substring-before($time,'('))"/>
+                            select="normalize-space(substring-after($time,'Polední nabídka'))"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:value-of select="normalize-space($time)"/>

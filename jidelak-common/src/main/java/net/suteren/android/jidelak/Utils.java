@@ -1,14 +1,26 @@
 package net.suteren.android.jidelak;
 
+import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import com.sun.org.apache.xml.internal.utils.DOMBuilder;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
+import org.apache.tika.Tika;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.DefaultParser;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.sax.BodyContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.tidy.Tidy;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
+import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,14 +32,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.util.Locale;
 import java.util.Properties;
@@ -97,7 +106,7 @@ public class Utils {
 
     public static Node retrieve(Source source, InputStream inXsl)
             throws IOException, TransformerException,
-            ParserConfigurationException, JidelakException {
+            ParserConfigurationException, JidelakException, TikaException, SAXException {
 
         System.setProperty("http.agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) " +
                 "Ubuntu Chromium/43.0.2357.81 Chrome/43.0.2357.81 Safari/537.36");
@@ -130,16 +139,13 @@ public class Utils {
         }
 
 
-        InputStream is = con.getInputStream();
-        String enc = source.getEncoding();
-        if (enc == null)
-            enc = con.getContentEncoding();
-
         ByteArrayOutputStream debugos = null;
         if (log.isDebugEnabled()) {
             debugos = new ByteArrayOutputStream();
         }
-        Document d = getTidy(enc).parseDOM(is, debugos);
+
+
+        Document d = getDocument(con, source, debugos);
         if (log.isDebugEnabled()) {
             log.debug("== Tidy output =================================================================");
             log.debug(debugos.toString());
@@ -155,8 +161,6 @@ public class Utils {
             log.debug(sw.toString());
             log.debug("================================================================================");
         }
-
-        is.close();
         con.disconnect();
 
         DOMResult res = transform(d, inXsl);
@@ -172,6 +176,28 @@ public class Utils {
         }
 
         return res.getNode();
+    }
+
+    private static Document getDocument(HttpURLConnection con, Source source, ByteArrayOutputStream debugos) throws IOException, ParserConfigurationException, TikaException, SAXException, TransformerConfigurationException {
+        InputStream is = con.getInputStream();
+
+        String enc = source.getEncoding();
+        if (enc == null)
+            enc = con.getContentEncoding();
+
+        if (con.getContentType().contains("pdf")) {
+
+            DOMBuilder contenthandler = new DOMBuilder(DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument());
+            Metadata metadata = new Metadata();
+            new DefaultParser().parse(is, contenthandler, metadata, new ParseContext());
+            log.debug("== PDF to html =====================================================");
+            log.debug(contenthandler.toString());
+            log.debug("====================================================================");
+            return contenthandler.getRootDocument().getOwnerDocument();
+        } else {
+            return getTidy(enc).parseDOM(is, debugos);
+        }
+
     }
 
     public static Tidy getTidy(String enc) {

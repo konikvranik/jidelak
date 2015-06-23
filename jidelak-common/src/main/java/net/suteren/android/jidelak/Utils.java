@@ -117,7 +117,7 @@ public class Utils {
 
         if (log.isDebugEnabled()) {
             InputStream dis = con.getInputStream();
-            FileOutputStream fw = new FileOutputStream(new File("site.debug"));
+            FileOutputStream fw = new FileOutputStream(new File("site.xml"));
             byte[] buffer = new byte[1024]; // Adjust if you want
             int bytesRead;
             while ((bytesRead = dis.read(buffer)) != -1) {

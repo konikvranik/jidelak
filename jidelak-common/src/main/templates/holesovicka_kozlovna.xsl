@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
     <xsl:output indent="yes" method="xml" encoding="UTF-8"/>
 
@@ -32,13 +31,13 @@
 
             <open>
                 <term from="11:00" to="15:00" description="denní menu"/>
-                <term day-of-week="Po" from="08:00" to="00:00"/>
-                <term day-of-week="Út" from="08:00" to="00:00"/>
-                <term day-of-week="St" from="08:00" to="00:00"/>
-                <term day-of-week="Čt" from="08:00" to="00:00"/>
-                <term day-of-week="Pá" from="08:00" to="01:00"/>
-                <term day-of-week="So" from="10:00" to="01:00"/>
-                <term day-of-week="Ne" from="11:00" to="23:00"/>
+                <term day-of-week="Po" from="11:00" to="23:00"/>
+                <term day-of-week="Út" from="11:00" to="23:00"/>
+                <term day-of-week="St" from="11:00" to="23:00"/>
+                <term day-of-week="Čt" from="11:00" to="23:00"/>
+                <term day-of-week="Pá" from="11:00" to="23:00"/>
+                <term day-of-week="So" from="11:30" to="23:00"/>
+                <term day-of-week="Ne" from="11:30" to="23:00"/>
             </open>
 
             <xsl:apply-templates select="//*[@id='week-menu']"/>

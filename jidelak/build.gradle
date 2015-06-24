@@ -7,11 +7,11 @@ apply plugin: 'idea'
 
 
 version = '1.6'
-android.defaultConfig.versionCode = 95
+android.defaultConfig.versionCode = 96
 
 group = "net.suteren.android.jidelak"
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.7
 
 
 repositories {

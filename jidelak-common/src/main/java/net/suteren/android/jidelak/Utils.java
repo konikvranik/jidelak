@@ -187,7 +187,6 @@ public class Utils {
 
         if (con.getContentType().contains("pdf")) {
 
-
             PDFParser parser = new PDFParser(is);
             parser.parse();
             COSDocument cosDoc = parser.getDocument();

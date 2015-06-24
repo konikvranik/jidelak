@@ -42,6 +42,7 @@ import java.util.StringTokenizer;
 public class Utils {
 
     private static Logger log = LoggerFactory.getLogger(Utils.class);
+    private static TransformerFactory transformerFactory;
 
     public Utils() {
     }
@@ -77,15 +78,16 @@ public class Utils {
             throws Exception {
 
         try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document d = db.newDocument();
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document configStubDocument = documentBuilder.newDocument();
 
-            Node n = d.appendChild(d.createElement("jidelak"));
-            n.appendChild(d.createElement("config"));
-            Transformer tr = TransformerFactory.newInstance().newTransformer(new StreamSource(fileStream));
-            DOMResult res = new DOMResult(DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument());
-            tr.transform(new DOMSource(d), res);
+            Node n = configStubDocument.appendChild(configStubDocument.createElement("jidelak"));
+            n.appendChild(configStubDocument.createElement("config"));
+            Transformer tr = getTransformer();
+            tr = getTransformer(fileStream);
+            DOMResult res = new DOMResult(documentBuilder.newDocument());
+            tr.transform(new DOMSource(configStubDocument), res);
 
             RestaurantMarshaller rm = new RestaurantMarshaller();
             // rm.setSource(source);
@@ -150,7 +152,7 @@ public class Utils {
         if (log.isDebugEnabled()) {
             log.debug("== Tidy transformed output =====================================================");
             StringWriter sw = new StringWriter();
-            Transformer tr = TransformerFactory.newInstance().newTransformer();
+            Transformer tr = getTransformer();
             tr.setOutputProperty(OutputKeys.INDENT, "yes");
             tr.transform(new DOMSource(d), new StreamResult(sw));
             log.debug(sw.toString());
@@ -163,7 +165,7 @@ public class Utils {
         if (log.isDebugEnabled()) {
             log.debug("== REstaurant transformed output ===============================================");
             StringWriter sw = new StringWriter();
-            Transformer tr = TransformerFactory.newInstance().newTransformer();
+            Transformer tr = getTransformer();
             tr.setOutputProperty(OutputKeys.INDENT, "yes");
             tr.transform(new DOMSource(res.getNode()), new StreamResult(sw));
             log.debug(sw.toString());
@@ -189,7 +191,7 @@ public class Utils {
             PDDocument pdDoc = new PDDocument(cosDoc);
 
             if (false) { // PDFDomTree implementation - returns strange results, so disabled. In other case,
-            // PDFText2HTML creates String from PDF and then parses it into XML so it could be memory eating.
+                // PDFText2HTML creates String from PDF and then parses it into XML so it could be memory eating.
                 PDFDomTree domParser = new PDFDomTree();
                 domParser.setAddMoreFormatting(false);
                 domParser.setForceParsing(true);
@@ -261,22 +263,33 @@ public class Utils {
     public static DOMResult transform(Document d, InputStream inXsl) throws IOException,
             TransformerFactoryConfigurationError, ParserConfigurationException, TransformerException {
 
-        TransformerFactory trf = TransformerFactory.newInstance();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(false);
 
-        Transformer tr = trf.newTransformer(new StreamSource(inXsl));
+        Transformer tr = getTransformer(inXsl);
         DOMResult res = new DOMResult(dbf.newDocumentBuilder().newDocument());
         tr.transform(new DOMSource(d), res);
 
         return res;
     }
 
+    private static Transformer getTransformer(InputStream inXsl) throws TransformerConfigurationException {
+        return getTransformerFactory().newTransformer(new StreamSource(inXsl));
+    }
+
+    private static Transformer getTransformer() throws TransformerConfigurationException {
+        return getTransformerFactory().newTransformer();
+    }
+
+    private static TransformerFactory getTransformerFactory() {
+        if(transformerFactory==null) transformerFactory = TransformerFactory.newInstance();
+        return transformerFactory;
+    }
+
     public static DOMResult transform(InputStream inXsl) throws IOException, TransformerFactoryConfigurationError,
             ParserConfigurationException, TransformerException {
 
-        TransformerFactory trf = TransformerFactory.newInstance();
-        Transformer tr = trf.newTransformer();
+        Transformer tr = getTransformer();
         DOMResult res = new DOMResult();
         tr.setOutputProperty(OutputKeys.INDENT, "yes");
         tr.transform(new StreamSource(inXsl), res);

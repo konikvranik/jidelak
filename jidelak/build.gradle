@@ -34,18 +34,17 @@ dependencies {
 
 	compile( project(':jidelak-common')) {
 		exclude module: 'slf4j-api'
-		exclude module: 'xml-apis'
-		exclude module: 'xercesImpl'
 		exclude module: 'stax'
 		exclude module: 'stax-api'
 		exclude module: 'xpp3'
-		exclude module: 'ant'
+		exclude module: 'xml-apis'
+		exclude module: 'xercesImpl'
 	}
 	compile 'com.android.support:support-v4:19.0.1'
 	compile 'com.android.support:appcompat-v7:19.0.1'
 	compile 'com.google.android.gms:play-services:3.2.+'
 	compile 'net.sf.jtidy:jtidy:r938'
-	compile 'org.slf4j:slf4j-android:1.6.1-RC1'
+	compile 'org.slf4j:slf4j-android:1.7.9'
 	compile 'org.apache.commons:commons-lang3:3.2.1'
 	// compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.6.1'
 

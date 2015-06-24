@@ -1,26 +1,21 @@
 package net.suteren.android.jidelak;
 
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
-import com.sun.org.apache.xml.internal.utils.DOMBuilder;
 import net.suteren.android.jidelak.dao.RestaurantMarshaller;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
-import org.apache.tika.Tika;
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.DefaultParser;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.sax.BodyContentHandler;
+import org.apache.pdfbox.cos.COSDocument;
+import org.apache.pdfbox.pdfparser.PDFParser;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.util.PDFText2HTML;
+import org.fit.cssbox.pdf.CSSBoxTree;
+import org.fit.pdfdom.PDFDomTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.tidy.Tidy;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -32,11 +27,17 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.util.Locale;
 import java.util.Properties;
@@ -86,10 +87,8 @@ public class Utils {
 
             Node n = d.appendChild(d.createElement("jidelak"));
             n.appendChild(d.createElement("config"));
-            Transformer tr = TransformerFactory.newInstance().newTransformer(
-                    new StreamSource(fileStream));
-            DOMResult res = new DOMResult(DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder().newDocument());
+            Transformer tr = TransformerFactory.newInstance().newTransformer(new StreamSource(fileStream));
+            DOMResult res = new DOMResult(DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument());
             tr.transform(new DOMSource(d), res);
 
             RestaurantMarshaller rm = new RestaurantMarshaller();
@@ -106,7 +105,7 @@ public class Utils {
 
     public static Node retrieve(Source source, InputStream inXsl)
             throws IOException, TransformerException,
-            ParserConfigurationException, JidelakException, TikaException, SAXException {
+            ParserConfigurationException, JidelakException, SAXException {
 
         System.setProperty("http.agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) " +
                 "Ubuntu Chromium/43.0.2357.81 Chrome/43.0.2357.81 Safari/537.36");
@@ -178,7 +177,8 @@ public class Utils {
         return res.getNode();
     }
 
-    private static Document getDocument(HttpURLConnection con, Source source, ByteArrayOutputStream debugos) throws IOException, ParserConfigurationException, TikaException, SAXException, TransformerConfigurationException {
+    private static Document getDocument(HttpURLConnection con, Source source, ByteArrayOutputStream debugos) throws
+            IOException, ParserConfigurationException, SAXException, TransformerConfigurationException {
         InputStream is = con.getInputStream();
 
         String enc = source.getEncoding();
@@ -187,16 +187,41 @@ public class Utils {
 
         if (con.getContentType().contains("pdf")) {
 
-            DOMBuilder contenthandler = new DOMBuilder(DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument());
-            Metadata metadata = new Metadata();
-            new DefaultParser().parse(is, contenthandler, metadata, new ParseContext());
-            log.debug("== PDF to html =====================================================");
-            log.debug(contenthandler.toString());
-            log.debug("====================================================================");
-            return contenthandler.getRootDocument().getOwnerDocument();
-        } else {
-            return getTidy(enc).parseDOM(is, debugos);
+
+            PDFParser parser = new PDFParser(is);
+            parser.parse();
+            COSDocument cosDoc = parser.getDocument();
+            PDDocument pdDoc = new PDDocument(cosDoc);
+
+            if (false) { // PDFDomTree implementation - returns strange results, so disabled. In other case,
+            // PDFText2HTML creates String from PDF and then parses it into XML so it could be memory eating.
+                PDFDomTree domParser = new PDFDomTree();
+                domParser.setAddMoreFormatting(false);
+                domParser.setForceParsing(true);
+                domParser.setShouldSeparateByBeads(false);
+                domParser.setDisableGraphics(true);
+                domParser.setDisableImageData(true);
+                domParser.setDisableImages(true);
+                domParser.setDropThreshold(0f);
+                domParser.setIndentThreshold(0f);
+                domParser.setAverageCharTolerance(0f);
+                domParser.setSpacingTolerance(0f);
+                domParser.setArticleStart("\n ARTICLE START!!! \n");
+                domParser.setArticleEnd("\n ARTICLE END!!! \n");
+                domParser.setParagraphStart("\n PARA START!!! \n");
+                domParser.setParagraphEnd("\n PARA END!!! \n");
+                domParser.setWordSeparator("\n WORD!!! \n");
+                domParser.setLineSeparator("\n LINE!!! \n");
+
+                domParser.processDocument(pdDoc);
+                return domParser.getDocument();
+            }
+
+            PDFText2HTML pdfStripper = new PDFText2HTML("utf8");
+            pdfStripper.setAddMoreFormatting(false);
+            is = new ByteArrayInputStream(pdfStripper.getText(pdDoc).getBytes());
         }
+        return getTidy(enc).parseDOM(is, debugos);
 
     }
 
@@ -238,28 +263,22 @@ public class Utils {
         return t;
     }
 
-    public static DOMResult transform(Document d, InputStream inXsl)
-            throws IOException, TransformerConfigurationException,
-            TransformerFactoryConfigurationError, ParserConfigurationException,
-            TransformerException {
+    public static DOMResult transform(Document d, InputStream inXsl) throws IOException,
+            TransformerFactoryConfigurationError, ParserConfigurationException, TransformerException {
 
         TransformerFactory trf = TransformerFactory.newInstance();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(false);
 
-        Transformer tr = trf.newTransformer();
-
-        tr = trf.newTransformer(new StreamSource(inXsl));
+        Transformer tr = trf.newTransformer(new StreamSource(inXsl));
         DOMResult res = new DOMResult(dbf.newDocumentBuilder().newDocument());
         tr.transform(new DOMSource(d), res);
 
         return res;
     }
 
-    public static DOMResult transform(InputStream inXsl) throws IOException,
-            TransformerConfigurationException,
-            TransformerFactoryConfigurationError, ParserConfigurationException,
-            TransformerException {
+    public static DOMResult transform(InputStream inXsl) throws IOException, TransformerFactoryConfigurationError,
+            ParserConfigurationException, TransformerException {
 
         TransformerFactory trf = TransformerFactory.newInstance();
         Transformer tr = trf.newTransformer();

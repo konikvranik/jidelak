@@ -18,19 +18,19 @@ import net.suteren.android.jidelak.Utils;
 public class Source implements Identificable<Source> {
 
     private static final long serialVersionUID = -4261642590268604447L;
-    TimeType timeType;
-    TimeOffsetType offsetBase;
-    Integer firstdayofweek;
-    Integer offset;
-    URL url;
-    Restaurant restaurant;
+    private TimeType timeType;
+    private TimeOffsetType offsetBase;
+    private Integer firstDayOfWeek;
+    private Integer offset;
+    private URL url;
+    private Restaurant restaurant;
     private Long id;
-    Locale locale;
-    DateFormat dateFormat;
+    private Locale locale;
+    private DateFormat dateFormat;
     private String dateFormatString;
     private String encoding;
     private List<Meal> menu;
-    Calendar date;
+    private Calendar date;
 
     public TimeType getTimeType() {
         if (timeType == null)
@@ -50,19 +50,19 @@ public class Source implements Identificable<Source> {
         this.offsetBase = base;
     }
 
-    public Integer getFirstdayofweek() {
-        return firstdayofweek;
+    public Integer getFirstDayOfWeek() {
+        return firstDayOfWeek;
     }
 
-    public void setFirstdayofweek(String firstdayofweek) throws ParseException {
+    public void setFirstDayOfWeek(String firstDayOfWeek) throws ParseException {
         DateFormat df = new SimpleDateFormat("E", getLocale());
         Calendar cal = Calendar.getInstance();
-        cal.setTime(df.parse(firstdayofweek));
+        cal.setTime(df.parse(firstDayOfWeek));
         setFirstdayofweek(cal.get(Calendar.DAY_OF_WEEK));
     }
 
     public void setFirstdayofweek(Integer firstdayofweek) {
-        this.firstdayofweek = firstdayofweek;
+        this.firstDayOfWeek = firstdayofweek;
     }
 
     public Integer getOffset() {
@@ -220,7 +220,7 @@ public class Source implements Identificable<Source> {
         fieldToString(stringBuilder, "locale", locale);
         fieldToString(stringBuilder, "encoding", encoding);
         fieldToString(stringBuilder, "date", date);
-        fieldToString(stringBuilder, "firstdayofweek", firstdayofweek);
+        fieldToString(stringBuilder, "firstDayOfWeek", firstDayOfWeek);
         fieldToString(stringBuilder, "timeType", timeType);
         fieldToString(stringBuilder, "offsetBase", offsetBase);
         fieldToString(stringBuilder, "offset", offset);

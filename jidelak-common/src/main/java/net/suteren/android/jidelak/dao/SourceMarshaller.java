@@ -47,7 +47,7 @@ public class SourceMarshaller extends BaseMarshaller<Source> {
 			x = data.get(prefix + "source@firstDayOfWeek");
 			if (x != null)
 				try {
-					source.setFirstdayofweek(x);
+					source.setFirstDayOfWeek(x);
 				} catch (ParseException e) {
 					throw new JidelakParseException(
 							"string.first_day_of_week_malformed", "E", x, e);

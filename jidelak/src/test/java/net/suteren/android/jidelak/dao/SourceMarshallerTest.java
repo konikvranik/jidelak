@@ -73,7 +73,7 @@ public class SourceMarshallerTest {
 		Node n = d;
 		sm.unmarshall(n, s);
 
-		assertEquals(Integer.valueOf(Calendar.MONDAY), s.getFirstdayofweek());
+		assertEquals(Integer.valueOf(Calendar.MONDAY), s.getFirstDayOfWeek());
 		assertEquals(TimeType.RELATIVE, s.getTimeType());
 		assertEquals("week", s.getOffsetBase());
 		assertEquals(Integer.valueOf(0), s.getOffset());
@@ -118,7 +118,7 @@ public class SourceMarshallerTest {
 
 		sm.unmarshall("jidelak.config.restaurant", d, s);
 
-		assertEquals(Integer.valueOf(Calendar.MONDAY), s.getFirstdayofweek());
+		assertEquals(Integer.valueOf(Calendar.MONDAY), s.getFirstDayOfWeek());
 		assertEquals(TimeType.RELATIVE, s.getTimeType());
 		assertEquals("week", s.getOffsetBase());
 		assertEquals(Integer.valueOf(0), s.getOffset());

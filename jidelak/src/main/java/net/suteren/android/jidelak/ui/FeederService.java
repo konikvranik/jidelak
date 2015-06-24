@@ -49,7 +49,6 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
-import org.xml.sax.SAXException;
 
 public class FeederService extends Service {
 
@@ -202,13 +201,6 @@ public class FeederService extends Service {
 							.setHandled(true).setErrorType(ErrorType.NETWORK);
 				} catch (TransformerException e) {
 					throw new JidelakTransformerException(getResources()
-							.getString(R.string.transformer_exception), rdao
-							.findById(restaurant).getTemplateName(), source
-							.getUrl().toString(), e).setSource(source)
-							.setRestaurant(rdao.findById(restaurant))
-							.setHandled(true).setErrorType(ErrorType.PARSING);
-				} catch (SAXException e) {
-					throw new JidelakParseException(getResources()
 							.getString(R.string.transformer_exception), rdao
 							.findById(restaurant).getTemplateName(), source
 							.getUrl().toString(), e).setSource(source)

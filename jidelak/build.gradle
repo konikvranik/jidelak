@@ -6,8 +6,8 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 
-version = '1.6'
-android.defaultConfig.versionCode = 96
+version = '1.7'
+android.defaultConfig.versionCode = 97
 
 group = "net.suteren.android.jidelak"
 
@@ -199,7 +199,14 @@ android {
 		}
 	}
 
-	packagingOptions { exclude 'META-INF/LICENSE.txt' }
+	packagingOptions {
+		exclude 'META-INF/LICENSE.txt'
+		exclude 'META-INF/DEPENDENCIES'
+		exclude 'META-INF/LICENSE'
+		exclude 'META-INF/NOTICE'
+		exclude 'placeholder'
+		exclude 'META-INF/NOTICE.txt'
+	}
 
 	lintOptions { abortOnError false }
 

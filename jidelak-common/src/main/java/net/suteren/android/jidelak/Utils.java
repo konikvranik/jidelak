@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.tidy.Tidy;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -102,7 +101,7 @@ public class Utils {
 
     public static Node retrieve(Source source, InputStream inXsl)
             throws IOException, TransformerException,
-            ParserConfigurationException, JidelakException, SAXException {
+            ParserConfigurationException, JidelakException {
 
         System.setProperty("http.agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) " +
                 "Ubuntu Chromium/43.0.2357.81 Chrome/43.0.2357.81 Safari/537.36");
@@ -175,7 +174,7 @@ public class Utils {
     }
 
     private static Document getDocument(HttpURLConnection con, Source source, ByteArrayOutputStream debugos) throws
-            IOException, ParserConfigurationException, SAXException, TransformerConfigurationException {
+            IOException, ParserConfigurationException, TransformerConfigurationException {
         InputStream is = con.getInputStream();
 
         String enc = source.getEncoding();

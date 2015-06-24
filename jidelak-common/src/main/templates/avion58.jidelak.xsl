@@ -17,7 +17,7 @@
 
     <xsl:template name="restaurant">
         <restaurant version="1.0">
-            <id>praha-avion</id>
+            <id>praha-avion58</id>
             <name>Avion 58</name>
             <phone>+420 601 575 222</phone>
             <web>http://www.avion58.cz/</web>

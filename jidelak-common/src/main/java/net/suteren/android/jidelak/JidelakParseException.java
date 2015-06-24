@@ -9,7 +9,7 @@ public class JidelakParseException extends JidelakException {
 	private String format;
 
 	public JidelakParseException(String messageResource, String format,
-			String date, ParseException e) {
+			String date, Throwable e) {
 		super(messageResource, e);
 
 		setFormat(format);

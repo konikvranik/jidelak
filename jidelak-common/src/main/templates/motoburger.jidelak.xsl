@@ -127,6 +127,10 @@
                     <xsl:value-of
                             select="normalize-space(substring-after($time,'Polední nabídka'))"/>
                 </xsl:when>
+                <xsl:when test="contains($time,'*')">
+                    <xsl:value-of
+                            select="normalize-space(substring-before($time,'*'))"/>
+                </xsl:when>
                 <xsl:otherwise>
                     <xsl:value-of select="normalize-space($time)"/>
                 </xsl:otherwise>

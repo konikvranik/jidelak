@@ -16,7 +16,7 @@
     </xsl:template>
 
     <xsl:template name="restaurant">
-        <restaurant version="1.0">
+        <restaurant version="1.1">
             <id>praha-motoburger</id>
             <name>Motoburger</name>
             <phone>+420 222 986 095</phone>
@@ -138,6 +138,10 @@
         </xsl:variable>
         <xsl:call-template name="string-replace">
             <xsl:with-param name="string">
+        <xsl:call-template name="string-replace">
+            <xsl:with-param name="string">
+        <xsl:call-template name="string-replace">
+            <xsl:with-param name="string">
                 <xsl:call-template name="string-replace">
                     <xsl:with-param name="string">
                         <xsl:call-template name="string-replace">
@@ -223,6 +227,14 @@
             </xsl:with-param>
             <xsl:with-param name="replace" select="'prosinec'"/>
             <xsl:with-param name="with" select="'prosince'"/>
+        </xsl:call-template>
+            </xsl:with-param>
+            <xsl:with-param name="replace" select="'PONĎELÍ'"/>
+            <xsl:with-param name="with" select="'pondělí'"/>
+        </xsl:call-template>
+            </xsl:with-param>
+            <xsl:with-param name="replace" select="'ponďelí'"/>
+            <xsl:with-param name="with" select="'pondělí'"/>
         </xsl:call-template>
     </xsl:template>
 

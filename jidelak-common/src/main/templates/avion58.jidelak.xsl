@@ -16,7 +16,7 @@
     </xsl:template>
 
     <xsl:template name="restaurant">
-        <restaurant version="1.0">
+        <restaurant version="1.1">
             <id>praha-avion58</id>
             <name>Avion 58</name>
             <phone>+420 601 575 222</phone>

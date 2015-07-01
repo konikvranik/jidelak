@@ -17,7 +17,7 @@
     </xsl:template>
 
     <xsl:template name="restaurant">
-        <restaurant version="1.0">
+        <restaurant version="1.2">
             <id>praha-babcak</id>
             <name>Jídelna Babčák</name>
             <phone>+420 266782055</phone>

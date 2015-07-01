@@ -169,10 +169,10 @@
                                                                                                         name="string-replace">
                                                                                                     <xsl:with-param
                                                                                                             name="string"
-                                                                                                            select="$fixed-time"/>
+                                                                                                            select="concat($fixed-time, ' ')"/>
                                                                                                     <xsl:with-param
                                                                                                             name="replace"
-                                                                                                            select="'leden'"/>
+                                                                                                            select="'leden '"/>
                                                                                                     <xsl:with-param
                                                                                                             name="with"
                                                                                                             select="'ledna'"/>
@@ -180,52 +180,52 @@
                                                                                             </xsl:with-param>
                                                                                             <xsl:with-param
                                                                                                     name="replace"
-                                                                                                    select="'únor'"/>
+                                                                                                    select="'únor '"/>
                                                                                             <xsl:with-param name="with"
                                                                                                             select="'února'"/>
                                                                                         </xsl:call-template>
                                                                                     </xsl:with-param>
                                                                                     <xsl:with-param name="replace"
-                                                                                                    select="'březen'"/>
+                                                                                                    select="'březen '"/>
                                                                                     <xsl:with-param name="with"
                                                                                                     select="'března'"/>
                                                                                 </xsl:call-template>
                                                                             </xsl:with-param>
                                                                             <xsl:with-param name="replace"
-                                                                                            select="'duben'"/>
+                                                                                            select="'duben '"/>
                                                                             <xsl:with-param name="with"
                                                                                             select="'dubna'"/>
                                                                         </xsl:call-template>
                                                                     </xsl:with-param>
-                                                                    <xsl:with-param name="replace" select="'květen'"/>
+                                                                    <xsl:with-param name="replace" select="'květen '"/>
                                                                     <xsl:with-param name="with" select="'května'"/>
                                                                 </xsl:call-template>
                                                             </xsl:with-param>
-                                                            <xsl:with-param name="replace" select="'červen'"/>
+                                                            <xsl:with-param name="replace" select="'červen '"/>
                                                             <xsl:with-param name="with" select="'června'"/>
                                                         </xsl:call-template>
                                                     </xsl:with-param>
-                                                    <xsl:with-param name="replace" select="'červenec'"/>
+                                                    <xsl:with-param name="replace" select="'červenec '"/>
                                                     <xsl:with-param name="with" select="'července'"/>
                                                 </xsl:call-template>
                                             </xsl:with-param>
-                                            <xsl:with-param name="replace" select="'srpen'"/>
+                                            <xsl:with-param name="replace" select="'srpen '"/>
                                             <xsl:with-param name="with" select="'srpna'"/>
                                         </xsl:call-template>
                                     </xsl:with-param>
-                                    <xsl:with-param name="replace" select="'září'"/>
+                                    <xsl:with-param name="replace" select="'září '"/>
                                     <xsl:with-param name="with" select="'září'"/>
                                 </xsl:call-template>
                             </xsl:with-param>
-                            <xsl:with-param name="replace" select="'říjen'"/>
+                            <xsl:with-param name="replace" select="'říjen '"/>
                             <xsl:with-param name="with" select="'října'"/>
                         </xsl:call-template>
                     </xsl:with-param>
-                    <xsl:with-param name="replace" select="'listopad'"/>
+                    <xsl:with-param name="replace" select="'listopad '"/>
                     <xsl:with-param name="with" select="'listopadu'"/>
                 </xsl:call-template>
             </xsl:with-param>
-            <xsl:with-param name="replace" select="'prosinec'"/>
+            <xsl:with-param name="replace" select="'prosinec '"/>
             <xsl:with-param name="with" select="'prosince'"/>
         </xsl:call-template>
             </xsl:with-param>

@@ -16,7 +16,7 @@
     </xsl:template>
 
     <xsl:template name="restaurant">
-        <restaurant version="1.0">
+        <restaurant version="1.1">
             <id>praha-holesovicka-kozlovna</id>
             <name>Holešovická Kozlovna</name>
             <phone>+420 220 875 900</phone>
@@ -71,7 +71,7 @@
             <xsl:choose>
                 <xsl:when test="preceding-sibling::tr[contains(.,'Dezert')]">dessert</xsl:when>
                 <xsl:when test="preceding-sibling::tr[contains(.,'Salát')]">dinner</xsl:when>
-                <xsl:when test="preceding-sibling::tr[contains(.,'Hlavní jídla')]">dinner</xsl:when>
+                <xsl:when test="preceding-sibling::tr[contains(.,'Hlavní jídl')]">dinner</xsl:when>
                 <xsl:when test="preceding-sibling::tr[contains(.,'Polévka')]">soup</xsl:when>
                 <xsl:otherwise>dinner</xsl:otherwise>
             </xsl:choose>

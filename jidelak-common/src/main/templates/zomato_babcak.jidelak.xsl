@@ -46,14 +46,14 @@
     <xsl:template match="*[@id='daily-menu-container']">
         <menu>
             <xsl:apply-templates
-                    select=".//div[@class='tmi-groups']/div[@class='tmi-group']/div[starts-with(@class,'tmi tmi-daily')]"
+                    select=".//div[@class='tmi-group']/div[starts-with(@class,'tmi tmi-daily')]"
                     mode="menuitem"/>
         </menu>
     </xsl:template>
 
     <xsl:template match="div" mode="menuitem">
         <xsl:if
-                test="not(contains(@class,'bold') or contains(., '2dcl točené limonády k obědu'))">
+                test="not(contains(., '2dcl točené limonády k obědu'))">
             <meal dish="" category="">
                 <xsl:call-template name="dish"/>
                 <xsl:call-template name="category"/>

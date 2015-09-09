@@ -61,7 +61,7 @@
 		<xsl:otherwise>soup</xsl:otherwise>
 		</xsl:choose></xsl:attribute>
 			<xsl:attribute name="order"><xsl:value-of select="position()" /></xsl:attribute>
-			<xsl:attribute name="time"><xsl:value-of select="(preceding-sibling::tr[count(td[strong]) = 1])[1]/td/strong/." /></xsl:attribute>
+			<xsl:attribute name="time"><xsl:value-of select="(preceding-sibling::tr[count(td[strong]) = 1])[last()]/td/strong/." /></xsl:attribute>
 			<title>
 				<xsl:value-of select="td[3]" />
 			</title>

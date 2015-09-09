@@ -17,7 +17,7 @@
     </xsl:template>
 
     <xsl:template name="restaurant">
-        <restaurant version="1.0">
+        <restaurant version="1.1">
             <id>praha-hamburg-holesovice</id>
             <name>Restaurant Hamburg</name>
             <phone>+420 283872256</phone>
@@ -55,7 +55,7 @@
 
     <xsl:template match="div" mode="menuitem">
         <xsl:if
-                test="not(contains(., '2dcl točené limonády k obědu'))">
+                test="not(contains(., 'Domácí limonády viz nabídka')) and not(contains(., 'Fresh čaj (máta, zázvor)'))">
             <meal dish="" category="">
                 <xsl:call-template name="dish"/>
                 <xsl:call-template name="category"/>
@@ -74,7 +74,7 @@
     <xsl:template name="dish">
         <xsl:attribute name="dish">
             <xsl:choose>
-                <xsl:when test="count(preceding-sibling::div[contains(@class, 'tmi-daily')]) &lt; 2">soup</xsl:when>
+                <xsl:when test="count(preceding-sibling::div[contains(@class, 'tmi-daily')]) &lt; 1">soup</xsl:when>
                 <xsl:otherwise>dinner</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>

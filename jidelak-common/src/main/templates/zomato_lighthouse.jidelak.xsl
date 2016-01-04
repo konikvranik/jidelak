@@ -17,7 +17,7 @@
     </xsl:template>
 
     <xsl:template name="restaurant">
-        <restaurant version="1.1">
+        <restaurant version="1.2">
             <id>praha-lighthouse-bufet</id>
             <name>Lighthouse bufet</name>
             <phone>+420 777257838</phone>
@@ -72,7 +72,8 @@
         <xsl:attribute name="dish">
             <xsl:choose>
                 <xsl:when test="count(preceding-sibling::div[contains(@class, 'tmi-daily')]) &lt; 2">soup</xsl:when>
-                <xsl:when test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Čerstvé wrapy a chlebíčky:')]]) &gt; 0">snack</xsl:when>
+                <xsl:when test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Ostatní domácí produkty:')]]) &gt; 0">dessert</xsl:when>
+                <xsl:when test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Čerstvé wrapy a chlebíčky:')]]) &gt; 0">lunch</xsl:when>
                 <xsl:when test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Velké saláty:')]]) &gt; 0">dinner</xsl:when>
                 <xsl:when test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Malé salátky:')]]) &gt; 0">trimmings</xsl:when>
                 <xsl:when test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Hlavní jídla:')]]) &gt; 0">dinner</xsl:when>

@@ -17,7 +17,7 @@
     </xsl:template>
 
     <xsl:template name="restaurant">
-        <restaurant version="1.2">
+        <restaurant version="1.3">
             <id>praha-lighthouse-bufet</id>
             <name>Lighthouse bufet</name>
             <phone>+420 777257838</phone>
@@ -86,9 +86,7 @@
         <xsl:attribute name="category">
             <xsl:choose>
                 <xsl:when
-                        test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Velké saláty:')]]) &gt; 0">
-                    50-salad
-                </xsl:when>
+                        test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Velké saláty:')]]) &gt; 0">50-salad</xsl:when>
                 <xsl:otherwise>10-normal</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>

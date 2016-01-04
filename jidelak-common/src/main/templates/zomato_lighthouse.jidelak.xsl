@@ -17,7 +17,7 @@
     </xsl:template>
 
     <xsl:template name="restaurant">
-        <restaurant version="1.3">
+        <restaurant version="1.4">
             <id>praha-lighthouse-bufet</id>
             <name>Lighthouse bufet</name>
             <phone>+420 777257838</phone>
@@ -31,11 +31,11 @@
                     url="https://www.zomato.com/cs/praha/lighthouse-coffee-and-restaurant-hole%C5%A1ovice-praha-7/menu#daily"/>
    <open>
                 <term from="11:00" to="14:00" description="denní menu"/>
-                <term day-of-week="Po" from="11:00" to="14:00"/>
-                <term day-of-week="Út" from="11:00" to="14:00"/>
-                <term day-of-week="St" from="11:00" to="14:00"/>
-                <term day-of-week="Čt" from="11:00" to="14:00"/>
-                <term day-of-week="Pá" from="11:00" to="14:00"/>
+                <term day-of-week="Po" from="01:00" to="18:00"/>
+                <term day-of-week="Út" from="01:00" to="18:00"/>
+                <term day-of-week="St" from="01:00" to="18:00"/>
+                <term day-of-week="Čt" from="01:00" to="18:00"/>
+                <term day-of-week="Pá" from="01:00" to="18:00"/>
             </open>
 
             <xsl:apply-templates select="//*[@id='daily-menu-container']"/>
@@ -85,8 +85,8 @@
     <xsl:template name="category">
         <xsl:attribute name="category">
             <xsl:choose>
-                <xsl:when
-                        test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Velké saláty:')]]) &gt; 0">50-salad</xsl:when>
+                <xsl:when test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Čerstvé wrapy a chlebíčky:')]]) &gt; 0">10-normal</xsl:when>
+                <xsl:when test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Velké saláty:')]]) &gt; 0">50-salad</xsl:when>
                 <xsl:otherwise>10-normal</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>

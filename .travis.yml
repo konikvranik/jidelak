@@ -30,7 +30,7 @@ before_script:
   - emulator -avd test -no-audio -no-window &
   - git config --global user.email builds@travis-ci.org
   - git config --global user.name "Travis CI"
-  - gpg --no-use-agent --passphrase "$GPG_PASSPHRASE" -d secrets.gpg | tar x
+  - gpg --no-use-agent --passphrase "$GPG_PASSPHRASE" -d secrets.gpg | tar xz
 
 script:
   - ./gradlew --daemon build jacocoTestReport

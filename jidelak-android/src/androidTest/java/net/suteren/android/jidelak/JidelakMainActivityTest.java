@@ -1,16 +1,17 @@
 package net.suteren.android.jidelak;
 
 import android.test.ActivityInstrumentationTestCase2;
+import net.suteren.android.jidelak.ui.MainActivity;
 
 public class JidelakMainActivityTest extends
-		ActivityInstrumentationTestCase2<JidelakMainActivity> {
+		ActivityInstrumentationTestCase2<MainActivity> {
 
 	public JidelakMainActivityTest() {
-		super(JidelakMainActivity.class);
+		super(MainActivity.class);
 	}
 
 	public void testActivity() {
-		JidelakMainActivity activity = getActivity();
+		MainActivity activity = getActivity();
 		assertNotNull(activity);
 	}
 

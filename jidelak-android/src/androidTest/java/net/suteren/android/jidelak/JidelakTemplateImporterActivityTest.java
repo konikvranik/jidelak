@@ -11,6 +11,7 @@ import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
+import net.suteren.android.jidelak.ui.TemplateImporterActivity;
 import org.junit.Test;
 
 import java.io.File;
@@ -20,22 +21,22 @@ import java.util.Set;
 import java.util.SortedSet;
 
 public class JidelakTemplateImporterActivityTest extends
-		ActivityInstrumentationTestCase2<JidelakTemplateImporterActivity> {
+		ActivityInstrumentationTestCase2<TemplateImporterActivity> {
 
-	private static final String LOG_TAG = "JidelakTemplateImporterActivityTest";
+	private static final String LOG_TAG = "JTIAT";
 
 	public JidelakTemplateImporterActivityTest() {
-		super(JidelakTemplateImporterActivity.class);
+		super(TemplateImporterActivity.class);
 	}
 
 	public void testActivity() {
-		JidelakTemplateImporterActivity activity = getActivity();
+		TemplateImporterActivity activity = getActivity();
 		assertNotNull(activity);
 	}
 
 	@Test
 	public void testParser() throws Exception {
-		JidelakTemplateImporterActivity activity = getActivity();
+		TemplateImporterActivity activity = getActivity();
 
 		// InputStream r = this.getClass().getResourceAsStream(
 		// "/lg_ave.jidelak.xsl");
@@ -55,7 +56,7 @@ public class JidelakTemplateImporterActivityTest extends
 		// bw.close();
 
 		Intent intent = new Intent(getActivity(),
-				JidelakTemplateImporterActivity.class);
+				TemplateImporterActivity.class);
 		intent.setData(Uri.fromFile(new File("/sdcard/lg_ave.jidelak.xsl")));
 		intent.putExtra("force", true);
 		getActivity().startActivity(intent);
@@ -66,7 +67,7 @@ public class JidelakTemplateImporterActivityTest extends
 		// this.getClass().getResourceAsStream("/lg_ave.jidelak.xsl"),
 		// restaurant);
 
-		RestaurantDao rdao = new RestaurantDao(new JidelakDbHelper(
+		RestaurantDao rdao = new RestaurantDao(JidelakDbHelper.getInstance(
 				getActivity()));
 
 		restaurant.setId((long) 1);
@@ -100,8 +101,8 @@ public class JidelakTemplateImporterActivityTest extends
 	}
 
 	public void testResults() {
-		JidelakTemplateImporterActivity activity = getActivity();
-		JidelakDbHelper dbh = new JidelakDbHelper(activity);
+		TemplateImporterActivity activity = getActivity();
+		JidelakDbHelper dbh = JidelakDbHelper.getInstance(activity);
 
 		RestaurantDao rdao = new RestaurantDao(dbh);
 

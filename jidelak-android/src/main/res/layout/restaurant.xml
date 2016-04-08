@@ -1,91 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="24dp" >
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingBottom="24dp">
 
     <View
-        android:id="@+id/bottom_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bottom_shadow"
-        android:visibility="gone" >
+            android:id="@+id/bottom_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bottom_shadow"
+            android:visibility="gone">
     </View>
 
     <View
-        android:id="@+id/upper_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:background="@drawable/upper_shadow"
-        android:visibility="gone" >
+            android:id="@+id/upper_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@drawable/upper_shadow"
+            android:visibility="gone">
     </View>
 
     <RelativeLayout
-        android:id="@+id/header"
-        style="@style/RestaurantHeaderTheme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+            android:id="@+id/header"
+            style="@style/RestaurantHeaderTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="8dp"
-            android:layout_toLeftOf="@+id/btn_call"
-            android:text="Restaurace"
-            android:textAppearance="@style/RestaurantTextLarge" />
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="8dp"
+                android:text="Restaurace"
+                android:textAppearance="@style/RestaurantTextLarge"/>
 
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/name"
-            android:text="@string/open"
-            android:textAppearance="@style/RestaurantTextSmall" />
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/name"
+                android:text="@string/open"
+                android:textAppearance="@style/RestaurantTextSmall"/>
 
         <TextView
-            android:id="@+id/open"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textView2"
-            android:layout_toLeftOf="@+id/btn_call"
-            android:layout_toRightOf="@+id/textView2"
-            android:paddingLeft="1dp"
-            android:singleLine="false"
-            android:text="16:00 - 19:00"
-            android:textAppearance="@style/RestaurantText" />
+                android:id="@+id/open"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textView2"
+                android:layout_toRightOf="@+id/textView2"
+                android:paddingLeft="1dp"
+                android:singleLine="false"
+                android:text="16:00 - 19:00"
+                android:textAppearance="@style/RestaurantText"/>
 
         <ImageButton
-            android:id="@+id/btn_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:onClick="onMenuButtonClick"
-            android:background="@android:color/transparent"
-            android:src="@drawable/abc_ic_menu_moreoverflow_normal_holo_light" />
+                android:id="@+id/btn_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:background="@android:color/transparent"/>
     </RelativeLayout>
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@drawable/bottom_shadow" >
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/bottom_shadow">
     </View>
 
     <TextView
-        android:id="@+id/empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="0dp"
-        android:paddingTop="15dp"
-        android:text="@string/no_menu" >
+            android:id="@+id/empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="0dp"
+            android:paddingTop="15dp"
+            android:text="@string/no_menu">
     </TextView>
 
 </LinearLayout>

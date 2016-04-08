@@ -109,5 +109,6 @@
         <item>minute</item>
         <item>minutes</item>
     </string-array>
+    <string name="update_title">Update</string>
 
 </resources>

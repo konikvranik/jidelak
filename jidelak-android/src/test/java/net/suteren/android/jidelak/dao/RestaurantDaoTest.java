@@ -1,13 +1,13 @@
 package net.suteren.android.jidelak.dao;
 
-import java.util.SortedSet;
-
-import net.suteren.android.jidelak.JidelakDbHelper;
-import net.suteren.android.jidelak.JidelakMainActivity;
-import net.suteren.android.jidelak.model.Restaurant;
 import android.content.ContentValues;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
+import net.suteren.android.jidelak.JidelakDbHelper;
+import net.suteren.android.jidelak.JidelakMainActivity;
+import net.suteren.android.jidelak.model.Restaurant;
+
+import java.util.SortedSet;
 
 public class RestaurantDaoTest extends
 		ActivityInstrumentationTestCase2<JidelakMainActivity> {

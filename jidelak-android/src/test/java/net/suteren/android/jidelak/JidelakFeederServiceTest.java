@@ -1,22 +1,18 @@
 package net.suteren.android.jidelak;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
+import android.content.Intent;
+import android.test.ServiceTestCase;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.w3c.dom.Node;
 
-import android.content.Intent;
-import android.test.ServiceTestCase;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 public class JidelakFeederServiceTest extends
 		ServiceTestCase<JidelakFeederService> {

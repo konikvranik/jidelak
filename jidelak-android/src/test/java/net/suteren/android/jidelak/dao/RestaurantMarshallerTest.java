@@ -1,13 +1,18 @@
 package net.suteren.android.jidelak.dao;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.io.StringWriter;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.SortedSet;
+import net.suteren.android.jidelak.JidelakException;
+import net.suteren.android.jidelak.model.Availability;
+import net.suteren.android.jidelak.model.Restaurant;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,21 +24,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.StringWriter;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.SortedSet;
 
-import net.suteren.android.jidelak.JidelakException;
-import net.suteren.android.jidelak.model.Availability;
-import net.suteren.android.jidelak.model.Restaurant;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import static org.junit.Assert.*;
 
 public class RestaurantMarshallerTest {
 

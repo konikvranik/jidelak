@@ -1,11 +1,9 @@
 package net.suteren.android.jidelak;
 
-import java.io.File;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.SortedSet;
-
+import android.content.Intent;
+import android.net.Uri;
+import android.test.ActivityInstrumentationTestCase2;
+import android.util.Log;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
@@ -13,13 +11,13 @@ import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
-
 import org.junit.Test;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.test.ActivityInstrumentationTestCase2;
-import android.util.Log;
+import java.io.File;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.SortedSet;
 
 public class JidelakTemplateImporterActivityTest extends
 		ActivityInstrumentationTestCase2<JidelakTemplateImporterActivity> {

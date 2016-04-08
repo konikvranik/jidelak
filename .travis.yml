@@ -1,0 +1,97 @@
+secure:
+  - "VUdKu+f/nqjMlbn00nTqqRJHMNSY9VEkeFges1lwrnKHntsQu4Y4gHV8kJETT8WaVd2IcUaBs9mCZUCODvtxeRHI/zRZThXMPpt3qG2pFjj1FXflqf9rO8p7dPEzMfkkvA84eT6FIWYgIF3W4j+IaK+laGXmNWABF7170skb3+OQBtqOoAsSimifToHfMs6FkemDz97nke4D28yHfMtGgFi/n4xVaqZxNxBhuW9W9uxP8yW8Nnp+tewhTAurf/DrGeScAgbQb5mSL1pZU1ANgy7D62vF14eIERMHJX7GOp3up1oS9F23QO/iJyD9cpZ9qF6fP+FvB8Kp3ESClsjJe+45rLCKWomRDk9izKB8AokNWxwoWYCN6ufkUiUkktn3oBvOycOSYRpPO/O9P/4rvCnmA2zFZFY4sY0Bi6wpYNiR1eV2wTMGYiByO+novtDRMhmtcoQOZzU51v/Bdlz6mV4jtyI71husIyzZGQ2aMfPYEi2trxqyEsfFe7f7GVRu67BJYOXoZv1jUaysIFjZtqyF5lChq+Z0Ec5+6tx9dYMsT6gHFPDzVg2xDOdg76rEn8Iej93RADdW8qm+7afswhRXPbsEmHzsxYxF5xY4wy6F9MfBK66V5zQ7JDTDzFbO2+Q//09yhLri4d5DJdvFOUOk6oPTuSSr3RVSWDYShdM=" # GH
+  - "UYejZruI58CANxUj+Ykv6KAMvGhEUKz8RbQgIxcmlp6Hh76U66fKMPdhTs3sS/a2zQ2XBpTbad6Ymof0jzGtJUAKgxQu/HWkerTy7gn1Ul5W8NXs6K/Wr8ootZlxAJfysLesVU2QYsQtiklBzwynynCspAWT7s0QwOjdcdpz2Ypq26VtDhLcmJlDfWHcsUyWx4ZaMCEx+jl9EbUeqUpuizD97q0ofZNNCRdNFxBXKdCd9h01FUUasIHRFtF8fkl94sWonsC3jHtF1Ii9JBgIV1wcV9VlUoutXOO7IyXZohLD2lhJpvc42gEiR3b2ZKFTRjX3Th2kvssL6gU48lM19FfRnf1j9T76k2djHBf8u7SiOeuljuuOejvnET+q7I4NhZezxokjZs4FmC0OrX9xsl8+hed8fV8fYs63H2KkRb3QR1yPQyjuIC0g10/BOCiNUZnxK8xNfjKIGG/B0Vb3GV+F4vs81UmgUgyl3u3PczfGmRSBQWNYyHff225albzvonep9gVH5cSDFKkinzjOjOP53eC3bmO1JZxLMPW/GyROceJ8W3SSG37alMvFIcn/JwlWKfNBYxeClAR9EqX3sLWT0vm2wl8pIwsEjgaAW6gCp2VWLyLYEEhOszE0vRZEmVWnz4BP/KDs+Y5qVXtJjKsv4VvKcmnlNLdhhD08+mI=" # CodeClimate
+
+language:
+  - android
+  - java
+
+jdk: oraclejdk7
+
+env:
+    global:
+    - GRADLE_OPTS="-Xmx512m -XX:MaxPermSize=512m -Djava.net.preferIPv4Stack=true"
+    - ANDROID_TARGET=android-23
+    - ANDROID_ABI=armeabi-v7a
+    - ADB_INSTALL_TIMEOUT=8
+    - AVD_DEBUG='init,avd_config,nand_limits,keys,adb,adbserver,adbclient'
+
+android:
+  components:
+  - tools
+  - platform-tools
+  - build-tools-23.0.2
+  - ${ANDROID_TARGET}
+  - extra-android-m2repository
+  - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
+
+before_script:
+  - echo no | android create avd --force -n test -t ${ANDROID_TARGET} --abi ${ANDROID_ABI}
+  - emulator -avd test -no-audio -no-window &
+  - git config --global user.email builds@travis-ci.org
+  - git config --global user.name "Travis CI"
+  - gpg --no-use-agent --passphrase "$GPG_PASSPHRASE" -d secrets.gpg | tar x
+
+script:
+  - ./gradlew --daemon build jacocoTestReport
+  - find $TRAVIS_BUILD_DIR/android/build -type f -not -iname "*.java" -and -not -iname "*.class" -and -not -iname "*.dex" -and -not -iname "*.png" -and -not -iname "*.aidl"
+  - ./android-wait-for-emulator
+  - adb shell input keyevent 82 &
+  - adb shell setprop dalvik.vm.dexopt-flags v=n,o=v
+  - ./gradlew --daemon connectedCheck jacocoTestReport --stacktrace --info
+
+after_script:
+  - bash <(curl -s https://codecov.io/bash) -v
+  - >
+    git remote set-url origin "https://$GITHUB_TOKEN@github.com/konikvranik/jidelak.git" &&
+    git fetch origin gh-pages:gh-pages &&
+    git symbolic-ref HEAD refs/heads/gh-pages &&
+    git reset HEAD &&
+    ( cp -ru $TRAVIS_BUILD_DIR/android/build/outputs/lint-results* . || true ) &&
+    ( cp -ru $TRAVIS_BUILD_DIR/android/build/outputs/report* . || true ) &&
+    ( cp -ru $TRAVIS_BUILD_DIR/android/build/report* . || true ) &&
+    ( cp -ru $TRAVIS_BUILD_DIR/android/CHANGELOG.html . || true ) &&
+    ( git add lint* || true ) &&
+    ( git add report* || true ) &&
+    ( git add CHANGELOG.html || true ) &&
+    git commit -m "travis => build reports [skip ci]" &&
+    git push --set-upstream origin gh-pages
+  - cat `which android-wait-for-emulator`
+  - curl https://www.quantifiedcode.com/api/v1/project/4ec4d485b6884f76a74d5799c08d14dc/analyze
+
+after_success:
+  - ./gradlew --daemon -p android bintrayUpload
+  - >
+    [ -n "$TRAVIS_TAG" ] &&
+    ./gradlew --daemon generateChangelog &&
+    ( cp android/CHANGELOG.md android/src/main/play/cs-CZ/whatsnew; cp android/CHANGELOG.md android/src/main/play/en-US/whatsnew; true ) &&
+    ./gradlew --daemon -p android publishRelease &&
+    git remote set-url origin "https://$GITHUB_TOKEN@github.com/konikvranik/jidelak.git" &&
+    git fetch origin master:master &&
+    git symbolic-ref HEAD refs/heads/master &&
+    git reset HEAD &&
+    ( git add version.properties || true ) &&
+    ( git add android/CHANGELOG.* || true ) &&
+    ( git add android/src/main/play/*/whatsnew || true ) &&
+    eval ` gawk '/^\s*([^#].*)$/{print "export " $1}' version.properties` &&
+    git commit -m "Buildversion increase: $VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH (Google Play: $VERSION_NUMBER, build: $VERSION_BUILD, tag: $TRAVIS_TAG) [skip ci]" &&
+    git push --set-upstream origin master
+
+deploy:
+  - provider: releases
+    skip_cleanup: true
+    overwrite: true
+    api_key: $GITHUB_TOKEN
+    file:
+    - $TRAVIS_BUILD_DIR/android/build/outputs/apk/android-debug.apk
+    - $TRAVIS_BUILD_DIR/android/build/outputs/apk/android-debug-unaligned.apk
+    - $TRAVIS_BUILD_DIR/android/build/outputs/apk/android-release.apk
+    - $TRAVIS_BUILD_DIR/android/build/outputs/apk/android-release-unaligned.apk
+    on:
+      tags: true
+
+after_deploy:
+
+addons:
+  code_climate:
+    repo_token: $CODECLIMATE_TOKEN

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
@@ -25,36 +26,39 @@
         android:paddingTop="3dp" >
 
         <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/price"
-            android:text="Jídlo"
-            android:textAppearance="@style/RestaurantText" />
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/price"
+                android:text="[[Jídlo]]"
+                android:textAppearance="@style/RestaurantText"
+                tools:ignore="HardcodedText"/>
 
         <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/name"
-            android:layout_toLeftOf="@+id/price"
-            android:text="Popis"
-            android:singleLine="false"
-            android:textAppearance="@style/RestaurantTextSmall" />
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/name"
+                android:layout_toLeftOf="@+id/price"
+                android:text="[[Popis]]"
+                android:singleLine="false"
+                android:textAppearance="@style/RestaurantTextSmall"
+                tools:ignore="HardcodedText"/>
 
         <TextView
-            android:id="@+id/price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="15dp"
-            android:text="100,- Kč"
-            android:textAppearance="@style/RestaurantTextSmall"
-            android:textStyle="italic" />
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="15dp"
+                android:text="[[100,- Kč]]"
+                android:textAppearance="@style/RestaurantTextSmall"
+                android:textStyle="italic"
+                tools:ignore="HardcodedText"/>
     </RelativeLayout>
 
 </LinearLayout>

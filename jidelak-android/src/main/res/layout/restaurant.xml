@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
@@ -36,8 +37,9 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="8dp"
-                android:text="Restaurace"
-                android:textAppearance="@style/RestaurantTextLarge"/>
+                android:text="[[Restaurace]]"
+                android:textAppearance="@style/RestaurantTextLarge"
+                tools:ignore="HardcodedText"/>
 
         <TextView
                 android:id="@+id/textView2"
@@ -56,8 +58,9 @@
                 android:layout_toRightOf="@+id/textView2"
                 android:paddingLeft="1dp"
                 android:singleLine="false"
-                android:text="16:00 - 19:00"
-                android:textAppearance="@style/RestaurantText"/>
+                android:text="[[16:00 - 19:00]]"
+                android:textAppearance="@style/RestaurantText"
+                tools:ignore="HardcodedText"/>
 
         <ImageButton
                 android:id="@+id/btn_menu"

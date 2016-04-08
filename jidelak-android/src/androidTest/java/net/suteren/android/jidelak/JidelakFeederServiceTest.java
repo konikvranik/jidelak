@@ -30,7 +30,6 @@ public class JidelakFeederServiceTest extends
 
 //		getService().updateData();
 
-        fail("Not yet implemented");
     }
 
     public void testRetrieve() throws MalformedURLException, FileNotFoundException, IOException,

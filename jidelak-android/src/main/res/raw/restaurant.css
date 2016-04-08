@@ -1,0 +1,58 @@
+body {
+	color: #ddd;
+	background-color: #000;
+	background: transparent;
+	padding: 2em;
+}
+
+a {
+	color: #ff9741;
+}
+
+th {
+	text-align: right;
+}
+
+.header th {
+	text-align: center;
+}
+
+td {
+	padding: .5ex 1ex;
+}
+
+div.serving {
+	width: 40%;
+	float: right;
+	margin-left: 2em;
+	padding: 0px;
+	border: 1px solid transparent;
+}
+
+address p {
+	margin: 0px;
+}
+
+p.email,p.web {
+	margin-bottom: 1em;
+}
+
+div.contact {
+	padding: 0px;
+	border: 1px solid transparent;
+}
+
+address {
+	margin: .5em 0px 1em 0px;
+}
+
+div.meta {
+	padding-top: 4em;
+	text-align: center;
+	clear: both;
+}
+
+table.meta {
+	margin-left: auto;
+	margin-right: auto;
+}

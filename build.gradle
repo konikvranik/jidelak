@@ -1,0 +1,37 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+//org.gradle.jvmargs="-Xmx1024m -XX:MaxPermSize=512m -Xms512m"
+
+allprojects {
+
+    if (project.rootProject.file('local.properties').exists()) {
+        Properties buildProps = new Properties()
+        buildProps.load(project.rootProject.file('local.properties').newDataInputStream())
+        buildProps.each { prop -> project.ext.set(prop.key, prop.value) }
+    }
+
+    def key = System.getenv('SIGNINIG_KEYSTORE_PASSWORD')
+    if (key != null) {
+        project.ext.set('pwd.keystore', key)
+    }
+    key = System.getenv('SIGNINIG_KEY_PASSWORD')
+    if (key != null) {
+        project.ext.set('pwd.key', key)
+    }
+
+    repositories {
+        jcenter()
+        maven {
+            url "https://dl.bintray.com/konikvranik/maven"
+        }
+    }
+
+    buildscript {
+        repositories {
+            jcenter()
+        }
+        dependencies {
+            classpath "org.jacoco:org.jacoco.core:0.7.4.201502262128"
+        }
+    }
+}

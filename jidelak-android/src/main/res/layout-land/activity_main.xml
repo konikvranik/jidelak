@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <FrameLayout
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="2" >
+
+        <include layout="@layout/restaurants_manager" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="3" >
+
+        <include layout="@layout/menu_view" />
+    </FrameLayout>
+
+</LinearLayout>

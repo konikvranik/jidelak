@@ -16,7 +16,7 @@ sourceCompatibility = 1.6
 repositories { mavenCentral() }
 
 dependencies {
-	compile project('jidelak-common')
+	compile project(':jidelak-common')
 	compile 'net.sf.jtidy:jtidy:r938'
 	compile 'org.slf4j:slf4j-api:1.6.1'
 	compile('com.squareup.retrofit:converter-simplexml:1.6.1'){

@@ -1,0 +1,316 @@
+group = "net.suteren.android.jidelak"
+
+buildscript {
+    dependencies {
+        classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
+        classpath 'com.android.tools.build:gradle:2.0.0-beta7'
+        classpath 'com.dicedmelon.gradle:jacoco-android:+'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+        classpath 'com.selesse:gradle-git-changelog:0.2.0'
+    }
+    repositories {
+        jcenter()
+    }
+}
+
+subprojects {
+    buildscript {
+        dependencies {
+            classpath "org.jacoco:org.jacoco.core:0.7.4.201502262128"
+        }
+    }
+}
+repositories {
+    jcenter()
+    maven {
+        url "https://dl.bintray.com/konikvranik/maven"
+    }
+}
+
+allprojects {
+
+    repositories {
+        jcenter()
+        maven {
+            url "https://dl.bintray.com/konikvranik/maven"
+        }
+    }
+
+    buildscript {
+        repositories {
+            jcenter()
+        }
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'jacoco-android'
+apply plugin: 'com.github.triplet.play'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: "com.selesse.git.changelog"
+
+dependencies {
+
+
+    compile(project(':jidelak-common')) { exclude module: 'slf4j-api' }
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.google.android.gms:play-services:3.2.+'
+    compile 'net.sf.jtidy:jtidy:r938'
+    compile 'org.slf4j:slf4j-android:1.6.1-RC1'
+    compile 'org.apache.commons:commons-lang3:3.2.1'
+    // compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.6.1'
+
+    testCompile 'junit:junit:4.12'
+
+}
+
+def key = System.getenv('SIGNINIG_KEYSTORE_PASSWORD')
+if (key != null) {
+    project.ext.set('pwd.keystore', key)
+}
+key = System.getenv('SIGNINIG_KEY_PASSWORD')
+if (key != null) {
+    project.ext.set('pwd.key', key)
+}
+def bintray_user = System.getenv('BINTRAY_USER')
+if (bintray_user != null) {
+    project.ext.set('bintray.user', bintray_user)
+}
+def bintray_api_key = System.getenv('BINTRAY_TOKEN')
+if (bintray_api_key != null) {
+    project.ext.set('bintray.apiKey', bintray_api_key)
+    System.getProperties().put('bintray.apiKey', bintray_api_key)
+    System.getProperties().put('apiKey', bintray_api_key)
+}
+def boolean sign = project.ext.has('pwd.keystore') && project.ext.has('pwd.key')
+
+def versionPropsFile = file('../version.properties')
+if (versionPropsFile.canRead()) {
+    def Properties versionProps = new Properties()
+
+    versionProps.load(new FileInputStream(versionPropsFile))
+
+    def value = 0
+
+    def runTasks = gradle.startParameter.taskNames
+    if ('assemble' in runTasks || 'assembleRelease' in runTasks || 'aR' in runTasks || 'publishApkRelease' in runTasks || 'publishRelease' in runTasks) {
+        value = 1;
+    }
+
+    def versionMajor = versionProps['VERSION_MAJOR'].toInteger()
+    def versionMinor = versionProps['VERSION_MINOR'].toInteger()
+    def versionPatch = versionProps['VERSION_PATCH'].toInteger() + value
+    def versionNumber = versionProps['VERSION_NUMBER'].toInteger() + value
+    def versionBuild = System.getenv("TRAVIS_BUILD_NUMBER") == null ?
+            (versionProps['VERSION_BUILD'].toInteger() + (System.getenv("CI") == null ? 0 : 1)) : System.getenv("TRAVIS_BUILD_NUMBER")
+    def versionSuffix = versionProps['VERSION_SUFFIX'].toString()
+
+    versionProps['VERSION_PATCH'] = versionPatch.toString()
+    versionProps['VERSION_BUILD'] = versionBuild.toString()
+    versionProps['VERSION_NUMBER'] = versionNumber.toString()
+    versionProps['VERSION_MAJOR'] = versionMajor.toString()
+    versionProps['VERSION_MINOR'] = versionMinor.toString()
+
+    versionProps.store(versionPropsFile.newWriter(), null)
+
+    android.defaultConfig {
+        applicationId "net.suteren.worksaldo.android"
+        minSdkVersion 21
+        targetSdkVersion 23
+        versionCode versionNumber
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}-${versionSuffix}@b${versionBuild}"
+    }
+
+/*
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                def fileNaming = "apk/RELEASES"
+                variant.outputs.each { out ->
+                    def outputFile = out.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        out.outputFile = new File(getProject().getRootDir(), "${fileNaming}-${versionMajor}.${versionMinor}.${versionPatch}-${outputFile.name}")
+                    }
+                }
+            }
+        }
+*/
+} else {
+    throw new GradleException("Could not read version.properties!")
+}
+
+version = android.defaultConfig.versionName
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    signingConfigs {
+        if (sign) {
+            release {
+
+                storeFile file("release.keystore")
+                keyAlias "jidelak"
+
+                storePassword project.ext.get('pwd.keystore')
+                keyPassword project.ext.get('pwd.key')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (sign) {
+                signingConfig signingConfigs.release
+            }
+        }
+        debug {
+            testCoverageEnabled true
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/jersey-module-version'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE.txt'
+    }
+
+    dexOptions {
+        preDexLibraries = false
+    }
+
+}
+
+play {
+    jsonFile = file('../GooglePlayAndroidDeveloper-d20ecef57b83.json')
+    errorOnSizeLimit = false
+    uploadImages = true
+}
+
+bintray.key = System.getenv('BINTRAY_TOKEN')
+bintray.user = System.getenv('BINTRAY_USER')
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_TOKEN')
+    filesSpec { //When uploading any arbitrary files ('filesSpec' is a standard Gradle CopySpec)
+        from 'build/outputs/apk'
+        into '.'
+        rename 'android(-.+)\\.apk', String.format('worksaldo-%s-%05d$1.apk', android.defaultConfig.versionName, android.defaultConfig.versionCode)
+    }
+    dryRun = false //Whether to run this as dry-run, without deploying
+    publish = true //If version should be auto published after an upload
+    pkg {
+        repo = 'android'
+        name = "worksaldo"
+        desc = 'Application which displays worked hours and balance over specified period.'
+        websiteUrl = 'https://github.com/konikvranik/worksaldo'
+        issueTrackerUrl = 'https://github.com/konikvranik/worksaldo/issues'
+        vcsUrl = 'https://github.com/konikvranik/worksaldo.git'
+        licenses = ['Apache-2.0']
+        labels = ["toggl", "client", "work", "android", "report", "apk"]
+        publicDownloadNumbers = true
+        version {
+            name = android.defaultConfig.versionName
+            desc = 'optional, version-specific description'
+//                vcsTag = '1.3.0'
+        }
+    }
+}
+
+changelog {
+    // The title appears at the top of the changelog.
+    // Default value: the name of the project.
+    title = "${project.name} - Changelog"
+
+    // The output directory where the report is generated.
+    // Default value: main resource directory, or the "build" directory
+    outputDirectory = file(projectDir)
+
+    // The name of the report to generate.
+    // Default value: CHANGELOG.md
+    //fileName = "changelog.txt"
+
+    // The range of commits the changelog should be composed of.
+    // Default value: 'beginning' (i.e. full changelog)
+    // Possible values: 'beginning', 'last_tag', 'xxx'
+    //
+    // 'last_tag' will use all the commits since the last tag,
+    // 'beginning' will use all commits since the initial commit (default)
+    // 'xxx' will use all the tags since the 'xxx' Git reference (i.e. `since = 1.2.0` will display the changelog
+    //       since the 1.2.0 tag, excluding 1.2.0)
+    since = 'beginning'
+
+    // The output formats that should be generated.
+    // Default value: ['markdown']
+    // Possible values: 'html', 'markdown'.
+    formats = ['html', 'markdown']
+
+    // The Git "pretty" changelog commit format.
+    // Default value: %ad%x09%s (%an), which produces:
+    // Thu May 7 20:10:33 2015 -0400    Initial commit (Alex Selesse)
+    // commitFormat = '%s (%an)'
+
+    // Specifies a commit format for Markdown.
+    // Default value: '* %s (%an)', which produces:
+    // * Initial commit (Alex Selesse)
+    markdown {
+        commitFormat = '* %s (%an)'
+    }
+
+    // Specifies a commit format for the HTML template.
+    // Default value: see commitFormat
+    html {
+        commitFormat = '%s (%an)'
+
+        // The Groovy HTML template used to generate the HTML changelog.
+        // See http://docs.groovy-lang.org/latest/html/documentation/template-engines.html
+        //   template = file("$projectDir/htmlTemplate").text
+    }
+
+    // A closure that returns 'true' if the line should be included in the changelog.
+    // Default value: accept everything, { true }
+    includeLines = {
+        !it.contains("Merge")
+    }
+
+    // A closure that transforms a changelog String.
+    // Default value: the identity closure, { it }
+    //
+    // For example, to remove '[ci skip]' from the changelog messages:
+    processLines = {
+        String input = it as String
+        if (input.contains('[ci skip] ')) {
+            input = input.minus('[ci skip] ')
+        }
+        input
+    }
+}
+
+preBuild {
+    doFirst {
+        JavaCompile jc = android.applicationVariants.find { it.name == 'debug' }.javaCompile
+        jc.options.compilerArgs = ["-Xlint:unchecked", "-Xlint:deprecation"]
+    }
+}
+if (project.rootProject.file('local.properties').exists()) {
+    Properties buildProps = System.getProperties()
+    buildProps.load(project.rootProject.file('local.properties').newDataInputStream())
+    buildProps.each { prop -> project.ext.set(prop.key, prop.value) }
+} else if (project.rootProject.file('../local.properties').exists()) {
+    Properties buildProps = System.getProperties()
+    buildProps.load(project.rootProject.file('../local.properties').newDataInputStream())
+    buildProps.each { prop -> project.ext.set(prop.key, prop.value) }
+}
+
+

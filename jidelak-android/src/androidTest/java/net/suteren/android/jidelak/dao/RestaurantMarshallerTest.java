@@ -1,13 +1,9 @@
 package net.suteren.android.jidelak.dao;
 
+import android.test.AndroidTestCase;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
@@ -29,147 +25,132 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.SortedSet;
 
-import static org.junit.Assert.*;
+public class RestaurantMarshallerTest extends AndroidTestCase {
 
-public class RestaurantMarshallerTest {
+    private static Logger log = LoggerFactory.getLogger("RestaurantTest");
 
-	private static Logger log = LoggerFactory.getLogger("RestaurantTest");
+    public void setUp() throws Exception {
+    }
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+    public void tearDown() throws Exception {
+    }
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+    public void testClean() {
+        fail("Not yet implemented");
+    }
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    public void testMarshallNode() throws ParserConfigurationException,
+            TransformerConfigurationException,
+            TransformerFactoryConfigurationError, TransformerException,
+            JidelakException {
 
-	@After
-	public void tearDown() throws Exception {
-	}
+        Document doc = DocumentBuilderFactory.newInstance()
+                .newDocumentBuilder().newDocument();
 
-	@Test
-	public void testClean() {
-		fail("Not yet implemented");
-	}
+        Node n = prepareDocument(doc);
+        printNode(n);
 
-	@Test
-	public void testMarshallNode() throws ParserConfigurationException,
-			TransformerConfigurationException,
-			TransformerFactoryConfigurationError, TransformerException,
-			JidelakException {
+        SourceMarshallerTest.prepareDocument(n);
 
-		Document doc = DocumentBuilderFactory.newInstance()
-				.newDocumentBuilder().newDocument();
+        Restaurant restaurant = new Restaurant();
+        new RestaurantMarshaller().unmarshall(n, restaurant);
 
-		Node n = prepareDocument(doc);
-		printNode(n);
+        assertEquals("Pokusný", restaurant.getName());
 
-		SourceMarshallerTest.prepareDocument(n);
+        assertEquals("cp1250", restaurant.getSource().iterator().next()
+                .getEncoding());
 
-		Restaurant restaurant = new Restaurant();
-		new RestaurantMarshaller().unmarshall(n, restaurant);
+        SortedSet<Availability> oh = restaurant.getOpeningHours();
+        assertEquals(6, oh.size());
 
-		assertEquals("Pokusný", restaurant.getName());
+        Iterator<Availability> it = oh.iterator();
+        Availability av = it.next();
+        assertEquals(Integer.valueOf(Calendar.MONDAY), av.getDow());
+        assertEquals("8:00", av.getFrom());
+        assertEquals("17:00", av.getTo());
 
-		assertEquals("cp1250", restaurant.getSource().iterator().next()
-				.getEncoding());
+        av = it.next();
+        assertEquals(Integer.valueOf(Calendar.TUESDAY), av.getDow());
+        assertEquals("8:00", av.getFrom());
+        assertEquals("17:00", av.getTo());
 
-		SortedSet<Availability> oh = restaurant.getOpeningHours();
-		assertEquals(6, oh.size());
+        av = it.next();
+        av = it.next();
+        av = it.next();
+        av = it.next();
+        assertEquals(Integer.valueOf(1), av.getDay());
+        assertEquals(Integer.valueOf(1), av.getMonth());
+        assertEquals(Integer.valueOf(2010), av.getYear());
+        assertTrue(av.getClosed());
+    }
 
-		Iterator<Availability> it = oh.iterator();
-		Availability av = it.next();
-		assertEquals(Integer.valueOf(Calendar.MONDAY), av.getDow());
-		assertEquals("8:00", av.getFrom());
-		assertEquals("17:00", av.getTo());
+    public void testMarshallStringNode() {
+        fail("Not yet implemented");
+    }
 
-		av = it.next();
-		assertEquals(Integer.valueOf(Calendar.TUESDAY), av.getDow());
-		assertEquals("8:00", av.getFrom());
-		assertEquals("17:00", av.getTo());
+    public static Node prepareDocument(Node n) {
 
-		av = it.next();
-		av = it.next();
-		av = it.next();
-		av = it.next();
-		assertEquals(Integer.valueOf(1), av.getDay());
-		assertEquals(Integer.valueOf(1), av.getMonth());
-		assertEquals(Integer.valueOf(2010), av.getYear());
-		assertEquals(true, av.getClosed());
-	}
+        Document doc;
+        if (n instanceof Document) {
+            doc = (Document) n;
+        } else {
+            doc = n.getOwnerDocument();
+        }
 
-	@Test
-	public void testMarshallStringNode() {
-		fail("Not yet implemented");
-	}
+        n = n.appendChild(doc.createElement("jidelak"));
 
-	public static Node prepareDocument(Node n) {
+        n = n.appendChild(doc.createElement("config"));
+        Node rn = n.appendChild(doc.createElement("restaurant"));
+        n = rn.appendChild(doc.createElement("name"));
+        n = n.appendChild(doc.createTextNode("Pokusný"));
 
-		Document doc;
-		if (n instanceof Document) {
-			doc = (Document) n;
-		} else {
-			doc = n.getOwnerDocument();
-		}
+        Node on = rn.appendChild(doc.createElement("open"));
 
-		n = n.appendChild(doc.createElement("jidelak"));
+        n = on.appendChild(doc.createElement("term"));
+        addAttr(n, "day-of-week", "Po");
+        addAttr(n, "from", "8:00");
+        addAttr(n, "to", "17:00");
 
-		n = n.appendChild(doc.createElement("config"));
-		Node rn = n.appendChild(doc.createElement("restaurant"));
-		n = rn.appendChild(doc.createElement("name"));
-		n = n.appendChild(doc.createTextNode("Pokusný"));
+        n = on.appendChild(doc.createElement("term"));
+        addAttr(n, "day-of-week", "Út");
+        addAttr(n, "from", "8:00");
+        addAttr(n, "to", "17:00");
 
-		Node on = rn.appendChild(doc.createElement("open"));
+        n = on.appendChild(doc.createElement("term"));
+        addAttr(n, "day-of-week", "St");
+        addAttr(n, "from", "8:00");
+        addAttr(n, "to", "17:00");
 
-		n = on.appendChild(doc.createElement("term"));
-		addAttr(n, "day-of-week", "Po");
-		addAttr(n, "from", "8:00");
-		addAttr(n, "to", "17:00");
+        n = on.appendChild(doc.createElement("term"));
+        addAttr(n, "day-of-week", "Čt");
+        addAttr(n, "from", "8:00");
+        addAttr(n, "to", "17:00");
 
-		n = on.appendChild(doc.createElement("term"));
-		addAttr(n, "day-of-week", "Út");
-		addAttr(n, "from", "8:00");
-		addAttr(n, "to", "17:00");
+        n = on.appendChild(doc.createElement("term"));
+        addAttr(n, "day-of-week", "Pá");
+        addAttr(n, "from", "8:00");
+        addAttr(n, "to", "17:00");
 
-		n = on.appendChild(doc.createElement("term"));
-		addAttr(n, "day-of-week", "St");
-		addAttr(n, "from", "8:00");
-		addAttr(n, "to", "17:00");
+        n = on.appendChild(doc.createElement("term"));
+        addAttr(n, "date", "1. 1. 2010");
+        addAttr(n, "closed", "true");
 
-		n = on.appendChild(doc.createElement("term"));
-		addAttr(n, "day-of-week", "Čt");
-		addAttr(n, "from", "8:00");
-		addAttr(n, "to", "17:00");
+        return rn;
+    }
 
-		n = on.appendChild(doc.createElement("term"));
-		addAttr(n, "day-of-week", "Pá");
-		addAttr(n, "from", "8:00");
-		addAttr(n, "to", "17:00");
+    private static void printNode(Node rn)
+            throws TransformerConfigurationException,
+            TransformerFactoryConfigurationError, TransformerException {
+        StringWriter sb = new StringWriter();
+        Transformer tr = TransformerFactory.newInstance().newTransformer();
+        tr.setOutputProperty(OutputKeys.INDENT, "yes");
+        tr.transform(new DOMSource(rn), new StreamResult(sb));
+        log.info(sb.toString());
+    }
 
-		n = on.appendChild(doc.createElement("term"));
-		addAttr(n, "date", "1. 1. 2010");
-		addAttr(n, "closed", "true");
-
-		return rn;
-	}
-
-	private static void printNode(Node rn)
-			throws TransformerConfigurationException,
-			TransformerFactoryConfigurationError, TransformerException {
-		StringWriter sb = new StringWriter();
-		Transformer tr = TransformerFactory.newInstance().newTransformer();
-		tr.setOutputProperty(OutputKeys.INDENT, "yes");
-		tr.transform(new DOMSource(rn), new StreamResult(sb));
-		log.info(sb.toString());
-	}
-
-	private static void addAttr(Node n, String name, String value) {
-		Attr a = n.getOwnerDocument().createAttribute(name);
-		a.setValue(value);
-		n.getAttributes().setNamedItem(a);
-	}
+    private static void addAttr(Node n, String name, String value) {
+        Attr a = n.getOwnerDocument().createAttribute(name);
+        a.setValue(value);
+        n.getAttributes().setNamedItem(a);
+    }
 }

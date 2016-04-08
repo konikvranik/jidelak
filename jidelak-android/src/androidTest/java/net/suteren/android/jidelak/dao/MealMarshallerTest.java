@@ -1,12 +1,8 @@
 package net.suteren.android.jidelak.dao;
 
+import android.test.AndroidTestCase;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Meal;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -17,122 +13,101 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
-import static org.junit.Assert.fail;
+public class MealMarshallerTest extends AndroidTestCase {
 
-public class MealMarshallerTest {
+    private MealMarshaller sm;
+    private DocumentBuilder db;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+    public void setUp() throws Exception {
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        db = dbf.newDocumentBuilder();
+        sm = new MealMarshaller();
 
-	private MealMarshaller sm;
-	private DocumentBuilder db;
+    }
 
-	@Before
-	public void setUp() throws Exception {
+    public void tearDown() throws Exception {
+    }
 
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		db = dbf.newDocumentBuilder();
-		sm = new MealMarshaller();
+    public void testUnmarshallHelperStringMapOfStringStringSource() {
+        fail("Not yet implemented");
+    }
 
-	}
+    public void testClean() {
+        fail("Not yet implemented");
+    }
 
-	@After
-	public void tearDown() throws Exception {
-	}
+    public void testUnmarshallNodeT() throws JidelakException,
+            ParserConfigurationException, SAXException, IOException {
 
-	@Test
-	public void testUnmarshallHelperStringMapOfStringStringSource() {
-		fail("Not yet implemented");
-	}
+        Meal s = new Meal();
 
-	@Test
-	public void testClean() {
-		fail("Not yet implemented");
-	}
+        Document d = db.newDocument();
+        // d = RestaurantMarshallerTest.prepareDocument(d);
+        // d = prepareDocument(d);
 
-	@Test
-	public void testUnmarshallNodeT() throws JidelakException,
-			ParserConfigurationException, SAXException, IOException {
+        d = db.parse(this.getClass().getResourceAsStream("/debug.result"));
 
-		Meal s = new Meal();
+        Node n = d.getDocumentElement();
+        sm.unmarshall("#document.jidelak.config.restaurant.menu", n, s);
 
-		Document d = db.newDocument();
-		// d = RestaurantMarshallerTest.prepareDocument(d);
-		// d = prepareDocument(d);
+    }
 
-		d = db.parse(this.getClass().getResourceAsStream("/debug.result"));
+    public static Node prepareDocument(Node n) {
 
-		Node n = d.getDocumentElement();
-		sm.unmarshall("#document.jidelak.config.restaurant.menu", n, s);
+        Document doc;
+        if (n instanceof Document) {
+            doc = (Document) n;
+        } else {
+            doc = n.getOwnerDocument();
+        }
 
-	}
+        Element sn = (Element) n.appendChild(doc.createElement("source"));
 
-	public static Node prepareDocument(Node n) {
+        sn.setAttribute("time", "relative");
+        sn.setAttribute("base", "week");
+        sn.setAttribute("firstDayOfWeek", "Po");
+        sn.setAttribute("timeOffset", "0");
+        sn.setAttribute("encoding", "cp1250");
+        sn.setAttribute("dateFormat", "dd. mmm. yyyy");
+        sn.setAttribute("locale", "cs_CZ");
+        sn.setAttribute("url",
+                "http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php");
+        return sn;
+    }
 
-		Document doc;
-		if (n instanceof Document) {
-			doc = (Document) n;
-		} else {
-			doc = n.getOwnerDocument();
-		}
+    public void testUnmarshallStringNodeT() throws JidelakException,
+            SAXException, IOException {
+        Meal s = new Meal();
 
-		Element sn = (Element) n.appendChild(doc.createElement("source"));
+        Document d = db.newDocument();
+        prepareDocument(RestaurantMarshallerTest.prepareDocument(d));
 
-		sn.setAttribute("time", "relative");
-		sn.setAttribute("base", "week");
-		sn.setAttribute("firstDayOfWeek", "Po");
-		sn.setAttribute("timeOffset", "0");
-		sn.setAttribute("encoding", "cp1250");
-		sn.setAttribute("dateFormat", "dd. mmm. yyyy");
-		sn.setAttribute("locale", "cs_CZ");
-		sn.setAttribute("url",
-				"http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php");
-		return sn;
-	}
+        d = db.parse(this.getClass().getResourceAsStream("/debug.result"));
 
-	@Test
-	public void testUnmarshallStringNodeT() throws JidelakException,
-			SAXException, IOException {
-		Meal s = new Meal();
+        sm.unmarshall("#document.jidelak.config.restaurant.menu",
+                d.getDocumentElement(), s);
 
-		Document d = db.newDocument();
-		prepareDocument(RestaurantMarshallerTest.prepareDocument(d));
+    }
 
-		d = db.parse(this.getClass().getResourceAsStream("/debug.result"));
+    public void testProcessElementHook() {
+        fail("Not yet implemented");
+    }
 
-		sm.unmarshall("#document.jidelak.config.restaurant.menu",
-				d.getDocumentElement(), s);
+    public void testGetNextNodeNode() {
+        fail("Not yet implemented");
+    }
 
-	}
+    public void testGetNextNodeNodeBoolean() {
+        fail("Not yet implemented");
+    }
 
-	@Test
-	public void testProcessElementHook() {
-		fail("Not yet implemented");
-	}
+    public void testPath() {
+        fail("Not yet implemented");
+    }
 
-	@Test
-	public void testGetNextNodeNode() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetNextNodeNodeBoolean() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testPath() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testProcessAttributes() {
-		fail("Not yet implemented");
-	}
+    public void testProcessAttributes() {
+        fail("Not yet implemented");
+    }
 
 }

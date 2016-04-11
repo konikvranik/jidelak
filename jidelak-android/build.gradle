@@ -115,7 +115,7 @@ if (versionPropsFile.canRead()) {
     versionProps.store(versionPropsFile.newWriter(), null)
 
     android.defaultConfig {
-        applicationId "net.suteren.worksaldo.android"
+        applicationId "net.suteren.android.jidelak"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode versionNumber

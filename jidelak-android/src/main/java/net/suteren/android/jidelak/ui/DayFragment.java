@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -45,25 +46,6 @@ public class DayFragment extends Fragment {
 
     private static final int DAYS_LOADER = 1;
     private static final int DELETE_LOADER = 2;
-    private final LoaderManager.LoaderCallbacks<Cursor> RESTAURANTS_LOADER_CALLBACK = new LoaderManager
-            .LoaderCallbacks<Cursor>() {
-
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(getContext(), RESTAURANTS_URI, new String[]{RestaurantDao.ID.getName()}, null,
-                    new String[]{}, null);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            dailyMenuAdapter.changeCursor(data);
-        }
-
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-
-        }
-    };
 
     @SuppressWarnings("unused")
     private static Logger log = LoggerFactory.getLogger(DayFragment.class);
@@ -97,9 +79,9 @@ public class DayFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.day, container, false);
 
-        dailyMenuAdapter = new SimpleCursorTreeAdapter(getContext(), null, R.layout.restaurant, new
-                String[]{RestaurantDao.NAME.getName()},
-                new int[]{R.id.name}, R.layout.meal, new String[]{}, new int[]{}) {
+        dailyMenuAdapter = new SimpleCursorTreeAdapter(getContext(), null, R.layout.restaurant,
+                new String[]{RestaurantDao.NAME.getName()},
+                new int[]{R.id.name}, R.layout.meal, new String[]{MealDao.TITLE.getName(), MealDao.DESCRIPTION.getName(), MealDao.PRICE.getName()}, new int[]{R.id.name, R.id.description, R.id.price}) {
             @Override
             protected Cursor getChildrenCursor(final Cursor groupCursor) {
                 final long restaurantId = groupCursor.getLong(groupCursor.getColumnIndex(RestaurantDao.ID.getName()));
@@ -112,7 +94,7 @@ public class DayFragment extends Fragment {
 
                     @Override
                     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-                        return new CursorLoader(getContext(), MEALS_URI, new String[]{MealDao.ID.getName()},
+                        return new CursorLoader(getContext(), MEALS_URI, new String[]{MealDao.ID.getName(), MealDao.TITLE.getName(), MealDao.DESCRIPTION.getName(), MealDao.PRICE.getName()},
                                 String.format("m.%s = ? and (a.%s = ? OR a.%s is null) and (a.%s = ? OR a.%s is null)" +
                                                 " and (a.%s = ? OR a.%s is null) and (a.%s = ? OR a.%s is null)",
                                         MealDao.RESTAURANT.getName(),
@@ -145,10 +127,37 @@ public class DayFragment extends Fragment {
             }
         };
 
-        dailyMenuList = (ExpandableListView) rootView
-                .findViewById(R.id.menu_list);
+        dailyMenuList = (ExpandableListView) rootView.findViewById(R.id.menu_list);
 
-        getLoaderManager().initLoader(DAYS_LOADER, null, RESTAURANTS_LOADER_CALLBACK);
+        getLoaderManager().initLoader(DAYS_LOADER, null, new LoaderManager
+                .LoaderCallbacks<Cursor>() {
+
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                return new CursorLoader(getContext(), RESTAURANTS_URI, new String[]{RestaurantDao.ID.getName(), RestaurantDao.NAME.getName()}, null,
+                        new String[]{}, null);
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                dailyMenuAdapter.changeCursor(data);
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+
+            }
+        });
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                getContext().getContentResolver().update(RELOAD_URI, null, null, null);
+                return null;
+            }
+        };
+
 
         if (dailyMenuAdapter.isEmpty()) {
             dailyMenuList.setVisibility(View.GONE);

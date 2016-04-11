@@ -1,24 +1,11 @@
 package net.suteren.android.jidelak.provider;
 
-import android.content.ContentProvider;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.UriMatcher;
+import android.content.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import net.suteren.android.jidelak.ErrorType;
-import net.suteren.android.jidelak.JidelakDbHelper;
-import net.suteren.android.jidelak.JidelakException;
-import net.suteren.android.jidelak.JidelakTransformerException;
-import net.suteren.android.jidelak.R;
-import net.suteren.android.jidelak.Utils;
-import net.suteren.android.jidelak.dao.AvailabilityDao;
-import net.suteren.android.jidelak.dao.MealDao;
-import net.suteren.android.jidelak.dao.RestaurantDao;
-import net.suteren.android.jidelak.dao.RestaurantMarshaller;
-import net.suteren.android.jidelak.dao.SourceDao;
+import net.suteren.android.jidelak.*;
+import net.suteren.android.jidelak.dao.*;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
@@ -31,14 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 import static net.suteren.android.jidelak.Constants.*;
 
@@ -70,7 +50,7 @@ public class JidelakProvider extends ContentProvider {
     private static final String RELOAD_PATH = "reload";
     private static final int MATCHED_RELOAD = 0;
     public static final String SCHEME_CONTENT = "content";
-    private static final Uri ALL_DATA_URI = new Uri.Builder().scheme(SCHEME_CONTENT).authority(URI_BASE).build();
+    public static final Uri RELOAD_URI = new Uri.Builder().scheme(SCHEME_CONTENT).authority(URI_BASE).appendPath(RELOAD_PATH).build();
     /**
      * Restaurants uri.
      */
@@ -124,7 +104,7 @@ public class JidelakProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case MATCHED_DAY:
                 cursor = loadDayFromDb(projection, selection, selectionArgs, sortOrder);
-                cursor.setNotificationUri(getContext().getContentResolver(), ALL_DATA_URI);
+                cursor.setNotificationUri(getContext().getContentResolver(), RELOAD_URI);
                 return cursor;
 
             case MATCHED_RESTAURANT:
@@ -136,15 +116,6 @@ public class JidelakProvider extends ContentProvider {
                 cursor = loadMealsFromDb(projection, selection, selectionArgs, sortOrder);
                 cursor.setNotificationUri(getContext().getContentResolver(), MEALS_URI);
                 return cursor;
-
-            case MATCHED_RELOAD:
-                try {
-                    updateData();
-                    getContext().getContentResolver().notifyChange(ALL_DATA_URI, null);
-                } catch (JidelakException e) {
-                    log.error(e.getMessage(), e);
-                }
-                break;
 
             default:
 
@@ -254,6 +225,20 @@ public class JidelakProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        switch (sUriMatcher.match(uri)) {
+            case MATCHED_RELOAD:
+                try {
+                    updateData();
+                    getContext().getContentResolver().notifyChange(RELOAD_URI, null);
+                    getContext().getContentResolver().notifyChange(MEALS_URI, null);
+                    getContext().getContentResolver().notifyChange(RESTAURANTS_URI, null);
+                } catch (JidelakException e) {
+                    log.error(e.getMessage(), e);
+                }
+                break;
+        }
+
+
         return 0;
     }
 
@@ -273,13 +258,11 @@ public class JidelakProvider extends ContentProvider {
                 try {
                     restaurant = source.getRestaurant();
 
-                    InputStream template = getContext().openFileInput(restaurant
-                            .getTemplateName());
+                    InputStream template = getContext().openFileInput(restaurant.getTemplateName());
 
                     Node result = Utils.retrieve(source, template);
 
-                    rm.unmarshall("#document.jidelak.config", result,
-                            restaurant);
+                    rm.unmarshall("#document.jidelak.config", result, restaurant);
 
                     Set<Availability> avs = new HashSet<Availability>();
                     for (Meal meal : restaurant.getMenu()) {
@@ -287,8 +270,7 @@ public class JidelakProvider extends ContentProvider {
                     }
 
                     for (Availability av : avs) {
-                        SortedSet<Meal> atd = mdao.findByDayAndRestaurant(
-                                av.getCalendar(), restaurant);
+                        SortedSet<Meal> atd = mdao.findByDayAndRestaurant(av.getCalendar(), restaurant);
                         mdao.delete(atd);
                     }
 
@@ -337,8 +319,7 @@ public class JidelakProvider extends ContentProvider {
                 // e);
             }
         }
-        SharedPreferences prefs = getContext().getSharedPreferences(
-                DEFAULT_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getContext().getSharedPreferences(DEFAULT_PREFERENCES, Context.MODE_PRIVATE);
         if (notFullyUpdated) {
             prefs.edit().putLong(LAST_UPDATED_KEY, System.currentTimeMillis()).apply();
         }

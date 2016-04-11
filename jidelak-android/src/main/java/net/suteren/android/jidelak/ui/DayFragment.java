@@ -7,7 +7,6 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -25,7 +24,6 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.SimpleCursorTreeAdapter;
 import android.widget.Toast;
-import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
@@ -47,6 +45,7 @@ import static net.suteren.android.jidelak.provider.JidelakProvider.*;
 public class DayFragment extends Fragment {
 
     private static final int DAYS_LOADER = 1;
+    private static final int DELETE_LOADER = 2;
     private final LoaderManager.LoaderCallbacks<Cursor> RESTAURANTS_LOADER_CALLBACK = new LoaderManager
             .LoaderCallbacks<Cursor>() {
 
@@ -70,7 +69,6 @@ public class DayFragment extends Fragment {
     @SuppressWarnings("unused")
     private static Logger log = LoggerFactory.getLogger(DayFragment.class);
 
-    private JidelakDbHelper dbHelper;
     private SimpleCursorTreeAdapter dailyMenuAdapter;
 
     private void showEmpty(boolean showEmpty, View paramView) {
@@ -85,16 +83,13 @@ public class DayFragment extends Fragment {
             emptyView.setVisibility(View.GONE);
     }
 
-
     public static final String ARG_DAY = "day";
     private ExpandableListView dailyMenuList;
-    private FragmentActivity act;
 
     private ExpandableListContextMenuInfo lastMenuInfo;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         final Bundle args = getArguments();
 
@@ -103,14 +98,17 @@ public class DayFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.day, container, false);
 
-        dailyMenuAdapter = new SimpleCursorTreeAdapter(getContext(), null, R.layout.restaurant, new String[]{RestaurantDao.NAME.getName()},
+        dailyMenuAdapter = new SimpleCursorTreeAdapter(getContext(), null, R.layout.restaurant, new
+                String[]{RestaurantDao.NAME.getName()},
                 new int[]{R.id.name}, R.layout.meal, new String[]{}, new int[]{}) {
             @Override
             protected Cursor getChildrenCursor(final Cursor groupCursor) {
                 final long restaurantId = groupCursor.getLong(groupCursor.getColumnIndex(RestaurantDao.ID.getName()));
 
-                long loaderId = cal.get(Calendar.YEAR) + cal.get(Calendar.MONTH) * 10000
-                        + cal.get(Calendar.DAY_OF_MONTH) * 1000000 + restaurantId * 100000000;
+                long loaderId = cal.get(Calendar.YEAR)
+                        + cal.get(Calendar.MONTH) * 10000
+                        + cal.get(Calendar.DAY_OF_MONTH) * 1000000
+                        + restaurantId * 100000000;
                 getLoaderManager().initLoader((int) loaderId, args, new LoaderManager.LoaderCallbacks<Cursor>() {
 
                     @Override
@@ -143,6 +141,7 @@ public class DayFragment extends Fragment {
 
                     }
                 });
+
                 return null;
             }
         };
@@ -270,20 +269,25 @@ public class DayFragment extends Fragment {
                                     public void onClick(DialogInterface dialog,
                                                         int which) {
 
-                                        MealDao mdao = new MealDao(dbHelper);
                                         long restaurantId = r.getLong(r.getColumnIndex(RestaurantDao.ID.getName()));
-                                        mdao.deleteByRestaurantId(restaurantId);
-                                        AvailabilityDao adao = new AvailabilityDao(
-                                                dbHelper);
-                                        adao.deleteByRestaurantId(restaurantId);
-                                        SourceDao sdao = new SourceDao(dbHelper);
-                                        sdao.deleteByRestaurantId(restaurantId);
-                                        RestaurantDao rdao = new RestaurantDao(
-                                                dbHelper);
-                                        rdao.delete(restaurantId);
-                                        getActivity().deleteFile(
-                                                Restaurant.getTemplateName(restaurantId));
-                                        dbHelper.notifyDataSetChanged();
+
+                                        getContext().getContentResolver().delete(MEALS_URI,
+                                                String.format("%s = ?", MealDao.RESTAURANT.getName()),
+                                                new String[]{String.format("%d", restaurantId)});
+
+                                        getContext().getContentResolver().delete(AVAILABILITY_URI,
+                                                String.format("%s = ?", AvailabilityDao.RESTAURANT.getName()),
+                                                new String[]{String.format("%d", restaurantId)});
+
+                                        getContext().getContentResolver().delete(SOURCE_URI,
+                                                String.format("%s = ?", SourceDao.RESTAURANT.getName()),
+                                                new String[]{String.format("%d", restaurantId)});
+
+                                        getContext().getContentResolver().delete(RESTAURANTS_URI,
+                                                String.format("%s = ?", RestaurantDao.ID.getName()),
+                                                new String[]{String.format("%d", restaurantId)});
+
+                                        getActivity().deleteFile(Restaurant.getTemplateName(restaurantId));
 
                                     }
                                 }).setNegativeButton("No", null)

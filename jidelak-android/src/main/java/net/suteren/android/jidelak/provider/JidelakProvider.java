@@ -51,7 +51,6 @@ public class JidelakProvider extends ContentProvider {
 
     private static Logger log = LoggerFactory.getLogger(JidelakProvider.class);
 
-
     // Creates a UriMatcher object.
     private static final UriMatcher sUriMatcher = new UriMatcher(0);
     /**
@@ -64,8 +63,12 @@ public class JidelakProvider extends ContentProvider {
     private static final int MATCHED_RESTAURANT = 2;
     private static final String MEAL_PATH = "meal";
     private static final int MATCHED_MEAL = 3;
+    private static final String AVAILABILITY_PATH = "availability";
+    private static final int MATCHED_AVAILABILITY = 4;
+    private static final String SOURCE_PATH = "source";
+    private static final int MATCHED_SOURCE = 5;
     private static final String RELOAD_PATH = "reload";
-    private static final int MATCHED_RELOAD = 4;
+    private static final int MATCHED_RELOAD = 0;
     private static final Uri ALL_DATA_URI = new Uri.Builder().scheme("content").authority(URI_BASE).build();
     /**
      * Restaurants uri.
@@ -80,6 +83,20 @@ public class JidelakProvider extends ContentProvider {
             .authority(URI_BASE)
             .appendPath(MEAL_PATH).build();
 
+    /**
+     * Availability uri.
+     */
+    public static final Uri AVAILABILITY_URI = new Uri.Builder().scheme("content")
+            .authority(URI_BASE)
+            .appendPath(AVAILABILITY_PATH).build();
+
+    /**
+     * Source uri.
+     */
+    public static final Uri SOURCE_URI = new Uri.Builder().scheme("content")
+            .authority(URI_BASE)
+            .appendPath(SOURCE_PATH).build();
+
     private JidelakDbHelper dbHelper;
 
 
@@ -93,6 +110,8 @@ public class JidelakProvider extends ContentProvider {
         sUriMatcher.addURI(URI_BASE, DAY_PATH, MATCHED_DAY);
         sUriMatcher.addURI(URI_BASE, RESTAURANT_PATH, MATCHED_RESTAURANT);
         sUriMatcher.addURI(URI_BASE, MEAL_PATH, MATCHED_MEAL);
+        sUriMatcher.addURI(URI_BASE, AVAILABILITY_PATH, MATCHED_AVAILABILITY);
+        sUriMatcher.addURI(URI_BASE, SOURCE_PATH, MATCHED_SOURCE);
         sUriMatcher.addURI(URI_BASE, RELOAD_PATH, MATCHED_RELOAD);
         return true;
     }
@@ -200,7 +219,27 @@ public class JidelakProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+
+        SQLiteDatabase wd = getDbHelper().getWritableDatabase();
+        wd.beginTransaction();
+
+        int cnt = 0;
+        switch (sUriMatcher.match(uri)) {
+            case MATCHED_RESTAURANT:
+                wd.delete(MealDao.TABLE_NAME, String.format("%s = ?", MealDao.RESTAURANT.getName()), selectionArgs);
+                wd.delete(AvailabilityDao.TABLE_NAME, String.format("%s = ?", AvailabilityDao.RESTAURANT.getName()),
+                        selectionArgs);
+                wd.delete(SourceDao.TABLE_NAME, String.format("%s = ?", SourceDao.RESTAURANT.getName()), selectionArgs);
+                cnt = wd.delete(RestaurantDao.TABLE_NAME, String.format("%s = ?", RestaurantDao.ID.getName()),
+                        selectionArgs);
+                wd.setTransactionSuccessful();
+                break;
+
+            case MATCHED_MEAL:
+        }
+        wd.endTransaction();
+
+        return cnt;
     }
 
     @Override

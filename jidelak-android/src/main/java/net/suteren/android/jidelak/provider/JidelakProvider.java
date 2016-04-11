@@ -69,31 +69,32 @@ public class JidelakProvider extends ContentProvider {
     private static final int MATCHED_SOURCE = 5;
     private static final String RELOAD_PATH = "reload";
     private static final int MATCHED_RELOAD = 0;
-    private static final Uri ALL_DATA_URI = new Uri.Builder().scheme("content").authority(URI_BASE).build();
+    public static final String SCHEME_CONTENT = "content";
+    private static final Uri ALL_DATA_URI = new Uri.Builder().scheme(SCHEME_CONTENT).authority(URI_BASE).build();
     /**
      * Restaurants uri.
      */
-    public static final Uri RESTAURANTS_URI = new Uri.Builder().scheme("content")
+    public static final Uri RESTAURANTS_URI = new Uri.Builder().scheme(SCHEME_CONTENT)
             .authority(URI_BASE)
             .appendPath(RESTAURANT_PATH).build();
     /**
      * Meals uri.
      */
-    public static final Uri MEALS_URI = new Uri.Builder().scheme("content")
+    public static final Uri MEALS_URI = new Uri.Builder().scheme(SCHEME_CONTENT)
             .authority(URI_BASE)
             .appendPath(MEAL_PATH).build();
 
     /**
      * Availability uri.
      */
-    public static final Uri AVAILABILITY_URI = new Uri.Builder().scheme("content")
+    public static final Uri AVAILABILITY_URI = new Uri.Builder().scheme(SCHEME_CONTENT)
             .authority(URI_BASE)
             .appendPath(AVAILABILITY_PATH).build();
 
     /**
      * Source uri.
      */
-    public static final Uri SOURCE_URI = new Uri.Builder().scheme("content")
+    public static final Uri SOURCE_URI = new Uri.Builder().scheme(SCHEME_CONTENT)
             .authority(URI_BASE)
             .appendPath(SOURCE_PATH).build();
 

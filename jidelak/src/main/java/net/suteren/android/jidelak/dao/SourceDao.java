@@ -114,8 +114,8 @@ public class SourceDao extends BaseDao<Source> {
 		if (obj.getOffsetBase() != null || updateNull)
 			values.put(BASE_TIME.getName(), obj.getOffsetBase() == null ? null
 					: obj.getOffsetBase().ordinal());
-		if (obj.getFirstdayofweek() != null || updateNull)
-			values.put(FIRST_DAY_OF_WEEK.getName(), obj.getFirstdayofweek());
+		if (obj.getFirstDayOfWeek() != null || updateNull)
+			values.put(FIRST_DAY_OF_WEEK.getName(), obj.getFirstDayOfWeek());
 		if (obj.getOffset() != null || updateNull)
 			values.put(OFFSET.getName(), obj.getOffset());
 		if (obj.getUrl() != null || updateNull)

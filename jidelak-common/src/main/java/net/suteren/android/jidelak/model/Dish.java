@@ -13,7 +13,7 @@ public enum Dish {
 		this.resource = resource;
 	}
 
-	public String getResource() {
+	public String getResourceName() {
 		return resource;
 	}
 

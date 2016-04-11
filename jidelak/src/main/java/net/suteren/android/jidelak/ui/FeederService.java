@@ -19,6 +19,7 @@ import javax.xml.transform.TransformerException;
 import net.suteren.android.jidelak.ErrorType;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.JidelakException;
+import net.suteren.android.jidelak.JidelakParseException;
 import net.suteren.android.jidelak.JidelakTransformerException;
 import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.Utils;

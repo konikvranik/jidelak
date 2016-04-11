@@ -17,196 +17,224 @@ import net.suteren.android.jidelak.Utils;
 
 public class Source implements Identificable<Source> {
 
-	private static final long serialVersionUID = -4261642590268604447L;
-	TimeType timeType;
-	TimeOffsetType offsetBase;
-	Integer firstdayofweek;
-	Integer offset;
-	URL url;
-	Restaurant restaurant;
-	private Long id;
-	Locale locale;
-	DateFormat dateFormat;
-	private String dateFormatString;
-	private String encoding;
-	private List<Meal> menu;
-	Calendar date;
+    private static final long serialVersionUID = -4261642590268604447L;
+    private TimeType timeType;
+    private TimeOffsetType offsetBase;
+    private Integer firstDayOfWeek;
+    private Integer offset;
+    private URL url;
+    private Restaurant restaurant;
+    private Long id;
+    private Locale locale;
+    private DateFormat dateFormat;
+    private String dateFormatString;
+    private String encoding;
+    private List<Meal> menu;
+    private Calendar date;
 
-	public TimeType getTimeType() {
-		if (timeType == null)
-			return TimeType.ABSOLUTE;
-		return timeType;
-	}
+    public TimeType getTimeType() {
+        if (timeType == null)
+            return TimeType.ABSOLUTE;
+        return timeType;
+    }
 
-	public void setTimeType(TimeType time) {
-		this.timeType = time;
-	}
+    public void setTimeType(TimeType time) {
+        this.timeType = time;
+    }
 
-	public TimeOffsetType getOffsetBase() {
-		return offsetBase;
-	}
+    public TimeOffsetType getOffsetBase() {
+        return offsetBase;
+    }
 
-	public void setOffsetBase(TimeOffsetType base) {
-		this.offsetBase = base;
-	}
+    public void setOffsetBase(TimeOffsetType base) {
+        this.offsetBase = base;
+    }
 
-	public Integer getFirstdayofweek() {
-		return firstdayofweek;
-	}
+    public Integer getFirstDayOfWeek() {
+        return firstDayOfWeek;
+    }
 
-	public void setFirstdayofweek(String firstdayofweek) throws ParseException {
-		DateFormat df = new SimpleDateFormat("E", getLocale());
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(df.parse(firstdayofweek));
-		setFirstdayofweek(cal.get(Calendar.DAY_OF_WEEK));
-	}
+    public void setFirstDayOfWeek(String firstDayOfWeek) throws ParseException {
+        DateFormat df = new SimpleDateFormat("E", getLocale());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(df.parse(firstDayOfWeek));
+        setFirstdayofweek(cal.get(Calendar.DAY_OF_WEEK));
+    }
 
-	public void setFirstdayofweek(Integer firstdayofweek) {
-		this.firstdayofweek = firstdayofweek;
-	}
+    public void setFirstdayofweek(Integer firstdayofweek) {
+        this.firstDayOfWeek = firstdayofweek;
+    }
 
-	public Integer getOffset() {
-		return offset;
-	}
+    public Integer getOffset() {
+        return offset;
+    }
 
-	public void setOffset(Integer offset) {
-		this.offset = offset;
-	}
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
 
-	public URL getUrl() {
-		return url;
-	}
+    public URL getUrl() {
+        return url;
+    }
 
-	public void setUrl(URL url) {
-		this.url = url;
-	}
+    public void setUrl(URL url) {
+        this.url = url;
+    }
 
-	public Restaurant getRestaurant() {
-		return restaurant;
-	}
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
 
-	public void setRestaurant(Restaurant restaurant2) {
-		this.restaurant = restaurant2;
-	}
+    public void setRestaurant(Restaurant restaurant2) {
+        this.restaurant = restaurant2;
+    }
 
-	@Override
-	public Long getId() {
-		// TODO Auto-generated method stub
-		return id;
-	}
+    @Override
+    public Long getId() {
+        // TODO Auto-generated method stub
+        return id;
+    }
 
-	@Override
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Locale getLocale() {
-		if (locale == null)
-			return Locale.getDefault();
-		return locale;
-	}
+    public Locale getLocale() {
+        if (locale == null)
+            return Locale.getDefault();
+        return locale;
+    }
 
-	public String getLocaleString() {
-		return getLocale().getLanguage() + "_" + getLocale().getCountry();
-	}
+    public String getLocaleString() {
+        return getLocale().getLanguage() + "_" + getLocale().getCountry();
+    }
 
-	public void setLocale(String locale) {
-		this.locale = Utils.stringToLocale(locale);
-	}
+    public void setLocale(String locale) {
+        this.locale = Utils.stringToLocale(locale);
+    }
 
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
 
-	public DateFormat getDateFormat() {
+    public DateFormat getDateFormat() {
 
-		if (dateFormat == null) {
-			Locale l = getLocale();
-			if (l == null)
-				l = Locale.getDefault();
-			return new SimpleDateFormat("dd.mm.yyyy", l);
-		}
+        if (dateFormat == null) {
+            Locale l = getLocale();
+            if (l == null)
+                l = Locale.getDefault();
+            return new SimpleDateFormat("dd.mm.yyyy", l);
+        }
 
-		return dateFormat;
-	}
+        return dateFormat;
+    }
 
-	public void setDateFormat(DateFormat dateFormat) {
-		this.dateFormat = dateFormat;
-	}
+    public void setDateFormat(DateFormat dateFormat) {
+        this.dateFormat = dateFormat;
+    }
 
-	public void setDateFormat(String dateFormat) {
-		this.dateFormatString = dateFormat;
-		this.dateFormat = new SimpleDateFormat(dateFormat, getLocale());
-	}
+    public void setDateFormat(String dateFormat) {
+        this.dateFormatString = dateFormat;
+        this.dateFormat = new SimpleDateFormat(dateFormat, getLocale());
+    }
 
-	public String getDateFormatString() {
-		return dateFormatString;
-	}
+    public String getDateFormatString() {
+        return dateFormatString;
+    }
 
-	public void setEncoding(String string) {
-		this.encoding = string;
-	}
+    public void setEncoding(String string) {
+        this.encoding = string;
+    }
 
-	public String getEncoding() {
-		return encoding;
-	}
+    public String getEncoding() {
+        return encoding;
+    }
 
-	public List<Meal> getMenu() {
-		return menu;
-	}
+    public List<Meal> getMenu() {
+        return menu;
+    }
 
-	public void setMenu(List<Meal> menu) {
-		this.menu = menu;
-	}
+    public void setMenu(List<Meal> menu) {
+        this.menu = menu;
+    }
 
-	public void addMenu(Meal meal) {
-		if (menu == null)
-			menu = new ArrayList<Meal>();
-		menu.add(meal);
-	}
+    public void addMenu(Meal meal) {
+        if (menu == null)
+            menu = new ArrayList<Meal>();
+        menu.add(meal);
+    }
 
-	public void addMenuAll(Collection<Meal> meal) {
-		if (menu == null)
-			menu = new ArrayList<Meal>();
-		menu.addAll(meal);
-	}
+    public void addMenuAll(Collection<Meal> meal) {
+        if (menu == null)
+            menu = new ArrayList<Meal>();
+        menu.addAll(meal);
+    }
 
-	public Calendar getDate() {
-		return date;
-	}
+    public Calendar getDate() {
+        return date;
+    }
 
-	public void setDate(Calendar date) {
-		this.date = date;
-	}
+    public void setDate(Calendar date) {
+        this.date = date;
+    }
 
-	@Override
-	public int compareTo(Source another) {
+    @Override
+    public int compareTo(Source another) {
 
-		int r = getId() != null ? getId().compareTo(another.getId()) : (another
-				.getId() == null ? 0 : -1);
-		if (r != 0)
-			return r;
+        int r = getId() != null ? getId().compareTo(another.getId()) : (another
+                .getId() == null ? 0 : -1);
+        if (r != 0)
+            return r;
 
-		r = getUrl() != null ? getUrl().toString().compareTo(
-				another.getUrl().toString()) : (another.getUrl() == null ? 0
-				: -1);
-		if (r != 0)
-			return r;
+        r = getUrl() != null ? getUrl().toString().compareTo(
+                another.getUrl().toString()) : (another.getUrl() == null ? 0
+                : -1);
+        if (r != 0)
+            return r;
 
-		return 0;
-	}
+        return 0;
+    }
 
-	private void readObject(ObjectInputStream aInputStream)
-			throws ClassNotFoundException, IOException {
-		aInputStream.defaultReadObject();
-	}
+    private void readObject(ObjectInputStream aInputStream)
+            throws ClassNotFoundException, IOException {
+        aInputStream.defaultReadObject();
+    }
 
-	private void writeObject(ObjectOutputStream aOutputStream)
-			throws IOException {
-		// perform the default serialization for all non-transient, non-static
-		// fields
-		aOutputStream.defaultWriteObject();
-		// aOutputStream.writeObject(resource);
-		// aOutputStream.writeObject(args);
-	}
+    private void writeObject(ObjectOutputStream aOutputStream)
+            throws IOException {
+        // perform the default serialization for all non-transient, non-static
+        // fields
+        aOutputStream.defaultWriteObject();
+        // aOutputStream.writeObject(resource);
+        // aOutputStream.writeObject(args);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("Source{");
+        fieldToString(stringBuilder, "id", id);
+        fieldToString(stringBuilder, "url", url);
+        fieldToString(stringBuilder, "dateFormatString", dateFormatString);
+        //fieldToString(stringBuilder, "dateFormat", dateFormat);
+        fieldToString(stringBuilder, "locale", locale);
+        fieldToString(stringBuilder, "encoding", encoding);
+        fieldToString(stringBuilder, "date", date);
+        fieldToString(stringBuilder, "firstDayOfWeek", firstDayOfWeek);
+        fieldToString(stringBuilder, "timeType", timeType);
+        fieldToString(stringBuilder, "offsetBase", offsetBase);
+        fieldToString(stringBuilder, "offset", offset);
+        //fieldToString(stringBuilder, "restaurant", restaurant);
+        //fieldToString(stringBuilder, "menu", menu);
+        stringBuilder.append("}");
+
+        return stringBuilder.toString();
+    }
+
+    private void fieldToString(StringBuilder stringBuilder, String name, Object value) {
+        stringBuilder.append(name);
+        stringBuilder.append("=");
+        stringBuilder.append(value);
+        stringBuilder.append(";");
+    }
 }

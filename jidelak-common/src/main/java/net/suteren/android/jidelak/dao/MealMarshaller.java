@@ -48,25 +48,25 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 		if (o != null)
 			meal.setPosition(Integer.parseInt(o));
 
-		String x = data.get(prefix + "meal@time");
+		String mealTime = data.get(prefix + "meal@time");
 		Calendar cal = Calendar.getInstance(getSource().getLocale());
 		cal.setTimeInMillis(System.currentTimeMillis());
 		switch (getSource().getTimeType()) {
 		case RELATIVE:
 
-			if (x != null) {
+			if (mealTime != null) {
 
-				String y = data.get(prefix + "meal@ref-time");
+				String refTime = data.get(prefix + "meal@ref-time");
 				try {
 
-					cal.setTime(getSource().getDateFormat().parse(y));
+					cal.setTime(getSource().getDateFormat().parse(refTime));
 					cal.add(getSource().getOffsetBase().getType(), getSource()
 							.getOffset());
 				} catch (ParseException e) {
 					log.warn(e.getMessage(), e);
 					throw new JidelakParseException(
 							"string.meal_invalid_date_format", getSource()
-									.getDateFormatString(), x, e)
+									.getDateFormatString(), mealTime, e)
 							.setMeal(meal)
 							.setRestaurant(
 									meal.getSource() == null ? meal
@@ -75,12 +75,12 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 							.setSource(meal.getSource()).setHandled(true);
 				}
 				try {
-					cal.add(Calendar.DAY_OF_MONTH, Integer.parseInt(x.trim()));
+					cal.add(Calendar.DAY_OF_MONTH, Integer.parseInt(mealTime.trim()));
 
 				} catch (NumberFormatException e) {
 					log.warn(e.getMessage(), e);
 					throw new JidelakException(
-							"string.meal_invalid_integer_format", e, x)
+							"string.meal_invalid_integer_format", e, mealTime)
 							.setMeal(meal)
 							.setRestaurant(
 									meal.getSource() == null ? meal
@@ -94,10 +94,10 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 		case ABSOLUTE:
 			try {
 
-				log.debug("Parsing " + x + " by "
+				log.debug("Parsing " + mealTime + " by "
 						+ getSource().getDateFormatString());
-				if (x != null)
-					cal.setTime(getSource().getDateFormat().parse(x.trim()));
+				if (mealTime != null)
+					cal.setTime(getSource().getDateFormat().parse(mealTime.trim()));
 				if (cal.get(Calendar.YEAR) == 1970)
 					cal.set(Calendar.YEAR,
 							Calendar.getInstance().get(Calendar.YEAR));
@@ -105,7 +105,7 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 				log.warn(e.getMessage() + " at " + e.getErrorOffset(), e);
 				throw new JidelakParseException(
 						"string.meal_invalid_date_format", getSource()
-								.getDateFormatString(), x, e)
+								.getDateFormatString(), mealTime, e)
 						.setMeal(meal)
 						.setRestaurant(
 								meal.getSource() == null ? meal.getRestaurant()

@@ -18,6 +18,7 @@ import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
 
 import org.apache.log4j.Level;
+import org.apache.pdfbox.util.PDFStreamEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
@@ -39,6 +40,7 @@ public class TemplateValidator {
 
 		if ("-d".equals(args[0])) {
 			org.apache.log4j.Logger.getRootLogger().setLevel(Level.DEBUG);
+			org.apache.log4j.Logger.getLogger(PDFStreamEngine.class).setLevel(Level.WARN);
 			templatePos++;
 		}
 

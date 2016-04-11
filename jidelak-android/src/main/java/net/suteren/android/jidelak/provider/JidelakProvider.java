@@ -230,8 +230,7 @@ public class JidelakProvider extends ContentProvider {
         SharedPreferences prefs = getContext().getSharedPreferences(
                 DEFAULT_PREFERENCES, Context.MODE_PRIVATE);
         if (notFullyUpdated) {
-            prefs.edit().putLong(LAST_UPDATED_KEY, System.currentTimeMillis())
-                    .commit();
+            prefs.edit().putLong(LAST_UPDATED_KEY, System.currentTimeMillis()).apply();
         }
 
         long delay = prefs.getLong(DELETE_DELAY_KEY, DEFAULT_DELETE_DELAY);

@@ -1,20 +1,20 @@
 package net.suteren.android.jidelak.dao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
+import android.database.sqlite.SQLiteDatabase;
 import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Restaurant;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
-import android.database.sqlite.SQLiteDatabase;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class MealDao extends BaseDao<Meal> {
 
@@ -243,14 +243,18 @@ public class MealDao extends BaseDao<Meal> {
 	}
 
 	public void delete(Restaurant r) {
+		deleteByRestaurantId(r.getId());
+	}
+
+	public void deleteByRestaurantId(Long r) {
 		SQLiteDatabase db = getDbHelper().getWritableDatabase();
 		try {
 			db.delete(AvailabilityDao.getTable().getName(), AvailabilityDao.ID
-					+ " in (select " + AVAILABILITY + " from " + getTableName()
-					+ " where " + RESTAURANT + " = ?)",
-					new String[] { Long.toString(r.getId()) });
+							+ " in (select " + AVAILABILITY + " from " + getTableName()
+							+ " where " + RESTAURANT + " = ?)",
+					new String[] { Long.toString(r) });
 			db.delete(getTableName(), RESTAURANT + " = ?",
-					new String[] { Long.toString(r.getId()) });
+					new String[] { Long.toString(r) });
 		} finally {
 			// db.close();
 		}

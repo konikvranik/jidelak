@@ -1,5 +1,8 @@
 package net.suteren.android.jidelak.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,9 +12,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Restaurant implements Identificable<Restaurant> {
 
@@ -170,7 +170,11 @@ public class Restaurant implements Identificable<Restaurant> {
 	}
 
 	public String getTemplateName() {
-		return "restaurant-" + getId() + ".template.xsl";
+		return getTemplateName(getId());
+	}
+
+	public static String getTemplateName(long restaurantId) {
+		return "restaurant-" + restaurantId + ".template.xsl";
 	}
 
 	@Override

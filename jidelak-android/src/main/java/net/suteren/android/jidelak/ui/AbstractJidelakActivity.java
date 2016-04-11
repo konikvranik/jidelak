@@ -1,18 +1,16 @@
 package net.suteren.android.jidelak.ui;
 
-import java.lang.reflect.Field;
-
-import net.suteren.android.jidelak.JidelakDbHelper;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ViewConfiguration;
+import net.suteren.android.jidelak.JidelakDbHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
 
 public class AbstractJidelakActivity extends ActionBarActivity {
 	protected ActionBar actionBar;

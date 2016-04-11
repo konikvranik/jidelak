@@ -62,10 +62,27 @@ public class JidelakProvider extends ContentProvider {
     private static final int MATCHED_DAY = 1;
     private static final String RESTAURANT_PATH = "restaurant";
     private static final int MATCHED_RESTAURANT = 2;
+    private static final String MEAL_PATH = "meal";
+    private static final int MATCHED_MEAL = 3;
     private static final String RELOAD_PATH = "reload";
-    private static final int MATCHED_RELOAD = 3;
+    private static final int MATCHED_RELOAD = 4;
     private static final Uri ALL_DATA_URI = new Uri.Builder().scheme("content").authority(URI_BASE).build();
+    /**
+     * Restaurants uri.
+     */
+    public static final Uri RESTAURANTS_URI = new Uri.Builder().scheme("content")
+            .authority(URI_BASE)
+            .appendPath(RESTAURANT_PATH).build();
+    /**
+     * Meals uri.
+     */
+    public static final Uri MEALS_URI = new Uri.Builder().scheme("content")
+            .authority(URI_BASE)
+            .appendPath(MEAL_PATH).build();
+
     private JidelakDbHelper dbHelper;
+
+
     /**
      * Name of default column with row id.
      */
@@ -75,6 +92,7 @@ public class JidelakProvider extends ContentProvider {
     public boolean onCreate() {
         sUriMatcher.addURI(URI_BASE, DAY_PATH, MATCHED_DAY);
         sUriMatcher.addURI(URI_BASE, RESTAURANT_PATH, MATCHED_RESTAURANT);
+        sUriMatcher.addURI(URI_BASE, MEAL_PATH, MATCHED_MEAL);
         sUriMatcher.addURI(URI_BASE, RELOAD_PATH, MATCHED_RELOAD);
         return true;
     }
@@ -82,14 +100,22 @@ public class JidelakProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
+        final Cursor cursor;
         switch (sUriMatcher.match(uri)) {
             case MATCHED_DAY:
-                final Cursor cursor = loadDayFromDb(projection, selection, selectionArgs, sortOrder);
+                cursor = loadDayFromDb(projection, selection, selectionArgs, sortOrder);
                 cursor.setNotificationUri(getContext().getContentResolver(), ALL_DATA_URI);
                 return cursor;
 
             case MATCHED_RESTAURANT:
-                break;
+                cursor = loadRestaurantsFromDb(projection, selection, selectionArgs, sortOrder);
+                cursor.setNotificationUri(getContext().getContentResolver(), RESTAURANTS_URI);
+                return cursor;
+
+            case MATCHED_MEAL:
+                cursor = loadMealsFromDb(projection, selection, selectionArgs, sortOrder);
+                cursor.setNotificationUri(getContext().getContentResolver(), MEALS_URI);
+                return cursor;
 
             case MATCHED_RELOAD:
                 try {
@@ -118,13 +144,48 @@ public class JidelakProvider extends ContentProvider {
         }
         SQLiteDatabase readableDatabase = getDbHelper().getReadableDatabase();
         return readableDatabase.query(
-                String.format("%s m, %s t, %s r", MealDao.getTable().getName(), AvailabilityDao.getTable().getName(),
+                String.format("%s m, %s a, %s r", MealDao.getTable().getName(), AvailabilityDao.getTable().getName(),
                         RestaurantDao.getTable().getName()), projection,
                 String.format("m.%s = r.%s ", MealDao.RESTAURANT, RestaurantDao.ID)
                         + " and "
                         + String.format("m.%s = a.%s ", MealDao.AVAILABILITY, AvailabilityDao.ID)
                         + (selection == null || selection.isEmpty() ? "" : " and " + selection), selectionArgs,
-                String.format("%s", RestaurantDao.ID), null, sortOrder);
+                null, null, sortOrder);
+    }
+
+    private Cursor loadRestaurantsFromDb(String[] projection, String selection, String[] selectionArgs, String
+            sortOrder) {
+        if (projection == null) {
+            return null;
+        }
+        List<String> proj = Arrays.asList(projection);
+        if (!proj.contains(ID_COLUMN_NAME)) {
+            proj = new ArrayList<>(Arrays.asList(projection));
+            proj.add(0, ID_COLUMN_NAME);
+            projection = proj.toArray(new String[proj.size()]);
+        }
+        SQLiteDatabase readableDatabase = getDbHelper().getReadableDatabase();
+        return readableDatabase.query(
+                RestaurantDao.getTable().getName(), projection, selection, selectionArgs, null, null, sortOrder);
+    }
+
+    private Cursor loadMealsFromDb(String[] projection, String selection, String[] selectionArgs, String
+            sortOrder) {
+        if (projection == null) {
+            return null;
+        }
+        List<String> proj = Arrays.asList(projection);
+        if (!proj.contains(ID_COLUMN_NAME)) {
+            proj = new ArrayList<>(Arrays.asList(projection));
+            proj.add(0, ID_COLUMN_NAME);
+            projection = proj.toArray(new String[proj.size()]);
+        }
+        SQLiteDatabase readableDatabase = getDbHelper().getReadableDatabase();
+        return readableDatabase.query(
+                String.format("%s m, %s a", MealDao.getTable().getName(), AvailabilityDao.getTable().getName()),
+                projection, String.format("m.%s = a.%s", MealDao.AVAILABILITY.getName(), AvailabilityDao.ID.getName())
+                        + (selection == null || selection.isEmpty() ? "" : " and " + selection), selectionArgs, null,
+                null, sortOrder);
     }
 
     @Override

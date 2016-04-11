@@ -111,7 +111,7 @@ public class JidelakTemplateImporterActivityTest extends
         for (Restaurant rest : rests) {
 
             Log.d(LOG_TAG, "Name: " + rest.getName());
-            Log.d(LOG_TAG, "TemplateName: " + rest.getTemplateName());
+            Log.d(LOG_TAG, "TemplateName: " + rest.getTemplateName(restaurantId));
 
             Set<Source> srcs = rest.getSource();
             if (srcs != null)

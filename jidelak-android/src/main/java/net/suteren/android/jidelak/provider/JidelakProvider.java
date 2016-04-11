@@ -1,4 +1,4 @@
-package net.suteren.android.jidelak;
+package net.suteren.android.jidelak.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;

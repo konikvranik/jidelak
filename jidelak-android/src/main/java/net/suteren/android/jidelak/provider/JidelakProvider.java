@@ -237,6 +237,15 @@ public class JidelakProvider extends ContentProvider {
                 break;
 
             case MATCHED_MEAL:
+                Cursor r = wd.query(MealDao.TABLE_NAME, new String[]{MealDao.AVAILABILITY.getName()},
+                        String.format("%s = ?", MealDao.ID.getName()), selectionArgs, null, null, null);
+                r.moveToFirst();
+                long aId = r.getLong(0);
+                cnt = wd.delete(MealDao.TABLE_NAME, String.format("%s = ?", MealDao.ID.getName()), selectionArgs);
+                wd.delete(AvailabilityDao.TABLE_NAME, String.format("%s = ?", AvailabilityDao.ID.getName()),
+                        new String[]{String.format("%d", aId)});
+                wd.setTransactionSuccessful();
+                break;
         }
         wd.endTransaction();
 

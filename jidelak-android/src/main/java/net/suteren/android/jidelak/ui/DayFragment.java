@@ -29,7 +29,6 @@ import net.suteren.android.jidelak.R;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
-import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Restaurant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -270,18 +269,6 @@ public class DayFragment extends Fragment {
                                                         int which) {
 
                                         long restaurantId = r.getLong(r.getColumnIndex(RestaurantDao.ID.getName()));
-
-                                        getContext().getContentResolver().delete(MEALS_URI,
-                                                String.format("%s = ?", MealDao.RESTAURANT.getName()),
-                                                new String[]{String.format("%d", restaurantId)});
-
-                                        getContext().getContentResolver().delete(AVAILABILITY_URI,
-                                                String.format("%s = ?", AvailabilityDao.RESTAURANT.getName()),
-                                                new String[]{String.format("%d", restaurantId)});
-
-                                        getContext().getContentResolver().delete(SOURCE_URI,
-                                                String.format("%s = ?", SourceDao.RESTAURANT.getName()),
-                                                new String[]{String.format("%d", restaurantId)});
 
                                         getContext().getContentResolver().delete(RESTAURANTS_URI,
                                                 String.format("%s = ?", RestaurantDao.ID.getName()),

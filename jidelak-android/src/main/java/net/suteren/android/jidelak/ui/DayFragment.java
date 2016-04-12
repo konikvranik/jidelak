@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -129,6 +130,20 @@ public class DayFragment extends Fragment {
 
         dailyMenuList = (ExpandableListView) rootView.findViewById(R.id.menu_list);
 
+        // set refresh action when swipe down list of days.
+        final SwipeRefreshLayout refresh = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reload(new Runnable() {
+                    @Override
+                    public void run() {
+                        refresh.setRefreshing(false);
+                    }
+                });
+            }
+        });
+
         getLoaderManager().initLoader(DAYS_LOADER, null, new LoaderManager
                 .LoaderCallbacks<Cursor>() {
 
@@ -149,14 +164,6 @@ public class DayFragment extends Fragment {
             }
         });
 
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                getContext().getContentResolver().update(RELOAD_URI, null, null, null);
-                return null;
-            }
-        };
 
 
         if (dailyMenuAdapter.isEmpty()) {
@@ -176,6 +183,30 @@ public class DayFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    private void reload(final Runnable onFinishHook) {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                getContext().getContentResolver().update(RELOAD_URI, null, null, null);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                onFinishHook.run();
+            }
+
+            @Override
+            protected void onCancelled() {
+                super.onCancelled();
+                onFinishHook.run();
+            }
+        };
+
     }
 
     private void setupEmpty(View rootView) {

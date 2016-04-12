@@ -38,7 +38,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.terlici.dragndroplist.DragNDropAdapter;
 import com.terlici.dragndroplist.DragNDropListView;
 import net.suteren.android.jidelak.AndroidUtils;
@@ -319,19 +318,6 @@ public class MainActivity extends AbstractJidelakActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
-            case R.id.action_update:
-
-                if (mBound && mService.isRunning()) {
-                    Toast.makeText(getApplicationContext(),
-                            R.string.update_already_running, Toast.LENGTH_SHORT)
-                            .show();
-                    return true;
-                }
-                Intent intent = new Intent(this, FeederService.class);
-                startService(intent);
-
-                return true;
 
             // case R.id.action_reorder_restaurants:
             // startActivity(new Intent(this, RestaurantManagerActivity.class));

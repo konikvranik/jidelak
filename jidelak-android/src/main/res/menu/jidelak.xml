@@ -4,21 +4,6 @@
     tools:context=".JidelakActivity" >
 
     <item
-        android:id="@+id/action_update"
-        android:actionLayout="@layout/refresh_action_view"
-        android:icon="@drawable/ic_action_refresh"
-        android:orderInCategory="10"
-        android:title="@string/action_update"
-        app:showAsAction="ifRoom"/>
-    
-    
-    <!-- item
-        android:id="@+id/action_find_on_map"
-        android:icon="@drawable/ic_action_map"
-        android:orderInCategory="100"
-        android:title="@string/locate"
-        app:showAsAction="ifRoom"/ -->
-    <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_action_settings"
         android:orderInCategory="100"

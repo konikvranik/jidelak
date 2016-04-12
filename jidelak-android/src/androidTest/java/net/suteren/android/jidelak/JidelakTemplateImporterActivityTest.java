@@ -58,7 +58,8 @@ public class JidelakTemplateImporterActivityTest extends
         // bw.close();
 
 
-        File file = new File(Environment.getExternalStorageDirectory(), "lg_ave.jidelak.xsl");
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                "lg_ave.jidelak.xsl");
 
         prepareTemplateOnSdCard(file);
 

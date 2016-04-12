@@ -129,6 +129,7 @@ public class DayFragment extends Fragment {
         };
 
         dailyMenuList = (ExpandableListView) rootView.findViewById(R.id.menu_list);
+        dailyMenuList.setEmptyView(dailyMenuList.findViewById(R.id.empty));
 
         // set refresh action when swipe down list of days.
         final SwipeRefreshLayout refresh = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);

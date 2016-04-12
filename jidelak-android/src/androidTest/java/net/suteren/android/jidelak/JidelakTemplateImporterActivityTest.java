@@ -14,6 +14,9 @@ import net.suteren.android.jidelak.model.Source;
 import net.suteren.android.jidelak.ui.TemplateImporterActivity;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Set;
@@ -53,9 +56,13 @@ public class JidelakTemplateImporterActivityTest extends
         // br.close();
         // bw.close();
 
-        Intent intent = new Intent(getActivity(),
-                TemplateImporterActivity.class);
-        intent.setData(Uri.fromFile(new File("/sdcard/lg_ave.jidelak.xsl")));
+
+        File file = new File("/sdcard/lg_ave.jidelak.xsl");
+
+        prepareTemplateOnSdCard(file);
+
+        Intent intent = new Intent(getActivity(), TemplateImporterActivity.class);
+        intent.setData(Uri.fromFile(file));
         intent.putExtra("force", true);
         getActivity().startActivity(intent);
 
@@ -96,6 +103,17 @@ public class JidelakTemplateImporterActivityTest extends
         assertEquals(Integer.valueOf(2010), av.getYear());
         assertEquals(Boolean.valueOf(true), av.getClosed());
 
+    }
+
+    private void prepareTemplateOnSdCard(File file) throws IOException {
+        InputStream is = this.getClass().getResourceAsStream("/lg_ave.jidelak.xsl");
+        FileOutputStream os = new FileOutputStream(file);
+        byte[] buffer = new byte[1024];
+        int len = is.read(buffer);
+        while (len != -1) {
+            os.write(buffer, 0, len);
+            len = is.read(buffer);
+        }
     }
 
     public void testResults() {

@@ -116,6 +116,9 @@ public class JidelakTemplateImporterActivityTest extends
             os.write(buffer, 0, len);
             len = is.read(buffer);
         }
+        os.flush();
+        is.close();
+        os.close();
     }
 
     public void testResults() {

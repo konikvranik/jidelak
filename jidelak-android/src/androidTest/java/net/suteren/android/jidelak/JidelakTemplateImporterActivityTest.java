@@ -2,6 +2,7 @@ package net.suteren.android.jidelak;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
@@ -57,7 +58,7 @@ public class JidelakTemplateImporterActivityTest extends
         // bw.close();
 
 
-        File file = new File("/sdcard/lg_ave.jidelak.xsl");
+        File file = new File(Environment.getExternalStorageDirectory(), "lg_ave.jidelak.xsl");
 
         prepareTemplateOnSdCard(file);
 

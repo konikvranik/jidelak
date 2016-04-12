@@ -69,7 +69,7 @@ public class JidelakTemplateImporterActivityTest extends
                 getActivity()));
 
         restaurant.setId((long) 1);
-        rdao.findById(restaurant);
+        restaurant = rdao.findById(restaurant);
 
         assertEquals("Lunch Garden Avenir", restaurant.getName());
         assertEquals("cp1250", restaurant.getSource().iterator().next().getEncoding());

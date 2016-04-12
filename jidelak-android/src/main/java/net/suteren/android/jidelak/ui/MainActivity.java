@@ -1,12 +1,9 @@
 package net.suteren.android.jidelak.ui;
 
-import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.database.DataSetObserver;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -22,20 +19,16 @@ import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBar.TabListener;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import com.terlici.dragndroplist.DragNDropAdapter;
@@ -87,24 +80,12 @@ public class MainActivity extends AbstractJidelakActivity implements
             mService = binder.getService();
             mBound = true;
 
-            mService.registerStartObserver(new DataSetObserver() {
-
-                @Override
-                public void onChanged() {
-                    updateRefreshButton();
-
-                }
-
-            });
-            updateRefreshButton();
-
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             log.debug("service disconnected");
             mBound = false;
-            updateRefreshButton();
         }
 
     };
@@ -286,27 +267,6 @@ public class MainActivity extends AbstractJidelakActivity implements
         return dayPagerAdapter;
     }
 
-    private void updateRefreshButton() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                if (mBound && mService != null && mService.isRunning()) {
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                        startRefreshHc();
-                    else
-                        startRefreshFr();
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                        stopRefreshHc();
-                    else
-                        stopRefreshFr();
-                }
-            }
-        });
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         mainMenu = menu;
@@ -385,46 +345,6 @@ public class MainActivity extends AbstractJidelakActivity implements
         return actionBar;
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    void startRefreshHc() {
-        log.debug("Start refresh");
-        Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotate);
-        rotation.setRepeatCount(Animation.INFINITE);
-
-        MenuItem refreshItem = mainMenu.findItem(R.id.action_update);
-
-        ImageView iv = (ImageView) refreshItem.getActionView();
-        if (iv == null) {
-            LayoutInflater inflater = (LayoutInflater) this
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            iv = (ImageView) inflater.inflate(R.layout.refresh_action_view,
-                    null);
-            refreshItem.setActionView(iv);
-        }
-        iv.startAnimation(rotation);
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    void stopRefreshHc() {
-        log.debug("Stop refresh");
-        MenuItem refreshItem = mainMenu.findItem(R.id.action_update);
-
-        ImageView iv = (ImageView) refreshItem.getActionView();
-        if (iv != null) {
-            iv.setAnimation(null);
-        }
-        refreshItem.setActionView(null);
-    }
-
-    void startRefreshFr() {
-        log.debug("Start refresh old");
-
-    }
-
-    void stopRefreshFr() {
-        log.debug("Stop refresh old");
-
-    }
 
     public class DayPagerAdapter extends FragmentPagerAdapter implements
             SpinnerAdapter {

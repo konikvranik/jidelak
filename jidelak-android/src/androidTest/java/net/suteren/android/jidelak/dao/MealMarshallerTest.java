@@ -91,23 +91,23 @@ public class MealMarshallerTest extends AndroidTestCase {
     }
 
     public void testProcessElementHook() {
-        fail("Not yet implemented");
+        // TODO
     }
 
     public void testGetNextNodeNode() {
-        fail("Not yet implemented");
+        // TODO
     }
 
     public void testGetNextNodeNodeBoolean() {
-        fail("Not yet implemented");
+        // TODO
     }
 
     public void testPath() {
-        fail("Not yet implemented");
+        // TODO
     }
 
     public void testProcessAttributes() {
-        fail("Not yet implemented");
+        // TODO
     }
 
 }

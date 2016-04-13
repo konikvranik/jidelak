@@ -1,9 +1,10 @@
-package net.suteren.android.jidelak;
+package net.suteren.android.jidelak.ui;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
+import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.MealDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
@@ -11,7 +12,6 @@ import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 import net.suteren.android.jidelak.model.Source;
-import net.suteren.android.jidelak.ui.TemplateImporterActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,24 +39,6 @@ public class JidelakTemplateImporterActivityTest extends
     public void testParser() throws Exception {
         TemplateImporterActivity activity = getActivity();
 
-        // InputStream r = this.getClass().getResourceAsStream(
-        // "/lg_ave.jidelak.xsl");
-        //
-        // CharBuffer cb = CharBuffer.allocate(64);
-        //
-        // BufferedReader br = new BufferedReader(new InputStreamReader(r));
-        //
-        // BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-        // getActivity().openFileOutput("test.xsl",
-        // getActivity().MODE_WORLD_READABLE)));
-        //
-        // while (br.read(cb) != -1) {
-        // bw.write(cb.array());
-        // }
-        // br.close();
-        // bw.close();
-
-
         File file = new File(getActivity().getCacheDir(), "lg_ave.jidelak.xsl");
         file.createNewFile();
 
@@ -69,9 +51,7 @@ public class JidelakTemplateImporterActivityTest extends
 
         Log.d("Test", "activity: " + activity);
         Restaurant restaurant = new Restaurant();
-        // activity.parseConfig(
-        // this.getClass().getResourceAsStream("/lg_ave.jidelak.xsl"),
-        // restaurant);
+        activity.importTemplate();
 
         RestaurantDao rdao = new RestaurantDao(JidelakDbHelper.getInstance(
                 getActivity()));

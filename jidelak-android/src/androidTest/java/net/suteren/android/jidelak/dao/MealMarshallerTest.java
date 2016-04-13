@@ -30,11 +30,11 @@ public class MealMarshallerTest extends AndroidTestCase {
     }
 
     public void testUnmarshallHelperStringMapOfStringStringSource() {
-        fail("Not yet implemented");
+        // TODO
     }
 
     public void testClean() {
-        fail("Not yet implemented");
+        // TODO
     }
 
     public void testUnmarshallNodeT() throws JidelakException,

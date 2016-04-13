@@ -42,17 +42,16 @@ public class MealMarshallerTest extends AndroidTestCase {
 
         Meal s = new Meal();
 
-        Document d = db.newDocument();
-        d = prepareDocument(d);
+        Document d = prepareDocument();
 
-        // d = db.parse(this.getClass().getResourceAsStream("/debug.result"));
+        // d = db.parse(this.getClass().getResourceAsStream("/debug_result.xml"));
 
         Node n = d.getDocumentElement();
         sm.unmarshall("#document.jidelak.config.restaurant.menu", n, s);
 
     }
 
-    public static Document prepareDocument(Node n) {
+    private static Document prepareDocument(Node n) {
 
         Document doc;
         if (n instanceof Document) {
@@ -74,13 +73,17 @@ public class MealMarshallerTest extends AndroidTestCase {
         return doc;
     }
 
+    private Document prepareDocument() throws IOException, SAXException {
+        return db.parse(this.getClass().getResourceAsStream("/debug_result.xml"));
+    }
+
+
     public void testUnmarshallStringNodeT() throws JidelakException, SAXException, IOException {
         Meal s = new Meal();
 
-        Document d = db.newDocument();
-        prepareDocument(d);
+        Document d = prepareDocument();
 
-        // d = db.parse(this.getClass().getResourceAsStream("/debug.result"));
+        // d = db.parse(this.getClass().getResourceAsStream("/debug_result.xml"));
 
         sm.unmarshall("#document.jidelak.config.restaurant.menu", d.getDocumentElement(), s);
 

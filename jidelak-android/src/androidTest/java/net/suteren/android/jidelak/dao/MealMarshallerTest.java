@@ -43,17 +43,16 @@ public class MealMarshallerTest extends AndroidTestCase {
         Meal s = new Meal();
 
         Document d = db.newDocument();
-        // d = RestaurantMarshallerTest.prepareDocument(d);
-        // d = prepareDocument(d);
+        d = prepareDocument(d);
 
-        d = db.parse(this.getClass().getResourceAsStream("/debug.result"));
+        // d = db.parse(this.getClass().getResourceAsStream("/debug.result"));
 
         Node n = d.getDocumentElement();
         sm.unmarshall("#document.jidelak.config.restaurant.menu", n, s);
 
     }
 
-    public static Node prepareDocument(Node n) {
+    public static Document prepareDocument(Node n) {
 
         Document doc;
         if (n instanceof Document) {
@@ -71,22 +70,19 @@ public class MealMarshallerTest extends AndroidTestCase {
         sn.setAttribute("encoding", "cp1250");
         sn.setAttribute("dateFormat", "dd. mmm. yyyy");
         sn.setAttribute("locale", "cs_CZ");
-        sn.setAttribute("url",
-                "http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php");
-        return sn;
+        sn.setAttribute("url", "http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php");
+        return doc;
     }
 
-    public void testUnmarshallStringNodeT() throws JidelakException,
-            SAXException, IOException {
+    public void testUnmarshallStringNodeT() throws JidelakException, SAXException, IOException {
         Meal s = new Meal();
 
         Document d = db.newDocument();
-        prepareDocument(RestaurantMarshallerTest.prepareDocument(d));
+        prepareDocument(d);
 
-        d = db.parse(this.getClass().getResourceAsStream("/debug.result"));
+        // d = db.parse(this.getClass().getResourceAsStream("/debug.result"));
 
-        sm.unmarshall("#document.jidelak.config.restaurant.menu",
-                d.getDocumentElement(), s);
+        sm.unmarshall("#document.jidelak.config.restaurant.menu", d.getDocumentElement(), s);
 
     }
 

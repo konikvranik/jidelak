@@ -1,19 +1,18 @@
 package net.suteren.android.jidelak.dao;
 
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.Map;
-
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.JidelakParseException;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Meal;
 import net.suteren.android.jidelak.model.Source;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.Map;
 
 public class MealMarshaller extends BaseMarshaller<Meal> {
 
@@ -29,6 +28,8 @@ public class MealMarshaller extends BaseMarshaller<Meal> {
 		meal.setPrice(data.get(prefix + "meal.price"));
 		meal.setCategory(data.get(prefix + "meal@category"));
 		String dishString = data.get(prefix + "meal@dish");
+		log.debug("Data: %s", data.toString());
+		log.debug("Meal: %s", meal);
 		try {
 			if (dishString != null && !"".equals(dishString.trim()))
 				meal.setDish(Dish.valueOf(dishString.trim().toUpperCase(

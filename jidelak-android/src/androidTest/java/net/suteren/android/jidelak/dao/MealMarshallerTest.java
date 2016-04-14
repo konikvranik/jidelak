@@ -4,7 +4,6 @@ import android.test.AndroidTestCase;
 import net.suteren.android.jidelak.JidelakException;
 import net.suteren.android.jidelak.model.Meal;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -47,30 +46,8 @@ public class MealMarshallerTest extends AndroidTestCase {
         // d = db.parse(this.getClass().getResourceAsStream("/debug_result.xml"));
 
         Node n = d.getDocumentElement();
-        sm.unmarshall("#document.jidelak.config.restaurant.menu", n, s);
+        sm.unmarshall("#document.jidelak.config.restaurant.menu", d, s);
 
-    }
-
-    private static Document prepareDocument(Node n) {
-
-        Document doc;
-        if (n instanceof Document) {
-            doc = (Document) n;
-        } else {
-            doc = n.getOwnerDocument();
-        }
-
-        Element sn = (Element) n.appendChild(doc.createElement("source"));
-
-        sn.setAttribute("time", "relative");
-        sn.setAttribute("base", "week");
-        sn.setAttribute("firstDayOfWeek", "Po");
-        sn.setAttribute("timeOffset", "0");
-        sn.setAttribute("encoding", "cp1250");
-        sn.setAttribute("dateFormat", "dd. mmm. yyyy");
-        sn.setAttribute("locale", "cs_CZ");
-        sn.setAttribute("url", "http://lgavenir.cateringmelodie.cz/cz/denni-menu-tisk.php");
-        return doc;
     }
 
     private Document prepareDocument() throws IOException, SAXException {

@@ -195,6 +195,11 @@ android {
         preDexLibraries = false
     }
 
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
+    }
 }
 
 play {

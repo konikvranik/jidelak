@@ -206,18 +206,6 @@ android {
             showStackTraces true
         }
     }
-
-    testOptions {
-        testLogging {
-            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
-            outputs.upToDateWhen {false}
-            showStandardStreams = true
-            showExceptions true
-            exceptionFormat "short"
-            showCauses true
-            showStackTraces true
-        }
-    }
 }
 
 play {

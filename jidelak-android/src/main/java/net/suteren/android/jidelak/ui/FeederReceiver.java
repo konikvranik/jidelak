@@ -38,14 +38,11 @@ public class FeederReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().compareTo(Intent.ACTION_BOOT_COMPLETED) == 0) {
 			log.debug("DemoReceiver.onReceive(ACTION_BOOT_COMPLETED)");
-			context.startService(new Intent(context, FeederService.class)
-					.putExtra("register", true));
 		} else if (intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0) {
 			log.debug("DemoReceiver.onReceive(ACTION_TIME_TICK)");
 
 			if (decideIfStart(context)) {
 				log.debug("Receiver is starting service...");
-				context.startService(new Intent(context, FeederService.class));
 			}
 		} else
 			log.debug("DemoReceiver.onReceive(" + intent.getAction() + ")");

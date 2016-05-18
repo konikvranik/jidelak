@@ -1,16 +1,11 @@
 package net.suteren.android.jidelak.ui;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -18,19 +13,10 @@ import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBar.TabListener;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.BaseAdapter;
-import android.widget.ExpandableListView;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
+import android.widget.*;
 import com.terlici.dragndroplist.DragNDropAdapter;
 import com.terlici.dragndroplist.DragNDropListView;
 import net.suteren.android.jidelak.AndroidUtils;
@@ -40,16 +26,11 @@ import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
-import net.suteren.android.jidelak.ui.FeederService.FeederServiceBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class MainActivity extends AbstractJidelakActivity implements
         TabListener, OnNavigationListener {
@@ -64,7 +45,6 @@ public class MainActivity extends AbstractJidelakActivity implements
 
     private boolean mBound = false;
 
-    private FeederService mService;
 
     /**
      * Defines callbacks for service binding, passed to bindService()
@@ -76,8 +56,6 @@ public class MainActivity extends AbstractJidelakActivity implements
             // We've bound to LocalService, cast the IBinder and get
             // LocalService instance
             log.debug("service connected");
-            FeederServiceBinder binder = (FeederServiceBinder) service;
-            mService = binder.getService();
             mBound = true;
 
         }
@@ -118,11 +96,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 
         goToToday();
 
-        getDbHelper().cleanup();
-
         log.debug("DemoReceiver.onReceive(ACTION_BOOT_COMPLETED)");
-        startService(new Intent(this, FeederService.class).putExtra("register",
-                true));
 
         updateHomeIcon();
 
@@ -142,9 +116,6 @@ public class MainActivity extends AbstractJidelakActivity implements
             unbindService(mConnection);
             mBound = false;
         } else if (!mBound && hasFocus) {
-            boolean res = bindService(new Intent(this, FeederService.class),
-                    mConnection, Context.BIND_NOT_FOREGROUND);
-            log.debug("Bind result: " + res);
         }
 
     }

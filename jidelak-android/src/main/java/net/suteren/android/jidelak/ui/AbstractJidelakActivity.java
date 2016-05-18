@@ -17,8 +17,6 @@ public class AbstractJidelakActivity extends ActionBarActivity {
 	protected static Logger log = LoggerFactory
 			.getLogger(AbstractJidelakActivity.class);
 
-	private JidelakDbHelper dbHelper;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,12 +44,6 @@ public class AbstractJidelakActivity extends ActionBarActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public JidelakDbHelper getDbHelper() {
-		if (dbHelper == null)
-			dbHelper = JidelakDbHelper.getInstance(getApplicationContext());
-		return dbHelper;
 	}
 
 	protected SharedPreferences getSharedPreferences() {

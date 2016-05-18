@@ -50,6 +50,7 @@ public class JidelakProvider extends ContentProvider {
     private static final String RELOAD_PATH = "reload";
     private static final int MATCHED_RELOAD = 0;
     public static final String SCHEME_CONTENT = "content";
+
     public static final Uri RELOAD_URI = new Uri.Builder().scheme(SCHEME_CONTENT).authority(URI_BASE).appendPath(RELOAD_PATH).build();
     /**
      * Restaurants uri.
@@ -64,19 +65,6 @@ public class JidelakProvider extends ContentProvider {
             .authority(URI_BASE)
             .appendPath(MEAL_PATH).build();
 
-    /**
-     * Availability uri.
-     */
-    public static final Uri AVAILABILITY_URI = new Uri.Builder().scheme(SCHEME_CONTENT)
-            .authority(URI_BASE)
-            .appendPath(AVAILABILITY_PATH).build();
-
-    /**
-     * Source uri.
-     */
-    public static final Uri SOURCE_URI = new Uri.Builder().scheme(SCHEME_CONTENT)
-            .authority(URI_BASE)
-            .appendPath(SOURCE_PATH).build();
 
     private JidelakDbHelper dbHelper;
 
@@ -229,7 +217,6 @@ public class JidelakProvider extends ContentProvider {
             case MATCHED_RELOAD:
                 try {
                     updateData();
-                    getContext().getContentResolver().notifyChange(RELOAD_URI, null);
                     getContext().getContentResolver().notifyChange(MEALS_URI, null);
                     getContext().getContentResolver().notifyChange(RESTAURANTS_URI, null);
                 } catch (JidelakException e) {

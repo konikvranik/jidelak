@@ -129,14 +129,6 @@
                 android:value=".ui.MainActivity" />
         </activity>
 
-        <service
-            android:name=".ui.FeederService"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </service>
-
         <receiver
             android:name=".ui.FeederReceiver"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >

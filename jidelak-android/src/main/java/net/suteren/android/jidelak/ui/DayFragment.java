@@ -53,18 +53,6 @@ public class DayFragment extends Fragment {
 
     private SimpleCursorTreeAdapter dailyMenuAdapter;
 
-    private void showEmpty(boolean showEmpty, View paramView) {
-        if (paramView == null)
-            return;
-        View emptyView = paramView.findViewById(R.id.empty);
-        if (emptyView == null)
-            return;
-        if (showEmpty)
-            emptyView.setVisibility(View.VISIBLE);
-        else
-            emptyView.setVisibility(View.GONE);
-    }
-
     public static final String ARG_DAY = "day";
     private ExpandableListView dailyMenuList;
 
@@ -129,7 +117,7 @@ public class DayFragment extends Fragment {
         };
 
         dailyMenuList = (ExpandableListView) rootView.findViewById(R.id.menu_list);
-        dailyMenuList.setEmptyView(dailyMenuList.findViewById(R.id.empty));
+        dailyMenuList.setEmptyView(rootView.findViewById(R.id.empty));
 
         // set refresh action when swipe down list of days.
         final SwipeRefreshLayout refresh = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
@@ -165,17 +153,7 @@ public class DayFragment extends Fragment {
             }
         });
 
-
-
-        if (dailyMenuAdapter.isEmpty()) {
-            dailyMenuList.setVisibility(View.GONE);
-            showEmpty(true, rootView);
-            setupEmpty(rootView);
-        } else {
-            dailyMenuList.setVisibility(View.VISIBLE);
-            rootView.findViewById(R.id.empty).setVisibility(View.GONE);
-
-        }
+        setupEmpty(rootView);
         registerForContextMenu(dailyMenuList);
         dailyMenuList.setAdapter(dailyMenuAdapter);
 

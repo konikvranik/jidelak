@@ -46,10 +46,10 @@ after_script:
     git fetch origin gh-pages:gh-pages &&
     git symbolic-ref HEAD refs/heads/gh-pages &&
     git reset HEAD &&
-    ( cp -ru $TRAVIS_BUILD_DIR/android/build/outputs/lint-results* . || true ) &&
-    ( cp -ru $TRAVIS_BUILD_DIR/android/build/outputs/report* . || true ) &&
-    ( cp -ru $TRAVIS_BUILD_DIR/android/build/report* . || true ) &&
-    ( cp -ru $TRAVIS_BUILD_DIR/android/CHANGELOG.html . || true ) &&
+    ( cp -ru $TRAVIS_BUILD_DIR/jidelak-android/build/outputs/lint-results* . || true ) &&
+    ( cp -ru $TRAVIS_BUILD_DIR/jidelak-android/build/outputs/report* . || true ) &&
+    ( cp -ru $TRAVIS_BUILD_DIR/jidelak-android/build/report* . || true ) &&
+    ( cp -ru $TRAVIS_BUILD_DIR/jidelak-android/CHANGELOG.html . || true ) &&
     ( git add lint* || true ) &&
     ( git add report* || true ) &&
     ( git add CHANGELOG.html || true ) &&

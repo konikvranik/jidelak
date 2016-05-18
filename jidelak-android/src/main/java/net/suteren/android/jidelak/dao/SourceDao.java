@@ -56,7 +56,7 @@ public class SourceDao extends BaseDao<Source> {
     }
 
     @Override
-    protected Source parseRow(Cursor cursor) {
+    public Source parseRow(Cursor cursor) {
         Source source = new Source();
         source.setId(unpackColumnValue(cursor, ID, Long.class));
         source.setTimeType(unpackColumnValue(cursor, TIME_TYPE, TimeType.class));

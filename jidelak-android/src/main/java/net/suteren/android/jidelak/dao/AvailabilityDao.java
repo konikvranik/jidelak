@@ -14,7 +14,7 @@ import static net.suteren.android.jidelak.dao.SQLiteDataTypes.TEXT;
 
 public class AvailabilityDao extends BaseDao<Availability> {
 
-    private static final String SQL_SEPARATOR = ", ";
+    public static final String SQL_SEPARATOR = ", ";
 
     public static final String TABLE_NAME = "availability";
 
@@ -58,7 +58,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
     }
 
     @Override
-    protected Availability parseRow(Cursor cursor) {
+    public Availability parseRow(Cursor cursor) {
         Availability av = new Availability();
         av.setYear(unpackColumnValue(cursor, YEAR, Integer.class));
         av.setMonth(unpackColumnValue(cursor, MONTH, Integer.class));

@@ -52,6 +52,8 @@ public class JidelakProvider extends ContentProvider {
     private static final int MATCHED_SOURCE = 5;
     private static final String REORDER_PATH = "reorder";
     private static final int MATCHED_REORDER = 6;
+    private static final String DATES_PATH = "dates";
+    private static final int MATCHED_DATES = 7;
     private static final String RELOAD_PATH = "reload";
     private static final int MATCHED_RELOAD = 0;
     public static final String SCHEME_CONTENT = "content";
@@ -71,6 +73,17 @@ public class JidelakProvider extends ContentProvider {
             .authority(URI_BASE)
             .appendPath(MEAL_PATH).build();
 
+    /**
+     * Change restaurants order.
+     */
+    public static final Uri REORDER_URI = new Uri.Builder().scheme(SCHEME_CONTENT).authority(URI_BASE).appendPath
+            (REORDER_PATH).build();
+
+    /**
+     * Change restaurants order.
+     */
+    public static final Uri DATES_URI = new Uri.Builder().scheme(SCHEME_CONTENT).authority(URI_BASE).appendPath
+            (DATES_PATH).build();
 
     private JidelakDbHelper dbHelper;
 
@@ -89,6 +102,7 @@ public class JidelakProvider extends ContentProvider {
         sUriMatcher.addURI(URI_BASE, SOURCE_PATH, MATCHED_SOURCE);
         sUriMatcher.addURI(URI_BASE, RELOAD_PATH, MATCHED_RELOAD);
         sUriMatcher.addURI(URI_BASE, REORDER_PATH, MATCHED_REORDER);
+        sUriMatcher.addURI(URI_BASE, DATES_PATH, MATCHED_DATES);
         return true;
     }
 
@@ -200,6 +214,8 @@ public class JidelakProvider extends ContentProvider {
                 cnt = wd.delete(RestaurantDao.TABLE_NAME, String.format("%s = ?", RestaurantDao.ID.getName()),
                         selectionArgs);
                 wd.setTransactionSuccessful();
+                notifyChange(MEALS_URI);
+                notifyChange(RESTAURANTS_URI);
                 break;
 
             case MATCHED_MEAL:
@@ -211,11 +227,16 @@ public class JidelakProvider extends ContentProvider {
                 wd.delete(AvailabilityDao.TABLE_NAME, String.format("%s = ?", AvailabilityDao.ID.getName()),
                         new String[]{String.format("%d", aId)});
                 wd.setTransactionSuccessful();
+                notifyChange(MEALS_URI);
                 break;
         }
         wd.endTransaction();
 
         return cnt;
+    }
+
+    private void notifyChange(Uri uri) {
+        getContext().getContentResolver().notifyChange(uri, null);
     }
 
     @Override
@@ -224,8 +245,8 @@ public class JidelakProvider extends ContentProvider {
             case MATCHED_RELOAD:
                 try {
                     updateData();
-                    getContext().getContentResolver().notifyChange(MEALS_URI, null);
-                    getContext().getContentResolver().notifyChange(RESTAURANTS_URI, null);
+                    notifyChange(MEALS_URI);
+                    notifyChange(RESTAURANTS_URI);
                 } catch (JidelakException e) {
                     log.error(e.getMessage(), e);
                 }
@@ -249,7 +270,7 @@ public class JidelakProvider extends ContentProvider {
                 values.put(RestaurantDao.POSITION.getName(), to);
                 db.update(RestaurantDao.TABLE_NAME, values, selection, selectionArgs);
 
-                getContext().getContentResolver().notifyChange(RESTAURANTS_URI, null);
+                notifyChange(RESTAURANTS_URI);
                 break;
         }
 

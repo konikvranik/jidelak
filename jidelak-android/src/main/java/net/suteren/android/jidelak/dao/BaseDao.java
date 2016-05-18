@@ -36,6 +36,10 @@ public abstract class BaseDao<T extends Identificable<T>> {
     protected static Logger log = LoggerFactory.getLogger(BaseDao.class);
     private final SQLiteDatabase database;
 
+    public BaseDao() {
+        database=null;
+    }
+
     public SQLiteDatabase getDatabase() {
         return database;
     }
@@ -342,7 +346,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
         return results;
     }
 
-    protected abstract T parseRow(Cursor cursor);
+    public abstract T parseRow(Cursor cursor);
 
     protected abstract String getTableName();
 

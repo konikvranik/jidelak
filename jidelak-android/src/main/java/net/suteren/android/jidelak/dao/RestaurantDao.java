@@ -56,8 +56,12 @@ public class RestaurantDao extends BaseDao<Restaurant> {
         super(db);
     }
 
+    public RestaurantDao() {
+        super();
+    }
+
     @Override
-    protected Restaurant parseRow(Cursor cursor) {
+    public Restaurant parseRow(Cursor cursor) {
         Restaurant restaurant = new Restaurant(unpackColumnValue(cursor, ID, Long.class));
         restaurant.setName(unpackColumnValue(cursor, NAME, String.class));
         restaurant.setPosition(unpackColumnValue(cursor, POSITION, Integer.class));

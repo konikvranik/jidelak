@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import net.suteren.android.jidelak.dao.AvailabilityDao;
 import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.dao.SourceDao;
 import net.suteren.android.jidelak.model.Restaurant;
+import net.suteren.android.jidelak.provider.JidelakProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,9 +123,8 @@ public class TemplateImporterActivity extends Activity {
         mHandler.post(new ToastRunnable(getResources().getString(
                 R.string.importing_template, sourceUri.getLastPathSegment())));
 
-        JidelakDbHelper dbh = JidelakDbHelper
-                .getInstance(getApplicationContext());
-        RestaurantDao restaurantDao = new RestaurantDao(dbh);
+        SQLiteDatabase db = JidelakDbHelper.getInstance(getApplicationContext()).getReadableDatabase();
+        RestaurantDao restaurantDao = new RestaurantDao(db);
 
         Restaurant restaurant = new Restaurant();
 
@@ -157,20 +158,19 @@ public class TemplateImporterActivity extends Activity {
 
             restaurantDao.update(restaurant);
 
-            new SourceDao(dbh).insert(restaurant.getSource());
+            new SourceDao(db).insert(restaurant.getSource());
 
-            new AvailabilityDao(dbh).insert(restaurant.getOpeningHours());
+            new AvailabilityDao(db).insert(restaurant.getOpeningHours());
 
         } catch (Exception e) {
             deleteFile(restaurant.getTemplateName());
-            restaurantDao.delete(restaurant);
+            getContentResolver().delete(JidelakProvider.RESTAURANTS_URI, String.format("%s=?", RestaurantDao.ID
+                    .getName()),new String[]{String.valueOf(restaurant.getId())});
             if (e instanceof JidelakException)
                 throw (JidelakException) e;
             else
                 throw new JidelakException(getResources().getString(
                         R.string.unexpected_exception), e);
-        } finally {
-            dbh.notifyDataSetChanged();
         }
     }
 

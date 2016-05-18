@@ -146,7 +146,7 @@ public class MealDao extends BaseDao<Meal> {
     }
 
     @Override
-    protected Meal parseRow(Cursor cursor) {
+    public Meal parseRow(Cursor cursor) {
 
         Meal meal = new Meal();
         meal.setId(unpackColumnValue(cursor, ID, Long.class));

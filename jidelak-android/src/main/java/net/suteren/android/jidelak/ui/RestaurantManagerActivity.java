@@ -4,15 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import com.terlici.dragndroplist.DragNDropAdapter;
 import com.terlici.dragndroplist.DragNDropListView;
 import net.suteren.android.jidelak.AndroidUtils;
-import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.R;
-import net.suteren.android.jidelak.dao.RestaurantDao;
 import net.suteren.android.jidelak.model.Restaurant;
 
 import java.util.ArrayList;
@@ -35,7 +31,7 @@ public class RestaurantManagerActivity extends AbstractJidelakActivity {
 
         public DragNDropRestaurantListAdapter(Collection<Restaurant> restaurants) {
             super();
-            this.restaurants = new ArrayList<Restaurant>(restaurants);
+            this.restaurants = new ArrayList<>(restaurants);
         }
 
         @Override
@@ -115,7 +111,7 @@ public class RestaurantManagerActivity extends AbstractJidelakActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.restaurants_manager);
-
+/*
         ImageButton cancel = (ImageButton) getWindow().findViewById(R.id.cancel);
         cancel.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -142,6 +138,6 @@ public class RestaurantManagerActivity extends AbstractJidelakActivity {
                 finish();
             }
         });
-    }
+*/    }
 
 }

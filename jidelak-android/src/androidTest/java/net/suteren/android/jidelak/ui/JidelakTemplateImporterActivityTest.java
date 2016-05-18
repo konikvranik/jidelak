@@ -1,6 +1,7 @@
 package net.suteren.android.jidelak.ui;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
@@ -54,7 +55,7 @@ public class JidelakTemplateImporterActivityTest extends
         activity.importTemplate();
 
         RestaurantDao rdao = new RestaurantDao(JidelakDbHelper.getInstance(
-                getActivity()));
+                getActivity()).getReadableDatabase());
 
         restaurant.setId((long) 1);
         restaurant = rdao.findById(restaurant);
@@ -102,9 +103,9 @@ public class JidelakTemplateImporterActivityTest extends
 
     public void testResults() {
         TemplateImporterActivity activity = getActivity();
-        JidelakDbHelper dbh = JidelakDbHelper.getInstance(activity);
+        SQLiteDatabase db = JidelakDbHelper.getInstance(activity).getReadableDatabase();
 
-        RestaurantDao rdao = new RestaurantDao(dbh);
+        RestaurantDao rdao = new RestaurantDao(db);
 
         SortedSet<Restaurant> rests = rdao.findAll();
 
@@ -129,10 +130,10 @@ public class JidelakTemplateImporterActivityTest extends
 
             Log.d(LOG_TAG, "Restauranrs count: " + rdao.findAll().size());
             Log.d(LOG_TAG, "Availability count: "
-                    + new AvailabilityDao(dbh).findAll().size());
-            Log.d(LOG_TAG, "Meal count: " + new MealDao(dbh).findAll().size());
+                    + new AvailabilityDao(db).findAll().size());
+            Log.d(LOG_TAG, "Meal count: " + new MealDao(db).findAll().size());
             Log.d(LOG_TAG, "Source count: "
-                    + new SourceDao(dbh).findAll().size());
+                    + new SourceDao(db).findAll().size());
         }
 
     }

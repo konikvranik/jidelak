@@ -3,6 +3,7 @@ package net.suteren.android.jidelak.provider;
 import android.content.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
 import net.suteren.android.jidelak.*;
 import net.suteren.android.jidelak.dao.*;
@@ -20,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static net.suteren.android.jidelak.Constants.*;
 
 /**
@@ -47,11 +50,14 @@ public class JidelakProvider extends ContentProvider {
     private static final int MATCHED_AVAILABILITY = 4;
     private static final String SOURCE_PATH = "source";
     private static final int MATCHED_SOURCE = 5;
+    private static final String REORDER_PATH = "reorder";
+    private static final int MATCHED_REORDER = 6;
     private static final String RELOAD_PATH = "reload";
     private static final int MATCHED_RELOAD = 0;
     public static final String SCHEME_CONTENT = "content";
 
-    public static final Uri RELOAD_URI = new Uri.Builder().scheme(SCHEME_CONTENT).authority(URI_BASE).appendPath(RELOAD_PATH).build();
+    public static final Uri RELOAD_URI = new Uri.Builder().scheme(SCHEME_CONTENT).authority(URI_BASE).appendPath
+            (RELOAD_PATH).build();
     /**
      * Restaurants uri.
      */
@@ -82,6 +88,7 @@ public class JidelakProvider extends ContentProvider {
         sUriMatcher.addURI(URI_BASE, AVAILABILITY_PATH, MATCHED_AVAILABILITY);
         sUriMatcher.addURI(URI_BASE, SOURCE_PATH, MATCHED_SOURCE);
         sUriMatcher.addURI(URI_BASE, RELOAD_PATH, MATCHED_RELOAD);
+        sUriMatcher.addURI(URI_BASE, REORDER_PATH, MATCHED_REORDER);
         return true;
     }
 
@@ -222,6 +229,27 @@ public class JidelakProvider extends ContentProvider {
                 } catch (JidelakException e) {
                     log.error(e.getMessage(), e);
                 }
+                break;
+
+            case MATCHED_REORDER:
+                SQLiteDatabase db = getDbHelper().getWritableDatabase();
+                Integer from = values.getAsInteger("from");
+                Integer to = values.getAsInteger("to");
+                String sign = from > to ? "+" : "-";
+
+                SQLiteStatement st = db.compileStatement(
+                        String.format("update %s set %s=%s%s1 where %s>=? and %s<=?",
+                                RestaurantDao.TABLE_NAME,
+                                RestaurantDao.POSITION.getName(), RestaurantDao.POSITION.getName(), sign,
+                                RestaurantDao.POSITION.getName(), RestaurantDao.POSITION.getName()));
+                st.bindLong(1, min(from, to));
+                st.bindLong(2, max(from, to));
+                st.executeUpdateDelete();
+                values = new ContentValues(1);
+                values.put(RestaurantDao.POSITION.getName(), to);
+                db.update(RestaurantDao.TABLE_NAME, values, selection, selectionArgs);
+
+                getContext().getContentResolver().notifyChange(RESTAURANTS_URI, null);
                 break;
         }
 

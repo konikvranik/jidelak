@@ -1,8 +1,10 @@
 package net.suteren.android.jidelak.ui;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.*;
@@ -120,11 +122,6 @@ public class MainActivity extends AbstractJidelakActivity implements
 
     }
 
-    private void updateData() {
-        getDayPagerAdapter().updateDates();
-        restaurantAdapter.updateRestaurants();
-    }
-
     protected void goToToday() {
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         cal.setTimeInMillis(System.currentTimeMillis());
@@ -196,8 +193,7 @@ public class MainActivity extends AbstractJidelakActivity implements
         if (restaurantListView == null)
             return;
 
-        restaurantAdapter = new DragNDropRestaurantListAdapter(
-                new RestaurantDao(JidelakDbHelper.getInstance(this)).findAll());
+        restaurantAdapter = new DragNDropRestaurantListAdapter(null);
         restaurantListView.setDragNDropAdapter(restaurantAdapter);
 
         ImageButton cancel = (ImageButton) getWindow()
@@ -216,8 +212,6 @@ public class MainActivity extends AbstractJidelakActivity implements
         save.setOnClickListener(new ImageButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JidelakDbHelper dbHelper = JidelakDbHelper
-                        .getInstance(getApplication());
                 new RestaurantDao(dbHelper).update(restaurantAdapter
                         .getRestaurants());
                 dbHelper.notifyDataSetChanged();
@@ -320,7 +314,7 @@ public class MainActivity extends AbstractJidelakActivity implements
     public class DayPagerAdapter extends FragmentPagerAdapter implements
             SpinnerAdapter {
 
-        private List<Availability> dates = new ArrayList<Availability>();
+        private List<Availability> dates = new ArrayList<>();
 
         public DayPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -459,7 +453,7 @@ public class MainActivity extends AbstractJidelakActivity implements
 
             log.debug("Update dates start");
             AvailabilityDao adao = new AvailabilityDao(getDbHelper());
-            dates = new ArrayList<Availability>(adao.findAllDays());
+            dates = new ArrayList<>(adao.findAllDays());
             runOnUiThread(new Runnable() {
 
                 @Override
@@ -525,78 +519,16 @@ public class MainActivity extends AbstractJidelakActivity implements
         return "android:switcher:" + view.getId() + ":" + id;
     }
 
-    private class DragNDropRestaurantListAdapter extends BaseAdapter implements
-            DragNDropAdapter {
-
-        private List<Restaurant> restaurants;
+    private class DragNDropRestaurantListAdapter extends SimpleCursorAdapter implements DragNDropAdapter {
 
         private boolean changed = false;
 
-        public DragNDropRestaurantListAdapter(Collection<Restaurant> restaurants) {
-            super();
-            this.restaurants = new ArrayList<Restaurant>(restaurants);
+        public DragNDropRestaurantListAdapter(Cursor restaurants) {
+            super(getApplicationContext(), R.layout.draggable_restaurant, restaurants,
+                    new String[]{RestaurantDao.NAME.getName(), RestaurantDao.ID.getName()},
+                    new int[]{R.id.name, R.id.open}, 0);
         }
 
-        public void updateRestaurants() {
-            setRestaurants(new RestaurantDao(
-                    JidelakDbHelper.getInstance(getApplicationContext()))
-                    .findAll());
-        }
-
-        @Override
-        public int getCount() {
-            return restaurants.size();
-        }
-
-        @Override
-        public Restaurant getItem(int paramInt) {
-            return restaurants.get(paramInt);
-        }
-
-        @Override
-        public long getItemId(int paramInt) {
-            return getItem(paramInt).getId();
-        }
-
-        @Override
-        public View getView(final int paramInt, View paramView,
-                            ViewGroup paramViewGroup) {
-
-            if (paramView == null) {
-                paramView = View.inflate(getApplicationContext(),
-                        R.layout.draggable_restaurant, null);
-            }
-
-            paramView.findViewById(R.id.header).setOnClickListener(
-                    new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                            if (changed)
-                                return;
-                            DayFragment page = getActiveDayFragment();
-                            if (page == null)
-                                return;
-                            ExpandableListView menuListView = (ExpandableListView) page.getMenuList();
-                            if (menuListView == null)
-                                return;
-                            //menuListView.setSelection(page.getAdapter().countAbsolutePosition(paramInt));
-                            closeDrawer();
-                        }
-
-                    });
-
-            Restaurant restaurant = getItem(paramInt);
-
-            TextView nameView = (TextView) paramView.findViewById(R.id.name);
-            nameView.setText(restaurant.getName());
-
-            TextView openingView = (TextView) paramView.findViewById(R.id.open);
-            openingView.setText(AndroidUtils.openingHoursToString(
-                    getApplicationContext(), restaurant));
-
-            return paramView;
-        }
 
         @Override
         public void onItemDrag(DragNDropListView parent, View view,
@@ -606,8 +538,7 @@ public class MainActivity extends AbstractJidelakActivity implements
         }
 
         @Override
-        public void onItemDrop(DragNDropListView parent, View view,
-                               int startPosition, int endPosition, long id) {
+        public void onItemDrop(DragNDropListView parent, View view, int startPosition, int endPosition, long id) {
             Restaurant restaurant = restaurants.remove(startPosition);
             restaurants.add(endPosition, restaurant);
 
@@ -628,24 +559,6 @@ public class MainActivity extends AbstractJidelakActivity implements
         @Override
         public int getDragHandler() {
             return R.id.handler;
-        }
-
-        public List<Restaurant> getRestaurants() {
-            return restaurants;
-        }
-
-        public void setRestaurants(Collection<Restaurant> restaurants) {
-            this.restaurants = new ArrayList<Restaurant>(restaurants);
-            resetChanged();
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    notifyDataSetChanged();
-                }
-            });
-        }
-
-        public void resetChanged() {
-            changed = false;
         }
 
     }

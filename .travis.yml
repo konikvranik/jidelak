@@ -56,7 +56,7 @@ after_script:
     git commit -m "travis => build reports [skip ci]" &&
     git push --set-upstream origin gh-pages
   - cat `which android-wait-for-emulator`
-  - curl https://www.quantifiedcode.com/api/v1/project/4ec4d485b6884f76a74d5799c08d14dc/analyze
+  - curl https://www.quantifiedcode.com/api/v1/project/a3d389316bc44f66b54bdfc0ec3e072a/analyze
 
 after_success:
   - ./gradlew --daemon -p android bintrayUpload

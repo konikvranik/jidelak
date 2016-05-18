@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
-import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.Utils;
 import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Identificable;
@@ -35,12 +34,17 @@ import java.util.TreeSet;
 public abstract class BaseDao<T extends Identificable<T>> {
 
     protected static Logger log = LoggerFactory.getLogger(BaseDao.class);
+    private final SQLiteDatabase database;
+
+    public SQLiteDatabase getDatabase() {
+        return database;
+    }
 
     public static class Table {
 
         private String name;
-        private List<Column> columns = new ArrayList<Column>();
-        private List<ForeignKey> foreignKeys = new ArrayList<ForeignKey>();
+        private List<Column> columns = new ArrayList<>();
+        private List<ForeignKey> foreignKeys = new ArrayList<>();
 
         public Table(String name) {
             this.name = name;
@@ -56,7 +60,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
         }
 
         public String createClausule() {
-            StringBuffer sb = new StringBuffer("create table ");
+            StringBuilder sb = new StringBuilder("create table ");
             sb.append(name);
             sb.append("(");
             Iterator<Column> ci = columns.iterator();
@@ -82,15 +86,15 @@ public abstract class BaseDao<T extends Identificable<T>> {
         }
 
         public String[] getColumnNames() {
-            List<String> colNames = new ArrayList<String>();
+            List<String> colNames = new ArrayList<>();
             for (Column col : columns) {
                 colNames.add(col.getName());
             }
-            return colNames.toArray(new String[0]);
+            return colNames.toArray(new String[colNames.size()]);
         }
 
         public Column[] getColumns() {
-            return columns.toArray(new Column[]{});
+            return columns.toArray(new Column[columns.size()]);
         }
     }
 
@@ -127,7 +131,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
         }
 
         public String createClausule() {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(name);
             sb.append(" ");
             sb.append(type.getType());
@@ -150,10 +154,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
 
         @Override
         public boolean equals(Object o) {
-            if (o instanceof Column) {
-                return toString().equals(o.toString());
-            }
-            return false;
+            return o instanceof Column && toString().equals(o.toString());
         }
 
     }
@@ -183,15 +184,8 @@ public abstract class BaseDao<T extends Identificable<T>> {
         }
 
         public Object createClausule() {
-            StringBuffer sb = new StringBuffer();
-            sb.append("foreign key(");
-            sb.append(source.getName());
-            sb.append(") references ");
-            sb.append(table.getName());
-            sb.append("(");
-            sb.append(target.getName());
-            sb.append(")");
-            return sb.toString();
+            return String.format("foreign key(%s) references %s(%s)",
+                    source.getName(), table.getName(), target.getName());
         }
     }
 
@@ -202,28 +196,18 @@ public abstract class BaseDao<T extends Identificable<T>> {
 
     public static final Locale LOCALE = Locale.ENGLISH;
 
-    private static Map<String, Table> tables = new HashMap<String, Table>();
-    private JidelakDbHelper dbHelper;
+    private static Map<String, Table> tables = new HashMap<>();
     public Locale locale;
 
-    public BaseDao(JidelakDbHelper dbHelper) {
-        this.dbHelper = dbHelper;
-    }
-
-    protected JidelakDbHelper getDbHelper() {
-        return dbHelper;
+    public BaseDao(SQLiteDatabase database) {
+        this.database = database;
     }
 
     public void insert(Collection<T> objs) {
         if (objs == null)
             return;
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
-        try {
-            for (T obj : objs) {
-                insert(db, obj);
-            }
-        } finally {
-            // db.close();
+        for (T obj : objs) {
+            insert(getDatabase(), obj);
         }
     }
 
@@ -240,23 +224,13 @@ public abstract class BaseDao<T extends Identificable<T>> {
     }
 
     public void insert(T obj) {
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
-        try {
-            insert(db, obj);
-        } finally {
-            // db.close();
-        }
+        insert(getDatabase(), obj);
     }
 
     protected abstract ContentValues getValues(T obj, boolean updateNull);
 
     public void update(T obj, boolean updateNull) {
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
-        try {
-            update(db, obj, updateNull);
-        } finally {
-            // db.close();
-        }
+        update(getDatabase(), obj, updateNull);
     }
 
     public void update(T obj) {
@@ -276,25 +250,14 @@ public abstract class BaseDao<T extends Identificable<T>> {
     }
 
     public void update(Collection<T> objs, boolean updateNull) {
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
-        try {
-            for (T obj : objs) {
-                update(db, obj, updateNull);
-            }
-        } finally {
-            // db.close();
+        for (T obj : objs) {
+            update(getDatabase(), obj, updateNull);
         }
     }
 
     public void delete(Collection<T> obj) {
-
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
-        try {
-            for (T t : obj) {
-                delete(db, t.getId());
-            }
-        } finally {
-            // db.close();
+        for (T t : obj) {
+            delete(getDatabase(), t.getId());
         }
     }
 
@@ -303,12 +266,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
     }
 
     public void delete(Long obj) {
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
-        try {
-            delete(db, obj);
-        } finally {
-            // db.close();
-        }
+        delete(getDatabase(), obj);
     }
 
     protected void delete(SQLiteDatabase db, Long id) {
@@ -338,10 +296,9 @@ public abstract class BaseDao<T extends Identificable<T>> {
     protected SortedSet<T> query(String selection, String[] selectionArgs,
                                  String groupBy, String having, String orderBy) {
         long millis1 = System.currentTimeMillis();
-        SQLiteDatabase db = getDbHelper().getReadableDatabase();
         long millis2 = System.currentTimeMillis();
         try {
-            Cursor cursor = db.query(getTableName(), getColumnNames(),
+            Cursor cursor = getDatabase().query(getTableName(), getColumnNames(),
                     selection, selectionArgs, groupBy, having, orderBy);
             return parseResults(cursor);
         } finally {
@@ -349,28 +306,25 @@ public abstract class BaseDao<T extends Identificable<T>> {
             log.trace("SQL query: " + getTableName() + ": " + selection
                     + Arrays.toString(selectionArgs) + " / times: "
                     + (now - millis1) + ", " + (now - millis2));
-            // db.close();
         }
     }
 
     protected SortedSet<T> rawQuery(String selection, String[] selectionArgs) {
         long millis1 = System.currentTimeMillis();
-        SQLiteDatabase db = getDbHelper().getReadableDatabase();
         long millis2 = System.currentTimeMillis();
         try {
-            Cursor cursor = db.rawQuery(selection, selectionArgs);
+            Cursor cursor = getDatabase().rawQuery(selection, selectionArgs);
             return parseResults(cursor);
         } finally {
             long now = System.currentTimeMillis();
             log.trace("SQL raw query: " + selection
                     + Arrays.toString(selectionArgs) + " / times: "
                     + (now - millis1) + ", " + (now - millis2));
-            // db.close();
         }
     }
 
     private SortedSet<T> parseResults(Cursor cursor) {
-        SortedSet<T> results = new TreeSet<T>();
+        SortedSet<T> results = new TreeSet<>();
         try {
 
             while (!cursor.isAfterLast()) {
@@ -468,7 +422,7 @@ public abstract class BaseDao<T extends Identificable<T>> {
     }
 
     public static String columnNamesToClause(String alias, Column[] columns) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < columns.length; i++) {
             if (i > 0)

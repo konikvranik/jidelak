@@ -3,12 +3,14 @@ package net.suteren.android.jidelak.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Restaurant;
 
 import java.util.Collection;
 import java.util.SortedSet;
+
+import static net.suteren.android.jidelak.dao.SQLiteDataTypes.INTEGER;
+import static net.suteren.android.jidelak.dao.SQLiteDataTypes.TEXT;
 
 public class AvailabilityDao extends BaseDao<Availability> {
 
@@ -16,22 +18,16 @@ public class AvailabilityDao extends BaseDao<Availability> {
 
     public static final String TABLE_NAME = "availability";
 
-    public static final Column YEAR = new Column("year",
-            SQLiteDataTypes.INTEGER);
-    public static final Column MONTH = new Column("month",
-            SQLiteDataTypes.INTEGER);
-    public static final Column DAY = new Column("day", SQLiteDataTypes.INTEGER);
-    public static final Column DOW = new Column("dow", SQLiteDataTypes.INTEGER);
-    public static final Column RESTAURANT = new Column("restaurant",
-            RestaurantDao.ID.getType(), new ForeignKey(
-            RestaurantDao.getTable(), RestaurantDao.ID));
-    public static final Column FROM = new Column("from_time",
-            SQLiteDataTypes.TEXT);
-    public static final Column TO = new Column("to_time", SQLiteDataTypes.TEXT);
-    public static final Column DESCRIPTION = new Column("description",
-            SQLiteDataTypes.TEXT);
-    public static final Column CLOSED = new Column("closed",
-            SQLiteDataTypes.INTEGER);
+    public static final Column YEAR = new Column("year", INTEGER);
+    public static final Column MONTH = new Column("month", INTEGER);
+    public static final Column DAY = new Column("day", INTEGER);
+    public static final Column DOW = new Column("dow", INTEGER);
+    public static final Column RESTAURANT = new Column("restaurant", RestaurantDao.ID.getType(),
+            new ForeignKey(RestaurantDao.getTable(), RestaurantDao.ID));
+    public static final Column FROM = new Column("from_time", TEXT);
+    public static final Column TO = new Column("to_time", TEXT);
+    public static final Column DESCRIPTION = new Column("description", TEXT);
+    public static final Column CLOSED = new Column("closed", INTEGER);
 
     static {
 
@@ -50,8 +46,8 @@ public class AvailabilityDao extends BaseDao<Availability> {
 
     }
 
-    public AvailabilityDao(JidelakDbHelper dbHelper) {
-        super(dbHelper);
+    public AvailabilityDao(SQLiteDatabase db) {
+        super(db);
     }
 
     public SortedSet<Availability> findAllDays() {
@@ -130,14 +126,7 @@ public class AvailabilityDao extends BaseDao<Availability> {
     }
 
     public void deleteByRestaurantId(Long r) {
-        SQLiteDatabase db = getDbHelper().getWritableDatabase();
-        try {
-            db.delete(getTableName(), RESTAURANT + " = ?",
-                    new String[]{Long.toString(r)});
-        } finally {
-            // db.close();
-        }
-
+        getDatabase().delete(getTableName(), RESTAURANT + " = ?", new String[]{Long.toString(r)});
     }
 
 }

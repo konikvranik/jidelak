@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
-import net.suteren.android.jidelak.JidelakDbHelper;
 import net.suteren.android.jidelak.model.Availability;
 import net.suteren.android.jidelak.model.Dish;
 import net.suteren.android.jidelak.model.Meal;
@@ -18,266 +17,226 @@ import java.util.TreeSet;
 
 public class MealDao extends BaseDao<Meal> {
 
-	public static final Column PRICE = new Column("price", SQLiteDataTypes.TEXT);
-	public static final Column DISH = new Column("dish",
-			SQLiteDataTypes.INTEGER);
-	public static final Column POSITION = new Column("position",
-			SQLiteDataTypes.INTEGER);
-	public static final Column CATEGORY = new Column("category",
-			SQLiteDataTypes.TEXT);
-	public static final Column DESCRIPTION = new Column("description",
-			SQLiteDataTypes.TEXT);
-	public static final Column TITLE = new Column("title", SQLiteDataTypes.TEXT);
-	public static final Column RESTAURANT = new Column("restaurant",
-			RestaurantDao.ID.getType(), new ForeignKey(
-					RestaurantDao.getTable(), RestaurantDao.ID));
-	public static final Column AVAILABILITY = new Column("availability",
-			AvailabilityDao.ID.getType(), new ForeignKey(
-					AvailabilityDao.getTable(), AvailabilityDao.ID));
+    public static final Column PRICE = new Column("price", SQLiteDataTypes.TEXT);
+    public static final Column DISH = new Column("dish",
+            SQLiteDataTypes.INTEGER);
+    public static final Column POSITION = new Column("position",
+            SQLiteDataTypes.INTEGER);
+    public static final Column CATEGORY = new Column("category",
+            SQLiteDataTypes.TEXT);
+    public static final Column DESCRIPTION = new Column("description",
+            SQLiteDataTypes.TEXT);
+    public static final Column TITLE = new Column("title", SQLiteDataTypes.TEXT);
+    public static final Column RESTAURANT = new Column("restaurant",
+            RestaurantDao.ID.getType(), new ForeignKey(
+            RestaurantDao.getTable(), RestaurantDao.ID));
+    public static final Column AVAILABILITY = new Column("availability",
+            AvailabilityDao.ID.getType(), new ForeignKey(
+            AvailabilityDao.getTable(), AvailabilityDao.ID));
 
-	public static final String TABLE_NAME = "meal";
+    public static final String TABLE_NAME = "meal";
 
-	public static final Column[] availabilityColumns;
+    public static final Column[] availabilityColumns;
 
-	static {
+    static {
 
-		registerTable(TABLE_NAME);
+        registerTable(TABLE_NAME);
 
-		getTable().addColumn(ID);
-		getTable().addColumn(TITLE);
-		getTable().addColumn(DESCRIPTION);
-		getTable().addColumn(PRICE);
-		getTable().addColumn(POSITION);
-		getTable().addColumn(DISH);
-		getTable().addColumn(CATEGORY);
-		getTable().addColumn(RESTAURANT);
-		getTable().addColumn(AVAILABILITY);
+        getTable().addColumn(ID);
+        getTable().addColumn(TITLE);
+        getTable().addColumn(DESCRIPTION);
+        getTable().addColumn(PRICE);
+        getTable().addColumn(POSITION);
+        getTable().addColumn(DISH);
+        getTable().addColumn(CATEGORY);
+        getTable().addColumn(RESTAURANT);
+        getTable().addColumn(AVAILABILITY);
 
-		availabilityColumns = prepareAvailabilityColumns();
+        availabilityColumns = prepareAvailabilityColumns();
 
-	}
+    }
 
-	public MealDao(JidelakDbHelper dbHelper) {
-		super(dbHelper);
-	}
+    public MealDao(SQLiteDatabase db) {
+        super(db);
+    }
 
-	public SortedSet<Meal> findByDayAndRestaurant(Calendar day,
-			Restaurant restaurant) {
-		return rawQuery(
-				"select " + columnNamesToClause("m", getTable().getColumns())
-						+ ", " + columnNamesToClause("a", availabilityColumns)
-						+ " from " + AvailabilityDao.getTable().getName()
-						+ " a" + " inner join " + getTableName() + " m"
-						+ " on " + " m." + RESTAURANT + "= ? and m."
-						+ AVAILABILITY + " = a." + AvailabilityDao.ID
-						+ " where" + " (a." + AvailabilityDao.YEAR
-						+ " = ? and a." + AvailabilityDao.MONTH + " = ? and a."
-						+ AvailabilityDao.DAY + " = ?) or (a."
-						+ AvailabilityDao.YEAR + " is null and a."
-						+ AvailabilityDao.MONTH + " is null and a."
-						+ AvailabilityDao.DAY + " is null and (a."
-						+ AvailabilityDao.DOW + " = ? or a."
-						+ AvailabilityDao.DOW + " is null))",
-				new String[] { String.valueOf(restaurant.getId()),
-						String.valueOf(day.get(Calendar.YEAR)),
-						String.valueOf(day.get(Calendar.MONTH)),
-						String.valueOf(day.get(Calendar.DAY_OF_MONTH)),
-						String.valueOf(day.get(Calendar.DAY_OF_WEEK)) });
-	}
+    public SortedSet<Meal> findByDayAndRestaurant(Calendar day,
+                                                  Restaurant restaurant) {
+        return rawQuery(
+                String.format("select %s, %s from %s a inner join %s m on  m.%s= ? and m.%s = a.%s where (a.%s = ? " +
+                                "and a.%s = ? and a.%s = ?) or (a.%s is null and a.%s is null and a.%s is null and (a" +
+                                ".%s = ? " +
+                                "or a.%s is null))",
+                        columnNamesToClause("m", getTable().getColumns()),
+                        columnNamesToClause("a", availabilityColumns),
+                        AvailabilityDao.getTable().getName(), getTableName(),
+                        RESTAURANT, AVAILABILITY, AvailabilityDao.ID, AvailabilityDao.YEAR, AvailabilityDao.MONTH,
+                        AvailabilityDao.DAY, AvailabilityDao.YEAR, AvailabilityDao.MONTH, AvailabilityDao.DAY,
+                        AvailabilityDao.DOW, AvailabilityDao.DOW),
+                new String[]{String.valueOf(restaurant.getId()),
+                        String.valueOf(day.get(Calendar.YEAR)),
+                        String.valueOf(day.get(Calendar.MONTH)),
+                        String.valueOf(day.get(Calendar.DAY_OF_MONTH)),
+                        String.valueOf(day.get(Calendar.DAY_OF_WEEK))});
+    }
 
-	public SortedSet<Meal> findByDay(Calendar day) {
+    protected static Column[] prepareAvailabilityColumns() {
+        ArrayList<Column> ac = new ArrayList<>();
+        for (Column ca : AvailabilityDao.getTable().getColumns()) {
+            boolean add = true;
+            for (Column cm : getTable().getColumns()) {
+                if (ca.equals(cm)) {
+                    add = false;
+                    break;
+                }
+            }
+            if (add)
+                ac.add(ca);
+        }
+        return ac.toArray(new Column[ac.size()]);
+    }
 
-		AvailabilityDao.getTable().getColumns();
+    public SortedSet<Meal> findOlder(Calendar day) {
+        return rawQuery(
+                String.format("select %s, %s from %s m, %s a where m.%s = a.%s and (a.%s < ?  or (a.%s = ?  and a.%s " +
+                                "< ?) or (a.%s = ?  and a.%s = ?  and a.%s < ?)) ",
+                        columnNamesToClause("m", getTable().getColumns()),
+                        columnNamesToClause("a", availabilityColumns),
+                        getTableName(), AvailabilityDao.getTable().getName(),
+                        AVAILABILITY, AvailabilityDao.ID, AvailabilityDao.YEAR, AvailabilityDao.YEAR,
+                        AvailabilityDao.MONTH, AvailabilityDao.YEAR, AvailabilityDao.MONTH, AvailabilityDao.DAY),
+                new String[]{String.valueOf(day.get(Calendar.YEAR)),
+                        String.valueOf(day.get(Calendar.YEAR)),
+                        String.valueOf(day.get(Calendar.MONTH)),
+                        String.valueOf(day.get(Calendar.YEAR)),
+                        String.valueOf(day.get(Calendar.MONTH)),
+                        String.valueOf(day.get(Calendar.DAY_OF_MONTH))});
+    }
 
-		return rawQuery(
-				"select " + columnNamesToClause("m", getTable().getColumns())
-						+ ", " + columnNamesToClause("a", availabilityColumns)
-						+ " from " + getTableName() + " m, "
-						+ AvailabilityDao.getTable().getName() + " a where m."
-						+ AVAILABILITY + " = a." + AvailabilityDao.ID
-						+ " and ((a." + AvailabilityDao.YEAR + " = ? and a."
-						+ AvailabilityDao.MONTH + " = ? and a."
-						+ AvailabilityDao.DAY + " = ?) or (a."
-						+ AvailabilityDao.YEAR + " is null and a."
-						+ AvailabilityDao.MONTH + " is null and a."
-						+ AvailabilityDao.DAY + " is null and (a."
-						+ AvailabilityDao.DOW + " = ? or a."
-						+ AvailabilityDao.DOW + " is null))) ",
-				new String[] { String.valueOf(day.get(Calendar.YEAR)),
-						String.valueOf(day.get(Calendar.MONTH)),
-						String.valueOf(day.get(Calendar.DAY_OF_MONTH)),
-						String.valueOf(day.get(Calendar.DAY_OF_WEEK)) });
-	}
+    @Override
+    public SortedSet<Meal> findAll() {
+        return rawQuery(
+                String.format("select %s, %s from %s m left outer join %s a on m.%s = a.%s",
+                        columnNamesToClause("m", getTable().getColumns()),
+                        columnNamesToClause("a", availabilityColumns),
+                        getTableName(), AvailabilityDao.getTable().getName(),
+                        AVAILABILITY, AvailabilityDao.ID),
+                new String[]{});
+    }
 
-	protected static Column[] prepareAvailabilityColumns() {
-		ArrayList<Column> ac = new ArrayList<BaseDao.Column>();
-		for (Column ca : AvailabilityDao.getTable().getColumns()) {
-			boolean add = true;
-			for (Column cm : getTable().getColumns()) {
-				if (ca.equals(cm)) {
-					add = false;
-					break;
-				}
-			}
-			if (add)
-				ac.add(ca);
-		}
-		return ac.toArray(new Column[] {});
-	}
+    @Override
+    public Meal findById(long obj) {
+        SortedSet<Meal> result = rawQuery(
+                String.format("select %s, %s from %s m left outer join %s a on m.%s = a.%s and m.%s=?",
+                        columnNamesToClause("m", getTable().getColumns()),
+                        columnNamesToClause("a", availabilityColumns),
+                        getTableName(), AvailabilityDao.getTable().getName(),
+                        AVAILABILITY, AvailabilityDao.ID, ID),
+                new String[]{Long.toString(obj)});
+        if (result.size() > 1)
+            throw new SQLiteConstraintException();
+        else if (result.isEmpty())
+            return null;
+        return result.first();
+    }
 
-	public SortedSet<Meal> findOlder(Calendar day) {
-		return rawQuery(
-				"select " + columnNamesToClause("m", getTable().getColumns())
-						+ ", " + columnNamesToClause("a", availabilityColumns)
-						+ " from " + getTableName() + " m, "
-						+ AvailabilityDao.getTable().getName() + " a where m."
-						+ AVAILABILITY + " = a." + AvailabilityDao.ID
-						+ " and (" + "a." + AvailabilityDao.YEAR + " < ? "
-						+ " or (" + "a." + AvailabilityDao.YEAR + " = ? "
-						+ " and a." + AvailabilityDao.MONTH + " < ?" + ") or ("
-						+ "a." + AvailabilityDao.YEAR + " = ? " + " and a."
-						+ AvailabilityDao.MONTH + " = ? " + " and a."
-						+ AvailabilityDao.DAY + " < ?" + ")) ",
-				new String[] { String.valueOf(day.get(Calendar.YEAR)),
-						String.valueOf(day.get(Calendar.YEAR)),
-						String.valueOf(day.get(Calendar.MONTH)),
-						String.valueOf(day.get(Calendar.YEAR)),
-						String.valueOf(day.get(Calendar.MONTH)),
-						String.valueOf(day.get(Calendar.DAY_OF_MONTH)) });
-	}
+    @Override
+    protected String getTableName() {
+        return TABLE_NAME;
+    }
 
-	@Override
-	public SortedSet<Meal> findAll() {
-		return rawQuery(
-				"select " + columnNamesToClause("m", getTable().getColumns())
-						+ ", " + columnNamesToClause("a", availabilityColumns)
-						+ " from " + getTableName() + " m left outer join "
-						+ AvailabilityDao.getTable().getName() + " a on m."
-						+ AVAILABILITY + " = a." + AvailabilityDao.ID,
-				new String[] {});
-	}
+    @Override
+    protected Meal parseRow(Cursor cursor) {
 
-	@Override
-	public Meal findById(long obj) {
-		SortedSet<Meal> result = rawQuery(
-				"select " + columnNamesToClause("m", getTable().getColumns())
-						+ ", " + columnNamesToClause("a", availabilityColumns)
-						+ " from " + getTableName() + " m left outer join "
-						+ AvailabilityDao.getTable().getName() + " a on m."
-						+ AVAILABILITY + " = a." + AvailabilityDao.ID
-						+ " and m." + ID + "=?",
-				new String[] { Long.toString(obj) });
-		if (result.size() > 1)
-			throw new SQLiteConstraintException();
-		else if (result.isEmpty())
-			return null;
-		return result.first();
-	}
+        Meal meal = new Meal();
+        meal.setId(unpackColumnValue(cursor, ID, Long.class));
+        meal.setCategory(unpackColumnValue(cursor, CATEGORY, String.class));
+        meal.setTitle(unpackColumnValue(cursor, TITLE, String.class));
+        meal.setDescription(unpackColumnValue(cursor, DESCRIPTION, String.class));
 
-	@Override
-	protected String getTableName() {
-		return TABLE_NAME;
-	}
+        Availability availability = new AvailabilityDao(getDatabase())
+                .parseRow(cursor);
+        availability.setId(unpackColumnValue(cursor, AVAILABILITY, Long.class));
+        availability.setRestaurant(null);
+        meal.setAvailability(availability);
+        meal.setDish(unpackColumnValue(cursor, DISH, Dish.class));
+        meal.setPrice(unpackColumnValue(cursor, PRICE, String.class));
+        meal.setPosition(unpackColumnValue(cursor, POSITION, Integer.class));
+        meal.setRestaurant(new Restaurant(unpackColumnValue(cursor, RESTAURANT,
+                Long.class)));
+        return meal;
+    }
 
-	@Override
-	protected Meal parseRow(Cursor cursor) {
+    @Override
+    protected String[] getColumnNames() {
+        return getTable().getColumnNames();
+    }
 
-		Meal meal = new Meal();
-		meal.setId(unpackColumnValue(cursor, ID, Long.class));
-		meal.setCategory(unpackColumnValue(cursor, CATEGORY, String.class));
-		meal.setTitle(unpackColumnValue(cursor, TITLE, String.class));
-		meal.setDescription(unpackColumnValue(cursor, DESCRIPTION, String.class));
+    @Override
+    protected ContentValues getValues(Meal obj, boolean updateNull) {
+        ContentValues values = new ContentValues();
+        if (obj.getAvailability() != null || updateNull)
+            values.put(AVAILABILITY.getName(), obj.getAvailability().getId());
+        if (obj.getDescription() != null || updateNull)
+            values.put(DESCRIPTION.getName(), obj.getDescription());
+        if (obj.getDish() != null || updateNull)
+            values.put(DISH.getName(), obj.getDish().ordinal());
+        if (obj.getId() != null || updateNull)
+            values.put(ID.getName(), obj.getId());
+        if (obj.getPosition() != null || updateNull)
+            values.put(POSITION.getName(), obj.getPosition());
+        if (obj.getTitle() != null || updateNull)
+            values.put(TITLE.getName(), obj.getTitle());
+        if (obj.getCategory() != null || updateNull)
+            values.put(CATEGORY.getName(), obj.getCategory());
+        if (obj.getPrice() != null || updateNull)
+            values.put(PRICE.getName(), obj.getPrice());
+        if (obj.getRestaurant() != null || updateNull)
+            values.put(RESTAURANT.getName(), obj.getRestaurant().getId());
+        return values;
+    }
 
-		Availability availability = new AvailabilityDao(getDbHelper())
-				.parseRow(cursor);
-		availability.setId(unpackColumnValue(cursor, AVAILABILITY, Long.class));
-		availability.setRestaurant(null);
-		meal.setAvailability(availability);
-		meal.setDish(unpackColumnValue(cursor, DISH, Dish.class));
-		meal.setPrice(unpackColumnValue(cursor, PRICE, String.class));
-		meal.setPosition(unpackColumnValue(cursor, POSITION, Integer.class));
-		meal.setRestaurant(new Restaurant(unpackColumnValue(cursor, RESTAURANT,
-				Long.class)));
-		return meal;
-	}
+    public static Table getTable() {
+        return getTable(TABLE_NAME);
+    }
 
-	@Override
-	protected String[] getColumnNames() {
-		return getTable().getColumnNames();
-	}
+    protected void delete(SQLiteDatabase db, Meal obj) {
+        db.delete(getTableName(), "id = ?",
+                new String[]{Long.toString(obj.getId())});
+        db.delete(AvailabilityDao.getTable().getName(), AvailabilityDao.ID
+                + " = ?", new String[]{String.format("%d", obj
+                .getAvailability().getId())});
+    }
 
-	@Override
-	protected ContentValues getValues(Meal obj, boolean updateNull) {
-		ContentValues values = new ContentValues();
-		if (obj.getAvailability() != null || updateNull)
-			values.put(AVAILABILITY.getName(), obj.getAvailability().getId());
-		if (obj.getDescription() != null || updateNull)
-			values.put(DESCRIPTION.getName(), obj.getDescription());
-		if (obj.getDish() != null || updateNull)
-			values.put(DISH.getName(), obj.getDish().ordinal());
-		if (obj.getId() != null || updateNull)
-			values.put(ID.getName(), obj.getId());
-		if (obj.getPosition() != null || updateNull)
-			values.put(POSITION.getName(), obj.getPosition());
-		if (obj.getTitle() != null || updateNull)
-			values.put(TITLE.getName(), obj.getTitle());
-		if (obj.getCategory() != null || updateNull)
-			values.put(CATEGORY.getName(), obj.getCategory());
-		if (obj.getPrice() != null || updateNull)
-			values.put(PRICE.getName(), obj.getPrice());
-		if (obj.getRestaurant() != null || updateNull)
-			values.put(RESTAURANT.getName(), obj.getRestaurant().getId());
-		return values;
-	}
+    public void delete(Restaurant r) {
+        deleteByRestaurantId(r.getId());
+    }
 
-	public static Table getTable() {
-		return getTable(TABLE_NAME);
-	}
+    public void deleteByRestaurantId(Long r) {
+        SQLiteDatabase db = getDatabase();
+        db.delete(AvailabilityDao.getTable().getName(),
+                String.format("%s in (select %s from %s where %s = ?)",
+                        AvailabilityDao.ID, AVAILABILITY, getTableName(), RESTAURANT),
+                new String[]{Long.toString(r)});
+        db.delete(getTableName(), RESTAURANT + " = ?",
+                new String[]{Long.toString(r)});
+    }
 
-	protected void delete(SQLiteDatabase db, Meal obj) {
-		db.delete(getTableName(), "id = ?",
-				new String[] { Long.toString(obj.getId()) });
-		db.delete(AvailabilityDao.getTable().getName(), AvailabilityDao.ID
-				+ " = ?", new String[] { String.format("%d", obj
-				.getAvailability().getId()) });
-	}
+    public void deleteOlder(Calendar day) {
 
-	public void delete(Restaurant r) {
-		deleteByRestaurantId(r.getId());
-	}
+        SortedSet<Meal> meals = findOlder(day);
+        SortedSet<Availability> avails = new TreeSet<>();
+        for (Meal m : meals)
+            avails.add(m.getAvailability());
 
-	public void deleteByRestaurantId(Long r) {
-		SQLiteDatabase db = getDbHelper().getWritableDatabase();
-		try {
-			db.delete(AvailabilityDao.getTable().getName(), AvailabilityDao.ID
-							+ " in (select " + AVAILABILITY + " from " + getTableName()
-							+ " where " + RESTAURANT + " = ?)",
-					new String[] { Long.toString(r) });
-			db.delete(getTableName(), RESTAURANT + " = ?",
-					new String[] { Long.toString(r) });
-		} finally {
-			// db.close();
-		}
+        log.debug(String.format("Deleting %d meals: %s",
+                meals.size(), Arrays.toString(new ArrayList<>(meals).toArray())));
 
-	}
+        delete(meals);
 
-	public void deleteOlder(Calendar day) {
+        log.debug(String.format("Deleting %d avails: %s",
+                avails.size(), Arrays.toString(new ArrayList<>(avails).toArray())));
+        new AvailabilityDao(getDatabase()).delete(avails);
 
-		SortedSet<Meal> meals = findOlder(day);
-		SortedSet<Availability> avails = new TreeSet<Availability>();
-		for (Meal m : meals)
-			avails.add(m.getAvailability());
-
-		log.debug("Deleting " + meals.size() + " meals: "
-				+ Arrays.toString(new ArrayList<Meal>(meals).toArray()));
-
-		delete(meals);
-
-		log.debug("Deleting "
-				+ avails.size()
-				+ " avails: "
-				+ Arrays.toString(new ArrayList<Availability>(avails).toArray()));
-		new AvailabilityDao(getDbHelper()).delete(avails);
-
-	}
+    }
 }

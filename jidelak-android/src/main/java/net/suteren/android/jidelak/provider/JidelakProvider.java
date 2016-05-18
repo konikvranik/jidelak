@@ -231,10 +231,12 @@ public class JidelakProvider extends ContentProvider {
 
     void updateData() throws JidelakException {
 
-        SourceDao sdao = new SourceDao(getDbHelper());
-        MealDao mdao = new MealDao(getDbHelper());
-        RestaurantDao rdao = new RestaurantDao(getDbHelper());
-        AvailabilityDao adao = new AvailabilityDao(getDbHelper());
+        SQLiteDatabase db = getDbHelper().getWritableDatabase();
+
+        SourceDao sdao = new SourceDao(db);
+        MealDao mdao = new MealDao(db);
+        RestaurantDao rdao = new RestaurantDao(db);
+        AvailabilityDao adao = new AvailabilityDao(db);
 
         RestaurantMarshaller rm = new RestaurantMarshaller();
         Restaurant restaurant = new Restaurant();

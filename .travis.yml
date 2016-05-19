@@ -50,7 +50,7 @@ after_script:
     ( cp -ru $TRAVIS_BUILD_DIR/jidelak-android/build/outputs/report* . || true ) &&
     ( cp -ru $TRAVIS_BUILD_DIR/jidelak-android/build/report* . || true ) &&
     ( cp -ru $TRAVIS_BUILD_DIR/jidelak-android/CHANGELOG.html . || true ) &&
-    ( mkdir -p report && adb logcat > report/logcat.log || true ) &&
+    ( mkdir -p reports; adb logcat > reports/logcat.log || true ) &&
     ( git add lint* || true ) &&
     ( git add report* || true ) &&
     ( git add CHANGELOG.html || true ) &&

@@ -101,7 +101,11 @@ public class DayPagerAdapter extends FragmentPagerAdapter implements SpinnerAdap
 
     @Override
     public int getCount() {
-        return mCursor.getCount();
+        if (mCursor == null) {
+            return 0;
+        } else {
+            return mCursor.getCount();
+        }
     }
 
     @Override
@@ -127,7 +131,7 @@ public class DayPagerAdapter extends FragmentPagerAdapter implements SpinnerAdap
 
     @Override
     public Fragment getItem(int position) {
-        if (!mCursor.move(position)) {
+        if (mCursor==null||!mCursor.move(position)) {
             return null;
         }
         Fragment fragment = new DayFragment();
@@ -141,7 +145,7 @@ public class DayPagerAdapter extends FragmentPagerAdapter implements SpinnerAdap
 
     @Override
     public long getItemId(int position) {
-        if (!mCursor.move(position)) {
+        if (mCursor==null||!mCursor.move(position)) {
             return -1;
         }
         return getTimeInMillis(mCursor);
@@ -268,6 +272,9 @@ public class DayPagerAdapter extends FragmentPagerAdapter implements SpinnerAdap
     }
 
     public int getPositionByDate(long cal) {
+        if(mCursor==null){
+            return 0;
+        }
         mCursor.moveToFirst();
         while (getTimeInMillis(mCursor) < cal && mCursor.moveToNext()) ;
         return mCursor.getPosition();

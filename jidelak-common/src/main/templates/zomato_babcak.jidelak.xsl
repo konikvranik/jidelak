@@ -96,7 +96,7 @@
 
     <xsl:template name="title">
         <title>
-            <xsl:value-of select="div[starts-with(@class, 'tmi-text-group')]/div[starts-with(@class, 'tmi-name')]/."/>
+            <xsl:value-of select="div[starts-with(@class, 'tmi-text-group')]//div[starts-with(@class, 'tmi-name')]/."/>
         </title>
     </xsl:template>
 

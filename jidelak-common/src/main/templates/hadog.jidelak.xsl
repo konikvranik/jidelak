@@ -29,7 +29,7 @@
             <address>Sokolovská 379/204</address>
             <zip>180 00</zip>
 
-            <source firstDayOfWeek="Po" encoding="cp1250" locale="cs_CZ" dateFormat="YYYY-MM-dd"
+            <source firstDayOfWeek="Po" encoding="cp1250" locale="cs_CZ" dateFormat="yyyy-MM-dd"
                     url="http://www.hadog.cz/burgery-hotdogy/"/>
    <open>
                 <term day-of-week="Po" from="11:00" to="22:00"/>

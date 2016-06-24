@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	xmlns:ex="http://exslt.org/dates-and-times"
+	extension-element-prefixes="ex"
+        xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
     <xsl:output indent="yes" method="xml" encoding="UTF-8"/>
 
@@ -27,7 +29,7 @@
             <address>Sokolovská 379/204</address>
             <zip>180 00</zip>
 
-            <source firstDayOfWeek="Po" encoding="cp1250" locale="cs_CZ"
+            <source firstDayOfWeek="Po" encoding="cp1250" locale="cs_CZ" dateFormat="YYYY-MM-dd"
                     url="http://www.hadog.cz/burgery-hotdogy/"/>
    <open>
                 <term day-of-week="Po" from="11:00" to="22:00"/>
@@ -51,6 +53,7 @@
 
     <xsl:template match="div" mode="menuitem">
             <meal dish="" category="">
+	    	<xsl:attribute name="time"><xsl:value-of select="substring(ex:date-time(),1,10)"/></xsl:attribute>
                 <xsl:call-template name="dish"/>
                 <xsl:call-template name="category"/>
                 <xsl:call-template name="order"/>

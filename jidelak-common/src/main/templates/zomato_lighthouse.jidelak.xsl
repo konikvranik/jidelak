@@ -94,7 +94,7 @@
 
     <xsl:template name="title">
         <title>
-            <xsl:value-of select="div[starts-with(@class, 'tmi-text-group')]/div[starts-with(@class, 'tmi-name')]/."/>
+            <xsl:value-of select="div[starts-with(@class, 'tmi-text-group')]//div[starts-with(@class, 'tmi-name')]/."/>
         </title>
     </xsl:template>
 
@@ -127,7 +127,7 @@
 
     <xsl:template name="time-format">
         <xsl:variable name="time">
-            <xsl:value-of select="preceding-sibling::div[@class='tmi-group-name']"/>
+            <xsl:value-of select="preceding-sibling::div[starts-with(@class,'tmi-group-name')]"/>
         </xsl:variable>
         <xsl:variable name="fixed-time">
             <xsl:choose>

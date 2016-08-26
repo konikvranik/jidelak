@@ -17,7 +17,7 @@
     </xsl:template>
 
     <xsl:template name="restaurant">
-        <restaurant version="1.4">
+        <restaurant version="1.5">
             <id>praha-babcak</id>
             <name>Jídelna Babčák</name>
             <phone>+420 266782055</phone>
@@ -82,11 +82,11 @@
         <xsl:attribute name="category">
             <xsl:choose>
                 <xsl:when
-                        test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'TĚSTOVINY')]]) > 0">
+                        test="count((preceding-sibling::div|.)[div[contains(@class,'tmi-text-group')]//div[@class='tmi-name' and starts-with(normalize-space(.), 'TĚSTOVINY')]]) > 0">
                     30-pasta
                 </xsl:when>
                 <xsl:when
-                        test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'SALÁTY')]]) > 0">
+                        test="count((preceding-sibling::div|.)[div[contains(@class,'tmi-text-group')]//div[@class='tmi-name' and starts-with(normalize-space(.), 'SALÁTY')]]) > 0">
                     50-salad
                 </xsl:when>
                 <xsl:otherwise>10-normal</xsl:otherwise>

@@ -17,7 +17,7 @@
     </xsl:template>
 
     <xsl:template name="restaurant">
-        <restaurant version="1.3">
+        <restaurant version="1.4">
             <id>praha-babcak</id>
             <name>Jídelna Babčák</name>
             <phone>+420 266782055</phone>
@@ -129,7 +129,7 @@
 
     <xsl:template name="time-format">
         <xsl:variable name="time">
-            <xsl:value-of select="preceding-sibling::div[@class='tmi-group-name']"/>
+            <xsl:value-of select="preceding-sibling::div[starts-with(@class,'tmi-group-name')]"/>
         </xsl:variable>
         <xsl:variable name="fixed-time">
             <xsl:choose>

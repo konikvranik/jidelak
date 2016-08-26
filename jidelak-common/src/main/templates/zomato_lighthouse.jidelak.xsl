@@ -17,7 +17,7 @@
     </xsl:template>
 
     <xsl:template name="restaurant">
-        <restaurant version="1.4">
+        <restaurant version="1.5">
             <id>praha-lighthouse-bufet</id>
             <name>Lighthouse bufet</name>
             <phone>+420 777257838</phone>
@@ -52,7 +52,7 @@
 
     <xsl:template match="div" mode="menuitem">
         <xsl:if
-                test="not(contains(., '2dcl točené limonády k obědu') or contains(., 'K JÍDLU DOMÁCÍ LIMONÁDA') or contains(., 'ZDARMA 0,2L') or contains(., 'Hlavní jídla:') or contains(., 'Malé salátky:') or contains(., 'Velké saláty:') or contains(., 'Čerstvé wrapy a chlebíčky:') or contains(., 'Ostatní domácí produkty:') or contains(., 'Možnost platit stravenkami'))">
+                test="not(contains(., '2dcl točené limonády k obědu') or contains(., 'K JÍDLU DOMÁCÍ LIMONÁDA') or contains(., 'ZDARMA 0,2L') or contains(., 'Hlavní jídla:') or contains(., 'Malé salátky:') or contains(., 'Velké saláty:') or contains(., 'Čerstvé wrapy a chlebíčky:') or contains(., 'Ostatní domácí produkty:') or contains(., 'Možnost platit stravenkami') or contains(., 'Polévky:'))">
             <meal dish="" category="">
                 <xsl:call-template name="dish"/>
                 <xsl:call-template name="category"/>
@@ -71,7 +71,7 @@
     <xsl:template name="dish">
         <xsl:attribute name="dish">
             <xsl:choose>
-                <xsl:when test="count(preceding-sibling::div[contains(@class, 'tmi-daily')]) &lt; 2">soup</xsl:when>
+                <xsl:when test="count(preceding-sibling::div[contains(@class, 'tmi-daily')]) &lt; 3">soup</xsl:when>
                 <xsl:when test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Ostatní domácí produkty:')]]) &gt; 0">dessert</xsl:when>
                 <xsl:when test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Čerstvé wrapy a chlebíčky:')]]) &gt; 0">lunch</xsl:when>
                 <xsl:when test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'Velké saláty:')]]) &gt; 0">dinner</xsl:when>

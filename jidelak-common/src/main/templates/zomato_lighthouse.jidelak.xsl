@@ -76,7 +76,7 @@
                 <xsl:when test="count((preceding-sibling::div|.)[div[starts-with(@class,'tmi-text-group')]//div[@class='tmi-name' and starts-with(normalize-space(.), 'Velké saláty:')]]) &gt; 0">dinner</xsl:when>
                 <xsl:when test="count((preceding-sibling::div|.)[div[starts-with(@class,'tmi-text-group')]//div[@class='tmi-name' and starts-with(normalize-space(.), 'Malé salátky:')]]) &gt; 0">trimmings</xsl:when>
                 <xsl:when test="count((preceding-sibling::div|.)[div[starts-with(@class,'tmi-text-group')]//div[@class='tmi-name' and starts-with(normalize-space(.), 'Hlavní jídla:')]]) &gt; 0">dinner</xsl:when>
-                <xsl:when test="count((preceding-sibling::div|.)[div[starts-with(@class,'tmi-text-group')]//div[@class='tmi-name' and starts-with(normalize-space(.), 'Polévky:')]]) &gt; 0">soup</xsl:when>
+                <xsl:when test="count((preceding-sibling::div|.)[div[starts-with(@class,'tmi-text-group')]//div[@class='tmi-name' and starts-with(normalize-space(.), 'Polévky:')]]) &gt; 0 or position() &lt; 3">soup</xsl:when>
                 <xsl:otherwise>dinner</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>

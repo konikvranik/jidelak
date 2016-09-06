@@ -40,15 +40,13 @@
                 <term day-of-week="Ne" from="11:30" to="23:00"/>
             </open>
 
-            <xsl:apply-templates select="//*[@id='week-menu']"/>
+            <xsl:apply-templates select="//table[@class='dailyMenuTable']"/>
         </restaurant>
     </xsl:template>
 
-    <xsl:template match="*[@id='week-menu']">
+    <xsl:template match="//table[@class='dailyMenuTable']">
         <menu>
-            <xsl:apply-templates
-                    select="table//tr[count(preceding-sibling::tr[contains(.,'Polévka')]) &gt; 0 and count(td[contains(@class, 'td-popis')]) &gt; 0 and count(td[contains(.,'Na stravenky vracíme do 5Kč.')]) &lt; 1]"
-                    mode="menuitem"/>
+            <xsl:apply-templates select=".//tr[count(td[@class='td-popis']) &gt; 0]" mode="menuitem"/>
         </menu>
     </xsl:template>
 
@@ -73,7 +71,7 @@
                 <xsl:when test="preceding-sibling::tr[contains(.,'Salát')]">dinner</xsl:when>
                 <xsl:when test="preceding-sibling::tr[contains(.,'Hlavní jídl')]">dinner</xsl:when>
                 <xsl:when test="preceding-sibling::tr[contains(.,'Polévka')]">soup</xsl:when>
-                <xsl:otherwise>dinner</xsl:otherwise>
+                <xsl:otherwise>drink</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
     </xsl:template>

@@ -73,13 +73,13 @@
         <xsl:attribute name="dish">
             <xsl:choose>
 		<xsl:when
-			test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'DEZERT')]]) &gt; 0">dessert</xsl:when>
+			test="count((preceding-sibling::div|.)[div[starts-with(@class,'tmi-text-group')]//div[starts-with(@class,'tmi-name') and starts-with(normalize-space(.), 'DEZERT')]]) &gt; 0">dessert</xsl:when>
 		<xsl:when
-			test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'HLAVNÍ CHOD')]]) &gt; 0">dinner</xsl:when>
+			test="count((preceding-sibling::div|.)[div[starts-with(@class,'tmi-text-group')]//div[starts-with(@class,'tmi-name') and starts-with(normalize-space(.), 'HLAVNÍ CHOD')]]) &gt; 0">dinner</xsl:when>
 		<xsl:when
-			test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'PŘEDKRM')]]) &gt; 0">starter</xsl:when>
+			test="count((preceding-sibling::div|.)[div[starts-with(@class,'tmi-text-group')]//div[starts-with(@class,'tmi-name') and starts-with(normalize-space(.), 'PŘEDKRM')]]) &gt; 0">starter</xsl:when>
 		<xsl:when
-			test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'POLÉVKA')]]) &gt; 0">soup</xsl:when>
+			test="count((preceding-sibling::div|.)[div[starts-with(@class,'tmi-text-group')]//div[@class='tmi-name' and starts-with(normalize-space(.), 'POLÉVKA')]]) &gt; 0">soup</xsl:when>
                 <xsl:otherwise>dinner</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
@@ -89,11 +89,11 @@
         <xsl:attribute name="category">
             <xsl:choose>
                 <xsl:when
-                        test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'TĚSTOVINY')]]) > 0">
+                        test="count((preceding-sibling::div|.)[div[starts-with(@class,'tmi-text-group')]//div[starts-with(@class,'tmi-name') and starts-with(normalize-space(.), 'TĚSTOVINY')]]) > 0">
                     30-pasta
                 </xsl:when>
                 <xsl:when
-                        test="count((preceding-sibling::div|.)[div[@class='tmi-text-group']/div[@class='tmi-name' and starts-with(normalize-space(.), 'SALÁTY')]]) > 0">
+                        test="count((preceding-sibling::div|.)[div[starts-with(@class,'tmi-text-group')]//div[starts-with(@class,'tmi-name') and starts-with(normalize-space(.), 'SALÁTY')]]) > 0">
                     50-salad
                 </xsl:when>
                 <xsl:otherwise>10-normal</xsl:otherwise>
@@ -103,7 +103,7 @@
 
     <xsl:template name="title">
         <title>
-            <xsl:value-of select="div[starts-with(@class, 'tmi-text-group')]/div[starts-with(@class, 'tmi-name')]/."/>
+            <xsl:value-of select="div[starts-with(@class, 'tmi-text-group')]//div[starts-with(@class, 'tmi-name')]/."/>
         </title>
     </xsl:template>
 
@@ -136,7 +136,7 @@
 
     <xsl:template name="time-format">
         <xsl:variable name="time">
-            <xsl:value-of select="preceding-sibling::div[@class='tmi-group-name']"/>
+            <xsl:value-of select="preceding-sibling::div[starts-with(@class,'tmi-group-name')]"/>
         </xsl:variable>
         <xsl:variable name="fixed-time">
             <xsl:choose>

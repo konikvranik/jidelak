@@ -26,7 +26,7 @@
             <address>Jankovcova 1566/2b</address>
             <zip>170 00</zip>
 
-            <source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="E d.M.yyyy" locale="cs_CZ"
+            <source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="E, d.M.yyyy" locale="cs_CZ"
                     url="http://www.lighthousecoffee.cz/files/file/jidelni_listek_restaurant.pdf"/>
 
             <open>

@@ -28,15 +28,15 @@
 	<address>Tusarova 58</address>
 	<zip>170 00</zip>
 
-            <source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="E, d MMM" locale="cs_CZ"
+            <source time="absolute" firstDayOfWeek="Mon" encoding="utf8" dateFormat="E, d MMM" locale="en_US"
                     url="https://www.zomato.com/cs/port58/menu"/>
 
             <open>
-                <term day-of-week="Po" from="11:00" to="14:00"/>
-                <term day-of-week="Út" from="11:00" to="24:00"/>
-                <term day-of-week="St" from="11:00" to="21:00"/>
-                <term day-of-week="Čt" from="11:00" to="24:00"/>
-                <term day-of-week="Pá" from="11:00" to="24:00"/>
+                <term day-of-week="Mon" from="11:00" to="14:00"/>
+                <term day-of-week="Tue" from="11:00" to="24:00"/>
+                <term day-of-week="Wewd" from="11:00" to="21:00"/>
+                <term day-of-week="Thu" from="11:00" to="24:00"/>
+                <term day-of-week="Fri" from="11:00" to="24:00"/>
             </open>
 
             <xsl:apply-templates select="//*[@id='daily-menu-container']"/>

@@ -27,16 +27,16 @@
             <address>Jankovcova 2</address>
             <zip>170 00</zip>
 
-            <source time="absolute" firstDayOfWeek="Po" encoding="utf8" dateFormat="E, d MMM" locale="cs_CZ"
-                    url="https://www.zomato.com/cs/praha/j%C3%ADdelna-bab%C4%8D%C3%A1k-hole%C5%A1ovice-praha-7/menu#daily"/>
+            <source time="absolute" firstDayOfWeek="Mon" encoding="utf8" dateFormat="E, d MMM" locale="en_US"
+                    url="https://www.zomato.com/praha/j%C3%ADdelna-bab%C4%8D%C3%A1k-hole%C5%A1ovice-praha-7/menu#daily"/>
 
             <open>
                 <term from="11:00" to="15:00" description="denní menu"/>
-                <term day-of-week="Po" from="07:30" to="16:00"/>
-                <term day-of-week="Út" from="07:30" to="16:00"/>
-                <term day-of-week="St" from="07:30" to="16:00"/>
-                <term day-of-week="Čt" from="07:30" to="16:00"/>
-                <term day-of-week="Pá" from="07:30" to="15:00"/>
+                <term day-of-week="Mon" from="07:30" to="16:00"/>
+                <term day-of-week="Tue" from="07:30" to="16:00"/>
+                <term day-of-week="Wed" from="07:30" to="16:00"/>
+                <term day-of-week="Thu" from="07:30" to="16:00"/>
+                <term day-of-week="Fri" from="07:30" to="15:00"/>
             </open>
 
             <xsl:apply-templates select="//*[@id='daily-menu-container']"/>
